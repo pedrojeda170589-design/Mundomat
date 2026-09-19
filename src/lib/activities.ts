@@ -228,19 +228,32 @@ function buildNumerosActivities(): ActivitySpec[] {
     )
   );
 
-  // 4: práctica — clasificar mayor/menor que 500
+  // 4: situación — en el kiosco de la escuela, separar lo que cuesta menos
+  // de $500 de lo que cuesta $500 o más (aplica valor posicional a un caso
+  // real: leer un precio y decidir en qué grupo va).
+  const kioscoProductos = shuffle([
+    "Alfajor",
+    "Gaseosa chica",
+    "Cuaderno",
+    "Lápiz de colores",
+    "Mochila",
+    "Pelota",
+    "Remera",
+    "Figuritas",
+  ]).slice(0, 6);
   const classifyNums = Array.from({ length: 6 }, () => randInt(100, 999));
   acts.push({
     type: "classify",
     id: "numeros-clasificar",
     title: "Actividad 4",
-    prompt: "Clasificá cada número según corresponda.",
-    categories: ["Menor que 500", "500 o más"],
-    items: classifyNums.map((n) => ({
-      label: String(n),
+    prompt:
+      "Estás ayudando en el kiosco de la escuela. Separá los productos según su precio.",
+    categories: ["Cuesta menos de $500", "Cuesta $500 o más"],
+    items: classifyNums.map((n, i) => ({
+      label: `${kioscoProductos[i]} - $${n}`,
       categoryIndex: n < 500 ? 0 : 1,
     })),
-    hint: "Pista: compará primero la cifra de las centenas con el 5.",
+    hint: "Pista: compará primero la cifra de las centenas del precio con el 5.",
   });
 
   // 5: práctica — palabras a cifras
@@ -578,12 +591,14 @@ function buildCalculoMentalActivities(): ActivitySpec[] {
     hint: "Pista: fijate si el mismo número se repite en toda la cuenta.",
   });
 
-  // 6: aplicación — agrupar redondos (ejemplo de la planificación)
+  // 6: situación — agrupar redondos para pagar en el kiosco (ejemplo de la
+  // planificación, ahora con un caso real de compra).
   acts.push({
     type: "input",
     id: "calculo-redondos",
     title: "Actividad 6",
-    prompt: "¿Cuánto es 30 + 7 + 10 + 2? (Pista: agrupá primero los números redondos)",
+    prompt:
+      "En el kiosco comprás una gaseosa a $30, un alfajor a $7, un cuaderno a $10 y un lápiz a $2. ¿Cuánto gastaste en total? (Pista: agrupá primero los números redondos)",
     answer: 49,
     hint: "Pista: 30 + 10 = 40, y 7 + 2 = 9. Después sumá 40 + 9.",
   });
@@ -870,24 +885,29 @@ function buildTablaGroupActivities(tables: number[]): ActivitySpec[] {
     hint: `Pista: calculá cada multiplicación por separado antes de unir.`,
   });
 
-  // 5-6: práctica — problemas con dos de las tablas
+  // 5: situación — filas de sillas para un acto escolar (aplica la tabla a
+  // un caso concreto en vez de "grupos con elementos").
   const gruposA = randInt(3, 8);
   acts.push({
     type: "input",
     id: `tabla-${tables.join("-")}-problema-1`,
     title: "Actividad 5",
-    prompt: `Hay ${gruposA} grupos con ${t1} elementos cada uno. ¿Cuántos elementos hay en total?`,
+    prompt: `Para el acto escolar armaron ${gruposA} filas de sillas, con ${t1} sillas cada fila. ¿Cuántas sillas hay en total?`,
     answer: gruposA * t1,
     hint: `Pista: multiplicá ${gruposA} × ${t1}.`,
   });
+
+  // 6: situación de 2 pasos — comprar cajas y comer algunos, para que no
+  // alcance con multiplicar y ya está.
   const gruposB = randInt(3, 8);
+  const comidosTabla = randInt(2, Math.min(6, t2 - 1 || 1));
   acts.push({
     type: "input",
     id: `tabla-${tables.join("-")}-problema-2`,
     title: "Actividad 6",
-    prompt: `Hay ${gruposB} grupos con ${t2} elementos cada uno. ¿Cuántos elementos hay en total?`,
-    answer: gruposB * t2,
-    hint: `Pista: multiplicá ${gruposB} × ${t2}.`,
+    prompt: `Comprás ${gruposB} cajas de alfajores con ${t2} alfajores cada una, y en el recreo te comés ${comidosTabla}. ¿Cuántos alfajores te quedan?`,
+    answer: gruposB * t2 - comidosTabla,
+    hint: `Pista: primero multiplicá ${gruposB} × ${t2}, después restá ${comidosTabla}.`,
   });
 
   // 7: aplicación — clasificar resultados por tabla
@@ -1090,10 +1110,11 @@ function buildGeometriaActivities(): ActivitySpec[] {
     type: "mc",
     id: "geo-vertices-cuadrado",
     title: "Actividad 7",
-    prompt: "¿Cuántos vértices (puntas) tiene un cuadrado?",
-    choices: ["4", "3", "0", "6"],
+    prompt:
+      "Estás armando un cartel para la feria de ciencias y necesitás pegar una figura con 4 lados iguales y 4 vértices (puntas). ¿Cuál elegís?",
+    choices: ["Cuadrado", "Triángulo", "Círculo", "Rectángulo"],
     answerIndex: 0,
-    hint: "Pista: contá las esquinas de una ventana cuadrada.",
+    hint: "Pista: contá las esquinas y compará el largo de los lados de cada figura.",
   });
 
   acts.push({
@@ -1565,7 +1586,8 @@ function buildNumerosGrandesActivities(): ActivitySpec[] {
     });
   }
 
-  // 7: estimación
+  // 7: situación — estimar una cantidad grande de un caso real (entradas a
+  // un club en dos días), sin necesidad de calcular el resultado exacto.
   const estA = randInt(150, 300);
   const estB = randInt(150, 300);
   const estExact = estA + estB;
@@ -1580,7 +1602,7 @@ function buildNumerosGrandesActivities(): ActivitySpec[] {
     type: "mc",
     id: "numgrande-estimacion",
     title: "Actividad 7",
-    prompt: `Sin calcular el resultado exacto, ¿cuál es la mejor estimación de ${estA} + ${estB}?`,
+    prompt: `El sábado entraron ${estA} personas al club y el domingo ${estB}. Sin calcular el número exacto, ¿cuál es la mejor estimación de cuántas personas entraron en total?`,
     choices: estOptions.map(String),
     answerIndex: estOptions.indexOf(estRound),
     hint: "Pista: redondeá cada número a la centena más cercana antes de sumar.",
@@ -1724,14 +1746,38 @@ function buildCuerposTiempoActivities(): ActivitySpec[] {
     hint: "Pista: una hora entera (60 minutos) dividida en 4 partes iguales.",
   });
 
+  // 8: situación — usar la duración del recreo para decidir si llegás a
+  // tiempo a la siguiente clase (aplica la equivalencia de tiempo a un caso
+  // real, en vez de solo calcular un minuto suelto).
+  const pad2 = (n: number) => String(n).padStart(2, "0");
+  const recreoInicio = pick([0, 10, 20, 30, 40]);
+  const recreoFin = recreoInicio + 15;
+  const escenario = pick(["justo", "tarde", "sobra"] as const);
+  const claseMinuto =
+    escenario === "justo"
+      ? recreoFin
+      : escenario === "tarde"
+        ? recreoFin - randInt(3, 7)
+        : recreoFin + randInt(3, 10);
+  const cuerposOpciones = shuffle([
+    "Llegás justo a tiempo",
+    "Llegás tarde, la clase ya empezó",
+    "Te sobra tiempo antes de que empiece",
+  ]);
+  const cuerposRespuesta =
+    escenario === "justo"
+      ? "Llegás justo a tiempo"
+      : escenario === "tarde"
+        ? "Llegás tarde, la clase ya empezó"
+        : "Te sobra tiempo antes de que empiece";
   acts.push({
-    type: "input",
+    type: "mc",
     id: "cuerpos-aplicacion",
     title: "Actividad 8",
-    prompt:
-      "Un recreo dura 15 minutos y empieza justo cuando el reloj marca los 0 minutos de la hora. ¿En qué minuto de la hora termina?",
-    answer: 15,
-    hint: "Pista: sumá la duración del recreo al minuto en que empezó.",
+    prompt: `El recreo empieza a las 10:${pad2(recreoInicio)} y dura 15 minutos. La clase de Lengua empieza a las 10:${pad2(claseMinuto)}. ¿Qué va a pasar?`,
+    choices: cuerposOpciones,
+    answerIndex: cuerposOpciones.indexOf(cuerposRespuesta),
+    hint: `Pista: el recreo termina a las 10:${pad2(recreoFin)}. Compará esa hora con la de la clase.`,
   });
 
   acts.push({
@@ -1793,22 +1839,41 @@ function buildOralidadInicialActivities(): ActivitySpec[] {
     hint: "Pista: fijate cómo termina cada palabra.",
   });
 
+  // 3: situación — resolver una adivinanza de verdad (adivinar la
+  // respuesta a partir de las pistas, en vez de unir pares ya emparejados).
+  const adivinanzas = [
+    {
+      riddle:
+        "Blanca por dentro, verde por fuera, si quieres que te lo diga, espera.",
+      answer: "La pera",
+    },
+    {
+      riddle: "Redondo como una pelota, alumbra de noche y de día no.",
+      answer: "La Luna",
+    },
+    {
+      riddle:
+        "Tiene hojas y no es un árbol, tiene tapas y no es una olla.",
+      answer: "El libro",
+    },
+  ];
+  const adivinanzaElegida = pick(adivinanzas);
+  const adivinanzaDistractores = shuffle(
+    ["El sol", "La mesa", "El sapo", "La silla", "El árbol", "La pelota"].filter(
+      (d) => d !== adivinanzaElegida.answer
+    )
+  ).slice(0, 3);
+  const adivinanzaChoices = shuffle([
+    adivinanzaElegida.answer,
+    ...adivinanzaDistractores,
+  ]);
   acts.push({
-    type: "match",
+    type: "mc",
     id: "oralidad-adivinanzas",
     title: "Actividad 3",
-    prompt: "Uní cada adivinanza con su respuesta.",
-    pairs: [
-      {
-        left: "Blanca por dentro, verde por fuera, si quieres que te lo diga, espera.",
-        right: "La pera",
-      },
-      {
-        left: "Redondo como una pelota, alumbra de noche y de día no.",
-        right: "La Luna",
-      },
-      { left: "Tiene hojas y no es un árbol, tiene tapas y no es una olla.", right: "El libro" },
-    ],
+    prompt: `Adivinanza: "${adivinanzaElegida.riddle}" ¿Qué es?`,
+    choices: adivinanzaChoices,
+    answerIndex: adivinanzaChoices.indexOf(adivinanzaElegida.answer),
     hint: "Pista: leé despacio y pensá en objetos o cosas de la naturaleza.",
   });
 
@@ -2331,19 +2396,23 @@ function buildClasesPalabrasActivities(): ActivitySpec[] {
     hint: "Pista: pensá si esas dos palabras se pueden usar para decir lo mismo.",
   });
 
+  // 9: situación — usar las clases de palabras para revisar un cartel de
+  // "Perdido" de verdad, en vez de clasificar una palabra suelta.
   acts.push({
     type: "find-error",
     id: "clases-error",
     title: "Actividad 9",
-    prompt: "Tomás clasificó así una palabra. Encontrá el error:",
-    resolution: '"La palabra \'corre\' es un sustantivo."',
+    prompt:
+      "Estás armando un cartel de \"PERDIDO\" para encontrar a tu perro y escribiste: \"Mi perro Toby es marrón y ladra fuerte.\" Un amigo te dice que \"ladra\" es el adjetivo de esa descripción. Encontrá el error:",
+    resolution: '"En esa oración, \'ladra\' es el adjetivo."',
     choices: [
-      "Está mal: 'corre' es un verbo, indica una acción",
-      "Está bien clasificada",
+      "Está mal: 'marrón' es el adjetivo (describe a Toby), 'ladra' es un verbo (una acción)",
+      "Está bien, 'ladra' es el adjetivo",
     ],
     answerIndex: 0,
-    correctAnswer: "'Corre' es un verbo, porque indica la acción de correr.",
-    hint: "Pista: pensá si esa palabra nombra algo o indica una acción.",
+    correctAnswer:
+      "'Marrón' es el adjetivo porque describe cómo es Toby; 'ladra' es un verbo porque es algo que hace.",
+    hint: "Pista: pensá si esa palabra describe cómo es el perro o es algo que hace.",
   });
 
   acts.push({
@@ -2918,12 +2987,15 @@ function buildFormacionPalabrasActivities(): ActivitySpec[] {
     hint: "Pista: recordá la regla: z → ces en plural.",
   });
 
+  // 9: situación — corregir un cartel real antes de colgarlo, en vez de
+  // clasificar la palabra suelta.
   acts.push({
     type: "find-error",
     id: "formacion-error",
     title: "Actividad 9",
-    prompt: "Lean escribió así el plural de 'pez'. Encontrá el error:",
-    resolution: '"El plural de \'pez\' es \'pezes\'."',
+    prompt:
+      "Estás escribiendo el cartel para la feria de peces del club y pusiste: \"Hoy vendemos pezes de colores.\" Antes de colgarlo, encontrá el error:",
+    resolution: '"Hoy vendemos pezes de colores."',
     choices: [
       "Está mal: el plural correcto es 'peces'",
       "Está bien escrito",
@@ -3660,11 +3732,14 @@ function buildSeresVivosDiversidadActivities(): ActivitySpec[] {
     hint: "Pista: pensá en las características que comparten todos los seres vivos.",
   });
 
+  // 7: situación — plantaste una semilla y se está marchitando; para
+  // encontrar qué paso te salteaste hay que repasar el orden completo del
+  // cuidado, no solo memorizar la lista.
   acts.push(
     buildOrderFromSequence(
       "svdiv-cuidar-planta",
       "Actividad 7",
-      "Ordená los pasos para cuidar una planta.",
+      "Plantaste una semilla y a los días la ves marchita. Ordená los pasos para cuidarla bien y descubrí cuál te salteaste.",
       [
         "Elegir una maceta con tierra",
         "Plantar la semilla",
@@ -3735,19 +3810,23 @@ function buildMaterialesMezclasActivities(): ActivitySpec[] {
     hint: "Pista: pensá si la arena se disuelve o se puede ver y colar.",
   });
 
+  // 2: situación — se derramó agua salada en la mesada de la cocina y hay
+  // que decidir cómo recuperar la sal, aplicando que se disolvió y no
+  // desapareció, en vez de solo describir qué pasa al mezclar.
   acts.push({
     type: "mc",
     id: "matmez-sal",
     title: "Actividad 2",
-    prompt: "¿Qué pasa si mezclás agua con sal?",
+    prompt:
+      "Se te derramó agua con sal en la mesada de la cocina y no querés desperdiciar la sal. ¿Qué podés hacer para recuperarla?",
     choices: [
-      "La sal se disuelve en el agua",
-      "La sal flota entera",
-      "El agua se pone verde",
-      "No pasa nada",
+      "Dejar que el agua se evapore y juntar la sal que queda",
+      "Tirar todo, porque la sal desapareció para siempre",
+      "Colarla con un colador de fideos",
+      "Guardarla en el freezer para que se separe",
     ],
     answerIndex: 0,
-    hint: "Pista: revolvé con la cuchara y fijate si se sigue viendo la sal.",
+    hint: "Pista: la sal no desaparece en el agua, solo se disuelve; el agua se puede evaporar.",
   });
 
   acts.push({
@@ -3990,14 +4069,23 @@ function buildFenomenosFisicosBasicosActivities(): ActivitySpec[] {
     hint: "Pista: pensá si te calentarías o te enfriarías cerca de cada uno.",
   });
 
+  // 10: situación — hay que servir una sopa bien caliente y elegir con qué
+  // cuchara hacerlo sin quemarse, aplicando la conducción del calor a una
+  // decisión real en vez de comparar cucharas ya usadas.
   acts.push({
     type: "mc",
     id: "fenbas-final",
     title: "Actividad 10: desafío final",
-    prompt: "Desafío: si tocás una cuchara de metal y una de madera que estuvieron en agua caliente, ¿cuál vas a sentir más caliente?",
-    choices: ["La de metal", "La de madera", "Las dos igual", "Ninguna, están frías"],
+    prompt:
+      "Desafío: vas a servir una sopa bien caliente. ¿Con qué cuchara conviene revolverla para no quemarte la mano: la de metal o la de madera?",
+    choices: [
+      "Con la de madera, porque conduce menos el calor",
+      "Con la de metal, porque es más resistente",
+      "Da lo mismo cuál uses",
+      "Con la de metal, porque se calienta más rápido y así se enfría antes la sopa",
+    ],
     answerIndex: 0,
-    hint: "Pista: pensá en cuál conduce mejor el calor.",
+    hint: "Pista: pensá cuál cuchara se pone más caliente cuando la dejás en algo caliente.",
   });
 
   return acts;
@@ -4086,18 +4174,21 @@ function buildPaisajesOrientacionActivities(): ActivitySpec[] {
     hint: "Pista: pensá por dónde amanece cada mañana.",
   });
 
+  // 7: situación — te perdiste en la estepa al atardecer y tenés que usar
+  // la posición del Sol que se pone frente a vos para encontrar el Norte,
+  // en vez de solo ordenar un procedimiento general.
   acts.push(
     buildOrderFromSequence(
       "paisaje-orientarse",
       "Actividad 7",
-      "Ordená los pasos para orientarte con los puntos cardinales.",
+      "Te perdiste en la estepa y ves el Sol ponerse justo frente a vos. Ordená los pasos para saber hacia dónde caminar para ir al Norte.",
       [
-        "Mirar por dónde sale el Sol a la mañana",
-        "Señalar ese lado como el Este",
-        "Saber que el Oeste queda del lado contrario",
-        "Ubicar el Norte y el Sur a los costados",
+        "Mirar hacia el Sol que se está escondiendo: ese lado es el Oeste",
+        "Recordar que el Este queda del lado contrario, a tu espalda",
+        "Quedarte mirando hacia el Oeste sin girar el cuerpo",
+        "Caminar hacia tu mano derecha: ese lado es el Norte",
       ],
-      "Pista: siempre empezá mirando por dónde sale el Sol."
+      "Pista: si el Sol se pone frente a vos, estás mirando al Oeste; el Norte queda a tu derecha."
     )
   );
 
@@ -4222,18 +4313,21 @@ function buildSeresVivosInteraccionesActivities(): ActivitySpec[] {
     hint: "Pista: pensá qué puede tener un agua que no está tratada.",
   });
 
+  // 6: situación — volviste de comprar y se cortó la luz dos horas, hay que
+  // decidir qué alimentos revisar primero según cuáles se echan a perder
+  // más rápido, en vez de ordenar pasos generales de conservación.
   acts.push(
     buildOrderFromSequence(
       "svint-conservar",
       "Actividad 6",
-      "Ordená los pasos para conservar bien los alimentos.",
+      "Volviste de comprar y justo se cortó la luz durante dos horas. Ordená estos alimentos del que revisarías PRIMERO (se arruina más rápido) al que puede esperar más tiempo.",
       [
-        "Lavar las frutas y verduras antes de comerlas",
-        "Revisar la fecha de vencimiento",
-        "Guardar los alimentos en la heladera",
-        "Tapar los recipientes",
+        "El helado (se derrite y no se puede recongelar bien)",
+        "La carne picada (se descompone rápido sin frío)",
+        "La leche (se corta si pasa mucho calor)",
+        "Las papas (aguantan bastante tiempo fuera de la heladera)",
       ],
-      "Pista: pensá en lo que hacés en tu casa antes y después de guardar la comida."
+      "Pista: pensá qué alimentos se echan a perder más rápido si dejan de estar fríos."
     )
   );
 
@@ -4367,18 +4461,21 @@ function buildMaterialesCambiosEstadoActivities(): ActivitySpec[] {
     hint: "Pista: pensá si el vapor de la pava es agua o es otra cosa.",
   });
 
+  // 6: situación — se acabó la sal de mesa pero hay agua salada de mar
+  // guardada, y hay que aplicar la separación por evaporación para
+  // recuperar sal de verdad para cocinar, no solo describir el experimento.
   acts.push(
     buildOrderFromSequence(
       "matcambio-separar-sal",
       "Actividad 6",
-      "Ordená los pasos para separar sal del agua por evaporación.",
+      "Se te acabó la sal de mesa para cocinar, pero tenés un poco de agua salada de mar guardada. Ordená los pasos para recuperar la sal.",
       [
-        "Mezclar sal con agua en un recipiente",
-        "Dejar el recipiente al sol o calentarlo",
+        "Poner el agua salada en un recipiente",
+        "Dejarlo al sol o calentarlo",
         "Esperar a que el agua se evapore",
-        "Observar la sal que queda en el fondo",
+        "Juntar la sal que queda en el fondo para usar en la comida",
       ],
-      "Pista: pensá en el orden lógico de este experimento."
+      "Pista: pensá qué le pasa al agua cuando se calienta y qué queda atrás."
     )
   );
 
@@ -4469,19 +4566,23 @@ function buildSonidoVibracionActivities(): ActivitySpec[] {
     hint: "Pista: pensá en un tambor cuando lo golpeás.",
   });
 
+  // 3: situación — estás en un salón con mucho eco y no se entiende lo que
+  // dicen, y hay que elegir qué materiales poner en las paredes para
+  // mejorarlo, en vez de solo clasificar materiales sueltos.
   acts.push({
     type: "classify",
     id: "sonido-clasificar-material",
     title: "Actividad 3",
-    prompt: "Clasificá cada material según deje pasar el sonido con más o menos facilidad.",
-    categories: ["Deja pasar bien el sonido", "Amortigua el sonido"],
+    prompt:
+      "Estás en un salón con mucho eco y cuesta entender lo que dicen. Clasificá qué materiales conviene poner en las paredes para mejorarlo.",
+    categories: ["Ayuda a evitar el eco", "Empeora el eco"],
     items: shuffle([
-      { label: "El aire", categoryIndex: 0 },
-      { label: "El metal", categoryIndex: 0 },
-      { label: "La lana", categoryIndex: 1 },
-      { label: "La espuma", categoryIndex: 1 },
+      { label: "Cortinas de tela gruesa", categoryIndex: 0 },
+      { label: "Paneles de espuma", categoryIndex: 0 },
+      { label: "Paredes de vidrio", categoryIndex: 1 },
+      { label: "Azulejos de cerámica", categoryIndex: 1 },
     ]),
-    hint: "Pista: pensá cuáles materiales se usan para insonorizar una habitación.",
+    hint: "Pista: pensá en los materiales blandos, que absorben el sonido en vez de hacerlo rebotar.",
   });
 
   acts.push({
@@ -4672,18 +4773,24 @@ function buildCieloFenomenosAtmosfericosActivities(): ActivitySpec[] {
     hint: "Pista: pensá en algo relacionado con el clima, no con el paisaje fijo.",
   });
 
+  // 8: situación — querés sacarle una foto a la Luna llena esta semana y
+  // hay que reconocer cuándo se va a ver así, aplicando el cambio de fases
+  // a una decisión real en vez de solo corregir una afirmación general.
   acts.push({
     type: "find-error",
     id: "cielo-error",
     title: "Actividad 8",
-    prompt: "Bruno dijo esta frase. Encontrá el error:",
-    resolution: "\"La Luna siempre se ve igual, con la misma forma todas las noches.\"",
+    prompt:
+      "Querés sacarle una foto a la Luna llena esta semana y Bruno te dice esta frase. Encontrá el error:",
+    resolution:
+      "\"La Luna se ve igual todas las noches, así que la podés fotografiar cualquier día.\"",
     choices: [
-      "Está mal: la Luna cambia de forma (fases) a lo largo del mes",
-      "Está bien, siempre se ve igual",
+      "Está mal: la Luna cambia de forma (fases), hay que esperar a que se vea como un círculo completo",
+      "Está bien, se ve igual siempre",
     ],
     answerIndex: 0,
-    correctAnswer: "La Luna tiene distintas fases (luna llena, cuarto creciente, etc.) que cambian durante el mes.",
+    correctAnswer:
+      "Hay que fijarse cuando la Luna se ve como un círculo completo y bien iluminado: eso pasa solo unos días del mes (luna llena).",
     hint: "Pista: pensá si alguna vez viste la Luna con forma de medialuna.",
   });
 
@@ -4802,19 +4909,25 @@ function buildSeresVivosComparacionActivities(): ActivitySpec[] {
     )
   );
 
+  // 7: situación — un amigo quiere traer un mono de mascota a Santa Cruz y
+  // hay que explicarle por qué no sobreviviría, aplicando la adaptación al
+  // ambiente a un caso concreto en vez de corregir una frase abstracta.
   acts.push({
     type: "find-error",
     id: "svcomp-error",
     title: "Actividad 7",
-    prompt: "Ana dijo esta frase. Encontrá el error:",
-    resolution: "\"Los animales de la selva podrían vivir perfectamente en la Patagonia sin ningún problema.\"",
+    prompt:
+      "Tu amigo Fede quiere traer un mono de mascota a Santa Cruz y te dice esta frase. Encontrá el error para explicarle por qué no sobreviviría:",
+    resolution:
+      "\"Un mono de la selva podría vivir perfectamente en Santa Cruz sin ningún problema.\"",
     choices: [
-      "Está mal: cada animal está adaptado al clima y ambiente donde vive",
-      "Está bien, todos los animales pueden vivir en cualquier lado",
+      "Está mal: el mono está adaptado al calor y la humedad de la selva, no al frío de la Patagonia",
+      "Está bien, cualquier animal puede vivir en cualquier clima",
     ],
     answerIndex: 0,
-    correctAnswer: "Los animales están adaptados a su ambiente: uno de clima cálido no sobrevive fácilmente en el frío patagónico.",
-    hint: "Pista: pensá si un mono podría sobrevivir al frío de la estepa.",
+    correctAnswer:
+      "El mono está adaptado al clima cálido y húmedo de la selva; en el frío y seco de Santa Cruz no sobreviviría.",
+    hint: "Pista: pensá si un mono tiene el pelaje y las costumbres para aguantar el frío patagónico.",
   });
 
   acts.push({
@@ -4902,19 +5015,23 @@ function buildMaterialesInformesActivities(): ActivitySpec[] {
     )
   );
 
+  // 4: situación — horneaste un bizcochuelo y te arrepentís, y hay que
+  // decidir si se puede volver a tener la harina, el huevo y el azúcar por
+  // separado, aplicando reversible/no reversible a un caso real de cocina.
   acts.push({
     type: "classify",
     id: "matinforme-clasificar-reversible",
     title: "Actividad 4",
-    prompt: "Clasificá cada transformación según sea reversible o no.",
+    prompt:
+      "Horneaste un bizcochuelo pero te arrepentís y querés recuperar la harina, el huevo y el azúcar por separado. Clasificá si estos cambios se pueden deshacer o no.",
     categories: ["Reversible", "No reversible"],
     items: shuffle([
-      { label: "Congelar y descongelar agua", categoryIndex: 0 },
-      { label: "Derretir manteca y volver a enfriarla", categoryIndex: 0 },
-      { label: "Quemar un papel", categoryIndex: 1 },
-      { label: "Cocinar un huevo", categoryIndex: 1 },
+      { label: "Volver a enfriar la manteca derretida", categoryIndex: 0 },
+      { label: "Descongelar hielo y volver a congelarlo", categoryIndex: 0 },
+      { label: "Hornear el bizcochuelo", categoryIndex: 1 },
+      { label: "Tostar el pan hasta quemarlo", categoryIndex: 1 },
     ]),
-    hint: "Pista: pensá si se puede volver al material original o no.",
+    hint: "Pista: pensá si después de hornear se puede separar la harina, el huevo y el azúcar como estaban antes.",
   });
 
   acts.push({
@@ -5101,19 +5218,25 @@ function buildFenomenosFisicosIntegracionActivities(): ActivitySpec[] {
     hint: "Pista: pensá si el objeto se deforma o si cambia de posición o velocidad.",
   });
 
+  // 8: situación — querés hacer sombras chinescas más grandes en la pared
+  // y hay que decidir si acercar o alejar la linterna, aplicando cómo
+  // cambia el tamaño de la sombra en vez de solo corregir una frase.
   acts.push({
     type: "find-error",
     id: "fenint-error",
     title: "Actividad 8",
-    prompt: "Valentina dijo esta frase. Encontrá el error:",
-    resolution: "\"La sombra de un objeto siempre tiene el mismo tamaño, sin importar dónde esté la luz.\"",
+    prompt:
+      "Valentina está haciendo sombras chinescas con una linterna y quiere que se vean más grandes en la pared. Dice esta frase. Encontrá el error:",
+    resolution:
+      "\"Para que la sombra se vea más grande, tengo que alejar la linterna del objeto.\"",
     choices: [
-      "Está mal: la sombra cambia de tamaño según la posición de la luz",
-      "Está bien, la sombra nunca cambia",
+      "Está mal: hay que acercar la linterna al objeto para que la sombra se vea más grande",
+      "Está bien, alejando la linterna la sombra crece",
     ],
     answerIndex: 0,
-    correctAnswer: "El tamaño de la sombra cambia según qué tan cerca o lejos esté la luz del objeto.",
-    hint: "Pista: acercá y alejá una linterna de un objeto y fijate qué pasa con la sombra.",
+    correctAnswer:
+      "Cuanto más cerca está la luz del objeto, más grande se ve la sombra en la pared.",
+    hint: "Pista: acercá y alejá una linterna de tu mano y fijate qué pasa con la sombra.",
   });
 
   acts.push({
@@ -5212,11 +5335,14 @@ function buildTiempoOrientacionActivities(): ActivitySpec[] {
     hint: "Pista: pensá en los mapas y en el recorrido del Sol durante el día.",
   });
 
+  // 6: situación — te olvidaste la brújula en un campamento y hay que
+  // armar una con un palito y el Sol, aplicando el movimiento de la
+  // sombra a un problema real en vez de solo ordenar un procedimiento.
   acts.push(
     buildOrderFromSequence(
       "tiempo-brujula",
       "Actividad 6",
-      "Ordená los pasos para armar una brújula sencilla con la sombra del Sol.",
+      "Te fuiste de campamento y te olvidaste la brújula. Ordená los pasos para armar una con un palito y la sombra del Sol.",
       [
         "Clavar un palito derecho en la tierra a la mañana",
         "Marcar dónde cae la punta de la sombra",
@@ -5342,17 +5468,20 @@ function buildPaisajesUrbanoRuralActivities(): ActivitySpec[] {
     hint: "Pista: pensá dónde se hace cada trabajo normalmente.",
   });
 
+  // 5: situación — estás dibujando el croquis de tu propio barrio para
+  // mostrárselo a un compañero, y tenés que elegir qué símbolo usar para
+  // cada elemento, incluida la plaza con árboles.
   acts.push({
     type: "match",
     id: "pur-croquis",
     title: "Actividad 5",
-    prompt: "Uní cada símbolo de un croquis con lo que representa.",
+    prompt: "Estás dibujando el croquis de tu barrio para mostrárselo a un compañero. Uní cada símbolo con lo que representa.",
     pairs: [
-      { left: "Una línea", right: "Un camino o una calle" },
-      { left: "Un cuadrado", right: "Una casa o edificio" },
-      { left: "Una cruz", right: "Una plaza o un hospital" },
+      { left: "Una línea", right: "Una calle de tu barrio" },
+      { left: "Un cuadrado", right: "Tu casa u otro edificio" },
+      { left: "Un árbol dibujado", right: "La plaza con árboles" },
     ],
-    hint: "Pista: pensá en los símbolos sencillos que se usan en los mapas.",
+    hint: "Pista: pensá en los símbolos sencillos que usarías para representar tu barrio.",
   });
 
   acts.push({
@@ -5501,18 +5630,21 @@ function buildSociedadColonialActivities(): ActivitySpec[] {
     hint: "Pista: pensá si un español y un esclavo vivían de la misma forma.",
   });
 
+  // 6: situación — sos un chico o una chica mestiza en 1750 y tenés que
+  // contar cómo sería tu día, ordenando los momentos según lo que se sabe
+  // de la vida cotidiana de los distintos grupos sociales coloniales.
   acts.push(
     buildOrderFromSequence(
       "soccol-dia-campesino",
       "Actividad 6",
-      "Ordená estos momentos de la vida cotidiana de una familia colonial.",
+      "Sos un chico o una chica mestiza en 1750. Ordená cómo sería tu día, de la mañana a la noche.",
       [
         "Levantarse temprano para trabajar la tierra",
         "Cocinar con lo que se cultivaba o criaba",
-        "Fabricar su propia ropa o herramientas",
-        "Reunirse para festejar en ocasiones especiales",
+        "Fabricar tu propia ropa o herramientas",
+        "Reunirte con tu familia para festejar en ocasiones especiales",
       ],
-      "Pista: pensá en el orden de un día de trabajo y descanso."
+      "Pista: pensá en el orden de un día de trabajo y descanso de una familia mestiza."
     )
   );
 
@@ -5656,18 +5788,21 @@ function buildAutoridadesConvivenciaActivities(): ActivitySpec[] {
     hint: "Pista: pensá en la mejor forma de resolver un problema entre personas.",
   });
 
+  // 7: situación — dos compañeros se pelean por la pelota en el recreo y
+  // hay que resolver ese conflicto real siguiendo los pasos democráticos,
+  // en vez de solo ordenar un procedimiento abstracto.
   acts.push(
     buildOrderFromSequence(
       "autcon-resolver",
       "Actividad 7",
-      "Ordená los pasos para resolver un conflicto de forma democrática.",
+      "Dos compañeros se pelean por la pelota en el recreo. Ordená los pasos para resolver ese conflicto de forma democrática.",
       [
         "Escuchar los distintos puntos de vista",
         "Dialogar sobre el problema",
         "Buscar una solución que beneficie a todos",
         "Respetar el acuerdo al que se llegó",
       ],
-      "Pista: pensá en el orden lógico para resolver un problema entre varias personas."
+      "Pista: pensá qué hacés primero cuando dos compañeros no se ponen de acuerdo."
     )
   );
 
@@ -5741,18 +5876,21 @@ function buildCircuitosProductivosActivities(): ActivitySpec[] {
     hint: "Pista: pensá en todo el recorrido de un producto, desde su origen.",
   });
 
+  // 2: situación — el camión que llevaba la lana se rompió antes de llegar
+  // a la fábrica; para saber qué etapa del circuito queda frenada primero
+  // hay que tener claro el orden completo de las etapas.
   acts.push(
     buildOrderFromSequence(
       "circprod-lana",
       "Actividad 2",
-      "Ordená las etapas del circuito productivo de la lana.",
+      "El camión que trasladaba la lana se rompió antes de llegar a la fábrica. Para entender qué etapa del circuito se frena, ordená primero las etapas del circuito productivo de la lana.",
       [
         "Esquilar la lana de las ovejas",
         "Lavar y procesar la lana en una fábrica",
         "Transportar la lana o los tejidos a distintos lugares",
         "Vender los productos de lana en los comercios",
       ],
-      "Pista: pensá en el recorrido de la lana desde la oveja hasta el negocio."
+      "Pista: si el camión se rompe antes de llegar a la fábrica, la etapa siguiente es la que queda frenada."
     )
   );
 
@@ -5966,19 +6104,22 @@ function buildPatrimonioCambiosActivities(): ActivitySpec[] {
     )
   );
 
+  // 7: situación — el municipio quiere demoler un edificio de 100 años
+  // del centro para hacer un estacionamiento, y hay que decidir qué
+  // responderle usando la idea de patrimonio.
   acts.push({
     type: "find-error",
     id: "patrim-error",
     title: "Actividad 7",
-    prompt: "Franco dijo esta frase. Encontrá el error:",
-    resolution: "\"Los edificios antiguos no sirven para nada hoy en día, hay que reemplazarlos siempre por edificios nuevos.\"",
+    prompt: "El municipio quiere demoler un edificio de 100 años para hacer un estacionamiento. Franco dice esta frase sobre la idea. Encontrá el error:",
+    resolution: "\"Los edificios antiguos no sirven para nada hoy en día, hay que demolerlos siempre que haga falta un estacionamiento o algo nuevo.\"",
     choices: [
-      "Está mal: los edificios patrimoniales se conservan porque forman parte de la memoria e identidad de una comunidad",
-      "Está bien, siempre hay que reemplazarlos",
+      "Está mal: aunque haga falta espacio, un edificio patrimonial se puede conservar porque forma parte de la memoria e identidad de la comunidad",
+      "Está bien, siempre conviene demolerlo para tener más lugar",
     ],
     answerIndex: 0,
-    correctAnswer: "Los bienes patrimoniales se cuidan y conservan porque forman parte de la historia e identidad de la comunidad.",
-    hint: "Pista: pensá por qué se cuidan los museos y edificios históricos.",
+    correctAnswer: "Antes de demoler un edificio de 100 años conviene evaluar su valor patrimonial: se lo puede cuidar y darle otro uso, porque forma parte de la historia e identidad de la comunidad.",
+    hint: "Pista: pensá qué le dirías al municipio para que no pierda un edificio con historia.",
   });
 
   acts.push({
@@ -6096,18 +6237,21 @@ function buildGobiernoMunicipalActivities(): ActivitySpec[] {
     hint: "Pista: pensá en lo que se espera de un buen compañero en la escuela.",
   });
 
+  // 6: situación — hace varios días no pasa el camión de basura por tu
+  // calle, y hay que armar el reclamo municipal paso a paso en vez de
+  // solo enumerar los pasos de forma abstracta.
   acts.push(
     buildOrderFromSequence(
       "gobmun-reclamo",
       "Actividad 6",
-      "Ordená los pasos para plantear un reclamo a las autoridades municipales de forma democrática.",
+      "Hace varios días no pasa el camión recolector de basura por tu calle. Ordená los pasos para hacer el reclamo ante el municipio de forma democrática.",
       [
-        "Identificar el problema o necesidad de la comunidad",
-        "Juntar información y, si es posible, firmas de apoyo",
-        "Presentar el reclamo ante la autoridad correspondiente",
-        "Esperar y hacer seguimiento de la respuesta",
+        "Identificar el problema: no pasa el camión de basura hace varios días",
+        "Juntar información y, si es posible, firmas de los vecinos afectados",
+        "Presentar el reclamo ante el organismo municipal correspondiente",
+        "Esperar y hacer seguimiento de la respuesta del municipio",
       ],
-      "Pista: pensá en el orden lógico para plantear un reclamo formal."
+      "Pista: pensá en el orden lógico para plantear un reclamo formal por un problema del barrio."
     )
   );
 
@@ -6196,14 +6340,22 @@ function buildTransporteAmbienteActivities(): ActivitySpec[] {
     hint: "Pista: pensá si el recurso está relacionado con animales de campo o con el mar.",
   });
 
+  // 3: situación — en tu pueblo se pescó demasiado este año y ahora hay
+  // muchos menos peces; hay que decidir qué proponerle al municipio en
+  // vez de solo nombrar el problema ambiental en abstracto.
   acts.push({
     type: "mc",
     id: "transamb-problema",
     title: "Actividad 3",
-    prompt: "¿Qué problema ambiental puede generar el uso excesivo de un recurso natural sin cuidado?",
-    choices: ["El agotamiento o daño de ese recurso", "Que el recurso se multiplique solo", "Que no pase nada", "Que mejore automáticamente el ambiente"],
+    prompt: "En tu pueblo se pescó demasiado este año y ahora hay muchos menos peces que antes. ¿Qué le propondrías al municipio?",
+    choices: [
+      "Poner una temporada o una cantidad límite de pesca para que el recurso se recupere",
+      "Pescar todavía más rápido antes de que se terminen",
+      "No hacer nada, el problema se soluciona solo",
+      "Prohibir pescar para siempre, aunque los pescadores necesiten trabajar",
+    ],
     answerIndex: 0,
-    hint: "Pista: pensá qué pasa si se pesca o se corta demasiado sin control.",
+    hint: "Pista: pensá en una medida que permita seguir pescando sin agotar el recurso.",
   });
 
   acts.push({
@@ -6344,18 +6496,21 @@ function buildLineaTiempoHistoricaActivities(): ActivitySpec[] {
     hint: "Pista: pensá en el significado de cada palabra por separado.",
   });
 
+  // 4: situación — armar la línea de tiempo de tu propia familia
+  // (abuelos → papás → vos), aplicando antes/después/duración a hechos
+  // reales en vez de solo ordenar procesos históricos generales.
   acts.push(
     buildOrderFromSequence(
       "lineatime-hechos",
       "Actividad 4",
-      "Ordená estos hechos según cuándo ocurrieron, del más antiguo al más reciente.",
+      "Armá la línea de tiempo de tu propia familia. Ordená estos momentos del más antiguo al más reciente.",
       [
-        "La organización de las primeras sociedades coloniales",
-        "Los procesos de independencia en América",
-        "La organización de los gobiernos municipales actuales",
-        "La vida en las ciudades y comunidades de hoy",
+        "Cuando tus abuelos eran chicos",
+        "El nacimiento de tus papás",
+        "Tu nacimiento",
+        "Tu vida en la escuela hoy",
       ],
-      "Pista: pensá en qué momento de la historia ocurrió cada uno."
+      "Pista: pensá quién nació primero: tus abuelos, tus papás o vos."
     )
   );
 
@@ -6536,19 +6691,22 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
     )
   );
 
+  // 7: situación — un compañero nuevo de otra provincia no consigue
+  // amigos porque tiene costumbres distintas, y hay que decidir cómo
+  // responder aplicando la idea de valorar la diversidad cultural.
   acts.push({
     type: "find-error",
     id: "diverciud-error",
     title: "Actividad 7",
-    prompt: "Zoe dijo esta frase. Encontrá el error:",
-    resolution: "\"Las personas o grupos con condiciones de vida desfavorables no tienen ningún derecho especial que los proteja.\"",
+    prompt: "Llega un compañero nuevo de otra provincia y le cuesta hacer amigos porque tiene costumbres distintas a las tuyas. Zoe dice esta frase sobre la situación. Encontrá el error:",
+    resolution: "\"Como tiene costumbres distintas, mejor no juntarse con él hasta que las cambie y sea como los demás.\"",
     choices: [
-      "Está mal: existen derechos e instituciones que buscan proteger a las personas en situaciones desfavorables",
-      "Está bien, no tienen ningún derecho",
+      "Está mal: hay que valorar y respetar sus costumbres distintas, e incluirlo tal como es, no pedirle que cambie",
+      "Está bien, primero tiene que dejar sus costumbres para poder integrarse",
     ],
     answerIndex: 0,
-    correctAnswer: "Existen derechos y organismos que buscan proteger y atender a las personas o grupos en condiciones de vida desfavorables.",
-    hint: "Pista: pensá si existen leyes u organismos que ayudan a quienes más lo necesitan.",
+    correctAnswer: "Valorar la diversidad cultural significa respetar las costumbres distintas de los demás e incluir a un compañero nuevo tal como es, sin pedirle que cambie.",
+    hint: "Pista: pensá cómo te gustaría que te traten si vos fueras el nuevo o la nueva en otro lugar.",
   });
 
   acts.push({

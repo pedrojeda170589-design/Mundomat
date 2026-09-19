@@ -20,10 +20,27 @@ export function isSpeechSupported(): boolean {
   return typeof window !== "undefined" && "speechSynthesis" in window;
 }
 
+// Los símbolos matemáticos (×, ÷, −, +, =) no siempre se leen bien con la
+// voz del navegador: algunas voces los saltean en silencio (por ejemplo
+// "1 × 3" se escucha como "1 3" en vez de "1 por 3"). Para que la lectura
+// en voz alta sea clara, los reemplazamos por su forma hablada antes de
+// pasarle el texto al sintetizador. El texto que se ve en pantalla no se
+// toca, solo lo que se lee en voz alta.
+function sanitizeForSpeech(text: string): string {
+  return text
+    .replace(/×/g, " por ")
+    .replace(/÷/g, " dividido ")
+    .replace(/−/g, " menos ")
+    .replace(/\s\+\s/g, " más ")
+    .replace(/\s=\s/g, " igual a ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export function speak(text: string) {
   if (!isSpeechSupported()) return;
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+  const utterance = new SpeechSynthesisUtterance(sanitizeForSpeech(text));
   utterance.lang = "es-AR";
   utterance.rate = 0.95;
   const voice = pickSpanishVoice();

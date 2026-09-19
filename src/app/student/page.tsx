@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
+import CloudsBackground from "@/components/CloudsBackground";
 
 export default function StudentLoginPage() {
   const router = useRouter();
@@ -35,10 +36,11 @@ export default function StudentLoginPage() {
   }
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950">
-      <div className="w-full max-w-sm">
+    <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 overflow-hidden">
+      <CloudsBackground />
+      <div className="relative z-10 w-full max-w-sm">
         <h1 className="text-3xl font-black text-center mb-1 text-amber-300">
-          MundoMat
+          MundoTest26
         </h1>
         <p className="text-center text-slate-300 mb-8">
           Ingresá tu código de acceso

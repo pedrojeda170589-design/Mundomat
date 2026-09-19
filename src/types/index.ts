@@ -24,7 +24,33 @@ export interface StudentProgress {
   activityLog: ActivityResult[];
   lastPlayedAt?: string;
   coins: number; // moneda ganada por respuestas correctas / mundos completados
+  // Personalización propia del alumno (no afecta el nombre real, que sigue
+  // viviendo en Student.name y es el único que ve el docente).
+  avatar?: string; // uno de AVATAR_OPTIONS
+  nickname?: string; // apodo elegido por el alumno para verse en el juego
 }
+
+// Avatares que el alumno puede elegir para personalizar su perfil de juego.
+export const AVATAR_OPTIONS: string[] = [
+  "🦁",
+  "🐯",
+  "🐼",
+  "🐸",
+  "🐵",
+  "🦊",
+  "🐶",
+  "🐱",
+  "🐰",
+  "🦄",
+  "🐧",
+  "🐢",
+  "🦖",
+  "🐬",
+  "🚀",
+  "⭐",
+];
+
+export const MAX_NICKNAME_LENGTH = 18;
 
 export type MedalTier = "ninguna" | "bronce" | "plata" | "oro";
 

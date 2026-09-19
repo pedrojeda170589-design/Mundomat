@@ -1,4 +1,4 @@
-# MundoMat 🚀
+# MundoTest26 🚀
 
 Videojuego educativo de Matemática, Lengua, Ciencias Naturales y Ciencias
 Sociales para 3° grado — Escuela Hogar Primaria Provincial Rural N°2
@@ -6,6 +6,29 @@ Sociales para 3° grado — Escuela Hogar Primaria Provincial Rural N°2
 
 ## Qué incluye
 
+- **Portada y ambientación**: portada con el nombre "MundoTest26" y nubes de
+  fondo animadas (desplazándose lentamente) en la portada, el login del
+  alumno y el mapa de mundos, para darle onda de videojuego. La portada
+  principal además cambia de "día" a "noche" según la hora real en la que
+  se abre la app, muestra la Luna con su **fase real** (calculada con el
+  ciclo sinódico, la misma Luna que se ve esa noche) para practicar las
+  fases lunares de forma gráfica, y agrega partículas de la **estación del
+  año actual** (☀️ verano, 🍂 otoño, ❄️ invierno, 🌸 primavera, calculado
+  para el hemisferio sur, como corresponde en Santa Cruz). También muestra
+  un **reloj analógico y uno digital en vivo**, uno al lado del otro, junto
+  con el día de la semana y la fecha, para que los alumnos vayan
+  practicando la hora "de fondo" cada vez que entran a la app.
+- **Situaciones aplicadas en los 47 mundos**: cada mundo incluye actividades
+  que plantean una situación real (no solo práctica abstracta) donde hay
+  que aplicar el concepto de ese mundo para resolverla — por ejemplo,
+  decidir cómo recuperar sal de agua salada, ordenar los pasos para armar
+  una brújula con un palito y el sol, o revisar el cartel de "Perdido" de
+  una mascota.
+- **Perfil del alumno**: cada alumno puede tocar su nombre (arriba del mapa
+  de mundos) para elegir un avatar (emoji) y ponerse un apodo con el que
+  se ve a sí mismo dentro del juego. Esto es solo cosmético: el código de
+  acceso y el nombre real no cambian, y el docente **siempre** ve el
+  nombre real del estudiante en el Panel Docente (el apodo no aparece ahí).
 - **47 mundos en 4 materias**, cada una organizada según su Planificación
   Anual de 3° grado, en progresión real por trimestre. Los alumnos eligen la
   materia con una pestaña 🔢 Matemática / 📚 Lengua / 🔬 Ciencias Naturales /

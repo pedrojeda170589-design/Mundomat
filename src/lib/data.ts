@@ -1,4 +1,11 @@
-import { Student, StudentProgress, StudentType, WorldsConfig } from "@/types";
+import {
+  AVATAR_OPTIONS,
+  MAX_NICKNAME_LENGTH,
+  Student,
+  StudentProgress,
+  StudentType,
+  WorldsConfig,
+} from "@/types";
 import { getJSON, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
@@ -98,6 +105,43 @@ export async function getProgress(code: string): Promise<StudentProgress> {
 
 export async function saveProgress(progress: StudentProgress): Promise<void> {
   await setJSON(`${PROGRESS_KEY_PREFIX}${progress.code}`, progress);
+}
+
+// Sanea el apodo que elige el alumno: recorta espacios, saca caracteres de
+// control y lo limita en longitud. Nunca toca Student.name (el nombre real
+// que ve el docente).
+function sanitizeNickname(raw: string): string {
+  const noControlChars = raw.replace(/[\u0000-\u001f\u007f]/g, "");
+  return noControlChars.trim().slice(0, MAX_NICKNAME_LENGTH);
+}
+
+export interface ProfileUpdate {
+  avatar?: string;
+  nickname?: string;
+}
+
+// Actualiza el avatar y/o apodo del alumno dentro de su progreso. Devuelve
+// null si el avatar propuesto no es válido (para que el endpoint responda
+// con un error claro). No requiere clave de docente: es autoservicio del
+// alumno con su propio código de acceso.
+export async function updateStudentProfile(
+  code: string,
+  update: ProfileUpdate
+): Promise<StudentProgress | null> {
+  if (update.avatar !== undefined && !AVATAR_OPTIONS.includes(update.avatar)) {
+    return null;
+  }
+  const progress = await getProgress(code);
+  const next: StudentProgress = { ...progress };
+  if (update.avatar !== undefined) {
+    next.avatar = update.avatar;
+  }
+  if (update.nickname !== undefined) {
+    const clean = sanitizeNickname(update.nickname);
+    next.nickname = clean.length > 0 ? clean : undefined;
+  }
+  await saveProgress(next);
+  return next;
 }
 
 export async function getWorldsConfig(): Promise<WorldsConfig> {

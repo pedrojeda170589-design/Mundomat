@@ -8,6 +8,8 @@ import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
+import ProfileEditor from "@/components/ProfileEditor";
+import CloudsBackground from "@/components/CloudsBackground";
 import { warmUpVoices } from "@/lib/tts";
 
 export default function StudentPlayPage() {
@@ -19,6 +21,7 @@ export default function StudentPlayPage() {
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
+  const [editingProfile, setEditingProfile] = useState(false);
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
@@ -86,12 +89,24 @@ export default function StudentPlayPage() {
   const medalInfo = MEDAL_INFO[medal];
 
   return (
-    <main className="flex-1 flex flex-col bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 py-8">
-      <div className="flex items-center justify-between max-w-3xl w-full mx-auto px-4 mb-6">
-        <div>
-          <p className="text-slate-400 text-sm">¡Hola,</p>
-          <p className="text-white font-bold text-lg -mt-1">{name}! 👋</p>
-        </div>
+    <main className="relative flex-1 flex flex-col bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 py-8 overflow-hidden">
+      <CloudsBackground />
+      <div className="relative z-10 flex items-center justify-between max-w-3xl w-full mx-auto px-4 mb-6">
+        <button
+          onClick={() => setEditingProfile(true)}
+          className="flex items-center gap-2 text-left"
+          title="Editar mi perfil"
+        >
+          <span className="text-3xl leading-none">
+            {progress.avatar || "🙂"}
+          </span>
+          <span>
+            <span className="block text-slate-400 text-sm">¡Hola,</span>
+            <span className="block text-white font-bold text-lg -mt-1">
+              {progress.nickname || name}! 👋 <span className="text-xs">✏️</span>
+            </span>
+          </span>
+        </button>
         <div className="flex items-center gap-3">
           <CoinBadge coins={progress.coins} />
           <div
@@ -107,7 +122,21 @@ export default function StudentPlayPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
+      {editingProfile && (
+        <ProfileEditor
+          code={code}
+          currentAvatar={progress.avatar}
+          currentNickname={progress.nickname}
+          realName={name}
+          onClose={() => setEditingProfile(false)}
+          onSaved={({ avatar, nickname }) => {
+            setProgress((p) => (p ? { ...p, avatar, nickname } : p));
+            setEditingProfile(false);
+          }}
+        />
+      )}
+
+      <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {
           const info = SUBJECT_INFO[s];
           const active = s === subject;
@@ -128,14 +157,16 @@ export default function StudentPlayPage() {
         })}
       </div>
 
-      <WorldMap
-        worlds={WORLDS.filter((w) => w.subject === subject)}
-        enabledWorldIds={enabledWorldIds}
-        completedWorlds={progress.completedWorlds}
-        onSelectWorld={setSelectedWorld}
-      />
+      <div className="relative z-10">
+        <WorldMap
+          worlds={WORLDS.filter((w) => w.subject === subject)}
+          enabledWorldIds={enabledWorldIds}
+          completedWorlds={progress.completedWorlds}
+          onSelectWorld={setSelectedWorld}
+        />
+      </div>
 
-      <div className="text-center mt-8">
+      <div className="relative z-10 text-center mt-8">
         <button
           onClick={handleLogout}
           className="text-slate-500 text-sm underline"

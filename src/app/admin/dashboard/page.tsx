@@ -134,7 +134,7 @@ export default function AdminDashboardPage() {
             <h1 className="text-2xl font-black text-sky-300">
               Panel Docente
             </h1>
-            <p className="text-slate-400 text-sm">MundoMat</p>
+            <p className="text-slate-400 text-sm">MundoTest26</p>
           </div>
           <button
             onClick={handleLogout}
