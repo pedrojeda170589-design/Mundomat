@@ -15,7 +15,7 @@ export default function Home() {
           MundoMat
         </h1>
         <p className="text-slate-300 mt-3 text-lg">
-          ¡El videojuego de Matemáticas! 🚀
+          Matemática, Lengua, Ciencias Naturales y Ciencias Sociales 🚀
         </p>
       </div>
 

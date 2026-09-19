@@ -8,6 +8,11 @@ import InputActivity from "@/components/activities/InputActivity";
 import ShapeActivity from "@/components/activities/ShapeActivity";
 import TableReviewActivity from "@/components/activities/TableReviewActivity";
 import TimedActivity from "@/components/activities/TimedActivity";
+import OrderActivity from "@/components/activities/OrderActivity";
+import MatchActivity from "@/components/activities/MatchActivity";
+import ClassifyActivity from "@/components/activities/ClassifyActivity";
+import TrueFalseActivity from "@/components/activities/TrueFalseActivity";
+import FindErrorActivity from "@/components/activities/FindErrorActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 
@@ -25,11 +30,18 @@ function speakTextFor(activity: ActivitySpec): string {
     case "mc":
     case "input":
     case "shape-identify":
+    case "order":
+    case "match":
+    case "classify":
       return activity.prompt;
     case "full-table-review":
       return `Repasemos toda la tabla del ${activity.table}.`;
     case "timed":
       return "Contra el reloj: respondé lo más rápido que puedas.";
+    case "true-false":
+      return activity.statement;
+    case "find-error":
+      return `${activity.prompt} ${activity.resolution}`;
   }
 }
 
@@ -170,6 +182,47 @@ export default function ActivityRunner({
               <TimedActivity
                 seconds={activity.seconds}
                 questions={activity.questions}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "order" && (
+              <OrderActivity
+                prompt={activity.prompt}
+                items={activity.items}
+                correctOrder={activity.correctOrder}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "match" && (
+              <MatchActivity
+                prompt={activity.prompt}
+                pairs={activity.pairs}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "classify" && (
+              <ClassifyActivity
+                prompt={activity.prompt}
+                categories={activity.categories}
+                items={activity.items}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "true-false" && (
+              <TrueFalseActivity
+                statement={activity.statement}
+                isTrue={activity.isTrue}
+                justification={activity.justification}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "find-error" && (
+              <FindErrorActivity
+                prompt={activity.prompt}
+                resolution={activity.resolution}
+                choices={activity.choices}
+                answerIndex={activity.answerIndex}
+                correctAnswer={activity.correctAnswer}
                 onDone={submitResult}
               />
             )}

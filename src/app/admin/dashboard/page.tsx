@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Student, StudentProgress } from "@/types";
+import { Student, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { WORLDS, getWorld } from "@/lib/worlds";
 import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
@@ -207,31 +207,47 @@ export default function AdminDashboardPage() {
         )}
 
         {tab === "mundos" && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {WORLDS.map((w) => {
-              const enabled = enabledWorldIds.includes(w.id);
+          <div className="flex flex-col gap-8">
+            {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
+              const info = SUBJECT_INFO[subject];
+              const subjectWorlds = WORLDS.filter(
+                (w) => w.subject === subject
+              );
               return (
-                <button
-                  key={w.id}
-                  onClick={() => toggleWorld(w.id)}
-                  className={`rounded-2xl p-3 text-left border-2 transition ${
-                    enabled
-                      ? "border-emerald-400 bg-emerald-400/10"
-                      : "border-slate-700 bg-slate-900/50"
-                  }`}
-                >
-                  <div className="text-2xl mb-1">{w.emoji}</div>
-                  <p className="text-white text-sm font-bold leading-tight">
-                    {w.name}
-                  </p>
-                  <p
-                    className={`text-xs font-semibold mt-2 ${
-                      enabled ? "text-emerald-300" : "text-slate-500"
-                    }`}
-                  >
-                    {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                  </p>
-                </button>
+                <div key={subject}>
+                  <h2 className="text-white font-black text-lg mb-3 flex items-center gap-2">
+                    <span>{info.emoji}</span>
+                    {info.label}
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {subjectWorlds.map((w) => {
+                      const enabled = enabledWorldIds.includes(w.id);
+                      return (
+                        <button
+                          key={w.id}
+                          onClick={() => toggleWorld(w.id)}
+                          className={`rounded-2xl p-3 text-left border-2 transition ${
+                            enabled
+                              ? "border-emerald-400 bg-emerald-400/10"
+                              : "border-slate-700 bg-slate-900/50"
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">{w.emoji}</div>
+                          <p className="text-white text-sm font-bold leading-tight">
+                            {w.name}
+                          </p>
+                          <p
+                            className={`text-xs font-semibold mt-2 ${
+                              enabled ? "text-emerald-300" : "text-slate-500"
+                            }`}
+                          >
+                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>

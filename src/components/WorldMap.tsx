@@ -37,9 +37,9 @@ export default function WorldMap({
             <p className="font-black text-slate-900 leading-tight text-sm">
               {world.name}
             </p>
-            {world.table && (
+            {world.tables && world.tables.length > 0 && (
               <p className="text-xs font-bold text-slate-800/70 mt-1">
-                Tabla del {world.table}
+                Tablas del {world.tables.join(", ")}
               </p>
             )}
             {!enabled && (

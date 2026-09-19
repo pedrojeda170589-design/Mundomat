@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS } from "@/lib/worlds";
-import { WorldDef, StudentProgress } from "@/types";
+import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
@@ -18,6 +18,7 @@ export default function StudentPlayPage() {
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
   const [loading, setLoading] = useState(true);
+  const [subject, setSubject] = useState<WorldSubject>("matematica");
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
@@ -106,8 +107,29 @@ export default function StudentPlayPage() {
         </div>
       </div>
 
+      <div className="flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
+        {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {
+          const info = SUBJECT_INFO[s];
+          const active = s === subject;
+          return (
+            <button
+              key={s}
+              onClick={() => setSubject(s)}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs sm:text-sm font-bold border transition whitespace-nowrap ${
+                active
+                  ? "bg-white text-slate-900 border-white"
+                  : "bg-white/10 text-slate-300 border-white/20"
+              }`}
+            >
+              <span>{info.emoji}</span>
+              {info.label}
+            </button>
+          );
+        })}
+      </div>
+
       <WorldMap
-        worlds={WORLDS}
+        worlds={WORLDS.filter((w) => w.subject === subject)}
         enabledWorldIds={enabledWorldIds}
         completedWorlds={progress.completedWorlds}
         onSelectWorld={setSelectedWorld}
