@@ -28,6 +28,14 @@ export interface StudentProgress {
   // viviendo en Student.name y es el único que ve el docente).
   avatar?: string; // uno de AVATAR_OPTIONS
   nickname?: string; // apodo elegido por el alumno para verse en el juego
+  // Desafío Especial de fin de semana (memorama con recompensa extra): fecha
+  // "YYYY-MM-DD" de la última vez que lo jugó, para permitir uno por día.
+  lastSpecialChallengeAt?: string;
+  // Racha de fines de semana consecutivos jugando el Desafío Especial, y la
+  // clave del último fin de semana en el que lo jugó (el sábado de ese fin
+  // de semana), para saber si la racha sigue viva o se cortó.
+  specialChallengeStreak?: number;
+  lastSpecialChallengeWeekendKey?: string;
 }
 
 // Avatares que el alumno puede elegir para personalizar su perfil de juego.
@@ -143,3 +151,11 @@ export const COINS_PER_CORRECT_ANSWER = 1;
 export const COINS_BONUS_WORLD_COMPLETE = 5;
 export const COST_HINT = 2;
 export const COST_VOICE_AVANZADO = 1;
+// Recompensa base del Desafío Especial de fin de semana (memorama): bastante
+// más que una respuesta correcta (1) o completar un mundo (5), porque es un
+// extra de una vez por día y solo disponible sábado y domingo.
+export const COINS_SPECIAL_CHALLENGE = 12;
+// Bonus por racha: cada fin de semana consecutivo jugando el Desafío
+// Especial suma monedas extra por sobre la base, hasta un tope.
+export const COINS_SPECIAL_CHALLENGE_STREAK_STEP = 2;
+export const COINS_SPECIAL_CHALLENGE_STREAK_MAX_BONUS = 20;

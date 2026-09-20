@@ -24,6 +24,16 @@ Sociales para 3° grado — Escuela Hogar Primaria Provincial Rural N°2
   decidir cómo recuperar sal de agua salada, ordenar los pasos para armar
   una brújula con un palito y el sol, o revisar el cartel de "Perdido" de
   una mascota.
+- **Desafío Especial de fin de semana + racha**: sábado y domingo, un banner
+  llamativo arriba del mapa de mundos avisa que hay un desafío especial
+  disponible (un memorama temático que rota de materia), con una recompensa
+  extra de monedas (bastante más que una respuesta correcta o completar un
+  mundo), hasta una vez por día. Jugarlo un sábado o domingo consecutivo al
+  del fin de semana anterior suma un 🔥 a la racha, que aumenta la
+  recompensa en cada fin de semana seguido (hasta un tope); si el alumno se
+  saltea un fin de semana completo sin jugar, la racha se corta y arranca de
+  nuevo. La racha vigente se ve todo el tiempo junto a las monedas y las
+  medallas, no solo el fin de semana.
 - **Perfil del alumno**: cada alumno puede tocar su nombre (arriba del mapa
   de mundos) para elegir un avatar (emoji) y ponerse un apodo con el que
   se ve a sí mismo dentro del juego. Esto es solo cosmético: el código de

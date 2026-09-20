@@ -9,6 +9,13 @@ import {
 import { getJSON, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
+import {
+  computeNextStreak,
+  computeSpecialChallengeReward,
+  isWeekend,
+  localDateKey,
+  weekendKey,
+} from "@/lib/specialChallenge";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -142,6 +149,60 @@ export async function updateStudentProfile(
   }
   await saveProgress(next);
   return next;
+}
+
+// ¿El alumno ya jugó hoy el Desafío Especial? Se permite uno por día
+// (fecha local del servidor), para que sea un "extra" puntual y no algo
+// que se repita en cada mundo.
+export function hasPlayedSpecialChallengeToday(
+  progress: StudentProgress,
+  today: string = localDateKey()
+): boolean {
+  return progress.lastSpecialChallengeAt === today;
+}
+
+// ¿Puede este alumno jugar el Desafío Especial ahora mismo? Solo sábado y
+// domingo, y como mucho una vez por día.
+export function isSpecialChallengeAvailable(
+  progress: StudentProgress,
+  date: Date = new Date()
+): boolean {
+  return isWeekend(date) && !hasPlayedSpecialChallengeToday(progress, localDateKey(date));
+}
+
+export interface SpecialChallengeResult {
+  progress: StudentProgress;
+  streak: number;
+  coinsEarned: number;
+}
+
+// Acredita la recompensa del Desafío Especial, actualiza la racha de fines
+// de semana consecutivos y marca el día como jugado. Devuelve null si hoy
+// no es fin de semana o si ya lo había jugado hoy (para que el endpoint lo
+// rechace sin acreditar monedas de más).
+export async function completeSpecialChallenge(
+  code: string
+): Promise<SpecialChallengeResult | null> {
+  const progress = await getProgress(code);
+  const now = new Date();
+  if (!isWeekend(now)) {
+    return null;
+  }
+  const today = localDateKey(now);
+  if (hasPlayedSpecialChallengeToday(progress, today)) {
+    return null;
+  }
+  const streak = computeNextStreak(progress, now);
+  const coinsEarned = computeSpecialChallengeReward(streak);
+  const updated: StudentProgress = {
+    ...progress,
+    coins: progress.coins + coinsEarned,
+    lastSpecialChallengeAt: today,
+    lastSpecialChallengeWeekendKey: weekendKey(now),
+    specialChallengeStreak: streak,
+  };
+  await saveProgress(updated);
+  return { progress: updated, streak, coinsEarned };
 }
 
 export async function getWorldsConfig(): Promise<WorldsConfig> {

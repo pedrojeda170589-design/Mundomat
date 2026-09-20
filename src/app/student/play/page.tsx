@@ -10,7 +10,19 @@ import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
 import CloudsBackground from "@/components/CloudsBackground";
+import SpecialChallengeBanner from "@/components/SpecialChallengeBanner";
+import SpecialChallengeModal from "@/components/SpecialChallengeModal";
+import { MemoryPair } from "@/lib/specialChallenge";
 import { warmUpVoices } from "@/lib/tts";
+
+interface SpecialChallengeState {
+  available: boolean;
+  subject: WorldSubject;
+  pairs: MemoryPair[];
+  coinsReward: number;
+  streak: number;
+  previewStreak: number;
+}
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -22,17 +34,25 @@ export default function StudentPlayPage() {
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
   const [editingProfile, setEditingProfile] = useState(false);
+  const [specialChallenge, setSpecialChallenge] =
+    useState<SpecialChallengeState | null>(null);
+  const [playingChallenge, setPlayingChallenge] = useState(false);
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
-    const [progressRes, worldsRes] = await Promise.all([
+    const [progressRes, worldsRes, challengeRes] = await Promise.all([
       fetch(`/api/progress?code=${encodeURIComponent(studentCode)}`),
       fetch("/api/worlds"),
+      fetch(`/api/special-challenge?code=${encodeURIComponent(studentCode)}`),
     ]);
     const progressData = await progressRes.json();
     const worldsData = await worldsRes.json();
     setProgress(progressData.progress);
     setEnabledWorldIds(worldsData.config.enabledWorldIds ?? []);
+    if (challengeRes.ok) {
+      const challengeData = await challengeRes.json();
+      setSpecialChallenge(challengeData);
+    }
     setLoading(false);
   }, []);
 
@@ -108,6 +128,15 @@ export default function StudentPlayPage() {
           </span>
         </button>
         <div className="flex items-center gap-3">
+          {!!specialChallenge?.streak && (
+            <div
+              className="flex items-center gap-1 rounded-full px-3 py-1.5 border border-amber-400/60 text-amber-300 text-sm font-bold"
+              title="Racha de fines de semana en el Desafío Especial"
+            >
+              <span>🔥</span>
+              {specialChallenge.streak}
+            </div>
+          )}
           <CoinBadge coins={progress.coins} />
           <div
             className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border text-sm font-bold"
@@ -132,6 +161,35 @@ export default function StudentPlayPage() {
           onSaved={({ avatar, nickname }) => {
             setProgress((p) => (p ? { ...p, avatar, nickname } : p));
             setEditingProfile(false);
+          }}
+        />
+      )}
+
+      {specialChallenge?.available && (
+        <SpecialChallengeBanner
+          subject={specialChallenge.subject}
+          coinsReward={specialChallenge.coinsReward}
+          streak={specialChallenge.streak}
+          previewStreak={specialChallenge.previewStreak}
+          onPlay={() => setPlayingChallenge(true)}
+        />
+      )}
+
+      {playingChallenge && specialChallenge && (
+        <SpecialChallengeModal
+          code={code}
+          subject={specialChallenge.subject}
+          pairs={specialChallenge.pairs}
+          coinsReward={specialChallenge.coinsReward}
+          onClose={() => {
+            setPlayingChallenge(false);
+            void refresh(code);
+          }}
+          onCompleted={(coinsEarned, streak) => {
+            setProgress((p) => (p ? { ...p, coins: p.coins + coinsEarned } : p));
+            setSpecialChallenge((sc) =>
+              sc ? { ...sc, available: false, streak } : sc
+            );
           }}
         />
       )}
