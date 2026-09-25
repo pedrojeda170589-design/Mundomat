@@ -81,7 +81,7 @@ function AnalogClock({ now, isDay }: { now: Date; isDay: boolean }) {
   );
 }
 
-export default function LiveClock({ isDay }: { isDay: boolean }) {
+export default function LiveClock() {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -103,27 +103,13 @@ export default function LiveClock({ isDay }: { isDay: boolean }) {
   const dayLabel = dayLabelRaw.charAt(0).toUpperCase() + dayLabelRaw.slice(1);
 
   return (
-    <div
-      className={`relative z-10 flex flex-col items-center gap-2 rounded-2xl border px-5 py-3 mb-8 ${
-        isDay
-          ? "bg-white/50 border-slate-300"
-          : "bg-white/5 border-white/15"
-      }`}
-    >
-      <p
-        className={`text-xs font-semibold tracking-wide ${
-          isDay ? "text-slate-700" : "text-slate-300"
-        }`}
-      >
+    <div className="wood-panel relative z-10 flex flex-col items-center gap-2 rounded-2xl px-5 py-3 mb-8">
+      <p className="text-xs font-semibold tracking-wide text-amber-100">
         📅 {dayLabel}
       </p>
       <div className="flex items-center gap-4">
-        <AnalogClock now={now} isDay={isDay} />
-        <span
-          className={`font-mono text-3xl font-bold tabular-nums ${
-            isDay ? "text-slate-800" : "text-white"
-          }`}
-        >
+        <AnalogClock now={now} isDay={false} />
+        <span className="font-mono text-3xl font-bold tabular-nums text-amber-50">
           {pad2(now.getHours())}:{pad2(now.getMinutes())}:{pad2(now.getSeconds())}
         </span>
       </div>

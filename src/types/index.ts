@@ -36,6 +36,19 @@ export interface StudentProgress {
   // de semana), para saber si la racha sigue viva o se cortó.
   specialChallengeStreak?: number;
   lastSpecialChallengeWeekendKey?: string;
+  // Sistema de refuerzo por mundo (umbral de dominio del 90%): un mundo
+  // recién se marca "completado" cuando el alumno llega al 90% o más en una
+  // vuelta y después repite el mundo una vez más (con cualquier puntaje).
+  // - worldsPendingReinforcementRetry: ya llegó al 90%+, le falta esa
+  //   repetición de refuerzo para quedar completado.
+  // - worldsNeedingTeacherReview: su último intento no llegó al 90%; se
+  //   muestra al docente en el Panel Docente y al alumno con un símbolo de
+  //   "a fortalecer" hasta que llegue al 90% en un intento posterior.
+  worldsPendingReinforcementRetry?: number[];
+  worldsNeedingTeacherReview?: number[];
+  // Último puntaje (0-100) del intento más reciente de cada mundo, para
+  // mostrarlo en el Panel Docente.
+  lastWorldAttemptScore?: Record<number, number>;
 }
 
 // Avatares que el alumno puede elegir para personalizar su perfil de juego.
@@ -145,6 +158,11 @@ export const SUBJECT_INFO: Record<WorldSubject, { label: string; emoji: string }
 };
 
 export const TOTAL_ACTIVITIES_PER_WORLD = 10;
+
+// Umbral de dominio para el sistema de refuerzo: porcentaje de aciertos que
+// hay que alcanzar EN UNA VUELTA del mundo (no acumulado) para empezar a
+// contar como dominado.
+export const WORLD_MASTERY_THRESHOLD_PCT = 90;
 
 // Economía de monedas
 export const COINS_PER_CORRECT_ANSWER = 1;

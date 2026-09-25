@@ -48,9 +48,11 @@ export async function POST(request: NextRequest) {
     finishedAt: new Date().toISOString(),
   };
 
-  const { progress: updated, coinsEarned, worldJustCompleted } =
-    applyActivityResult(progress, result);
+  const { progress: updated, coinsEarned } = applyActivityResult(
+    progress,
+    result
+  );
   await saveProgress(updated);
 
-  return Response.json({ progress: updated, coinsEarned, worldJustCompleted });
+  return Response.json({ progress: updated, coinsEarned });
 }

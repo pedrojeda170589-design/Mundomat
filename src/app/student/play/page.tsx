@@ -10,6 +10,8 @@ import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
 import CloudsBackground from "@/components/CloudsBackground";
+import Mountains from "@/components/Mountains";
+import SubjectBadge from "@/components/SubjectBadge";
 import SpecialChallengeBanner from "@/components/SpecialChallengeBanner";
 import SpecialChallengeModal from "@/components/SpecialChallengeModal";
 import { MemoryPair } from "@/lib/specialChallenge";
@@ -87,7 +89,7 @@ export default function StudentPlayPage() {
 
   if (selectedWorld) {
     return (
-      <main className="flex-1 flex flex-col bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950">
+      <main className="flex-1 flex flex-col bg-explorer-night">
         <ActivityRunner
           world={selectedWorld}
           studentCode={code}
@@ -109,9 +111,10 @@ export default function StudentPlayPage() {
   const medalInfo = MEDAL_INFO[medal];
 
   return (
-    <main className="relative flex-1 flex flex-col bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-950 py-8 overflow-hidden">
+    <main className="relative flex-1 flex flex-col bg-explorer-day py-8 overflow-hidden">
       <CloudsBackground />
-      <div className="relative z-10 flex items-center justify-between max-w-3xl w-full mx-auto px-4 mb-6">
+      <Mountains isDay />
+      <div className="wood-panel-light relative z-10 flex items-center justify-between max-w-3xl w-full mx-auto px-4 py-2.5 mb-6 rounded-2xl">
         <button
           onClick={() => setEditingProfile(true)}
           className="flex items-center gap-2 text-left"
@@ -121,7 +124,7 @@ export default function StudentPlayPage() {
             {progress.avatar || "🙂"}
           </span>
           <span>
-            <span className="block text-slate-400 text-sm">¡Hola,</span>
+            <span className="block text-amber-100 text-sm">¡Hola,</span>
             <span className="block text-white font-bold text-lg -mt-1">
               {progress.nickname || name}! 👋 <span className="text-xs">✏️</span>
             </span>
@@ -130,7 +133,7 @@ export default function StudentPlayPage() {
         <div className="flex items-center gap-3">
           {!!specialChallenge?.streak && (
             <div
-              className="flex items-center gap-1 rounded-full px-3 py-1.5 border border-amber-400/60 text-amber-300 text-sm font-bold"
+              className="flex items-center gap-1 rounded-full px-3 py-1.5 border border-amber-300/60 bg-black/15 text-amber-200 text-sm font-bold"
               title="Racha de fines de semana en el Desafío Especial"
             >
               <span>🔥</span>
@@ -139,7 +142,7 @@ export default function StudentPlayPage() {
           )}
           <CoinBadge coins={progress.coins} />
           <div
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border text-sm font-bold"
+            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border bg-black/15 text-sm font-bold"
             style={{
               borderColor: medalInfo.color,
               color: medalInfo.color,
@@ -202,13 +205,13 @@ export default function StudentPlayPage() {
             <button
               key={s}
               onClick={() => setSubject(s)}
-              className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs sm:text-sm font-bold border transition whitespace-nowrap ${
+              className={`flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1.5 text-xs sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm ${
                 active
-                  ? "bg-white text-slate-900 border-white"
-                  : "bg-white/10 text-slate-300 border-white/20"
+                  ? "bg-white text-slate-900 border-amber-500"
+                  : "bg-white/70 text-slate-700 border-white/60"
               }`}
             >
-              <span>{info.emoji}</span>
+              <SubjectBadge subject={s} size={24} />
               {info.label}
             </button>
           );
@@ -220,6 +223,8 @@ export default function StudentPlayPage() {
           worlds={WORLDS.filter((w) => w.subject === subject)}
           enabledWorldIds={enabledWorldIds}
           completedWorlds={progress.completedWorlds}
+          worldsPendingRetry={progress.worldsPendingReinforcementRetry}
+          worldsNeedingReview={progress.worldsNeedingTeacherReview}
           onSelectWorld={setSelectedWorld}
         />
       </div>
@@ -227,7 +232,7 @@ export default function StudentPlayPage() {
       <div className="relative z-10 text-center mt-8">
         <button
           onClick={handleLogout}
-          className="text-slate-500 text-sm underline"
+          className="text-slate-700 text-sm underline"
         >
           Salir
         </button>

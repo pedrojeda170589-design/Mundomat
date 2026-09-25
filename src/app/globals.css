@@ -61,3 +61,113 @@ body {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   Tema "Expedición Patagonia" — paneles de madera, pergamino y
+   texturas suaves reutilizadas en toda la app (portada, ingreso,
+   mapa de mundos, actividades y panel docente).
+   ============================================================ */
+
+.wood-panel {
+  background:
+    linear-gradient(180deg, rgba(46, 26, 8, 0.35), rgba(30, 16, 4, 0.55)),
+    url("/theme/wood-texture.jpg");
+  background-size: 260px 260px;
+  border: 3px solid #5c3714;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+  color: #fdf3e0;
+}
+
+.wood-panel-light {
+  background:
+    linear-gradient(180deg, rgba(60, 34, 10, 0.15), rgba(40, 22, 6, 0.35)),
+    url("/theme/wood-texture.jpg");
+  background-size: 260px 260px;
+  border: 3px solid #5c3714;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #fffaf0;
+}
+
+.parchment-panel {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.5), transparent 55%),
+    linear-gradient(180deg, #fdf3da, #f5e4bc);
+  border: 2px solid #d8b877;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 3px 10px rgba(92, 55, 20, 0.18);
+  color: #4a3316;
+}
+
+/* Fondo cielo + cerros para las pantallas de la app (versión de día). */
+.bg-explorer-day {
+  background: linear-gradient(180deg, #7ec8f0 0%, #bfe6f5 35%, #eaf6e1 70%, #d7ecc4 100%);
+}
+
+/* Versión de noche: cielo profundo, cerros oscuros, misma composición. */
+.bg-explorer-night {
+  background: linear-gradient(180deg, #0b1130 0%, #161b3f 45%, #1c2340 75%, #141a33 100%);
+}
+
+/* Fondo ilustrado (lámina generada para el proyecto) para las pantallas
+   "de bienvenida" — portada e ingreso — con un velo para que el texto de
+   encima siga siendo legible. */
+.bg-hero-night {
+  background-image: linear-gradient(
+      180deg,
+      rgba(6, 10, 30, 0.18) 0%,
+      rgba(6, 10, 30, 0.42) 55%,
+      rgba(6, 10, 30, 0.72) 100%
+    ),
+    url("/theme/hero-landscape-night.jpg");
+  background-size: cover;
+  background-position: center bottom;
+}
+
+.bg-hero-day {
+  background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(20, 40, 25, 0.14) 55%,
+      rgba(10, 30, 18, 0.32) 100%
+    ),
+    url("/theme/hero-landscape-day.jpg");
+  background-size: cover;
+  background-position: center bottom;
+}
+
+.explorer-title-plaque {
+  background:
+    linear-gradient(180deg, rgba(60, 34, 10, 0.12), rgba(40, 22, 6, 0.32)),
+    url("/theme/wood-texture.jpg");
+  background-size: 260px 260px;
+  border: 4px solid #5c3714;
+  border-radius: 1.25rem;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.3),
+    0 6px 14px rgba(0, 0, 0, 0.28);
+}
+
+.signpost-tile {
+  position: relative;
+}
+
+.signpost-tile::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  width: 10px;
+  height: 16px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #8a5423, #5c3714);
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+}

@@ -8,6 +8,8 @@ import { WORLDS, getWorld } from "@/lib/worlds";
 import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
+import SubjectBadge from "@/components/SubjectBadge";
+import Mountains from "@/components/Mountains";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -127,24 +129,25 @@ export default function AdminDashboardPage() {
       : null;
 
   return (
-    <main className="flex-1 bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950 py-8 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+    <main className="relative flex-1 bg-explorer-day py-8 px-4 overflow-hidden">
+      <Mountains isDay />
+      <div className="relative z-10 max-w-3xl mx-auto">
+        <div className="wood-panel-light flex items-center justify-between mb-6 rounded-2xl px-5 py-3">
           <div>
-            <h1 className="text-2xl font-black text-sky-300">
-              Panel Docente
+            <h1 className="text-2xl font-black text-amber-50">
+              🧭 Panel Docente
             </h1>
-            <p className="text-slate-400 text-sm">MundoTest26</p>
+            <p className="text-amber-100 text-sm">MundoTest26</p>
           </div>
           <button
             onClick={handleLogout}
-            className="text-slate-400 text-sm underline"
+            className="text-amber-100 text-sm underline"
           >
             Salir
           </button>
         </div>
 
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           {[
             { id: "alumnos", label: "👥 Alumnos" },
             { id: "mundos", label: "🗺️ Habilitar Mundos" },
@@ -153,10 +156,10 @@ export default function AdminDashboardPage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id as typeof tab)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold ${
+              className={`rounded-full px-4 py-2 text-sm font-semibold border-2 transition ${
                 tab === t.id
-                  ? "bg-sky-500 text-white"
-                  : "bg-slate-800 text-slate-300"
+                  ? "bg-amber-500 text-white border-amber-700/50"
+                  : "bg-white/70 text-amber-900 border-white/50"
               }`}
             >
               {t.label}
@@ -168,18 +171,18 @@ export default function AdminDashboardPage() {
           <div className="flex flex-col gap-4">
             <form
               onSubmit={handleAddStudent}
-              className="flex gap-2 bg-slate-900/70 border border-slate-700 rounded-2xl p-3"
+              className="parchment-panel flex gap-2 rounded-2xl p-3"
             >
               <input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Nombre del nuevo estudiante"
-                className="flex-1 rounded-xl bg-slate-800 border border-slate-600 px-3 py-2 text-white outline-none focus:border-amber-400"
+                className="flex-1 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-2 text-amber-950 outline-none focus:border-amber-500 placeholder:text-amber-800/40"
               />
               <button
                 type="submit"
                 disabled={adding}
-                className="rounded-xl bg-amber-500 text-slate-900 font-bold px-4 py-2 disabled:opacity-60"
+                className="rounded-xl bg-amber-500 text-slate-900 font-bold px-4 py-2 border-2 border-amber-700/40 disabled:opacity-60"
               >
                 + Agregar
               </button>
@@ -215,8 +218,8 @@ export default function AdminDashboardPage() {
               );
               return (
                 <div key={subject}>
-                  <h2 className="text-white font-black text-lg mb-3 flex items-center gap-2">
-                    <span>{info.emoji}</span>
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2">
+                    <SubjectBadge subject={subject} size={30} />
                     {info.label}
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -228,17 +231,17 @@ export default function AdminDashboardPage() {
                           onClick={() => toggleWorld(w.id)}
                           className={`rounded-2xl p-3 text-left border-2 transition ${
                             enabled
-                              ? "border-emerald-400 bg-emerald-400/10"
-                              : "border-slate-700 bg-slate-900/50"
+                              ? "border-emerald-500 bg-emerald-400/20"
+                              : "border-amber-700/20 bg-white/60"
                           }`}
                         >
                           <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-white text-sm font-bold leading-tight">
+                          <p className="text-amber-950 text-sm font-bold leading-tight">
                             {w.name}
                           </p>
                           <p
                             className={`text-xs font-semibold mt-2 ${
-                              enabled ? "text-emerald-300" : "text-slate-500"
+                              enabled ? "text-emerald-700" : "text-amber-800/50"
                             }`}
                           >
                             {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
@@ -260,10 +263,10 @@ export default function AdminDashboardPage() {
                 <button
                   key={s.code}
                   onClick={() => handleViewStats(s.code)}
-                  className={`rounded-full px-3 py-1.5 text-sm font-semibold border ${
+                  className={`rounded-full px-3 py-1.5 text-sm font-semibold border-2 ${
                     selectedCode === s.code
-                      ? "bg-amber-400 text-slate-900 border-amber-400"
-                      : "bg-slate-800 text-slate-300 border-slate-700"
+                      ? "bg-amber-400 text-slate-900 border-amber-600"
+                      : "bg-white/70 text-amber-900 border-white/50"
                   }`}
                 >
                   {s.name}
@@ -272,24 +275,24 @@ export default function AdminDashboardPage() {
             </div>
 
             {!selectedStudent && (
-              <p className="text-slate-500 text-sm">
+              <p className="text-amber-900/70 text-sm">
                 Elegí un estudiante para ver su registro de actividades.
               </p>
             )}
 
             {selectedStudent && stats && selectedProgress && (
-              <div className="rounded-2xl bg-slate-900/70 border border-slate-700 p-5 flex flex-col gap-4">
+              <div className="parchment-panel rounded-2xl p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
-                    <p className="text-white font-bold text-lg">
+                    <p className="text-amber-950 font-bold text-lg">
                       {selectedStudent.name}
                     </p>
-                    <p className="text-slate-500 text-xs font-mono">
+                    <p className="text-amber-800/60 text-xs font-mono">
                       Código: {selectedStudent.code}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-yellow-300 font-bold text-sm">
+                    <span className="text-amber-700 font-bold text-sm">
                       🪙 {selectedProgress.coins}
                     </span>
                     {(() => {
@@ -317,30 +320,63 @@ export default function AdminDashboardPage() {
                   />
                 </div>
 
+                {!!selectedProgress.worldsNeedingTeacherReview?.length && (
+                  <div>
+                    <p className="text-orange-700 font-semibold text-sm mb-1">
+                      🌱 Mundos a tratar (no llegaron al 90%)
+                    </p>
+                    <p className="text-amber-950/80 text-sm">
+                      {selectedProgress.worldsNeedingTeacherReview
+                        .map((id) => {
+                          const name = getWorld(id)?.name ?? "?";
+                          const score =
+                            selectedProgress.lastWorldAttemptScore?.[id];
+                          return score !== undefined
+                            ? `${name} (${score}%)`
+                            : name;
+                        })
+                        .join(", ")}
+                    </p>
+                  </div>
+                )}
+
+                {!!selectedProgress.worldsPendingReinforcementRetry?.length && (
+                  <div>
+                    <p className="text-amber-700 font-semibold text-sm mb-1">
+                      ⭐ A un repaso de completar
+                    </p>
+                    <p className="text-amber-950/80 text-sm">
+                      {selectedProgress.worldsPendingReinforcementRetry
+                        .map((id) => getWorld(id)?.name ?? "?")
+                        .join(", ")}
+                    </p>
+                  </div>
+                )}
+
                 <div>
-                  <p className="text-emerald-300 font-semibold text-sm mb-1">
+                  <p className="text-emerald-700 font-semibold text-sm mb-1">
                     💪 Fortalezas
                   </p>
                   {stats.strengths.length ? (
-                    <p className="text-slate-300 text-sm">
+                    <p className="text-amber-950/80 text-sm">
                       {stats.strengths.join(", ")}
                     </p>
                   ) : (
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-amber-800/50 text-sm">
                       Todavía no hay suficientes datos.
                     </p>
                   )}
                 </div>
                 <div>
-                  <p className="text-amber-300 font-semibold text-sm mb-1">
+                  <p className="text-amber-700 font-semibold text-sm mb-1">
                     📌 Contenidos a fortalecer
                   </p>
                   {stats.toImprove.length ? (
-                    <p className="text-slate-300 text-sm">
+                    <p className="text-amber-950/80 text-sm">
                       {stats.toImprove.join(", ")}
                     </p>
                   ) : (
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-amber-800/50 text-sm">
                       Todavía no hay suficientes datos.
                     </p>
                   )}
@@ -351,7 +387,7 @@ export default function AdminDashboardPage() {
         )}
 
         <div className="text-center mt-8">
-          <Link href="/" className="text-slate-500 text-sm underline">
+          <Link href="/" className="text-slate-700 text-sm underline">
             ← Volver al inicio
           </Link>
         </div>
@@ -362,9 +398,9 @@ export default function AdminDashboardPage() {
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-xl bg-slate-800/60 border border-slate-700 py-3">
-      <p className="text-lg font-black text-white">{value}</p>
-      <p className="text-[11px] text-slate-400 leading-tight mt-0.5">
+    <div className="rounded-xl bg-white/60 border-2 border-amber-700/20 py-3">
+      <p className="text-lg font-black text-amber-950">{value}</p>
+      <p className="text-[11px] text-amber-800/70 leading-tight mt-0.5">
         {label}
       </p>
     </div>

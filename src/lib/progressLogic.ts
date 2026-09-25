@@ -2,62 +2,123 @@ import {
   ActivityResult,
   StudentProgress,
   TOTAL_ACTIVITIES_PER_WORLD,
+  WORLD_MASTERY_THRESHOLD_PCT,
   COINS_PER_CORRECT_ANSWER,
   COINS_BONUS_WORLD_COMPLETE,
 } from "@/types";
 
-// Un mundo se considera completado cuando el alumno tiene al menos un
-// intento correcto registrado para cada una de las 10 actividades.
-export function computeCompletedWorldIds(log: ActivityResult[]): number[] {
-  const byWorld = new Map<number, Set<number>>();
-  for (const r of log) {
-    if (r.correct > 0) {
-      if (!byWorld.has(r.worldId)) byWorld.set(r.worldId, new Set());
-      byWorld.get(r.worldId)!.add(r.activityIndex);
-    }
-  }
-  const completed: number[] = [];
-  for (const [worldId, activitiesDone] of byWorld.entries()) {
-    if (activitiesDone.size >= TOTAL_ACTIVITIES_PER_WORLD) completed.push(worldId);
-  }
-  return completed.sort((a, b) => a - b);
-}
-
 export interface ApplyResultOutcome {
   progress: StudentProgress;
   coinsEarned: number;
-  worldJustCompleted: boolean;
 }
 
+// Registra el resultado de UNA actividad (se llama en cada pregunta). Ya no
+// completa mundos acá: eso lo decide el intento completo, en
+// applyWorldAttempt (ver más abajo) — sistema de refuerzo por 90%.
 export function applyActivityResult(
   progress: StudentProgress,
   result: ActivityResult
 ): ApplyResultOutcome {
-  const wasCompletedBefore = new Set(progress.completedWorlds);
-
   const activityLog = [...progress.activityLog, result];
-  const completedWorlds = computeCompletedWorldIds(activityLog);
 
   let coinsEarned = 0;
   if (result.correct > 0) {
     coinsEarned += COINS_PER_CORRECT_ANSWER;
   }
-  const worldJustCompleted =
-    completedWorlds.includes(result.worldId) &&
-    !wasCompletedBefore.has(result.worldId);
-  if (worldJustCompleted) {
-    coinsEarned += COINS_BONUS_WORLD_COMPLETE;
-  }
 
   const updated: StudentProgress = {
     ...progress,
     activityLog,
-    completedWorlds,
     coins: progress.coins + coinsEarned,
     lastPlayedAt: new Date().toISOString(),
   };
 
-  return { progress: updated, coinsEarned, worldJustCompleted };
+  return { progress: updated, coinsEarned };
+}
+
+export type WorldMasteryOutcome =
+  | { kind: "completed"; alreadyCompleted: boolean }
+  | { kind: "pending-retry"; scorePct: number }
+  | { kind: "needs-review"; scorePct: number };
+
+export interface ApplyWorldAttemptOutcome {
+  progress: StudentProgress;
+  outcome: WorldMasteryOutcome;
+  coinsEarned: number;
+}
+
+// Se llama cuando el alumno termina una vuelta completa de un mundo (las 10
+// actividades respondidas). Sistema de refuerzo:
+// - Si el mundo ya estaba completado, esta vuelta es solo repaso: no cambia
+//   nada (el alumno puede repetir mundos completados las veces que quiera).
+// - Si el mundo estaba esperando la repetición de refuerzo (ya había
+//   llegado al 90%+ antes), esta vuelta lo completa, sea cual sea el
+//   puntaje de esta vez.
+// - Si en esta vuelta llega al 90% o más, queda "a un repaso de completar".
+// - Si no llega al 90%, queda "a fortalecer" / a tratar por el docente,
+//   pero el alumno puede seguir intentando cuando quiera.
+export function applyWorldAttempt(
+  progress: StudentProgress,
+  worldId: number,
+  correctCount: number,
+  totalActivities: number = TOTAL_ACTIVITIES_PER_WORLD
+): ApplyWorldAttemptOutcome {
+  const total = Math.max(1, totalActivities);
+  const clampedCorrect = Math.min(Math.max(correctCount, 0), total);
+  const scorePct = Math.round((clampedCorrect / total) * 100);
+
+  if (progress.completedWorlds.includes(worldId)) {
+    return {
+      progress,
+      outcome: { kind: "completed", alreadyCompleted: true },
+      coinsEarned: 0,
+    };
+  }
+
+  const pendingRetry = new Set(progress.worldsPendingReinforcementRetry ?? []);
+  const needsReview = new Set(progress.worldsNeedingTeacherReview ?? []);
+  const lastWorldAttemptScore = {
+    ...(progress.lastWorldAttemptScore ?? {}),
+    [worldId]: scorePct,
+  };
+
+  let outcome: WorldMasteryOutcome;
+  let coinsEarned = 0;
+  let completedWorlds = progress.completedWorlds;
+
+  if (pendingRetry.has(worldId)) {
+    // Ya había llegado al 90%+ antes: esta repetición de refuerzo alcanza
+    // para completarlo, sin importar el puntaje de esta vuelta.
+    pendingRetry.delete(worldId);
+    needsReview.delete(worldId);
+    completedWorlds = [...progress.completedWorlds, worldId].sort(
+      (a, b) => a - b
+    );
+    coinsEarned = COINS_BONUS_WORLD_COMPLETE;
+    outcome = { kind: "completed", alreadyCompleted: false };
+  } else if (scorePct >= WORLD_MASTERY_THRESHOLD_PCT) {
+    needsReview.delete(worldId);
+    pendingRetry.add(worldId);
+    outcome = { kind: "pending-retry", scorePct };
+  } else {
+    pendingRetry.delete(worldId);
+    needsReview.add(worldId);
+    outcome = { kind: "needs-review", scorePct };
+  }
+
+  const updated: StudentProgress = {
+    ...progress,
+    completedWorlds,
+    coins: progress.coins + coinsEarned,
+    worldsPendingReinforcementRetry: Array.from(pendingRetry).sort(
+      (a, b) => a - b
+    ),
+    worldsNeedingTeacherReview: Array.from(needsReview).sort((a, b) => a - b),
+    lastWorldAttemptScore,
+    lastPlayedAt: new Date().toISOString(),
+  };
+
+  return { progress: updated, outcome, coinsEarned };
 }
 
 export interface StudentStats {

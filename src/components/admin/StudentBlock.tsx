@@ -52,37 +52,37 @@ export default function StudentBlock({
   }
 
   return (
-    <div className="rounded-2xl bg-slate-900/70 border border-slate-700 p-4">
-      <h3 className="font-bold text-white mb-3">
+    <div className="parchment-panel rounded-2xl p-4">
+      <h3 className="font-bold text-amber-950 mb-3">
         {emoji} {title}{" "}
-        <span className="text-slate-500 font-normal text-sm">
+        <span className="text-amber-800/60 font-normal text-sm">
           ({students.length})
         </span>
       </h3>
       {students.length === 0 ? (
-        <p className="text-slate-500 text-sm">No hay alumnos en este grupo.</p>
+        <p className="text-amber-800/60 text-sm">No hay alumnos en este grupo.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {students.map((s) => (
             <li
               key={s.code}
-              className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 border ${
+              className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 border-2 ${
                 selectedCode === s.code
-                  ? "border-amber-400 bg-amber-400/10"
-                  : "border-slate-700 bg-slate-800/50"
+                  ? "border-amber-500 bg-amber-400/20"
+                  : "border-amber-700/15 bg-white/50"
               }`}
             >
               <button
                 onClick={() => onViewStats(s.code)}
                 className="text-left flex-1 min-w-0"
               >
-                <p className="text-white text-sm font-semibold truncate">
+                <p className="text-amber-950 text-sm font-semibold truncate">
                   {s.name}
                 </p>
               </button>
               <button
                 onClick={() => handleCopy(s.code)}
-                className="font-mono text-xs bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-amber-300 shrink-0"
+                className="font-mono text-xs bg-amber-950 border border-amber-800 rounded-lg px-2 py-1 text-amber-300 shrink-0"
                 title="Copiar código"
               >
                 {copiedCode === s.code ? "¡Copiado!" : s.code}
@@ -90,7 +90,7 @@ export default function StudentBlock({
               <button
                 onClick={() => handleDelete(s.code, s.name)}
                 disabled={deletingCode === s.code}
-                className="text-red-400 text-xs shrink-0 disabled:opacity-50"
+                className="text-red-700 text-xs shrink-0 disabled:opacity-50"
                 title="Eliminar alumno"
               >
                 🗑️

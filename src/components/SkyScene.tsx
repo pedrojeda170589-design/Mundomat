@@ -27,7 +27,15 @@ const PARTICLE_SLOTS = [
   { left: "92%", duration: "13s", delay: "-7s", size: "1.5rem" },
 ];
 
-export default function SkyScene() {
+export default function SkyScene({
+  showCelestial = true,
+}: {
+  // Cuando el fondo ya es una ilustración con su propio cielo, luna y
+  // estrellas pintadas (ver bg-hero-*), no queremos duplicarlos: en ese
+  // caso se pasa showCelestial={false} y solo quedan las partículas de
+  // estación cayendo por encima.
+  showCelestial?: boolean;
+}) {
   const { period, season, moon, ready } = useSkyTheme();
   const seasonInfo = SEASON_INFO[season];
 
@@ -36,7 +44,7 @@ export default function SkyScene() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden z-0"
     >
-      {ready && period === "night" &&
+      {showCelestial && ready && period === "night" &&
         STARS.map((s, i) => (
           <span
             key={i}
@@ -52,7 +60,7 @@ export default function SkyScene() {
           />
         ))}
 
-      {ready && (
+      {showCelestial && ready && (
         <div
           className="absolute select-none text-center"
           style={{

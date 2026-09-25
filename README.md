@@ -102,6 +102,18 @@ Sociales para 3° grado — Escuela Hogar Primaria Provincial Rural N°2
   completar, ordenar, relacionar (unir pares), clasificar, verdadero/falso
   con justificación, detectar el error, y desafíos contrarreloj — no solo
   preguntas de opción múltiple.
+- **Sistema de refuerzo (dominio del 90%)**: un mundo ya no se marca
+  completado apenas el alumno acierta cada actividad alguna vez. Ahora,
+  cada vuelta completa del mundo se evalúa como un todo:
+  - Si en esa vuelta acierta el **90% o más**, el mundo queda "a un repaso
+    de completar" (⭐ en el mapa) — con volver a jugarlo una vez más (con
+    cualquier puntaje) queda completado ✅ y se acredita el bonus de
+    monedas.
+  - Si no llega al 90%, el mundo se marca **"Necesitás fortalecer este
+    mundo"** 🌱 (símbolo discreto en el mapa) y queda como pendiente para
+    el docente en el Panel Docente, con el último puntaje logrado. El
+    alumno puede seguir intentando el mundo cuando quiera; en cuanto llegue
+    al 90% en algún intento, sigue el mismo camino de arriba.
 - Sistema de medallas (Bronce/Plata/Oro) según mundos completados (suma
   mundos de ambas materias).
 - Sistema de monedas 🪙: se ganan por respuesta correcta y por completar un
@@ -118,7 +130,9 @@ Sociales para 3° grado — Escuela Hogar Primaria Provincial Rural N°2
     alumnos, agrupados por materia (🔢 Matemática / 📚 Lengua / 🔬 Ciencias
     Naturales / 🏛️ Ciencias Sociales).
   - **Registro y Fortalezas**: estadísticas por alumno (% de aciertos,
-    tiempo jugado, mundos completados, fortalezas y contenidos a reforzar).
+    tiempo jugado, mundos completados, fortalezas y contenidos a reforzar),
+    más los mundos "a tratar" (no llegaron al 90%, con su último puntaje) y
+    los que están "a un repaso de completar".
 
 ## Cómo correr el proyecto en tu computadora (opcional)
 
