@@ -2,55 +2,26 @@ import Image from "next/image";
 import {
   AccessorySlot,
   AvatarAccessories,
+  getAccessoryById,
   getAccessorySrc,
   getAvatarSrc,
   getBackgroundById,
-  isStandardAvatar,
 } from "@/types";
 import { resolveBackgroundId } from "@/lib/seasons";
+import { ACCESSORIES_WITH_BACK, AVATAR_FIT } from "@/lib/avatarFit";
 
-// Posición de cada casillero de accesorio, como porcentaje del contenedor
-// cuadrado del avatar. Están pensadas para retratos tipo "cara y hombros"
-// centrados y mirando de frente (el mismo encuadre que se usó para generar
-// todos los personajes en public/theme/avatars/), así que un mismo ancla
-// sirve razonablemente bien para los personajes de un mismo grupo sin tener
-// que ajustar cada accesorio por personaje.
-const SLOT_STYLE_LEGACY: Partial<Record<AccessorySlot, string>> = {
-  headwear: "top-[-8%] left-[22%] w-[56%]",
-  eyewear: "top-[28%] left-[27%] w-[46%]",
-  face: "top-[44%] left-[26%] w-[48%]",
-  torso: "top-[66%] left-[2%] w-[96%]",
-  // Solo para accesorios de temporada (escarapela, pin, flor de solapa).
-  pendant: "top-[72%] left-[38%] w-[24%]",
-};
+// Recuadro interno (en % del avatar) donde se dibuja el personaje. Deja
+// aire arriba para que gorros, coronas y orejas no queden cortados.
+const STAGE = { left: 7, top: 14, size: 86 };
 
-// Los avatares "estándar" tienen su propio encuadre (ver
-// public/theme/avatars/estandar-*.png, ambos recortados con el mismo
-// método) y un guardarropa con más piezas: mochila (detrás/sobre la
-// campera) y accesorios de bolsillo (binoculares, collar).
-const SLOT_STYLE_ESTANDAR: Partial<Record<AccessorySlot, string>> = {
-  headwear: "top-[-10%] left-[21%] w-[58%]",
-  eyewear: "top-[24%] left-[30%] w-[40%]",
-  face: "top-[57%] left-[31%] w-[38%]",
-  torso: "top-[62%] left-[12%] w-[76%]",
-  backpack: "top-[60%] left-[11%] w-[78%]",
-  pendant: "top-[72%] left-[38%] w-[24%]",
-};
-
-// Anclado del contenido dentro de su casillero: los objetos "que cuelgan
-// desde arriba" (gorro, campera, mochila) se apoyan mejor alineados arriba;
-// los más chicos y centrados (anteojos, pañuelo, colgante) se ven mejor
-// centrados en su casillero.
-const TOP_ALIGNED_SLOTS = new Set<AccessorySlot>(["headwear", "torso", "backpack"]);
-
-const SLOT_ORDER_LEGACY: AccessorySlot[] = ["torso", "headwear", "face", "pendant", "eyewear"];
-const SLOT_ORDER_ESTANDAR: AccessorySlot[] = [
+// Orden de dibujo de los casilleros (de atrás hacia adelante).
+const SLOT_ORDER: AccessorySlot[] = [
   "torso",
   "backpack",
-  "headwear",
   "face",
   "pendant",
   "eyewear",
+  "headwear",
 ];
 
 interface Props {
@@ -62,13 +33,53 @@ interface Props {
   // Fondo guardado del alumno (AUTO_BACKGROUND, un id de BACKGROUND_OPTIONS
   // o nada = automático). Se resuelve acá según la fecha.
   background?: string;
+  // Día de cumpleaños: fondo y corona de cumple por encima de lo elegido, y
+  // una tortita arriba del avatar.
+  birthday?: boolean;
 }
 
-// Compone el avatar del alumno: el retrato del personaje base como fondo, y
-// arriba, en orden fijo, los accesorios que tenga equipados. El contenedor
-// que se le pase por className debe definir tamaño y position relative (o
-// dejar que este componente lo haga con w-full h-full si ya está dentro de
-// uno) ya que las imágenes internas usan `fill`.
+function AccessoryLayer({
+  id,
+  character,
+  back,
+  imageSizes,
+}: {
+  id: string;
+  character: string;
+  back: boolean;
+  imageSizes: string;
+}) {
+  const fit = AVATAR_FIT[character]?.[id];
+  if (!fit) return null;
+  const [left, top, width, height, rot, ox, oy] = fit;
+  const src = getAccessorySrc(id);
+  return (
+    <span
+      className="absolute pointer-events-none"
+      style={{
+        left: `${left}%`,
+        top: `${top}%`,
+        width: `${width}%`,
+        height: `${height}%`,
+        transform: rot ? `rotate(${rot}deg)` : undefined,
+        transformOrigin: `${ox * 100}% ${oy * 100}%`,
+      }}
+    >
+      <Image
+        src={back ? src.replace(/\.png$/, ".back.png") : src}
+        alt=""
+        fill
+        sizes={imageSizes}
+        className={back ? "" : "drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]"}
+      />
+    </span>
+  );
+}
+
+// Compone el avatar del alumno: fondo, partes traseras de los accesorios,
+// el personaje (PNG transparente) y encima los accesorios, cada uno ubicado
+// según la cara de ese personaje (ver src/lib/avatarFit.ts). El contenedor
+// que se pase por className debe definir el tamaño.
 export default function AvatarDisplay({
   character,
   accessories,
@@ -76,49 +87,50 @@ export default function AvatarDisplay({
   alt = "Avatar",
   imageSizes = "200px",
   background,
+  birthday = false,
 }: Props) {
-  const bg = getBackgroundById(resolveBackgroundId(background));
-  const standard = isStandardAvatar(character);
-  const slotOrder = standard ? SLOT_ORDER_ESTANDAR : SLOT_ORDER_LEGACY;
-  const slotStyle = standard ? SLOT_STYLE_ESTANDAR : SLOT_STYLE_LEGACY;
+  const avatarSrc = getAvatarSrc(character);
+  const characterId = avatarSrc.split("/").pop()!.replace(/\.png$/, "");
+  const bg = getBackgroundById(birthday ? "cumple" : resolveBackgroundId(background));
+
+  const equipped: AvatarAccessories = { ...(accessories ?? {}) };
+  if (birthday) equipped.headwear = "corona-cumple";
+  const ids = SLOT_ORDER.map((slot) => equipped[slot]).filter(
+    (id): id is string => !!id && !!getAccessoryById(id)
+  );
 
   return (
     <span className={`relative block overflow-hidden ${className}`}>
       {bg && (
-        <span
-          aria-hidden
-          className="absolute inset-0"
-          style={{ background: bg.css }}
-        />
+        <span aria-hidden className="absolute inset-0" style={{ background: bg.css }} />
       )}
-      <Image
-        src={getAvatarSrc(character)}
-        alt={alt}
-        fill
-        sizes={imageSizes}
-        className="object-cover"
-      />
-      {slotOrder.map((slot) => {
-        const accessoryId = accessories?.[slot];
-        const style = slotStyle[slot];
-        if (!accessoryId || !style) return null;
-        return (
-          <span
-            key={slot}
-            className={`absolute pointer-events-none aspect-square ${style}`}
-          >
-            <Image
-              src={getAccessorySrc(accessoryId)}
-              alt=""
-              fill
-              sizes={imageSizes}
-              className={`object-contain drop-shadow-md ${
-                TOP_ALIGNED_SLOTS.has(slot) ? "object-top" : "object-center"
-              }`}
-            />
-          </span>
-        );
-      })}
+      <span
+        className="absolute"
+        style={{
+          left: `${STAGE.left}%`,
+          top: `${STAGE.top}%`,
+          width: `${STAGE.size}%`,
+          height: `${STAGE.size}%`,
+        }}
+      >
+        {ids
+          .filter((id) => ACCESSORIES_WITH_BACK.has(id))
+          .map((id) => (
+            <AccessoryLayer key={`${id}-back`} id={id} character={characterId} back imageSizes={imageSizes} />
+          ))}
+        <Image src={avatarSrc} alt={alt} fill sizes={imageSizes} className="object-contain" />
+        {ids.map((id) => (
+          <AccessoryLayer key={id} id={id} character={characterId} back={false} imageSizes={imageSizes} />
+        ))}
+      </span>
+      {birthday && (
+        <span
+          className="absolute right-[3%] top-[3%] w-[30%] h-[30%] pointer-events-none animate-bounce"
+          title="¡Feliz cumpleaños!"
+        >
+          <Image src="/theme/torta-cumple.png" alt="¡Feliz cumpleaños!" fill sizes="64px" className="object-contain drop-shadow" />
+        </span>
+      )}
     </span>
   );
 }

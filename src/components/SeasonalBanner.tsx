@@ -2,18 +2,23 @@
 
 import Image from "next/image";
 import { getAccessoryById, getAccessorySrc } from "@/types";
-import { getActiveEvents, getEventRewardIds } from "@/lib/seasons";
+import { BIRTHDAY_EVENT, getActiveEvents, getEventRewardIds } from "@/lib/seasons";
 
 interface Props {
   seasonalCollection?: string[];
+  birthday?: boolean;
   onOpenProfile: () => void;
 }
 
 // Cartel de la estación / festividad del momento, con sus premios de
 // temporada: si todavía no los ganó, lo invita a jugar una actividad; si ya
 // los tiene, lo invita a ponérselos en su perfil.
-export default function SeasonalBanner({ seasonalCollection = [], onOpenProfile }: Props) {
-  const events = getActiveEvents();
+export default function SeasonalBanner({
+  seasonalCollection = [],
+  birthday = false,
+  onOpenProfile,
+}: Props) {
+  const events = birthday ? [BIRTHDAY_EVENT, ...getActiveEvents()] : getActiveEvents();
   if (events.length === 0) return null;
   const owned = new Set(seasonalCollection);
 
@@ -34,9 +39,13 @@ export default function SeasonalBanner({ seasonalCollection = [], onOpenProfile 
               <span className="block font-black text-sm">{event.label}</span>
               <span className="block text-xs opacity-80">
                 {event.description}{" "}
-                {allOwned
-                  ? "¡Ya ganaste sus premios! Tocá acá para ponértelos."
-                  : "Jugá una actividad y ganá sus premios de temporada."}
+                {event.id === BIRTHDAY_EVENT.id
+                  ? allOwned
+                    ? "¡La corona y el fondo de cumple ya son tuyos para siempre!"
+                    : "Jugá una actividad y quedate con la corona y el fondo de cumple."
+                  : allOwned
+                    ? "¡Ya ganaste sus premios! Tocá acá para ponértelos."
+                    : "Jugá una actividad y ganá sus premios de temporada."}
               </span>
             </span>
             <span className="flex -space-x-2 shrink-0">

@@ -45,6 +45,7 @@ interface Props {
   currentNickname?: string;
   currentBackground?: string;
   seasonalCollection?: string[];
+  isBirthday?: boolean;
   realName: string;
   completedWorldsCount: number;
   onClose: () => void;
@@ -64,7 +65,7 @@ const SLOTS_LEGACY: { slot: AccessorySlot; label: string }[] = [
   { slot: "headwear", label: "Cabeza" },
   { slot: "eyewear", label: "Ojos" },
   { slot: "face", label: "Cara y cuello" },
-  { slot: "torso", label: "Ropa" },
+  { slot: "pendant", label: "Colgante" },
 ];
 
 const SLOTS_ESTANDAR: { slot: AccessorySlot; label: string }[] = [
@@ -83,6 +84,7 @@ export default function ProfileEditor({
   currentNickname,
   currentBackground,
   seasonalCollection = [],
+  isBirthday = false,
   realName,
   completedWorldsCount,
   onClose,
@@ -204,6 +206,7 @@ export default function ProfileEditor({
             alt="Vista previa de tu avatar"
             imageSizes="128px"
             background={background}
+            birthday={isBirthday}
           />
         </div>
 

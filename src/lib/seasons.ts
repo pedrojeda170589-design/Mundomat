@@ -205,7 +205,19 @@ export const SEASONAL_EVENTS: SeasonalEvent[] = [
   },
 ];
 
+// "Evento" personal del cumpleaños de cada alumno (no depende del
+// calendario general: ver isBirthdayToday).
+export const BIRTHDAY_EVENT: SeasonalEvent = {
+  id: "cumple",
+  label: "Tu cumpleaños",
+  emoji: "🎂",
+  kind: "festividad",
+  description: "¡Feliz cumpleaños! Hoy tu avatar festeja con corona y torta.",
+  isActive: () => false,
+};
+
 export function getSeasonalEventById(id: string): SeasonalEvent | undefined {
+  if (id === BIRTHDAY_EVENT.id) return BIRTHDAY_EVENT;
   return SEASONAL_EVENTS.find((e) => e.id === id);
 }
 
@@ -246,13 +258,31 @@ export function resolveBackgroundId(saved: string | undefined, now: Date = new D
 // Suma a la colección los premios de los eventos activos que todavía no
 // tenía. Devuelve el progreso actualizado y la lista de premios nuevos (para
 // poder avisarle al alumno). Se llama cuando el alumno juega una actividad.
+// ¿Hoy es el cumpleaños del alumno? birthday = "MM-DD" (hora argentina).
+export function isBirthdayToday(birthday: string | undefined, now: Date = new Date()): boolean {
+  if (!birthday) return false;
+  const d = getArgentinaDate(now);
+  const today = `${String(d.month).padStart(2, "0")}-${String(d.day).padStart(2, "0")}`;
+  // Los nacidos el 29/2, en años no bisiestos festejan el 28/2.
+  if (birthday === "02-29") {
+    const leap = (d.year % 4 === 0 && d.year % 100 !== 0) || d.year % 400 === 0;
+    return today === (leap ? "02-29" : "02-28");
+  }
+  return today === birthday;
+}
+
 export function collectActiveSeasonalRewards(
   progress: StudentProgress,
-  now: Date = new Date()
+  now: Date = new Date(),
+  birthday?: string
 ): { progress: StudentProgress; newRewards: string[] } {
   const owned = new Set(progress.seasonalCollection ?? []);
   const newRewards: string[] = [];
-  for (const event of getActiveEvents(now)) {
+  const eventIds = getActiveEvents(now).map((e) => e.id);
+  // El cumpleaños no es un evento del calendario general: es de cada uno.
+  if (isBirthdayToday(birthday, now)) eventIds.push("cumple");
+  for (const eventId of eventIds) {
+    const event = { id: eventId };
     for (const id of getEventRewardIds(event.id)) {
       if (!owned.has(id)) {
         owned.add(id);

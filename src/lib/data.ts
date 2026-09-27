@@ -100,6 +100,20 @@ export async function deleteStudent(code: string): Promise<void> {
   await setJSON(STUDENTS_KEY, updated);
 }
 
+export async function setStudentBirthday(
+  code: string,
+  birthday: string | undefined
+): Promise<boolean> {
+  const students = await getStudents();
+  const idx = students.findIndex((s) => s.code.toUpperCase() === code.toUpperCase());
+  if (idx === -1) return false;
+  const updated = [...students];
+  updated[idx] = { ...updated[idx], birthday };
+  if (!birthday) delete updated[idx].birthday;
+  await setJSON(STUDENTS_KEY, updated);
+  return true;
+}
+
 export async function findStudentByCode(
   code: string
 ): Promise<Student | undefined> {

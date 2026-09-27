@@ -16,6 +16,7 @@ import SubjectBadge from "@/components/SubjectBadge";
 import SpecialChallengeBanner from "@/components/SpecialChallengeBanner";
 import SpecialChallengeModal from "@/components/SpecialChallengeModal";
 import SeasonalBanner from "@/components/SeasonalBanner";
+import { isBirthdayToday } from "@/lib/seasons";
 import { MemoryPair } from "@/lib/specialChallenge";
 import { warmUpVoices } from "@/lib/tts";
 
@@ -37,6 +38,7 @@ export default function StudentPlayPage() {
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
+  const [birthday, setBirthday] = useState<string | undefined>(undefined);
   const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
   const [specialChallenge, setSpecialChallenge] =
@@ -53,6 +55,7 @@ export default function StudentPlayPage() {
     const progressData = await progressRes.json();
     const worldsData = await worldsRes.json();
     setProgress(progressData.progress);
+    setBirthday(progressData.student?.birthday);
     setEnabledWorldIds(worldsData.config.enabledWorldIds ?? []);
     if (challengeRes.ok) {
       const challengeData = await challengeRes.json();
@@ -131,6 +134,7 @@ export default function StudentPlayPage() {
     );
   }
 
+  const isBirthday = isBirthdayToday(birthday);
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
 
@@ -144,18 +148,32 @@ export default function StudentPlayPage() {
           className="flex items-center gap-2 text-left"
           title="Editar mi perfil"
         >
-          <AvatarDisplay
+          <span className="relative shrink-0">
+            <AvatarDisplay
             character={progress.avatar}
             accessories={progress.avatarAccessories}
             className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
             alt="Mi avatar"
             imageSizes="48px"
             background={progress.avatarBackground}
+            birthday={isBirthday}
           />
+            {isBirthday && (
+              <span
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white border-2 border-pink-400 flex items-center justify-center text-sm shadow animate-bounce"
+                title="¡Hoy es tu cumpleaños!"
+              >
+                🎂
+              </span>
+            )}
+          </span>
           <span>
-            <span className="block text-amber-100 text-sm">¡Hola,</span>
+            <span className="block text-amber-100 text-sm">
+              {isBirthday ? "¡Feliz cumpleaños," : "¡Hola,"}
+            </span>
             <span className="block text-white font-bold text-lg -mt-1">
-              {progress.nickname || name}! 👋 <span className="text-xs">✏️</span>
+              {progress.nickname || name}! {isBirthday ? "🎂" : "👋"}{" "}
+              <span className="text-xs">✏️</span>
             </span>
           </span>
         </button>
@@ -190,6 +208,7 @@ export default function StudentPlayPage() {
           currentAccessories={progress.avatarAccessories}
           currentNickname={progress.nickname}
           currentBackground={progress.avatarBackground}
+          isBirthday={isBirthday}
           seasonalCollection={progress.seasonalCollection}
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
@@ -213,6 +232,7 @@ export default function StudentPlayPage() {
 
       <SeasonalBanner
         seasonalCollection={progress.seasonalCollection}
+        birthday={isBirthday}
         onOpenProfile={() => setEditingProfile(true)}
       />
 

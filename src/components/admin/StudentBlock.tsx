@@ -24,6 +24,19 @@ export default function StudentBlock({
 }: Props) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [deletingCode, setDeletingCode] = useState<string | null>(null);
+  // Cumpleaños cargados en esta sesión (para mostrar el cambio al instante).
+  const [birthdays, setBirthdays] = useState<Record<string, string>>({});
+
+  async function handleBirthday(code: string, value: string) {
+    // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío).
+    const mmdd = value ? value.slice(5) : "";
+    setBirthdays((b) => ({ ...b, [code]: mmdd }));
+    await fetch("/api/students", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, birthday: mmdd, adminPassword }),
+    });
+  }
 
   async function handleCopy(code: string) {
     try {
@@ -80,6 +93,21 @@ export default function StudentBlock({
                   {s.name}
                 </p>
               </button>
+              <label
+                className="shrink-0 flex items-center gap-1 text-xs text-amber-900"
+                title="Cumpleaños (día y mes)"
+              >
+                🎂
+                <input
+                  type="date"
+                  value={(() => {
+                    const b = birthdays[s.code] ?? s.birthday;
+                    return b ? `2000-${b}` : "";
+                  })()}
+                  onChange={(e) => handleBirthday(s.code, e.target.value)}
+                  className="w-[7.5rem] rounded-md border border-amber-700/30 bg-white/70 px-1 py-0.5 text-amber-950"
+                />
+              </label>
               <button
                 onClick={() => handleCopy(s.code)}
                 className="font-mono text-xs bg-amber-950 border border-amber-800 rounded-lg px-2 py-1 text-amber-300 shrink-0"

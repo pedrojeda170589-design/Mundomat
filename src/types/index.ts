@@ -7,6 +7,10 @@ export interface Student {
   name: string;
   type: StudentType;
   createdAt: string;
+  // Fecha de cumpleaños "MM-DD" (sin año), la carga el docente. Ese día el
+  // avatar del alumno aparece festejando (corona, fondo y torta) y se gana
+  // la corona y el fondo de cumpleaños para siempre.
+  birthday?: string;
 }
 
 export interface ActivityResult {
@@ -171,14 +175,14 @@ export interface AccessoryDef {
 export const ACCESSORY_CATALOG: AccessoryDef[] = [
   { id: "gorro", slot: "headwear", label: "Gorro de lana", emoji: "🧶", group: "legacy" },
   { id: "gafas-sol", slot: "eyewear", label: "Gafas de sol", emoji: "🕶️", group: "legacy" },
-  { id: "remera-roja", slot: "torso", label: "Remera roja", emoji: "👕", group: "legacy" },
+  { id: "bufanda", slot: "face", label: "Bufanda", emoji: "🧣", group: "legacy" },
   { id: "gorra", slot: "headwear", label: "Gorra", emoji: "🧢", group: "legacy" },
   { id: "lentes", slot: "eyewear", label: "Lentes", emoji: "👓", group: "legacy" },
-  { id: "barbijo", slot: "face", label: "Barbijo", emoji: "😷", group: "legacy" },
+  { id: "mono", slot: "face", label: "Moño", emoji: "🎀", group: "legacy" },
   { id: "sombrero", slot: "headwear", label: "Sombrero explorador", emoji: "👒", group: "legacy" },
-  { id: "camisa-cuadros", slot: "torso", label: "Camisa a cuadros", emoji: "🦺", group: "legacy" },
-  { id: "bufanda", slot: "face", label: "Bufanda", emoji: "🧣", group: "legacy" },
-  { id: "remera-azul", slot: "torso", label: "Remera azul", emoji: "👕", group: "legacy" },
+  { id: "medalla", slot: "pendant", label: "Medalla", emoji: "🏅", group: "legacy" },
+  { id: "barbijo", slot: "face", label: "Barbijo", emoji: "😷", group: "legacy" },
+  { id: "corona", slot: "headwear", label: "Corona", emoji: "👑", group: "legacy" },
 ];
 
 // Guardarropa "estándar": mucho más amplio y realista, solo para
@@ -237,6 +241,7 @@ export const ACCESSORY_CATALOG_TEMPORADA: AccessoryDef[] = [
   { id: "boina-gaucha", slot: "headwear", label: "Boina gaucha", emoji: "🐴", group: "temporada", eventId: "tradicion" },
   { id: "panuelo-gaucho", slot: "face", label: "Pañuelo gaucho", emoji: "🧣", group: "temporada", eventId: "tradicion" },
   { id: "gorro-navidad", slot: "headwear", label: "Gorro navideño", emoji: "🎅", group: "temporada", eventId: "navidad" },
+  { id: "corona-cumple", slot: "headwear", label: "Corona de cumpleaños", emoji: "🎂", group: "temporada", eventId: "cumple" },
 ];
 
 export const ALL_ACCESSORIES: AccessoryDef[] = [
@@ -346,6 +351,7 @@ export const BACKGROUND_OPTIONS: BackgroundDef[] = [
   { id: "infancias", label: "Día de las Infancias", emoji: "🎈", css: bgImage("infancias"), eventId: "infancias" },
   { id: "tradicion", label: "Día de la Tradición", emoji: "🐎", css: bgImage("tradicion"), eventId: "tradicion" },
   { id: "navidad", label: "Navidad", emoji: "🎄", css: bgImage("navidad"), eventId: "navidad" },
+  { id: "cumple", label: "Mi cumpleaños", emoji: "🎂", css: bgImage("cumple"), eventId: "cumple" },
 ];
 
 export function getBackgroundById(id?: string): BackgroundDef | undefined {
