@@ -1,10 +1,14 @@
 import {
+  ACCESSORY_CATALOG,
   AVATAR_OPTIONS,
+  AccessorySlot,
+  AvatarAccessories,
   MAX_NICKNAME_LENGTH,
   Student,
   StudentProgress,
   StudentType,
   WorldsConfig,
+  getUnlockedAccessoryIds,
 } from "@/types";
 import { getJSON, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
@@ -125,12 +129,20 @@ function sanitizeNickname(raw: string): string {
 export interface ProfileUpdate {
   avatar?: string;
   nickname?: string;
+  // Un valor por casillero: string para equipar ese accesorio, null para
+  // sacárselo. Casilleros ausentes del objeto no se tocan.
+  accessories?: Partial<Record<AccessorySlot, string | null>>;
 }
 
-// Actualiza el avatar y/o apodo del alumno dentro de su progreso. Devuelve
-// null si el avatar propuesto no es válido (para que el endpoint responda
-// con un error claro). No requiere clave de docente: es autoservicio del
-// alumno con su propio código de acceso.
+// Actualiza el avatar, accesorios y/o apodo del alumno dentro de su
+// progreso. Devuelve null si algo propuesto no es válido (avatar
+// desconocido, accesorio que no existe, que no corresponde a ese casillero,
+// o que todavía no desbloqueó según sus mundos completados) para que el
+// endpoint responda con un error claro. No requiere clave de docente: es
+// autoservicio del alumno con su propio código de acceso. La validación de
+// accesorios desbloqueados se hace acá, contra progress.completedWorlds del
+// servidor, para que no se puedan "trampear" accesorios bloqueados desde el
+// cliente.
 export async function updateStudentProfile(
   code: string,
   update: ProfileUpdate
@@ -139,9 +151,32 @@ export async function updateStudentProfile(
     return null;
   }
   const progress = await getProgress(code);
+
+  let nextAccessories: AvatarAccessories | undefined = progress.avatarAccessories;
+  if (update.accessories !== undefined) {
+    const unlocked = new Set(getUnlockedAccessoryIds(progress.completedWorlds.length));
+    const merged: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
+    for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
+      const value = update.accessories[key];
+      if (value === null || value === undefined) {
+        delete merged[key];
+        continue;
+      }
+      const def = ACCESSORY_CATALOG.find((a) => a.id === value);
+      if (!def || def.slot !== key || !unlocked.has(value)) {
+        return null;
+      }
+      merged[key] = value;
+    }
+    nextAccessories = merged;
+  }
+
   const next: StudentProgress = { ...progress };
   if (update.avatar !== undefined) {
     next.avatar = update.avatar;
+  }
+  if (update.accessories !== undefined) {
+    next.avatarAccessories = nextAccessories;
   }
   if (update.nickname !== undefined) {
     const clean = sanitizeNickname(update.nickname);

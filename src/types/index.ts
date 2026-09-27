@@ -26,7 +26,11 @@ export interface StudentProgress {
   coins: number; // moneda ganada por respuestas correctas / mundos completados
   // Personalización propia del alumno (no afecta el nombre real, que sigue
   // viviendo en Student.name y es el único que ve el docente).
-  avatar?: string; // uno de AVATAR_OPTIONS
+  avatar?: string; // personaje base elegido, uno de AVATAR_OPTIONS
+  // Accesorios equipados (gorro, lentes, remera, etc.), uno por casillero
+  // (AccessorySlot). Se desbloquean progresivamente completando mundos: ver
+  // ACCESSORY_CATALOG y getUnlockedAccessoryIds().
+  avatarAccessories?: AvatarAccessories;
   nickname?: string; // apodo elegido por el alumno para verse en el juego
   // Desafío Especial de fin de semana (memorama con recompensa extra): fecha
   // "YYYY-MM-DD" de la última vez que lo jugó, para permitir uno por día.
@@ -51,25 +55,107 @@ export interface StudentProgress {
   lastWorldAttemptScore?: Record<number, number>;
 }
 
-// Avatares que el alumno puede elegir para personalizar su perfil de juego.
+// Avatares (personajes base) que el alumno puede elegir para su perfil de
+// juego. Cada uno es una ilustración propia (mismo estilo "Expedición
+// Patagonia" que el resto de la app) en public/theme/avatars/<id>.jpg. Antes
+// estos eran emojis sueltos; el id se mantiene como string simple para no
+// romper la validación existente en lib/data.ts (AVATAR_OPTIONS.includes(...)).
+// Son 14 personajes en total: los 4 animales patagónicos ya ilustrados, más
+// 10 personajes de estudiante (variados: nenes y nenas, distintos tonos de
+// piel y pelo) para que el avatar también pueda ser "una foto de perfil" de
+// tipo chico/a.
 export const AVATAR_OPTIONS: string[] = [
-  "🦁",
-  "🐯",
-  "🐼",
-  "🐸",
-  "🐵",
-  "🦊",
-  "🐶",
-  "🐱",
-  "🐰",
-  "🦄",
-  "🐧",
-  "🐢",
-  "🦖",
-  "🐬",
-  "🚀",
-  "⭐",
+  "zorro",
+  "guanaco",
+  "condor",
+  "pinguino",
+  "explorador",
+  "exploradora",
+  "aventurero",
+  "aventurera",
+  "viajero",
+  "viajera",
+  "montanes",
+  "montanesa",
+  "curioso",
+  "curiosa",
 ];
+
+// Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
+// respaldo si la imagen no llegara a cargar.
+export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
+  zorro: { label: "Zorro", emoji: "🦊" },
+  guanaco: { label: "Guanaco", emoji: "🦙" },
+  condor: { label: "Cóndor", emoji: "🦅" },
+  pinguino: { label: "Pingüino", emoji: "🐧" },
+  explorador: { label: "Explorador", emoji: "🧑" },
+  exploradora: { label: "Exploradora", emoji: "👧" },
+  aventurero: { label: "Aventurero", emoji: "👦" },
+  aventurera: { label: "Aventurera", emoji: "🧒" },
+  viajero: { label: "Viajero", emoji: "🙂" },
+  viajera: { label: "Viajera", emoji: "😊" },
+  montanes: { label: "Montañés", emoji: "🏔️" },
+  montanesa: { label: "Montañesa", emoji: "🏔️" },
+  curioso: { label: "Curioso", emoji: "🔎" },
+  curiosa: { label: "Curiosa", emoji: "🔍" },
+};
+
+// Devuelve la ruta de imagen del avatar, con respaldo al primero de la lista
+// si el valor guardado es viejo (emoji de antes de este cambio) o inválido.
+export function getAvatarSrc(avatar?: string): string {
+  const id = avatar && AVATAR_OPTIONS.includes(avatar) ? avatar : AVATAR_OPTIONS[0];
+  return `/theme/avatars/${id}.jpg`;
+}
+
+// Casillero de accesorio: cada personaje puede tener, como mucho, un
+// accesorio equipado por casillero a la vez.
+export type AccessorySlot = "headwear" | "eyewear" | "face" | "torso";
+
+export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
+
+export interface AccessoryDef {
+  id: string;
+  slot: AccessorySlot;
+  label: string;
+  emoji: string;
+}
+
+// Catálogo de accesorios que el alumno va ganando. Desbloqueo "progresivo
+// simple": cada mundo completado (sin importar la materia) desbloquea el
+// siguiente accesorio de esta lista, en este orden fijo — ver
+// getUnlockedAccessoryIds(). Cuando completa más mundos que accesorios hay
+// en el catálogo, ya tiene todos desbloqueados (las medallas y monedas
+// siguen sumando igual).
+export const ACCESSORY_CATALOG: AccessoryDef[] = [
+  { id: "gorro", slot: "headwear", label: "Gorro de lana", emoji: "🧶" },
+  { id: "gafas-sol", slot: "eyewear", label: "Gafas de sol", emoji: "🕶️" },
+  { id: "remera-roja", slot: "torso", label: "Remera roja", emoji: "👕" },
+  { id: "gorra", slot: "headwear", label: "Gorra", emoji: "🧢" },
+  { id: "lentes", slot: "eyewear", label: "Lentes", emoji: "👓" },
+  { id: "barbijo", slot: "face", label: "Barbijo", emoji: "😷" },
+  { id: "sombrero", slot: "headwear", label: "Sombrero explorador", emoji: "👒" },
+  { id: "camisa-cuadros", slot: "torso", label: "Camisa a cuadros", emoji: "🦺" },
+  { id: "bufanda", slot: "face", label: "Bufanda", emoji: "🧣" },
+  { id: "remera-azul", slot: "torso", label: "Remera azul", emoji: "👕" },
+];
+
+// Ids de accesorios ya desbloqueados según la cantidad de mundos completados
+// (sistema "progresivo simple": el mundo N desbloquea el accesorio N de la
+// lista, en orden fijo).
+export function getUnlockedAccessoryIds(completedWorldsCount: number): string[] {
+  return ACCESSORY_CATALOG.slice(
+    0,
+    Math.min(completedWorldsCount, ACCESSORY_CATALOG.length)
+  ).map((a) => a.id);
+}
+
+export function getAccessoryById(id: string): AccessoryDef | undefined {
+  return ACCESSORY_CATALOG.find((a) => a.id === id);
+}
+
+export function getAccessorySrc(id: string): string {
+  return `/theme/accessories/${id}.png`;
+}
 
 export const MAX_NICKNAME_LENGTH = 18;
 

@@ -9,6 +9,7 @@ import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
+import AvatarDisplay from "@/components/AvatarDisplay";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
@@ -120,9 +121,13 @@ export default function StudentPlayPage() {
           className="flex items-center gap-2 text-left"
           title="Editar mi perfil"
         >
-          <span className="text-3xl leading-none">
-            {progress.avatar || "🙂"}
-          </span>
+          <AvatarDisplay
+            character={progress.avatar}
+            accessories={progress.avatarAccessories}
+            className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
+            alt="Mi avatar"
+            imageSizes="48px"
+          />
           <span>
             <span className="block text-amber-100 text-sm">¡Hola,</span>
             <span className="block text-white font-bold text-lg -mt-1">
@@ -158,11 +163,15 @@ export default function StudentPlayPage() {
         <ProfileEditor
           code={code}
           currentAvatar={progress.avatar}
+          currentAccessories={progress.avatarAccessories}
           currentNickname={progress.nickname}
           realName={name}
+          completedWorldsCount={progress.completedWorlds.length}
           onClose={() => setEditingProfile(false)}
-          onSaved={({ avatar, nickname }) => {
-            setProgress((p) => (p ? { ...p, avatar, nickname } : p));
+          onSaved={({ avatar, accessories, nickname }) => {
+            setProgress((p) =>
+              p ? { ...p, avatar, avatarAccessories: accessories, nickname } : p
+            );
             setEditingProfile(false);
           }}
         />

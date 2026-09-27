@@ -1,22 +1,24 @@
 import { NextRequest } from "next/server";
 import { findStudentByCode, updateStudentProfile } from "@/lib/data";
-import { MAX_NICKNAME_LENGTH } from "@/types";
+import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 
-// El alumno personaliza su avatar y/o apodo con su propio código de acceso
-// (no requiere clave de docente). El nombre real (Student.name) nunca se
-// toca acá: el docente siempre ve ese nombre en el Panel Docente.
+// El alumno personaliza su avatar (personaje + accesorios) y/o apodo con su
+// propio código de acceso (no requiere clave de docente). El nombre real
+// (Student.name) nunca se toca acá: el docente siempre ve ese nombre en el
+// Panel Docente.
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, avatar, nickname } = body as {
+  const { code, avatar, nickname, accessories } = body as {
     code?: string;
     avatar?: string;
     nickname?: string;
+    accessories?: Partial<Record<AccessorySlot, string | null>>;
   };
 
   if (!code) {
     return Response.json({ error: "Falta el código." }, { status: 400 });
   }
-  if (avatar === undefined && nickname === undefined) {
+  if (avatar === undefined && nickname === undefined && accessories === undefined) {
     return Response.json(
       { error: "No hay nada para actualizar." },
       { status: 400 }
@@ -35,9 +37,13 @@ export async function POST(request: NextRequest) {
   const updated = await updateStudentProfile(student.code, {
     avatar,
     nickname,
+    accessories,
   });
   if (!updated) {
-    return Response.json({ error: "Avatar inválido." }, { status: 400 });
+    return Response.json(
+      { error: "Avatar o accesorio inválido." },
+      { status: 400 }
+    );
   }
 
   return Response.json({ progress: updated });
