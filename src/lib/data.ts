@@ -1,5 +1,4 @@
 import {
-  ACCESSORY_CATALOG,
   AVATAR_OPTIONS,
   AccessorySlot,
   AvatarAccessories,
@@ -8,6 +7,8 @@ import {
   StudentProgress,
   StudentType,
   WorldsConfig,
+  getAccessoryById,
+  getAccessoryCatalogForAvatar,
   getUnlockedAccessoryIds,
 } from "@/types";
 import { getJSON, setJSON } from "@/lib/store";
@@ -151,10 +152,18 @@ export async function updateStudentProfile(
     return null;
   }
   const progress = await getProgress(code);
+  // El personaje "efectivo" contra el que se validan los accesorios: el
+  // nuevo, si se está cambiando en esta misma actualización, o si no el que
+  // ya tenía. Cada personaje tiene su propio catálogo (ver
+  // getAccessoryCatalogForAvatar): los estándar tienen guardarropa amplio,
+  // el resto los accesorios simples de siempre.
+  const effectiveAvatar = update.avatar !== undefined ? update.avatar : progress.avatar;
 
   let nextAccessories: AvatarAccessories | undefined = progress.avatarAccessories;
   if (update.accessories !== undefined) {
-    const unlocked = new Set(getUnlockedAccessoryIds(progress.completedWorlds.length));
+    const unlocked = new Set(
+      getUnlockedAccessoryIds(progress.completedWorlds.length, effectiveAvatar)
+    );
     const merged: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
     for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
       const value = update.accessories[key];
@@ -162,7 +171,7 @@ export async function updateStudentProfile(
         delete merged[key];
         continue;
       }
-      const def = ACCESSORY_CATALOG.find((a) => a.id === value);
+      const def = getAccessoryById(value);
       if (!def || def.slot !== key || !unlocked.has(value)) {
         return null;
       }
@@ -170,12 +179,29 @@ export async function updateStudentProfile(
     }
     nextAccessories = merged;
   }
+  // Si el personaje cambió de guardarropa (de "estándar" a uno de siempre, o
+  // viceversa), cualquier accesorio que haya quedado equipado del guardarropa
+  // anterior ya no es válido acá (otras rutas de imagen, otro catálogo): se
+  // saca en vez de dejar un ícono roto.
+  if (update.avatar !== undefined && nextAccessories) {
+    const validIds = new Set(
+      getAccessoryCatalogForAvatar(effectiveAvatar).map((a) => a.id)
+    );
+    const cleaned: AvatarAccessories = {};
+    for (const key of Object.keys(nextAccessories) as AccessorySlot[]) {
+      const value = nextAccessories[key];
+      if (value && validIds.has(value)) {
+        cleaned[key] = value;
+      }
+    }
+    nextAccessories = cleaned;
+  }
 
   const next: StudentProgress = { ...progress };
   if (update.avatar !== undefined) {
     next.avatar = update.avatar;
   }
-  if (update.accessories !== undefined) {
+  if (update.accessories !== undefined || update.avatar !== undefined) {
     next.avatarAccessories = nextAccessories;
   }
   if (update.nickname !== undefined) {
@@ -238,6 +264,34 @@ export async function completeSpecialChallenge(
   };
   await saveProgress(updated);
   return { progress: updated, streak, coinsEarned };
+}
+
+// Para el Mapa de Mundos: cuántos compañeros de clase están "actualmente" en
+// cada mundo de una materia. El mundo "actual" de un alumno es el primero,
+// en el orden de la materia, que todavía no completó (si ya los completó
+// todos, no cuenta en ningún mundo). No distingue quién es quién: es solo un
+// contador anónimo por mundo, para que los chicos vean por dónde andan sus
+// compañeros sin exponer nombres ni apodos de nadie.
+export async function getClassmateWorldCounts(
+  subjectWorldIdsInOrder: number[],
+  excludeCode: string
+): Promise<Record<number, number>> {
+  const students = await getStudents();
+  const counts: Record<number, number> = {};
+  await Promise.all(
+    students
+      .filter((s) => s.code.toUpperCase() !== excludeCode.toUpperCase())
+      .map(async (s) => {
+        const progress = await getProgress(s.code);
+        const currentWorldId = subjectWorldIdsInOrder.find(
+          (id) => !progress.completedWorlds.includes(id)
+        );
+        if (currentWorldId !== undefined) {
+          counts[currentWorldId] = (counts[currentWorldId] ?? 0) + 1;
+        }
+      })
+  );
+  return counts;
 }
 
 export async function getWorldsConfig(): Promise<WorldsConfig> {

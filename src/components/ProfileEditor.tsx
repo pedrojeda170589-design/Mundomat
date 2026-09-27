@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
-  ACCESSORY_CATALOG,
   AVATAR_OPTIONS,
   AVATAR_INFO,
   AccessorySlot,
   AvatarAccessories,
   MAX_NICKNAME_LENGTH,
+  getAccessoryCatalogForAvatar,
   getAccessorySrc,
   getAvatarSrc,
   getUnlockedAccessoryIds,
+  isStandardAvatar,
 } from "@/types";
 import AvatarDisplay from "@/components/AvatarDisplay";
 
@@ -30,11 +31,24 @@ interface Props {
   }) => void;
 }
 
-const SLOTS: { slot: AccessorySlot; label: string }[] = [
+// Casilleros a mostrar según el guardarropa del personaje elegido: los de
+// siempre (4 animales + 10 de estudiante) usan el set simple; los dos
+// avatares "estándar" tienen mochila y un casillero extra de accesorio de
+// bolsillo (binoculares / collar), además de más variedad por casillero.
+const SLOTS_LEGACY: { slot: AccessorySlot; label: string }[] = [
   { slot: "headwear", label: "Cabeza" },
   { slot: "eyewear", label: "Ojos" },
   { slot: "face", label: "Cara y cuello" },
   { slot: "torso", label: "Ropa" },
+];
+
+const SLOTS_ESTANDAR: { slot: AccessorySlot; label: string }[] = [
+  { slot: "headwear", label: "Cabeza" },
+  { slot: "torso", label: "Campera" },
+  { slot: "backpack", label: "Mochila" },
+  { slot: "face", label: "Pañuelo" },
+  { slot: "eyewear", label: "Lentes" },
+  { slot: "pendant", label: "Accesorio" },
 ];
 
 export default function ProfileEditor({
@@ -57,11 +71,32 @@ export default function ProfileEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const unlockedIds = new Set(getUnlockedAccessoryIds(completedWorldsCount));
-  const nextLocked = ACCESSORY_CATALOG.find((a) => !unlockedIds.has(a.id));
+  const catalog = getAccessoryCatalogForAvatar(avatar);
+  const slots = isStandardAvatar(avatar) ? SLOTS_ESTANDAR : SLOTS_LEGACY;
+  const unlockedIds = new Set(getUnlockedAccessoryIds(completedWorldsCount, avatar));
+  const nextLocked = catalog.find((a) => !unlockedIds.has(a.id));
   const worldsToNextUnlock = nextLocked
-    ? ACCESSORY_CATALOG.indexOf(nextLocked) + 1 - completedWorldsCount
+    ? catalog.indexOf(nextLocked) + 1 - completedWorldsCount
     : 0;
+
+  // Al cambiar de personaje, el guardarropa puede cambiar (de siempre <->
+  // estándar): se sacan del estado los accesorios que ya no correspondan a
+  // ese personaje, para no guardar (ni mostrar en la vista previa) algo que
+  // el servidor igual va a rechazar.
+  function handleSelectAvatar(nextAvatar: string) {
+    setAvatar(nextAvatar);
+    const validIds = new Set(getAccessoryCatalogForAvatar(nextAvatar).map((a) => a.id));
+    setAccessories((prev) => {
+      const cleaned: AvatarAccessories = {};
+      for (const key of Object.keys(prev) as AccessorySlot[]) {
+        const value = prev[key];
+        if (value && validIds.has(value)) {
+          cleaned[key] = value;
+        }
+      }
+      return cleaned;
+    });
+  }
 
   function toggleAccessory(slot: AccessorySlot, id: string) {
     setAccessories((prev) => {
@@ -141,7 +176,7 @@ export default function ProfileEditor({
             {AVATAR_OPTIONS.map((a) => (
               <button
                 key={a}
-                onClick={() => setAvatar(a)}
+                onClick={() => handleSelectAvatar(a)}
                 title={AVATAR_INFO[a]?.label}
                 className={`relative aspect-square rounded-xl overflow-hidden border-2 transition ${
                   avatar === a
@@ -165,8 +200,8 @@ export default function ProfileEditor({
           <p className="text-slate-400 text-xs -mb-1">
             Accesorios que fuiste ganando
           </p>
-          {SLOTS.map(({ slot, label }) => {
-            const options = ACCESSORY_CATALOG.filter((a) => a.slot === slot);
+          {slots.map(({ slot, label }) => {
+            const options = catalog.filter((a) => a.slot === slot);
             return (
               <div key={slot}>
                 <p className="text-slate-500 text-[11px] mb-1.5">{label}</p>

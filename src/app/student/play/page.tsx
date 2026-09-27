@@ -36,6 +36,7 @@ export default function StudentPlayPage() {
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
+  const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
   const [specialChallenge, setSpecialChallenge] =
     useState<SpecialChallengeState | null>(null);
@@ -73,6 +74,27 @@ export default function StudentPlayPage() {
     setName(storedName || "");
     void refresh(storedCode);
   }, [router, refresh]);
+
+  // Cuántos compañeros de clase están actualmente en cada mundo de la
+  // materia elegida, para el Mapa de Mundos. Se vuelve a pedir cada vez que
+  // el alumno cambia de materia (no expone quiénes son, solo un conteo).
+  useEffect(() => {
+    if (!code) return;
+    let cancelled = false;
+    fetch(
+      `/api/worlds/classmates?code=${encodeURIComponent(code)}&subject=${subject}`
+    )
+      .then((res) => (res.ok ? res.json() : { counts: {} }))
+      .then((data) => {
+        if (!cancelled) setClassmateCounts(data.counts ?? {});
+      })
+      .catch(() => {
+        if (!cancelled) setClassmateCounts({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [code, subject]);
 
   function handleLogout() {
     sessionStorage.removeItem("mundomat_code");
@@ -234,6 +256,7 @@ export default function StudentPlayPage() {
           completedWorlds={progress.completedWorlds}
           worldsPendingRetry={progress.worldsPendingReinforcementRetry}
           worldsNeedingReview={progress.worldsNeedingTeacherReview}
+          classmateCounts={classmateCounts}
           onSelectWorld={setSelectedWorld}
         />
       </div>

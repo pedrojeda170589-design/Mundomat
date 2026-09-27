@@ -79,6 +79,8 @@ export const AVATAR_OPTIONS: string[] = [
   "montanesa",
   "curioso",
   "curiosa",
+  "estandar-nena",
+  "estandar-nino",
 ];
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
@@ -98,7 +100,19 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   montanesa: { label: "Montañesa", emoji: "🏔️" },
   curioso: { label: "Curioso", emoji: "🔎" },
   curiosa: { label: "Curiosa", emoji: "🔍" },
+  "estandar-nena": { label: "Exploradora Estándar", emoji: "👧" },
+  "estandar-nino": { label: "Explorador Estándar", emoji: "👦" },
 };
+
+// Los dos avatares "estándar" tienen un guardarropa mucho más amplio (ver
+// ACCESSORY_CATALOG_ESTANDAR): gorros, camperas, mochilas y pañuelos de
+// varios colores, en vez de los accesorios simples del resto de los
+// personajes. getAccessoryCatalogForAvatar() decide cuál catálogo usar.
+export const STANDARD_AVATAR_IDS: string[] = ["estandar-nena", "estandar-nino"];
+
+export function isStandardAvatar(avatar?: string): boolean {
+  return !!avatar && STANDARD_AVATAR_IDS.includes(avatar);
+}
 
 // Devuelve la ruta de imagen del avatar, con respaldo al primero de la lista
 // si el valor guardado es viejo (emoji de antes de este cambio) o inválido.
@@ -108,53 +122,116 @@ export function getAvatarSrc(avatar?: string): string {
 }
 
 // Casillero de accesorio: cada personaje puede tener, como mucho, un
-// accesorio equipado por casillero a la vez.
-export type AccessorySlot = "headwear" | "eyewear" | "face" | "torso";
+// accesorio equipado por casillero a la vez. "backpack" y "pendant" solo los
+// usan los avatares "estándar" (mochila, y binoculares/collar respectivamente).
+export type AccessorySlot =
+  | "headwear"
+  | "eyewear"
+  | "face"
+  | "torso"
+  | "backpack"
+  | "pendant";
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
+
+export type AccessoryGroup = "legacy" | "estandar";
 
 export interface AccessoryDef {
   id: string;
   slot: AccessorySlot;
   label: string;
   emoji: string;
+  // A qué guardarropa pertenece: "legacy" (personajes de siempre, ícono
+  // simple) o "estandar" (los dos avatares estándar, guardarropa realista).
+  group: AccessoryGroup;
 }
 
-// Catálogo de accesorios que el alumno va ganando. Desbloqueo "progresivo
-// simple": cada mundo completado (sin importar la materia) desbloquea el
-// siguiente accesorio de esta lista, en este orden fijo — ver
+// Catálogo "de siempre": accesorios simples (íconos planos) para los 14
+// personajes originales (4 animales + 10 de estudiante). Desbloqueo
+// "progresivo simple": cada mundo completado (sin importar la materia)
+// desbloquea el siguiente accesorio de esta lista, en este orden fijo — ver
 // getUnlockedAccessoryIds(). Cuando completa más mundos que accesorios hay
 // en el catálogo, ya tiene todos desbloqueados (las medallas y monedas
 // siguen sumando igual).
 export const ACCESSORY_CATALOG: AccessoryDef[] = [
-  { id: "gorro", slot: "headwear", label: "Gorro de lana", emoji: "🧶" },
-  { id: "gafas-sol", slot: "eyewear", label: "Gafas de sol", emoji: "🕶️" },
-  { id: "remera-roja", slot: "torso", label: "Remera roja", emoji: "👕" },
-  { id: "gorra", slot: "headwear", label: "Gorra", emoji: "🧢" },
-  { id: "lentes", slot: "eyewear", label: "Lentes", emoji: "👓" },
-  { id: "barbijo", slot: "face", label: "Barbijo", emoji: "😷" },
-  { id: "sombrero", slot: "headwear", label: "Sombrero explorador", emoji: "👒" },
-  { id: "camisa-cuadros", slot: "torso", label: "Camisa a cuadros", emoji: "🦺" },
-  { id: "bufanda", slot: "face", label: "Bufanda", emoji: "🧣" },
-  { id: "remera-azul", slot: "torso", label: "Remera azul", emoji: "👕" },
+  { id: "gorro", slot: "headwear", label: "Gorro de lana", emoji: "🧶", group: "legacy" },
+  { id: "gafas-sol", slot: "eyewear", label: "Gafas de sol", emoji: "🕶️", group: "legacy" },
+  { id: "remera-roja", slot: "torso", label: "Remera roja", emoji: "👕", group: "legacy" },
+  { id: "gorra", slot: "headwear", label: "Gorra", emoji: "🧢", group: "legacy" },
+  { id: "lentes", slot: "eyewear", label: "Lentes", emoji: "👓", group: "legacy" },
+  { id: "barbijo", slot: "face", label: "Barbijo", emoji: "😷", group: "legacy" },
+  { id: "sombrero", slot: "headwear", label: "Sombrero explorador", emoji: "👒", group: "legacy" },
+  { id: "camisa-cuadros", slot: "torso", label: "Camisa a cuadros", emoji: "🦺", group: "legacy" },
+  { id: "bufanda", slot: "face", label: "Bufanda", emoji: "🧣", group: "legacy" },
+  { id: "remera-azul", slot: "torso", label: "Remera azul", emoji: "👕", group: "legacy" },
 ];
+
+// Guardarropa "estándar": mucho más amplio y realista, solo para
+// "estandar-nena" / "estandar-nino". Mismo desbloqueo progresivo simple,
+// pero sobre esta lista (28 objetos en total).
+export const ACCESSORY_CATALOG_ESTANDAR: AccessoryDef[] = [
+  { id: "gorra-rosa", slot: "headwear", label: "Gorra rosa", emoji: "🧢", group: "estandar" },
+  { id: "campera-azul", slot: "torso", label: "Campera azul", emoji: "🧥", group: "estandar" },
+  { id: "mochila-azul", slot: "backpack", label: "Mochila azul", emoji: "🎒", group: "estandar" },
+  { id: "panuelo-azul", slot: "face", label: "Pañuelo azul", emoji: "🧣", group: "estandar" },
+  { id: "gorro-pompon-azul", slot: "headwear", label: "Gorro de lana azul", emoji: "🧶", group: "estandar" },
+  { id: "campera-roja", slot: "torso", label: "Campera roja", emoji: "🧥", group: "estandar" },
+  { id: "mochila-naranja", slot: "backpack", label: "Mochila naranja", emoji: "🎒", group: "estandar" },
+  { id: "panuelo-rosa", slot: "face", label: "Pañuelo rosa", emoji: "🧣", group: "estandar" },
+  { id: "sombrero-safari", slot: "headwear", label: "Sombrero explorador", emoji: "👒", group: "estandar" },
+  { id: "campera-verde", slot: "torso", label: "Campera verde", emoji: "🧥", group: "estandar" },
+  { id: "mochila-verde", slot: "backpack", label: "Mochila verde", emoji: "🎒", group: "estandar" },
+  { id: "panuelo-verde", slot: "face", label: "Pañuelo verde", emoji: "🧣", group: "estandar" },
+  { id: "vincha-verde", slot: "headwear", label: "Vincha pañuelo", emoji: "🎀", group: "estandar" },
+  { id: "lentes-sol", slot: "eyewear", label: "Lentes de sol", emoji: "🕶️", group: "estandar" },
+  { id: "campera-amarilla", slot: "torso", label: "Campera amarilla", emoji: "🧥", group: "estandar" },
+  { id: "mochila-violeta", slot: "backpack", label: "Mochila violeta", emoji: "🎒", group: "estandar" },
+  { id: "panuelo-amarillo", slot: "face", label: "Pañuelo amarillo", emoji: "🧣", group: "estandar" },
+  { id: "gorra-violeta", slot: "headwear", label: "Gorra violeta", emoji: "🧢", group: "estandar" },
+  { id: "campera-violeta", slot: "torso", label: "Campera violeta", emoji: "🧥", group: "estandar" },
+  { id: "mochila-rosa", slot: "backpack", label: "Mochila rosa", emoji: "🎒", group: "estandar" },
+  { id: "binoculares", slot: "pendant", label: "Binoculares", emoji: "🔭", group: "estandar" },
+  { id: "gorro-crema", slot: "headwear", label: "Gorro de lana crema", emoji: "🧶", group: "estandar" },
+  { id: "mochila-marron", slot: "backpack", label: "Mochila marrón", emoji: "🎒", group: "estandar" },
+  { id: "campera-rosa", slot: "torso", label: "Campera rosa", emoji: "🧥", group: "estandar" },
+  { id: "antiparras-esqui", slot: "headwear", label: "Antiparras de esquí", emoji: "🥽", group: "estandar" },
+  { id: "auriculares-rosa", slot: "headwear", label: "Auriculares rosas", emoji: "🎧", group: "estandar" },
+  { id: "collar-brujula", slot: "pendant", label: "Collar con brújula", emoji: "🧭", group: "estandar" },
+  { id: "auriculares-azul", slot: "headwear", label: "Auriculares azules", emoji: "🎧", group: "estandar" },
+];
+
+export const ALL_ACCESSORIES: AccessoryDef[] = [
+  ...ACCESSORY_CATALOG,
+  ...ACCESSORY_CATALOG_ESTANDAR,
+];
+
+// Qué catálogo de accesorios corresponde según el personaje elegido.
+export function getAccessoryCatalogForAvatar(avatar?: string): AccessoryDef[] {
+  return isStandardAvatar(avatar) ? ACCESSORY_CATALOG_ESTANDAR : ACCESSORY_CATALOG;
+}
 
 // Ids de accesorios ya desbloqueados según la cantidad de mundos completados
 // (sistema "progresivo simple": el mundo N desbloquea el accesorio N de la
-// lista, en orden fijo).
-export function getUnlockedAccessoryIds(completedWorldsCount: number): string[] {
-  return ACCESSORY_CATALOG.slice(
-    0,
-    Math.min(completedWorldsCount, ACCESSORY_CATALOG.length)
-  ).map((a) => a.id);
+// lista de su catálogo, en orden fijo), para el catálogo que corresponde al
+// personaje elegido.
+export function getUnlockedAccessoryIds(
+  completedWorldsCount: number,
+  avatar?: string
+): string[] {
+  const catalog = getAccessoryCatalogForAvatar(avatar);
+  return catalog
+    .slice(0, Math.min(completedWorldsCount, catalog.length))
+    .map((a) => a.id);
 }
 
 export function getAccessoryById(id: string): AccessoryDef | undefined {
-  return ACCESSORY_CATALOG.find((a) => a.id === id);
+  return ALL_ACCESSORIES.find((a) => a.id === id);
 }
 
 export function getAccessorySrc(id: string): string {
-  return `/theme/accessories/${id}.png`;
+  const def = getAccessoryById(id);
+  const folder = def?.group === "estandar" ? "accessories-estandar" : "accessories";
+  return `/theme/${folder}/${id}.png`;
 }
 
 export const MAX_NICKNAME_LENGTH = 18;
