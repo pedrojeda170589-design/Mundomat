@@ -8,8 +8,9 @@ import {
   StudentType,
   WorldsConfig,
   getAccessoryById,
-  getAccessoryCatalogForAvatar,
-  getUnlockedAccessoryIds,
+  getEquippableAccessoryIds,
+  getValidAccessoryIdsForAvatar,
+  isBackgroundSelectable,
 } from "@/types";
 import { getJSON, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
@@ -133,6 +134,9 @@ export interface ProfileUpdate {
   // Un valor por casillero: string para equipar ese accesorio, null para
   // sacárselo. Casilleros ausentes del objeto no se tocan.
   accessories?: Partial<Record<AccessorySlot, string | null>>;
+  // Fondo del avatar: AUTO_BACKGROUND, uno de siempre o uno de temporada ya
+  // ganado.
+  background?: string;
 }
 
 // Actualiza el avatar, accesorios y/o apodo del alumno dentro de su
@@ -161,8 +165,10 @@ export async function updateStudentProfile(
 
   let nextAccessories: AvatarAccessories | undefined = progress.avatarAccessories;
   if (update.accessories !== undefined) {
-    const unlocked = new Set(
-      getUnlockedAccessoryIds(progress.completedWorlds.length, effectiveAvatar)
+    const unlocked = getEquippableAccessoryIds(
+      progress.completedWorlds.length,
+      effectiveAvatar,
+      progress.seasonalCollection
     );
     const merged: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
     for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
@@ -184,9 +190,7 @@ export async function updateStudentProfile(
   // anterior ya no es válido acá (otras rutas de imagen, otro catálogo): se
   // saca en vez de dejar un ícono roto.
   if (update.avatar !== undefined && nextAccessories) {
-    const validIds = new Set(
-      getAccessoryCatalogForAvatar(effectiveAvatar).map((a) => a.id)
-    );
+    const validIds = getValidAccessoryIdsForAvatar(effectiveAvatar);
     const cleaned: AvatarAccessories = {};
     for (const key of Object.keys(nextAccessories) as AccessorySlot[]) {
       const value = nextAccessories[key];
@@ -197,7 +201,17 @@ export async function updateStudentProfile(
     nextAccessories = cleaned;
   }
 
+  if (
+    update.background !== undefined &&
+    !isBackgroundSelectable(update.background, progress.seasonalCollection)
+  ) {
+    return null;
+  }
+
   const next: StudentProgress = { ...progress };
+  if (update.background !== undefined) {
+    next.avatarBackground = update.background;
+  }
   if (update.avatar !== undefined) {
     next.avatar = update.avatar;
   }

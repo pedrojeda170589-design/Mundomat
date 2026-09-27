@@ -3,24 +3,48 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
+  ACCESSORY_CATALOG_TEMPORADA,
+  AUTO_BACKGROUND,
   AVATAR_OPTIONS,
   AVATAR_INFO,
   AccessorySlot,
   AvatarAccessories,
+  BACKGROUND_OPTIONS,
   MAX_NICKNAME_LENGTH,
   getAccessoryCatalogForAvatar,
   getAccessorySrc,
   getAvatarSrc,
-  getUnlockedAccessoryIds,
+  getBackgroundById,
+  getEquippableAccessoryIds,
+  getValidAccessoryIdsForAvatar,
+  isBackgroundSelectable,
   isStandardAvatar,
 } from "@/types";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import {
+  getActiveEvents,
+  getAutoBackgroundId,
+  getSeasonalEventById,
+} from "@/lib/seasons";
+
+// Todos los casilleros que se mandan al guardar (los que no estén
+// equipados van como null, para sacarlos).
+const ALL_SLOTS: AccessorySlot[] = [
+  "headwear",
+  "eyewear",
+  "face",
+  "torso",
+  "backpack",
+  "pendant",
+];
 
 interface Props {
   code: string;
   currentAvatar?: string;
   currentAccessories?: AvatarAccessories;
   currentNickname?: string;
+  currentBackground?: string;
+  seasonalCollection?: string[];
   realName: string;
   completedWorldsCount: number;
   onClose: () => void;
@@ -28,6 +52,7 @@ interface Props {
     avatar?: string;
     accessories?: AvatarAccessories;
     nickname?: string;
+    background?: string;
   }) => void;
 }
 
@@ -56,6 +81,8 @@ export default function ProfileEditor({
   currentAvatar,
   currentAccessories,
   currentNickname,
+  currentBackground,
+  seasonalCollection = [],
   realName,
   completedWorldsCount,
   onClose,
@@ -68,12 +95,22 @@ export default function ProfileEditor({
     currentAccessories ?? {}
   );
   const [nickname, setNickname] = useState<string>(currentNickname || "");
+  const [background, setBackground] = useState<string>(
+    currentBackground || AUTO_BACKGROUND
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const catalog = getAccessoryCatalogForAvatar(avatar);
   const slots = isStandardAvatar(avatar) ? SLOTS_ESTANDAR : SLOTS_LEGACY;
-  const unlockedIds = new Set(getUnlockedAccessoryIds(completedWorldsCount, avatar));
+  const unlockedIds = getEquippableAccessoryIds(
+    completedWorldsCount,
+    avatar,
+    seasonalCollection
+  );
+  const owned = new Set(seasonalCollection);
+  const activeEventIds = new Set(getActiveEvents().map((e) => e.id));
+  const autoBackground = getBackgroundById(getAutoBackgroundId());
   const nextLocked = catalog.find((a) => !unlockedIds.has(a.id));
   const worldsToNextUnlock = nextLocked
     ? catalog.indexOf(nextLocked) + 1 - completedWorldsCount
@@ -85,7 +122,7 @@ export default function ProfileEditor({
   // el servidor igual va a rechazar.
   function handleSelectAvatar(nextAvatar: string) {
     setAvatar(nextAvatar);
-    const validIds = new Set(getAccessoryCatalogForAvatar(nextAvatar).map((a) => a.id));
+    const validIds = getValidAccessoryIdsForAvatar(nextAvatar);
     setAccessories((prev) => {
       const cleaned: AvatarAccessories = {};
       for (const key of Object.keys(prev) as AccessorySlot[]) {
@@ -121,12 +158,10 @@ export default function ProfileEditor({
           code,
           avatar,
           nickname: nickname.trim(),
-          accessories: {
-            headwear: accessories.headwear ?? null,
-            eyewear: accessories.eyewear ?? null,
-            face: accessories.face ?? null,
-            torso: accessories.torso ?? null,
-          },
+          background,
+          accessories: Object.fromEntries(
+            ALL_SLOTS.map((slot) => [slot, accessories[slot] ?? null])
+          ),
         }),
       });
       const data = await res.json();
@@ -139,6 +174,7 @@ export default function ProfileEditor({
         avatar: data.progress.avatar,
         accessories: data.progress.avatarAccessories,
         nickname: data.progress.nickname,
+        background: data.progress.avatarBackground,
       });
     } catch {
       setError("Ocurrió un error. Probá de nuevo.");
@@ -167,6 +203,7 @@ export default function ProfileEditor({
             className="w-32 h-32 rounded-2xl border-2 border-amber-400/70 bg-slate-800"
             alt="Vista previa de tu avatar"
             imageSizes="128px"
+            background={background}
           />
         </div>
 
@@ -178,7 +215,7 @@ export default function ProfileEditor({
                 key={a}
                 onClick={() => handleSelectAvatar(a)}
                 title={AVATAR_INFO[a]?.label}
-                className={`relative aspect-square rounded-xl overflow-hidden border-2 transition ${
+                className={`relative aspect-square rounded-xl overflow-hidden border-2 transition bg-gradient-to-b from-sky-300 to-sky-100 ${
                   avatar === a
                     ? "border-amber-400 ring-2 ring-amber-400/50"
                     : "border-slate-700"
@@ -267,6 +304,105 @@ export default function ProfileEditor({
               desbloquear &quot;{nextLocked.label}&quot; {nextLocked.emoji}.
             </p>
           )}
+        </div>
+
+        <div>
+          <p className="text-slate-400 text-xs mb-1">
+            🎁 Colección de temporada
+          </p>
+          <p className="text-slate-500 text-[11px] mb-2">
+            Se ganan jugando durante cada estación o festividad, y quedan
+            para siempre.
+          </p>
+          <div className="grid grid-cols-4 gap-2">
+            {ACCESSORY_CATALOG_TEMPORADA.map((acc) => {
+              const earned = owned.has(acc.id);
+              const selected = accessories[acc.slot] === acc.id;
+              const event = acc.eventId ? getSeasonalEventById(acc.eventId) : undefined;
+              const activeNow = !!acc.eventId && activeEventIds.has(acc.eventId);
+              return (
+                <button
+                  key={acc.id}
+                  disabled={!earned}
+                  onClick={() => toggleAccessory(acc.slot, acc.id)}
+                  title={
+                    earned
+                      ? acc.label
+                      : activeNow
+                        ? `${acc.label}: ¡jugá una actividad para ganarlo!`
+                        : `${acc.label}: se gana en ${event?.label ?? "su temporada"}`
+                  }
+                  className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-slate-800 ${
+                    selected
+                      ? "border-amber-400 ring-2 ring-amber-400/50"
+                      : activeNow && !earned
+                        ? "border-emerald-400/70"
+                        : "border-slate-700"
+                  } ${!earned ? "opacity-50" : ""}`}
+                >
+                  <Image
+                    src={getAccessorySrc(acc.id)}
+                    alt={acc.label}
+                    fill
+                    sizes="64px"
+                    className={`object-contain p-1.5 ${!earned ? "grayscale" : ""}`}
+                  />
+                  {!earned && (
+                    <span className="absolute bottom-0 inset-x-0 bg-black/60 text-[9px] leading-tight text-white px-0.5 py-0.5">
+                      {event?.emoji} {event?.label}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-slate-400 text-xs mb-2">🖼️ Fondo de tu avatar</p>
+          <div className="grid grid-cols-4 gap-2">
+            <button
+              onClick={() => setBackground(AUTO_BACKGROUND)}
+              title="Cambia solo según la estación o la festividad"
+              className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
+                background === AUTO_BACKGROUND
+                  ? "border-amber-400 ring-2 ring-amber-400/50"
+                  : "border-slate-700"
+              }`}
+              style={{ background: autoBackground?.css }}
+            >
+              <span className="absolute bottom-0 inset-x-0 bg-black/60 text-[9px] font-bold text-white py-0.5">
+                ✨ Automático
+              </span>
+            </button>
+            {BACKGROUND_OPTIONS.map((bg) => {
+              const selectable = isBackgroundSelectable(bg.id, seasonalCollection);
+              const event = bg.eventId ? getSeasonalEventById(bg.eventId) : undefined;
+              return (
+                <button
+                  key={bg.id}
+                  disabled={!selectable}
+                  onClick={() => setBackground(bg.id)}
+                  title={
+                    selectable
+                      ? bg.label
+                      : `${bg.label}: se gana en ${event?.label ?? "su temporada"}`
+                  }
+                  className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
+                    background === bg.id
+                      ? "border-amber-400 ring-2 ring-amber-400/50"
+                      : "border-slate-700"
+                  } ${!selectable ? "opacity-40 grayscale" : ""}`}
+                  style={{ background: bg.css }}
+                >
+                  <span className="absolute bottom-0 inset-x-0 bg-black/55 text-[9px] leading-tight text-white py-0.5">
+                    {!selectable && "🔒 "}
+                    {bg.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div>

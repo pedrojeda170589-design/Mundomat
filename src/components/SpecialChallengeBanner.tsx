@@ -23,7 +23,7 @@ export default function SpecialChallengeBanner({
       onClick={onPlay}
       className="relative z-10 w-full max-w-3xl mx-auto mb-6 px-4 text-left"
     >
-      <div className="rounded-2xl border-2 border-amber-400 bg-gradient-to-r from-amber-500/20 via-yellow-400/20 to-amber-500/20 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_0_18px_rgba(251,191,36,0.35)] hover:brightness-110 transition">
+      <div className="rounded-2xl border-2 border-amber-400 bg-slate-900/85 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_0_18px_rgba(251,191,36,0.35)] hover:brightness-110 transition">
         <div className="flex items-center gap-2">
           <span className="text-2xl animate-pulse">🎉</span>
           <span>

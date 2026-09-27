@@ -15,6 +15,7 @@ import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
 import SpecialChallengeBanner from "@/components/SpecialChallengeBanner";
 import SpecialChallengeModal from "@/components/SpecialChallengeModal";
+import SeasonalBanner from "@/components/SeasonalBanner";
 import { MemoryPair } from "@/lib/specialChallenge";
 import { warmUpVoices } from "@/lib/tts";
 
@@ -149,6 +150,7 @@ export default function StudentPlayPage() {
             className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
             alt="Mi avatar"
             imageSizes="48px"
+            background={progress.avatarBackground}
           />
           <span>
             <span className="block text-amber-100 text-sm">¡Hola,</span>
@@ -187,17 +189,32 @@ export default function StudentPlayPage() {
           currentAvatar={progress.avatar}
           currentAccessories={progress.avatarAccessories}
           currentNickname={progress.nickname}
+          currentBackground={progress.avatarBackground}
+          seasonalCollection={progress.seasonalCollection}
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
           onClose={() => setEditingProfile(false)}
-          onSaved={({ avatar, accessories, nickname }) => {
+          onSaved={({ avatar, accessories, nickname, background }) => {
             setProgress((p) =>
-              p ? { ...p, avatar, avatarAccessories: accessories, nickname } : p
+              p
+                ? {
+                    ...p,
+                    avatar,
+                    avatarAccessories: accessories,
+                    nickname,
+                    avatarBackground: background,
+                  }
+                : p
             );
             setEditingProfile(false);
           }}
         />
       )}
+
+      <SeasonalBanner
+        seasonalCollection={progress.seasonalCollection}
+        onOpenProfile={() => setEditingProfile(true)}
+      />
 
       {specialChallenge?.available && (
         <SpecialChallengeBanner

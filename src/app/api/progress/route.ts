@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { findStudentByCode, getProgress, saveProgress } from "@/lib/data";
 import { applyActivityResult } from "@/lib/progressLogic";
+import { collectActiveSeasonalRewards } from "@/lib/seasons";
 import { ActivityResult } from "@/types";
 
 export async function GET(request: NextRequest) {
@@ -48,11 +49,15 @@ export async function POST(request: NextRequest) {
     finishedAt: new Date().toISOString(),
   };
 
-  const { progress: updated, coinsEarned } = applyActivityResult(
+  const { progress: afterActivity, coinsEarned } = applyActivityResult(
     progress,
     result
   );
+  // Jugar durante una estación o festividad entrega sus premios de
+  // temporada (accesorios y fondo), que quedan para siempre.
+  const { progress: updated, newRewards } =
+    collectActiveSeasonalRewards(afterActivity);
   await saveProgress(updated);
 
-  return Response.json({ progress: updated, coinsEarned });
+  return Response.json({ progress: updated, coinsEarned, newRewards });
 }

@@ -31,6 +31,15 @@ export interface StudentProgress {
   // (AccessorySlot). Se desbloquean progresivamente completando mundos: ver
   // ACCESSORY_CATALOG y getUnlockedAccessoryIds().
   avatarAccessories?: AvatarAccessories;
+  // Fondo detrás del avatar (los personajes son PNG con fondo transparente):
+  // AUTO_BACKGROUND (el de la estación/festividad del momento), uno de los
+  // fondos de siempre, o uno de temporada ya ganado. Ver BACKGROUND_OPTIONS.
+  avatarBackground?: string;
+  // Colección de premios de temporada ya ganados (ids de accesorios de
+  // ACCESSORY_CATALOG_TEMPORADA y de fondos de temporada). Se ganan jugando
+  // al menos una actividad mientras esa estación o festividad está activa, y
+  // quedan para siempre. Ver src/lib/seasons.ts.
+  seasonalCollection?: string[];
   nickname?: string; // apodo elegido por el alumno para verse en el juego
   // Desafío Especial de fin de semana (memorama con recompensa extra): fecha
   // "YYYY-MM-DD" de la última vez que lo jugó, para permitir uno por día.
@@ -116,9 +125,11 @@ export function isStandardAvatar(avatar?: string): boolean {
 
 // Devuelve la ruta de imagen del avatar, con respaldo al primero de la lista
 // si el valor guardado es viejo (emoji de antes de este cambio) o inválido.
+// Los retratos son PNG con fondo transparente, para poder ponerles detrás el
+// fondo que corresponda (ver BACKGROUND_OPTIONS y AvatarDisplay).
 export function getAvatarSrc(avatar?: string): string {
   const id = avatar && AVATAR_OPTIONS.includes(avatar) ? avatar : AVATAR_OPTIONS[0];
-  return `/theme/avatars/${id}.jpg`;
+  return `/theme/avatars/${id}.png`;
 }
 
 // Casillero de accesorio: cada personaje puede tener, como mucho, un
@@ -134,7 +145,7 @@ export type AccessorySlot =
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
 
-export type AccessoryGroup = "legacy" | "estandar";
+export type AccessoryGroup = "legacy" | "estandar" | "temporada";
 
 export interface AccessoryDef {
   id: string;
@@ -142,8 +153,12 @@ export interface AccessoryDef {
   label: string;
   emoji: string;
   // A qué guardarropa pertenece: "legacy" (personajes de siempre, ícono
-  // simple) o "estandar" (los dos avatares estándar, guardarropa realista).
+  // simple), "estandar" (los dos avatares estándar, guardarropa realista) o
+  // "temporada" (premios de estaciones y festividades, para todos).
   group: AccessoryGroup;
+  // Solo para "temporada": la estación o festividad que lo entrega (ver
+  // SEASONAL_EVENTS en src/lib/seasons.ts).
+  eventId?: string;
 }
 
 // Catálogo "de siempre": accesorios simples (íconos planos) para los 14
@@ -200,9 +215,34 @@ export const ACCESSORY_CATALOG_ESTANDAR: AccessoryDef[] = [
   { id: "auriculares-azul", slot: "headwear", label: "Auriculares azules", emoji: "🎧", group: "estandar" },
 ];
 
+// Accesorios de temporada: no se desbloquean por mundos completados sino
+// jugando durante una estación o festividad (ver src/lib/seasons.ts). Una
+// vez ganados quedan en la colección del alumno para siempre y se pueden
+// usar con cualquier personaje. Solo usan casilleros que todos los
+// personajes tienen ubicados (cabeza, ojos, cuello, colgante).
+export const ACCESSORY_CATALOG_TEMPORADA: AccessoryDef[] = [
+  { id: "sombrero-paja", slot: "headwear", label: "Sombrero de paja", emoji: "👒", group: "temporada", eventId: "verano" },
+  { id: "lentes-verano", slot: "eyewear", label: "Lentes de verano", emoji: "🕶️", group: "temporada", eventId: "verano" },
+  { id: "boina-otono", slot: "headwear", label: "Boina de otoño", emoji: "🍂", group: "temporada", eventId: "otono" },
+  { id: "gorro-orejeras", slot: "headwear", label: "Gorro con orejeras", emoji: "❄️", group: "temporada", eventId: "invierno" },
+  { id: "bufanda-rayas", slot: "face", label: "Bufanda a rayas", emoji: "🧣", group: "temporada", eventId: "invierno" },
+  { id: "corona-flores", slot: "headwear", label: "Corona de flores", emoji: "🌸", group: "temporada", eventId: "primavera" },
+  { id: "flor-solapa", slot: "pendant", label: "Flor de solapa", emoji: "🌼", group: "temporada", eventId: "primavera" },
+  { id: "antifaz-carnaval", slot: "eyewear", label: "Antifaz de carnaval", emoji: "🎭", group: "temporada", eventId: "carnaval" },
+  { id: "orejas-conejo", slot: "headwear", label: "Orejas de conejo", emoji: "🐰", group: "temporada", eventId: "pascuas" },
+  { id: "pin-malvinas", slot: "pendant", label: "Pin de Malvinas", emoji: "🇦🇷", group: "temporada", eventId: "malvinas" },
+  { id: "escarapela", slot: "pendant", label: "Escarapela", emoji: "🎗️", group: "temporada", eventId: "semana-mayo" },
+  { id: "vincha-argentina", slot: "headwear", label: "Vincha celeste y blanca", emoji: "🇦🇷", group: "temporada", eventId: "patria" },
+  { id: "gorrito-fiesta", slot: "headwear", label: "Gorrito de fiesta", emoji: "🥳", group: "temporada", eventId: "infancias" },
+  { id: "boina-gaucha", slot: "headwear", label: "Boina gaucha", emoji: "🐴", group: "temporada", eventId: "tradicion" },
+  { id: "panuelo-gaucho", slot: "face", label: "Pañuelo gaucho", emoji: "🧣", group: "temporada", eventId: "tradicion" },
+  { id: "gorro-navidad", slot: "headwear", label: "Gorro navideño", emoji: "🎅", group: "temporada", eventId: "navidad" },
+];
+
 export const ALL_ACCESSORIES: AccessoryDef[] = [
   ...ACCESSORY_CATALOG,
   ...ACCESSORY_CATALOG_ESTANDAR,
+  ...ACCESSORY_CATALOG_TEMPORADA,
 ];
 
 // Qué catálogo de accesorios corresponde según el personaje elegido.
@@ -224,14 +264,101 @@ export function getUnlockedAccessoryIds(
     .map((a) => a.id);
 }
 
+// Todos los accesorios que este personaje puede tener equipados en
+// principio (su catálogo + los de temporada), sin mirar si ya los ganó.
+export function getValidAccessoryIdsForAvatar(avatar?: string): Set<string> {
+  return new Set([
+    ...getAccessoryCatalogForAvatar(avatar).map((a) => a.id),
+    ...ACCESSORY_CATALOG_TEMPORADA.map((a) => a.id),
+  ]);
+}
+
+// Lo que el alumno puede equipar ahora mismo: lo desbloqueado de su
+// catálogo por mundos completados + los premios de temporada ya ganados.
+export function getEquippableAccessoryIds(
+  completedWorldsCount: number,
+  avatar: string | undefined,
+  seasonalCollection: string[] = []
+): Set<string> {
+  const earned = new Set(seasonalCollection);
+  return new Set([
+    ...getUnlockedAccessoryIds(completedWorldsCount, avatar),
+    ...ACCESSORY_CATALOG_TEMPORADA.filter((a) => earned.has(a.id)).map((a) => a.id),
+  ]);
+}
+
 export function getAccessoryById(id: string): AccessoryDef | undefined {
   return ALL_ACCESSORIES.find((a) => a.id === id);
 }
 
+const ACCESSORY_FOLDER: Record<AccessoryGroup, string> = {
+  legacy: "accessories",
+  estandar: "accessories-estandar",
+  temporada: "accessories-temporada",
+};
+
 export function getAccessorySrc(id: string): string {
   const def = getAccessoryById(id);
-  const folder = def?.group === "estandar" ? "accessories-estandar" : "accessories";
-  return `/theme/${folder}/${id}.png`;
+  return `/theme/${ACCESSORY_FOLDER[def?.group ?? "legacy"]}/${id}.png`;
+}
+
+// --- Fondos del avatar ---
+//
+// Como los personajes tienen fondo transparente, detrás se dibuja un fondo:
+// - AUTO_BACKGROUND: el de la festividad activa, o si no hay, el de la
+//   estación (ver getAutoBackgroundId en src/lib/seasons.ts). Es el valor
+//   por defecto, así el avatar "se viste" de la época solo.
+// - fondos "de siempre" (paisajes patagónicos y colores lisos), siempre
+//   disponibles para elegir;
+// - fondos de temporada (con eventId), que se ganan igual que los
+//   accesorios de temporada y después se pueden elegir cuando se quiera.
+export const AUTO_BACKGROUND = "auto";
+
+export interface BackgroundDef {
+  id: string;
+  label: string;
+  emoji: string;
+  // CSS de fondo: una imagen en public/theme/backgrounds/ o un degradé.
+  css: string;
+  eventId?: string;
+}
+
+const bgImage = (id: string) => `center / cover no-repeat url(/theme/backgrounds/${id}.jpg)`;
+
+export const BACKGROUND_OPTIONS: BackgroundDef[] = [
+  { id: "patagonia", label: "Cordillera", emoji: "🏔️", css: bgImage("patagonia") },
+  { id: "glaciar", label: "Glaciar", emoji: "🧊", css: bgImage("glaciar") },
+  { id: "bosque", label: "Bosque", emoji: "🌳", css: bgImage("bosque") },
+  { id: "noche-estrellada", label: "Noche estrellada", emoji: "🌙", css: bgImage("noche-estrellada") },
+  { id: "color-celeste", label: "Celeste", emoji: "🔵", css: "linear-gradient(160deg, #bfe6ff, #5bb3ea)" },
+  { id: "color-atardecer", label: "Atardecer", emoji: "🌅", css: "linear-gradient(160deg, #ffd89b, #f5857a)" },
+  { id: "color-menta", label: "Menta", emoji: "🟢", css: "linear-gradient(160deg, #d4f7e3, #6fcf97)" },
+  { id: "color-lavanda", label: "Lavanda", emoji: "🟣", css: "linear-gradient(160deg, #eadcff, #a78bfa)" },
+  { id: "verano", label: "Verano", emoji: "☀️", css: bgImage("verano"), eventId: "verano" },
+  { id: "otono", label: "Otoño", emoji: "🍁", css: bgImage("otono"), eventId: "otono" },
+  { id: "invierno", label: "Invierno", emoji: "❄️", css: bgImage("invierno"), eventId: "invierno" },
+  { id: "primavera", label: "Primavera", emoji: "🌷", css: bgImage("primavera"), eventId: "primavera" },
+  { id: "carnaval", label: "Carnaval", emoji: "🎉", css: bgImage("carnaval"), eventId: "carnaval" },
+  { id: "pascuas", label: "Pascuas", emoji: "🥚", css: bgImage("pascuas"), eventId: "pascuas" },
+  { id: "malvinas", label: "Malvinas", emoji: "🌊", css: bgImage("malvinas"), eventId: "malvinas" },
+  { id: "semana-mayo", label: "Semana de Mayo", emoji: "🏛️", css: bgImage("semana-mayo"), eventId: "semana-mayo" },
+  { id: "patria", label: "Fiestas patrias", emoji: "🇦🇷", css: bgImage("patria"), eventId: "patria" },
+  { id: "infancias", label: "Día de las Infancias", emoji: "🎈", css: bgImage("infancias"), eventId: "infancias" },
+  { id: "tradicion", label: "Día de la Tradición", emoji: "🐎", css: bgImage("tradicion"), eventId: "tradicion" },
+  { id: "navidad", label: "Navidad", emoji: "🎄", css: bgImage("navidad"), eventId: "navidad" },
+];
+
+export function getBackgroundById(id?: string): BackgroundDef | undefined {
+  return BACKGROUND_OPTIONS.find((b) => b.id === id);
+}
+
+// ¿Puede el alumno elegir este fondo? "auto" y los de siempre, sí; los de
+// temporada, solo si ya los ganó.
+export function isBackgroundSelectable(id: string, seasonalCollection: string[] = []): boolean {
+  if (id === AUTO_BACKGROUND) return true;
+  const def = getBackgroundById(id);
+  if (!def) return false;
+  return !def.eventId || seasonalCollection.includes(`fondo:${def.id}`);
 }
 
 export const MAX_NICKNAME_LENGTH = 18;

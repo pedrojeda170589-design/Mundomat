@@ -8,17 +8,23 @@ import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 // Panel Docente.
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, avatar, nickname, accessories } = body as {
+  const { code, avatar, nickname, accessories, background } = body as {
     code?: string;
     avatar?: string;
     nickname?: string;
     accessories?: Partial<Record<AccessorySlot, string | null>>;
+    background?: string;
   };
 
   if (!code) {
     return Response.json({ error: "Falta el código." }, { status: 400 });
   }
-  if (avatar === undefined && nickname === undefined && accessories === undefined) {
+  if (
+    avatar === undefined &&
+    nickname === undefined &&
+    accessories === undefined &&
+    background === undefined
+  ) {
     return Response.json(
       { error: "No hay nada para actualizar." },
       { status: 400 }
@@ -38,10 +44,11 @@ export async function POST(request: NextRequest) {
     avatar,
     nickname,
     accessories,
+    background,
   });
   if (!updated) {
     return Response.json(
-      { error: "Avatar o accesorio inválido." },
+      { error: "Avatar, accesorio o fondo inválido." },
       { status: 400 }
     );
   }
