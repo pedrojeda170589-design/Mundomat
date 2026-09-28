@@ -53,6 +53,10 @@ export interface StudentProgress {
   // de semana), para saber si la racha sigue viva o se cortó.
   specialChallengeStreak?: number;
   lastSpecialChallengeWeekendKey?: string;
+  // Aventura de fin de semana (Memoria Numérica): avance del día actual
+  // (se reinicia cuando cambia el día) y cantidad de días completados.
+  weekend?: WeekendRecord;
+  weekendDaysCompleted?: number;
   // Sistema de refuerzo por mundo (umbral de dominio del 90%): un mundo
   // recién se marca "completado" cuando el alumno llega al 90% o más en una
   // vuelta y después repite el mundo una vez más (con cualquier puntaje).
@@ -66,6 +70,15 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+}
+
+export interface WeekendRecord {
+  dayKey: string; // "AAAA-MM-DD" (Argentina)
+  completed: number; // actividades resueltas hoy (0..10), en orden
+  points: number; // puntos del día
+  finished: boolean;
+  // Recompensa del cofre al completar las 10 del día.
+  reward?: { coins: number; accessoryId?: string };
 }
 
 // Avatares (personajes base) que el alumno puede elegir para su perfil de
@@ -242,7 +255,17 @@ export const ACCESSORY_CATALOG_TEMPORADA: AccessoryDef[] = [
   { id: "panuelo-gaucho", slot: "face", label: "Pañuelo gaucho", emoji: "🧣", group: "temporada", eventId: "tradicion" },
   { id: "gorro-navidad", slot: "headwear", label: "Gorro navideño", emoji: "🎅", group: "temporada", eventId: "navidad" },
   { id: "corona-cumple", slot: "headwear", label: "Corona de cumpleaños", emoji: "🎂", group: "temporada", eventId: "cumple" },
+  // Premios del cofre de la Aventura de fin de semana (uno por cada día
+  // completado, en este orden, hasta tenerlos todos).
+  { id: "sombrero-mago", slot: "headwear", label: "Sombrero de mago de los números", emoji: "🧙", group: "temporada", eventId: "fin-de-semana" },
+  { id: "lentes-estrella", slot: "eyewear", label: "Lentes de estrella", emoji: "⭐", group: "temporada", eventId: "fin-de-semana" },
+  { id: "vincha-antenas", slot: "headwear", label: "Vincha de antenas", emoji: "🧠", group: "temporada", eventId: "fin-de-semana" },
+  { id: "medalla-estrella", slot: "pendant", label: "Medalla de la memoria", emoji: "🏅", group: "temporada", eventId: "fin-de-semana" },
 ];
+
+export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(
+  (a) => a.eventId === "fin-de-semana"
+).map((a) => a.id);
 
 export const ALL_ACCESSORIES: AccessoryDef[] = [
   ...ACCESSORY_CATALOG,

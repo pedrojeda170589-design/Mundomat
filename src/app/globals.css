@@ -171,3 +171,105 @@ body {
   border-radius: 2px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
 }
+
+/* ============================================================
+   Aventura de fin de semana — cartas que se dan vuelta
+   ============================================================ */
+
+.wk-card {
+  perspective: 800px;
+}
+.wk-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.6, 1);
+  transform-style: preserve-3d;
+}
+.wk-card.is-up .wk-card-inner {
+  transform: rotateY(180deg);
+}
+.wk-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wk-face-back {
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), transparent 45%),
+    repeating-linear-gradient(45deg, #7c3aed 0 10px, #8b5cf6 10px 20px);
+  border: 4px solid #fde68a;
+  box-shadow: 0 6px 0 #5b21b6, 0 10px 18px rgba(0, 0, 0, 0.25);
+}
+.wk-face-front {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, #ffffff, #fef3c7);
+  border: 4px solid #f59e0b;
+  box-shadow: 0 6px 0 #b45309, 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+.wk-card.is-wrong .wk-face-front {
+  border-color: #fb7185;
+  background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+  box-shadow: 0 6px 0 #be123c, 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+.wk-card.is-found .wk-face-front {
+  border-color: #34d399;
+  background: linear-gradient(180deg, #ecfdf5, #d1fae5);
+  box-shadow: 0 6px 0 #047857, 0 10px 18px rgba(0, 0, 0, 0.2);
+}
+.wk-card.is-wrong {
+  animation: wk-shake 0.45s ease-in-out 0.35s;
+}
+.wk-card.is-found.just-found {
+  animation: wk-pop 0.5s ease-out 0.3s;
+}
+@keyframes wk-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px) rotate(-2deg); }
+  40% { transform: translateX(6px) rotate(2deg); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes wk-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* Lluvia de estrellitas / confeti para los éxitos */
+.wk-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.wk-burst span {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  font-size: 1.6rem;
+  animation: wk-fly 1.2s ease-out forwards;
+}
+@keyframes wk-fly {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+.wk-float {
+  animation: wk-float 2.4s ease-in-out infinite;
+}
+@keyframes wk-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wk-card-inner { transition: none; }
+  .wk-card.is-wrong, .wk-card.is-found.just-found, .wk-float, .wk-burst span { animation: none !important; }
+}

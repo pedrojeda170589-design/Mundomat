@@ -1,86 +1,12 @@
-// Contenido del "Desafío Especial" diario: un memorama (juego de memoria)
-// temático por materia. Cada día del año usa una materia distinta (rota en
-// orden), así todos los alumnos que jueguen ese día tienen el mismo desafío
-// — un mini evento compartido, no algo random por alumno.
+// Racha de fines de semana y monedas del cofre de la Aventura de fin de
+// semana (ver src/lib/weekend/plan.ts y completeWeekendActivity).
 
 import {
   COINS_SPECIAL_CHALLENGE,
   COINS_SPECIAL_CHALLENGE_STREAK_MAX_BONUS,
   COINS_SPECIAL_CHALLENGE_STREAK_STEP,
   StudentProgress,
-  WorldSubject,
 } from "@/types";
-
-export interface MemoryPair {
-  left: string;
-  right: string;
-}
-
-const MATEMATICA_PARES: MemoryPair[] = [
-  { left: "6 × 7", right: "42" },
-  { left: "8 × 5", right: "40" },
-  { left: "9 × 3", right: "27" },
-  { left: "100 - 45", right: "55" },
-  { left: "1/2 de 20", right: "10" },
-  { left: "1 hora", right: "60 minutos" },
-];
-
-const LENGUA_PARES: MemoryPair[] = [
-  { left: "Feliz", right: "Contento" },
-  { left: "Grande", right: "Chico" },
-  { left: "Veloz", right: "Rápido" },
-  { left: "Sustantivo", right: "Nombra algo" },
-  { left: "Verbo", right: "Indica acción" },
-  { left: "Trabalenguas", right: "Difícil de decir rápido" },
-];
-
-const NATURALES_PARES: MemoryPair[] = [
-  { left: "Guanaco", right: "Fauna de la estepa" },
-  { left: "Luna llena", right: "Se ve completa" },
-  { left: "Agua + sal", right: "Mezcla" },
-  { left: "Norte", right: "Punto cardinal" },
-  { left: "Cubo", right: "Cuerpo geométrico" },
-  { left: "Vibración", right: "Produce sonido" },
-];
-
-const SOCIALES_PARES: MemoryPair[] = [
-  { left: "Intendente", right: "Gobierno municipal" },
-  { left: "Cabildo", right: "Autoridad colonial" },
-  { left: "Circuito productivo", right: "Producción → venta" },
-  { left: "Patrimonio", right: "Se cuida del pasado" },
-  { left: "Zona rural", right: "Campo" },
-  { left: "Zona urbana", right: "Ciudad" },
-];
-
-export const CHALLENGE_PAIRS: Record<WorldSubject, MemoryPair[]> = {
-  matematica: MATEMATICA_PARES,
-  lengua: LENGUA_PARES,
-  naturales: NATURALES_PARES,
-  sociales: SOCIALES_PARES,
-};
-
-const SUBJECT_ROTATION: WorldSubject[] = [
-  "matematica",
-  "lengua",
-  "naturales",
-  "sociales",
-];
-
-function dayOfYear(date: Date): number {
-  const start = new Date(date.getFullYear(), 0, 0);
-  const diff = date.getTime() - start.getTime();
-  return Math.floor(diff / 86400000);
-}
-
-// La materia del desafío de hoy: rota entre las 4 materias según el día del
-// año, así es la misma para todos los alumnos ese día.
-export function getTodaysChallengeSubject(date: Date = new Date()): WorldSubject {
-  return SUBJECT_ROTATION[dayOfYear(date) % SUBJECT_ROTATION.length];
-}
-
-export function getTodaysChallengePairs(date: Date = new Date()): MemoryPair[] {
-  return CHALLENGE_PAIRS[getTodaysChallengeSubject(date)];
-}
 
 // Fecha en formato "YYYY-MM-DD" en horario local, para comparar "mismo día".
 export function localDateKey(date: Date = new Date()): string {

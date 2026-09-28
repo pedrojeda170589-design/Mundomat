@@ -6,6 +6,8 @@ import {
   Student,
   StudentProgress,
   StudentType,
+  WEEKEND_REWARD_IDS,
+  WeekendRecord,
   WorldsConfig,
   getAccessoryById,
   getEquippableAccessoryIds,
@@ -18,10 +20,15 @@ import { WORLDS } from "@/lib/worlds";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
-  isWeekend,
-  localDateKey,
   weekendKey,
 } from "@/lib/specialChallenge";
+import {
+  ACTIVITIES_PER_DAY,
+  FINAL_BONUS,
+  buildWeekendPlan,
+  getWeekendDay,
+  scoreActivity,
+} from "@/lib/weekend/plan";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -240,58 +247,82 @@ export async function updateStudentProfile(
   return next;
 }
 
-// ¿El alumno ya jugó hoy el Desafío Especial? Se permite uno por día
-// (fecha local del servidor), para que sea un "extra" puntual y no algo
-// que se repita en cada mundo.
-export function hasPlayedSpecialChallengeToday(
+// --- Aventura de fin de semana (Memoria Numérica) ---
+
+// Registro del día de hoy (si el guardado es de otro día, arranca de cero).
+export function getTodayWeekendRecord(
   progress: StudentProgress,
-  today: string = localDateKey()
-): boolean {
-  return progress.lastSpecialChallengeAt === today;
+  dayKey: string
+): WeekendRecord {
+  const r = progress.weekend;
+  if (r && r.dayKey === dayKey) return r;
+  return { dayKey, completed: 0, points: 0, finished: false };
 }
 
-// ¿Puede este alumno jugar el Desafío Especial ahora mismo? Solo sábado y
-// domingo, y como mucho una vez por día.
-export function isSpecialChallengeAvailable(
-  progress: StudentProgress,
-  date: Date = new Date()
-): boolean {
-  return isWeekend(date) && !hasPlayedSpecialChallengeToday(progress, localDateKey(date));
-}
-
-export interface SpecialChallengeResult {
+export interface WeekendActivityResult {
   progress: StudentProgress;
-  streak: number;
-  coinsEarned: number;
+  record: WeekendRecord;
+  pointsEarned: number;
+  perfectBonus: number;
+  finalBonus: number;
+  streak?: number;
 }
 
-// Acredita la recompensa del Desafío Especial, actualiza la racha de fines
-// de semana consecutivos y marca el día como jugado. Devuelve null si hoy
-// no es fin de semana o si ya lo había jugado hoy (para que el endpoint lo
-// rechace sin acreditar monedas de más).
-export async function completeSpecialChallenge(
-  code: string
-): Promise<SpecialChallengeResult | null> {
+// Registra una actividad resuelta del día. Los puntos se calculan acá (no
+// los manda el cliente) y se acreditan como monedas. Al completar la
+// décima se abre el cofre: bonus final, monedas extra según la racha de
+// fines de semana y el próximo accesorio de la colección de fin de semana.
+// Devuelve null si hoy no es fin de semana o si la actividad no es la que
+// sigue (evita sumar dos veces la misma).
+export async function completeWeekendActivity(
+  code: string,
+  activityIndex: number,
+  errors: number,
+  now: Date = new Date()
+): Promise<WeekendActivityResult | null> {
+  const today = getWeekendDay(now);
+  if (!today) return null;
   const progress = await getProgress(code);
-  const now = new Date();
-  if (!isWeekend(now)) {
-    return null;
-  }
-  const today = localDateKey(now);
-  if (hasPlayedSpecialChallengeToday(progress, today)) {
-    return null;
-  }
-  const streak = computeNextStreak(progress, now);
-  const coinsEarned = computeSpecialChallengeReward(streak);
-  const updated: StudentProgress = {
-    ...progress,
-    coins: progress.coins + coinsEarned,
-    lastSpecialChallengeAt: today,
-    lastSpecialChallengeWeekendKey: weekendKey(now),
-    specialChallengeStreak: streak,
+  const record = getTodayWeekendRecord(progress, today.dayKey);
+  if (record.finished || activityIndex !== record.completed) return null;
+  const plan = buildWeekendPlan(today.dayKey, today.day);
+  const activity = plan.activities[activityIndex];
+  if (!activity) return null;
+
+  const { points, perfectBonus } = scoreActivity(activity, Math.max(0, errors));
+  const next: WeekendRecord = {
+    ...record,
+    completed: record.completed + 1,
+    points: record.points + points,
   };
+  let coins = progress.coins + points;
+  let finalBonus = 0;
+  let streak: number | undefined;
+  const updated: StudentProgress = { ...progress };
+
+  if (next.completed >= ACTIVITIES_PER_DAY) {
+    finalBonus = FINAL_BONUS;
+    next.points += FINAL_BONUS;
+    next.finished = true;
+    // La racha de fines de semana usa la fecha de calendario argentina.
+    const argDay = new Date(`${today.dayKey}T12:00:00`);
+    streak = computeNextStreak(progress, argDay);
+    const chestCoins = FINAL_BONUS + computeSpecialChallengeReward(streak);
+    coins += chestCoins;
+    const owned = new Set(progress.seasonalCollection ?? []);
+    const accessoryId = WEEKEND_REWARD_IDS.find((id) => !owned.has(id));
+    if (accessoryId) owned.add(accessoryId);
+    next.reward = { coins: chestCoins, accessoryId };
+    updated.seasonalCollection = [...owned];
+    updated.specialChallengeStreak = streak;
+    updated.lastSpecialChallengeWeekendKey = weekendKey(argDay);
+    updated.lastSpecialChallengeAt = today.dayKey;
+    updated.weekendDaysCompleted = (progress.weekendDaysCompleted ?? 0) + 1;
+  }
+  updated.coins = coins;
+  updated.weekend = next;
   await saveProgress(updated);
-  return { progress: updated, streak, coinsEarned };
+  return { progress: updated, record: next, pointsEarned: points, perfectBonus, finalBonus, streak };
 }
 
 // Para el Mapa de Mundos: cuántos compañeros de clase están "actualmente" en

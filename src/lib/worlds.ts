@@ -576,3 +576,19 @@ export const WORLDS: WorldDef[] = [
 export function getWorld(id: number): WorldDef | undefined {
   return WORLDS.find((w) => w.id === id);
 }
+
+// Etapa del paisaje del Mapa de Mundos (1 a 4). Crece con el avance
+// promedio en las 4 áreas: para llegar a la última hay que avanzar en todas
+// (una sola área completa suma como mucho un 25%).
+export function getMapStage(completedWorlds: number[]): { stage: number; percent: number } {
+  const subjects = ["matematica", "lengua", "naturales", "sociales"] as const;
+  const done = new Set(completedWorlds);
+  const avg =
+    subjects.reduce((sum, subj) => {
+      const ws = WORLDS.filter((w) => w.subject === subj);
+      return sum + (ws.length ? ws.filter((w) => done.has(w.id)).length / ws.length : 0);
+    }, 0) / subjects.length;
+  const percent = Math.round(avg * 100);
+  const stage = avg >= 0.75 ? 4 : avg >= 0.5 ? 3 : avg >= 0.25 ? 2 : 1;
+  return { stage, percent };
+}

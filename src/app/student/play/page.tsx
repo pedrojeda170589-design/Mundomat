@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { WORLDS } from "@/lib/worlds";
+import { WORLDS, getMapStage } from "@/lib/worlds";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import WorldMap from "@/components/WorldMap";
@@ -13,21 +13,11 @@ import AvatarDisplay from "@/components/AvatarDisplay";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
-import SpecialChallengeBanner from "@/components/SpecialChallengeBanner";
-import SpecialChallengeModal from "@/components/SpecialChallengeModal";
+import WeekendBanner, { WeekendSummary } from "@/components/weekend/WeekendBanner";
 import SeasonalBanner from "@/components/SeasonalBanner";
 import { isBirthdayToday } from "@/lib/seasons";
-import { MemoryPair } from "@/lib/specialChallenge";
 import { warmUpVoices } from "@/lib/tts";
 
-interface SpecialChallengeState {
-  available: boolean;
-  subject: WorldSubject;
-  pairs: MemoryPair[];
-  coinsReward: number;
-  streak: number;
-  previewStreak: number;
-}
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -41,16 +31,14 @@ export default function StudentPlayPage() {
   const [birthday, setBirthday] = useState<string | undefined>(undefined);
   const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
-  const [specialChallenge, setSpecialChallenge] =
-    useState<SpecialChallengeState | null>(null);
-  const [playingChallenge, setPlayingChallenge] = useState(false);
+  const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
     const [progressRes, worldsRes, challengeRes] = await Promise.all([
       fetch(`/api/progress?code=${encodeURIComponent(studentCode)}`),
       fetch("/api/worlds"),
-      fetch(`/api/special-challenge?code=${encodeURIComponent(studentCode)}`),
+      fetch(`/api/weekend?code=${encodeURIComponent(studentCode)}`),
     ]);
     const progressData = await progressRes.json();
     const worldsData = await worldsRes.json();
@@ -58,8 +46,7 @@ export default function StudentPlayPage() {
     setBirthday(progressData.student?.birthday);
     setEnabledWorldIds(worldsData.config.enabledWorldIds ?? []);
     if (challengeRes.ok) {
-      const challengeData = await challengeRes.json();
-      setSpecialChallenge(challengeData);
+      setWeekend(await challengeRes.json());
     }
     setLoading(false);
   }, []);
@@ -135,6 +122,7 @@ export default function StudentPlayPage() {
   }
 
   const isBirthday = isBirthdayToday(birthday);
+  const mapStage = getMapStage(progress.completedWorlds);
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
 
@@ -178,13 +166,13 @@ export default function StudentPlayPage() {
           </span>
         </button>
         <div className="flex items-center gap-3">
-          {!!specialChallenge?.streak && (
+          {!!weekend?.streak && (
             <div
               className="flex items-center gap-1 rounded-full px-3 py-1.5 border border-amber-300/60 bg-black/15 text-amber-200 text-sm font-bold"
               title="Racha de fines de semana en el Desafío Especial"
             >
               <span>🔥</span>
-              {specialChallenge.streak}
+              {weekend.streak}
             </div>
           )}
           <CoinBadge coins={progress.coins} />
@@ -236,33 +224,8 @@ export default function StudentPlayPage() {
         onOpenProfile={() => setEditingProfile(true)}
       />
 
-      {specialChallenge?.available && (
-        <SpecialChallengeBanner
-          subject={specialChallenge.subject}
-          coinsReward={specialChallenge.coinsReward}
-          streak={specialChallenge.streak}
-          previewStreak={specialChallenge.previewStreak}
-          onPlay={() => setPlayingChallenge(true)}
-        />
-      )}
-
-      {playingChallenge && specialChallenge && (
-        <SpecialChallengeModal
-          code={code}
-          subject={specialChallenge.subject}
-          pairs={specialChallenge.pairs}
-          coinsReward={specialChallenge.coinsReward}
-          onClose={() => {
-            setPlayingChallenge(false);
-            void refresh(code);
-          }}
-          onCompleted={(coinsEarned, streak) => {
-            setProgress((p) => (p ? { ...p, coins: p.coins + coinsEarned } : p));
-            setSpecialChallenge((sc) =>
-              sc ? { ...sc, available: false, streak } : sc
-            );
-          }}
-        />
+      {weekend?.available && (
+        <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
       )}
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
@@ -286,6 +249,26 @@ export default function StudentPlayPage() {
         })}
       </div>
 
+      <div className="relative z-10 max-w-md w-full mx-auto px-4 mb-3">
+        <div
+          className="parchment-panel rounded-xl px-3 py-2 flex items-center gap-2 text-xs"
+          title="El paisaje cambia cuando avanzás en las 4 áreas"
+        >
+          <span className="text-base">🗺️</span>
+          <span className="flex-1">
+            <span className="font-black">Paisaje etapa {mapStage.stage} de 4</span> · crece cuando
+            avanzás en las 4 áreas
+            <span className="mt-1 block h-1.5 rounded-full bg-amber-900/15 overflow-hidden">
+              <span
+                className="block h-full rounded-full bg-emerald-500"
+                style={{ width: `${mapStage.percent}%` }}
+              />
+            </span>
+          </span>
+          <span className="font-black">{mapStage.percent}%</span>
+        </div>
+      </div>
+
       <div className="relative z-10">
         <WorldMap
           worlds={WORLDS.filter((w) => w.subject === subject)}
@@ -294,6 +277,7 @@ export default function StudentPlayPage() {
           worldsPendingRetry={progress.worldsPendingReinforcementRetry}
           worldsNeedingReview={progress.worldsNeedingTeacherReview}
           classmateCounts={classmateCounts}
+          mapStage={mapStage.stage}
           onSelectWorld={setSelectedWorld}
         />
       </div>

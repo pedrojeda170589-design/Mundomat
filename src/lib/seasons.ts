@@ -216,8 +216,19 @@ export const BIRTHDAY_EVENT: SeasonalEvent = {
   isActive: () => false,
 };
 
+// Los premios del cofre de la Aventura de fin de semana.
+export const WEEKEND_EVENT: SeasonalEvent = {
+  id: "fin-de-semana",
+  label: "Aventura de fin de semana",
+  emoji: "🧩",
+  kind: "festividad",
+  description: "Se gana completando las 10 actividades de un día de fin de semana.",
+  isActive: () => false,
+};
+
 export function getSeasonalEventById(id: string): SeasonalEvent | undefined {
   if (id === BIRTHDAY_EVENT.id) return BIRTHDAY_EVENT;
+  if (id === WEEKEND_EVENT.id) return WEEKEND_EVENT;
   return SEASONAL_EVENTS.find((e) => e.id === id);
 }
 

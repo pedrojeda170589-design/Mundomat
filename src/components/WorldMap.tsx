@@ -33,6 +33,8 @@ interface Props {
   // Cuántos compañeros de clase están actualmente en cada mundo (por id),
   // sin identificar quiénes son. Ver getClassmateWorldCounts.
   classmateCounts?: Record<number, number>;
+  // Etapa del paisaje de fondo (1..4), según el avance en las 4 áreas.
+  mapStage?: number;
   onSelectWorld: (world: WorldDef) => void;
 }
 
@@ -43,18 +45,24 @@ export default function WorldMap({
   worldsPendingRetry = [],
   worldsNeedingReview = [],
   classmateCounts = {},
+  mapStage = 1,
   onSelectWorld,
 }: Props) {
   const points = worlds.map((_, i) => ({
     xPct: ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length],
-    yPx: ISLAND_SIZE / 2 + i * ROW_HEIGHT,
+    yPx: 28 + ISLAND_SIZE / 2 + i * ROW_HEIGHT,
   }));
-  const containerHeight = ISLAND_SIZE + Math.max(0, worlds.length - 1) * ROW_HEIGHT + 56;
+  const containerHeight = 28 + ISLAND_SIZE + Math.max(0, worlds.length - 1) * ROW_HEIGHT + 64;
 
   return (
     <div
-      className="relative w-full max-w-md mx-auto px-6"
-      style={{ height: containerHeight }}
+      className="relative w-full max-w-md mx-auto px-6 rounded-[2rem] overflow-hidden border-4 border-amber-800/30 shadow-xl"
+      style={{
+        height: containerHeight,
+        backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.28)), url(/theme/map/etapa-${mapStage}.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       {/* Sendero punteado que conecta las islas, como en el mapa del póster */}
       {points.length > 1 && (
@@ -162,12 +170,12 @@ export default function WorldMap({
               {world.name}
             </span>
             {world.tables && world.tables.length > 0 && (
-              <span className="text-[10px] font-bold text-slate-700/80 -mt-1">
+              <span className="text-[10px] font-bold text-slate-800 -mt-1 bg-white/80 rounded-md px-1.5">
                 Tablas del {world.tables.join(", ")}
               </span>
             )}
             {!enabled && (
-              <span className="text-[10px] font-bold text-slate-700/80 -mt-1">
+              <span className="text-[10px] font-bold text-slate-800 -mt-1 bg-white/80 rounded-md px-1.5">
                 Esperando al Docente
               </span>
             )}
