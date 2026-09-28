@@ -162,13 +162,11 @@ export default function WorldMap({
               )}
             </button>
             <a
-              href={`/fichas/mundo-${world.id}.pdf`}
-              target="_blank"
-              rel="noopener"
+              href={`/familias#mundo-${world.id}`}
               className="absolute right-0 rounded-full bg-white border-2 border-sky-500 w-8 h-8 flex items-center justify-center text-sm shadow hover:scale-110 transition"
               style={{ top: ISLAND_SIZE - 30 }}
-              title="Ficha para imprimir (PDF)"
-              aria-label={`Ficha para imprimir de ${world.name}`}
+              title="Fichas para imprimir (PDF)"
+              aria-label={`Fichas para imprimir de ${world.name}`}
             >
               📄
             </a>

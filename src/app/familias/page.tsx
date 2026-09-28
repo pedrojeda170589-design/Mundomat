@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { WORLDS } from "@/lib/worlds";
 import { SUBJECT_INFO, WorldSubject } from "@/types";
+import { fichaHref, fichaVersions } from "@/lib/fichas";
 
 export const metadata = {
   title: "Fichas para imprimir · MundoTest26",
@@ -20,7 +21,8 @@ export default function FamiliasPage() {
             <h1 className="text-white font-black text-xl sm:text-2xl">📄 Fichas para imprimir</h1>
             <p className="text-amber-100 text-sm">
               Actividades de refuerzo de cada mundo para trabajar en casa: repasar con el lápiz,
-              escribir, dibujar y resolver. Cada ficha tiene 2 hojas y las soluciones al pie.
+              escribir, dibujar, resolver y recortar cartas para jugar a la memoria. Cada ficha
+              trae actividades distintas (en Matemática, con otros números) y las soluciones al pie.
             </p>
           </div>
           <Link href="/" className="text-amber-100 text-sm font-bold underline shrink-0">
@@ -38,22 +40,30 @@ export default function FamiliasPage() {
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {worlds.map((w) => (
-                  <li key={w.id}>
-                    <a
-                      href={`/fichas/mundo-${w.id}.pdf`}
-                      target="_blank"
-                      rel="noopener"
-                      className="flex items-center gap-3 rounded-xl bg-white/60 hover:bg-white/90 border border-amber-700/20 px-3 py-2 transition"
-                    >
-                      <span className="relative w-12 h-12 shrink-0">
-                        <Image src={`/theme/islands/mundo-${w.id}.png`} alt="" fill sizes="48px" className="object-contain" />
+                  <li
+                    key={w.id}
+                    id={`mundo-${w.id}`}
+                    className="flex items-center gap-3 rounded-xl bg-white/60 border border-amber-700/20 px-3 py-2 scroll-mt-4 target:ring-4 target:ring-sky-400"
+                  >
+                    <span className="relative w-12 h-12 shrink-0">
+                      <Image src={`/theme/islands/mundo-${w.id}.png`} alt="" fill sizes="48px" className="object-contain" />
+                    </span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block font-bold text-sm">{w.name}</span>
+                      <span className="flex flex-wrap gap-1.5 mt-1">
+                        {Array.from({ length: fichaVersions(w) }, (_, k) => k + 1).map((v) => (
+                          <a
+                            key={v}
+                            href={fichaHref(w.id, v)}
+                            target="_blank"
+                            rel="noopener"
+                            className="rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-2.5 py-1"
+                          >
+                            Ficha {v} ⬇
+                          </a>
+                        ))}
                       </span>
-                      <span className="flex-1 min-w-0">
-                        <span className="block font-bold text-sm">{w.name}</span>
-                        <span className="block text-xs opacity-70 truncate">{w.description}</span>
-                      </span>
-                      <span className="text-xs font-black text-sky-700 shrink-0">PDF ⬇</span>
-                    </a>
+                    </span>
                   </li>
                 ))}
               </ul>

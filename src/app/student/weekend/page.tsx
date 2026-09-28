@@ -124,7 +124,7 @@ export default function WeekendPage() {
           <p className="text-5xl mb-2">🗓️</p>
           <p className="font-black text-xl">¡La aventura abre el sábado!</p>
           <p className="text-sm opacity-80 mt-2">
-            Los sábados y domingos hay 10 juegos de Memoria Numérica con premios especiales.
+            Los sábados y domingos hay 10 juegos de memoria (Memoria Numérica y memoramas de dibujos y de palabras) con premios especiales.
           </p>
         </div>
       </main>
@@ -146,7 +146,9 @@ export default function WeekendPage() {
           <p className="text-xs font-bold uppercase tracking-wide opacity-70">
             Actividad {a.index + 1} de {plan.activities.length} · {a.title}
           </p>
-          <h1 className="text-3xl font-black text-violet-700">🃏 {intro.gameName}</h1>
+          <h1 className="text-3xl font-black text-violet-700">
+            {a.kind === "memoria-secuencia" ? "🔢" : a.kind === "memorama-imagenes" ? "🖼️" : "📝"} {intro.gameName}
+          </h1>
           <div className="text-left">
             <p className="font-black text-sm mb-1">¿Qué vamos a hacer?</p>
             <p className="text-sm leading-relaxed">{intro.howTo}</p>
@@ -191,7 +193,8 @@ export default function WeekendPage() {
         {header}
         <div className="relative z-10 w-full max-w-2xl mx-auto">
           <p className="text-center text-sm font-bold text-slate-700 mb-3">
-            Actividad {a.index + 1} de {plan.activities.length} · {WEEKEND_GAMES[a.kind].intro(a).sequenceType}
+            Actividad {a.index + 1} de {plan.activities.length} ·{" "}
+            {WEEKEND_GAMES[a.kind].intro(a).sequenceType ?? WEEKEND_GAMES[a.kind].intro(a).gameName}
           </p>
           <Game key={a.index} activity={a} onComplete={({ errors }) => void handleComplete(a, errors)} />
           {saving && <p className="text-center text-sm mt-3 text-slate-600">Guardando...</p>}
@@ -299,11 +302,11 @@ export default function WeekendPage() {
       <div className="relative z-10 max-w-md w-full mx-auto flex flex-col gap-3">
         <div className="parchment-panel rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
           <span>
-            <span className="block font-black">🃏 Memoria Numérica</span>
+            <span className="block font-black">🧠 Juegos de memoria</span>
             <span className="block text-xs opacity-80">
               {record.finished
                 ? "¡Completaste la aventura de hoy! Volvé el próximo día de finde."
-                : `Actividad ${record.completed + 1} de ${plan.activities.length} · ¡Recordá dónde está cada número!`}
+                : `Actividad ${record.completed + 1} de ${plan.activities.length} · Memoria Numérica y memoramas`}
             </span>
           </span>
           <span className="shrink-0 rounded-xl bg-violet-100 border-2 border-violet-300 px-3 py-1 text-center">

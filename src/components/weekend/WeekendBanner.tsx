@@ -28,12 +28,12 @@ export default function WeekendBanner({
         <span className="text-3xl wk-float">🃏</span>
         <span className="flex-1 min-w-0">
           <span className="block text-white font-black text-base drop-shadow">
-            {summary.plan?.title ?? "Aventura de fin de semana"} · Memoria Numérica
+            {summary.plan?.title ?? "Aventura de fin de semana"} · Juegos de memoria
           </span>
           <span className="block text-white/90 text-xs">
             {finished
               ? "¡Completaste los 10 juegos de hoy! Tocá para ver tu premio."
-              : `10 juegos de memoria y secuencias · cofre con 🪙 ${summary.chestCoins ?? ""} y un accesorio`}
+              : `Memoria Numérica y memoramas · cofre con 🪙 ${summary.chestCoins ?? ""} y un accesorio`}
           </span>
           <span className="mt-1.5 block h-2 rounded-full bg-white/30 overflow-hidden">
             <span
