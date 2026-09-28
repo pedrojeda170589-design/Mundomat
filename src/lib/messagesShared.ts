@@ -3,7 +3,7 @@
 // convivencia. El docente puede ver todo el historial y apagarlo.
 
 
-export type MessageKind = "mensaje" | "regalo" | "monedas";
+export type MessageKind = "mensaje" | "regalo" | "monedas" | "desafio";
 
 export interface PresetMessage {
   id: string;
@@ -22,9 +22,30 @@ export const PRESET_MESSAGES: PresetMessage[] = [
   { id: "extrano", text: "¡Te extrañamos en clase!", emoji: "💛" },
   { id: "perdon", text: "Perdón si te molesté.", emoji: "🙂" },
   { id: "amigo", text: "¡Me alegra ser tu compañero/a!", emoji: "😊" },
-  { id: "cumple", text: "¡Feliz cumpleaños!", emoji: "🎂" },
   { id: "animo", text: "Si te equivocás, no pasa nada: ¡seguimos!", emoji: "🌈" },
 ];
+
+// Saludos para el compañero que cumple años (se ofrecen desde el pizarrón
+// y en el buzón cuando el compañero cumple hoy).
+export const BIRTHDAY_MESSAGES: PresetMessage[] = [
+  { id: "cumple", text: "¡Feliz cumpleaños!", emoji: "🎂" },
+  { id: "cumple-dia", text: "¡Que pases un día hermoso!", emoji: "🌞" },
+  { id: "cumple-muchos", text: "¡Que cumplas muchos más!", emoji: "🎉" },
+  { id: "cumple-deseo", text: "¡Te deseo lo mejor en tu día!", emoji: "🌟" },
+  { id: "cumple-festejo", text: "¡Hoy festejamos con vos!", emoji: "🥳" },
+  { id: "cumple-amigo", text: "¡Feliz cumple! Me alegra que seas mi compañero/a.", emoji: "💛" },
+];
+
+// Mensajes que acompañan un desafío a un duelo de memoria.
+export const CHALLENGE_MESSAGES: PresetMessage[] = [
+  { id: "duelo", text: "¡Te desafío a un duelo de memoria!", emoji: "⚔️" },
+  { id: "duelo-finde", text: "¿Jugamos un duelo este fin de semana?", emoji: "🃏" },
+  { id: "duelo-amistoso", text: "¡Juguemos un duelo amistoso!", emoji: "🤝" },
+  { id: "duelo-revancha", text: "¿Querés la revancha?", emoji: "🔁" },
+  { id: "duelo-suerte", text: "¡Que gane el mejor! Suerte.", emoji: "🍀" },
+];
+
+export const ALL_TEXT_MESSAGES: PresetMessage[] = [];
 
 export const PRESET_GIFTS: PresetMessage[] = [
   { id: "flor", text: "una flor", emoji: "🌸" },
@@ -33,7 +54,11 @@ export const PRESET_GIFTS: PresetMessage[] = [
   { id: "globo", text: "un globo", emoji: "🎈" },
   { id: "trofeo", text: "un trofeo", emoji: "🏆" },
   { id: "abrazo", text: "un abrazo", emoji: "🤗" },
+  { id: "torta", text: "una porción de torta", emoji: "🍰" },
+  { id: "regalito", text: "un regalito", emoji: "🎁" },
 ];
+
+ALL_TEXT_MESSAGES.push(...PRESET_MESSAGES, ...BIRTHDAY_MESSAGES);
 
 export const COIN_AMOUNTS = [1, 3, 5];
 export const MAX_COINS_SENT_PER_DAY = 10;
@@ -47,6 +72,7 @@ export interface ClassMessage {
   kind: MessageKind;
   presetId?: string;
   amount?: number;
+  duelId?: string; // desafío: el duelo al que invita
   read?: boolean;
 }
 
@@ -60,7 +86,11 @@ export function describeMessage(m: ClassMessage): { emoji: string; text: string 
     const g = PRESET_GIFTS.find((x) => x.id === m.presetId);
     return { emoji: g?.emoji ?? "🎁", text: `te mandó ${g?.text ?? "un regalo"}` };
   }
-  const p = PRESET_MESSAGES.find((x) => x.id === m.presetId);
+  if (m.kind === "desafio") {
+    const c = CHALLENGE_MESSAGES.find((x) => x.id === m.presetId);
+    return { emoji: c?.emoji ?? "⚔️", text: c?.text ?? "¡Te desafío a un duelo de memoria!" };
+  }
+  const p = ALL_TEXT_MESSAGES.find((x) => x.id === m.presetId);
   return { emoji: p?.emoji ?? "💌", text: p?.text ?? "" };
 }
 

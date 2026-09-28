@@ -269,9 +269,11 @@ export function resolveBackgroundId(saved: string | undefined, now: Date = new D
 // Suma a la colección los premios de los eventos activos que todavía no
 // tenía. Devuelve el progreso actualizado y la lista de premios nuevos (para
 // poder avisarle al alumno). Se llama cuando el alumno juega una actividad.
-// ¿Hoy es el cumpleaños del alumno? birthday = "MM-DD" (hora argentina).
-export function isBirthdayToday(birthday: string | undefined, now: Date = new Date()): boolean {
-  if (!birthday) return false;
+// ¿Hoy es el cumpleaños del alumno? birthday = "AAAA-MM-DD" o "MM-DD"
+// (los cargados antes no tenían año). Hora argentina.
+export function isBirthdayToday(birthdayRaw: string | undefined, now: Date = new Date()): boolean {
+  if (!birthdayRaw) return false;
+  const birthday = birthdayRaw.slice(-5);
   const d = getArgentinaDate(now);
   const today = `${String(d.month).padStart(2, "0")}-${String(d.day).padStart(2, "0")}`;
   // Los nacidos el 29/2, en años no bisiestos festejan el 28/2.
@@ -306,4 +308,12 @@ export function collectActiveSeasonalRewards(
     progress: { ...progress, seasonalCollection: [...owned] },
     newRewards,
   };
+}
+
+// Años que cumple hoy (o cumplió este año). Solo si se cargó el año.
+export function birthdayAge(birthday: string | undefined, now: Date = new Date()): number | null {
+  if (!birthday || birthday.length !== 10) return null;
+  const y = +birthday.slice(0, 4);
+  const age = getArgentinaDate(now).year - y;
+  return age > 0 && age < 100 ? age : null;
 }

@@ -7,7 +7,8 @@ export interface Student {
   name: string;
   type: StudentType;
   createdAt: string;
-  // Fecha de cumpleaños "MM-DD" (sin año), la carga el docente. Ese día el
+  // Fecha de nacimiento "AAAA-MM-DD" (los cargados antes: "MM-DD", sin año).
+  // La carga el docente. El día del cumple el
   // avatar del alumno aparece festejando (corona, fondo y torta) y se gana
   // la corona y el fondo de cumpleaños para siempre.
   birthday?: string;

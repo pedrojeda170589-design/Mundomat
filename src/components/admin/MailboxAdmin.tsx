@@ -52,7 +52,7 @@ export default function MailboxAdmin({ adminPassword }: { adminPassword: string 
             return (
               <li key={m.id}>
                 {d.emoji} <b>{m.fromName}</b> → <b>{m.toName}</b>:{" "}
-                {m.kind === "mensaje" ? `“${d.text}”` : d.text.replace("te ", "")}
+                {m.kind === "mensaje" || m.kind === "desafio" ? `“${d.text}”` : d.text.replace("te ", "")}
                 <span className="text-amber-800/50 text-xs"> · {new Date(m.at).toLocaleString("es-AR")}</span>
               </li>
             );

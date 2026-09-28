@@ -11,7 +11,7 @@ import { Student, StudentProgress } from "@/types";
 const NEWS_KEY = "news";
 const MAX_NEWS = 40;
 
-export type NewsKind = "mundo" | "medalla" | "finde" | "racha";
+export type NewsKind = "mundo" | "superado" | "medalla" | "finde" | "racha" | "duelo" | "torneo";
 
 export interface NewsItem {
   id: string;
@@ -65,6 +65,22 @@ export function newsForWorldProgress(
     const world = getWorld(id);
     if (world) {
       out.push({ code: student.code, who, kind: "mundo", emoji: world.emoji, text: `completó ${world.name}` });
+    }
+  }
+  // Primera vuelta con 90% o más: el mundo queda a un repaso de completarse.
+  const pendingBefore = new Set(before.worldsPendingReinforcementRetry ?? []);
+  for (const id of after.worldsPendingReinforcementRetry ?? []) {
+    if (pendingBefore.has(id)) continue;
+    const world = getWorld(id);
+    const pct = after.lastWorldAttemptScore?.[id];
+    if (world) {
+      out.push({
+        code: student.code,
+        who,
+        kind: "superado",
+        emoji: "⭐",
+        text: `superó ${world.name}${pct !== undefined ? ` con ${pct}%` : ""}`,
+      });
     }
   }
   const tierBefore = getMedalTier(before.completedWorlds.length);

@@ -13,7 +13,7 @@ const MISMATCH_SHOW_MS = 1100;
 // - conceptos: una palabra y su significado.
 // Como en Memoria Numérica, las cartas nunca cambian de lugar y el error no
 // castiga: las dos cartas se muestran un momento y se vuelven a tapar.
-export default function MemoramaGame({ activity, onComplete }: WeekendGameProps) {
+export default function MemoramaGame({ activity, onComplete, onProgress }: WeekendGameProps) {
   const memo = activity.memo!;
   const { cards } = memo;
   const [matched, setMatched] = useState<Set<number>>(new Set()); // índices de carta
@@ -40,6 +40,7 @@ export default function MemoramaGame({ activity, onComplete }: WeekendGameProps)
       setMatched(m);
       setOpen([]);
       setLastMatch(cards[a].pairId);
+      onProgress?.(m.size / 2, memo.pairs);
       if (m.size === cards.length) {
         setDone(true);
         // "Sin errores" en un memorama: como mucho una vuelta de más por

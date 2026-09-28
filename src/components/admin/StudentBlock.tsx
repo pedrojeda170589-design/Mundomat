@@ -27,14 +27,17 @@ export default function StudentBlock({
   // Cumpleaños cargados en esta sesión (para mostrar el cambio al instante).
   const [birthdays, setBirthdays] = useState<Record<string, string>>({});
 
+  // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío). Mientras
+  // se escribe el año el valor puede ser incompleto: se muestra tal cual y
+  // solo se guarda cuando la fecha es válida (o cuando se borra).
   async function handleBirthday(code: string, value: string) {
-    // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío).
-    const mmdd = value ? value.slice(5) : "";
-    setBirthdays((b) => ({ ...b, [code]: mmdd }));
+    setBirthdays((b) => ({ ...b, [code]: value }));
+    const valid = /^(19|20)\d\d-\d\d-\d\d$/.test(value);
+    if (value && !valid) return;
     await fetch("/api/students", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, birthday: mmdd, adminPassword }),
+      body: JSON.stringify({ code, birthday: value, adminPassword }),
     });
   }
 
@@ -95,17 +98,19 @@ export default function StudentBlock({
               </button>
               <label
                 className="shrink-0 flex items-center gap-1 text-xs text-amber-900"
-                title="Cumpleaños (día y mes)"
+                title="Fecha de nacimiento"
               >
                 🎂
                 <input
                   type="date"
                   value={(() => {
                     const b = birthdays[s.code] ?? s.birthday;
-                    return b ? `2000-${b}` : "";
+                    if (!b) return "";
+                    // Los cargados antes solo tenían día y mes.
+                    return b.length === 5 ? `2018-${b}` : b;
                   })()}
                   onChange={(e) => handleBirthday(s.code, e.target.value)}
-                  className="w-[7.5rem] rounded-md border border-amber-700/30 bg-white/70 px-1 py-0.5 text-amber-950"
+                  className="w-[8.75rem] rounded-md border border-amber-700/30 bg-white/70 px-1 py-0.5 text-amber-950"
                 />
               </label>
               <button

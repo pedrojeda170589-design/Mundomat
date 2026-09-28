@@ -14,6 +14,8 @@ import MemoramaGame from "@/components/weekend/MemoramaGame";
 export interface WeekendGameProps {
   activity: WeekendActivity;
   onComplete: (result: { errors: number }) => void;
+  // Opcional (duelos en vivo): avance dentro del juego.
+  onProgress?: (done: number, total: number) => void;
 }
 
 export interface WeekendGameIntro {

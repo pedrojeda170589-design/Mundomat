@@ -55,7 +55,7 @@ export async function PATCH(request: NextRequest) {
   if (!code) {
     return Response.json({ error: "Falta el código." }, { status: 400 });
   }
-  if (birthday && !/^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(birthday)) {
+  if (birthday && !/^((19|20)\d\d-)?(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(birthday)) {
     return Response.json({ error: "Fecha inválida." }, { status: 400 });
   }
   const ok = await setStudentBirthday(code, birthday || undefined);

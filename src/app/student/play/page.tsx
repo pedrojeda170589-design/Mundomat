@@ -16,6 +16,7 @@ import SubjectBadge from "@/components/SubjectBadge";
 import WeekendBanner, { WeekendSummary } from "@/components/weekend/WeekendBanner";
 import SeasonalBanner from "@/components/SeasonalBanner";
 import NewsBoard from "@/components/NewsBoard";
+import CompetitionBanner from "@/components/competition/CompetitionBanner";
 import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
@@ -236,6 +237,8 @@ export default function StudentPlayPage() {
       )}
 
       <NewsBoard code={code} />
+
+      <CompetitionBanner code={code} />
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {

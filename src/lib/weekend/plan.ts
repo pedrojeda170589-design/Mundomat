@@ -60,7 +60,7 @@ export interface WeekendPlan {
 // Un nivel de Memoria Numérica describe rangos posibles; cada día se elige
 // una combinación distinta (con semilla por fecha), así el sábado y el
 // domingo no son iguales y el juego no se repite exactamente.
-interface SequenceSlot {
+export interface SequenceSlot {
   kind: "memoria-secuencia";
   title: string;
   points: 1 | 2 | 3;
@@ -68,15 +68,15 @@ interface SequenceSlot {
   steps: number[];
   counts: number[];
 }
-interface MemoSlot {
+export interface MemoSlot {
   kind: "memorama-imagenes" | "memorama-conceptos";
   title: string;
   points: 1 | 2 | 3;
   pairs: number;
 }
-type DaySlot = SequenceSlot | MemoSlot;
+export type DaySlot = SequenceSlot | MemoSlot;
 
-const seq = (title: string, points: 1 | 2 | 3, starts: number[], steps: number[], counts: number[]): SequenceSlot => ({
+export const seq = (title: string, points: 1 | 2 | 3, starts: number[], steps: number[], counts: number[]): SequenceSlot => ({
   kind: "memoria-secuencia", title, points, starts, steps, counts,
 });
 
@@ -106,11 +106,11 @@ function dayNumber(dayKey: string): number {
   return Math.floor(Date.parse(`${dayKey}T12:00:00Z`) / 86_400_000);
 }
 
-function buildMemo(slot: MemoSlot, dayKey: string, index: number, rand: () => number, pairs: number) {
+function buildMemo(slot: MemoSlot, themeIndex: number, rand: () => number, pairs: number) {
   const pool: MemoCard[][] = [];
   let theme: string;
   if (slot.kind === "memorama-imagenes") {
-    const set = IMAGE_SETS[(dayNumber(dayKey) + Math.floor(index / 2)) % IMAGE_SETS.length];
+    const set = IMAGE_SETS[themeIndex % IMAGE_SETS.length];
     theme = set.title;
     const chosen = shuffledPositions(rand, set.cards.length).slice(0, pairs).map((i) => set.cards[i]);
     chosen.forEach((c, pairId) => {
@@ -118,7 +118,7 @@ function buildMemo(slot: MemoSlot, dayKey: string, index: number, rand: () => nu
       pool.push([card, { ...card }]);
     });
   } else {
-    const subject = SUBJECT_ROTATION[(dayNumber(dayKey) + Math.floor(index / 2)) % SUBJECT_ROTATION.length];
+    const subject = SUBJECT_ROTATION[themeIndex % SUBJECT_ROTATION.length];
     theme = SUBJECT_INFO[subject].label;
     const all = CONCEPT_PAIRS[subject];
     const chosen = shuffledPositions(rand, all.length).slice(0, pairs).map((i) => all[i]);
@@ -134,39 +134,57 @@ function buildMemo(slot: MemoSlot, dayKey: string, index: number, rand: () => nu
   return { theme, pairs, cards: order.map((i) => flat[i]) };
 }
 
-export function buildWeekendPlan(dayKey: string, day: WeekendDay): WeekendPlan {
-  const activities = DAY_SLOTS.map((slot, index): WeekendActivity => {
-    const rand = seededRandom(`${dayKey}#${index}`);
-    const harder = day === "domingo" && SUNDAY_HARDER.has(index) ? 1 : 0;
-    if (slot.kind === "memoria-secuencia") {
-      const sequence: SequenceParams = {
-        start: pick(rand, slot.starts),
-        step: pick(rand, slot.steps),
-        count: pick(rand, slot.counts) + harder,
-      };
-      const values = buildSequence(sequence);
-      const positions = shuffledPositions(rand, values.length);
-      return {
-        index,
-        kind: slot.kind,
-        title: slot.title,
-        points: slot.points,
-        sequence,
-        values,
-        layout: positions.map((i) => values[i]),
-      };
-    }
+// Arma una actividad a partir de su casillero. `seedKey` fija el azar (el
+// mismo casillero con la misma semilla da siempre la misma mesa) y
+// `themeIndex` elige el tema del memorama.
+export function buildActivityFromSlot(
+  slot: DaySlot,
+  seedKey: string,
+  index: number,
+  themeIndex: number,
+  harder = 0
+): WeekendActivity {
+  const rand = seededRandom(`${seedKey}#${index}`);
+  if (slot.kind === "memoria-secuencia") {
+    const sequence: SequenceParams = {
+      start: pick(rand, slot.starts),
+      step: pick(rand, slot.steps),
+      count: pick(rand, slot.counts) + harder,
+    };
+    const values = buildSequence(sequence);
+    const positions = shuffledPositions(rand, values.length);
     return {
       index,
       kind: slot.kind,
       title: slot.title,
       points: slot.points,
-      sequence: { start: 0, step: 1, count: 0 },
-      values: [],
-      layout: [],
-      memo: buildMemo(slot, dayKey, index, rand, slot.pairs + harder),
+      sequence,
+      values,
+      layout: positions.map((i) => values[i]),
     };
-  });
+  }
+  return {
+    index,
+    kind: slot.kind,
+    title: slot.title,
+    points: slot.points,
+    sequence: { start: 0, step: 1, count: 0 },
+    values: [],
+    layout: [],
+    memo: buildMemo(slot, themeIndex, rand, slot.pairs + harder),
+  };
+}
+
+export function buildWeekendPlan(dayKey: string, day: WeekendDay): WeekendPlan {
+  const activities = DAY_SLOTS.map((slot, index) =>
+    buildActivityFromSlot(
+      slot,
+      dayKey,
+      index,
+      dayNumber(dayKey) + Math.floor(index / 2),
+      day === "domingo" && SUNDAY_HARDER.has(index) ? 1 : 0
+    )
+  );
   return {
     dayKey,
     day,

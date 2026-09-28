@@ -2,8 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import Link from "next/link";
 import {
+  BIRTHDAY_MESSAGES,
+  CHALLENGE_MESSAGES,
   COIN_AMOUNTS,
   ClassMessage,
   MAX_COINS_SENT_PER_DAY,
@@ -21,6 +25,7 @@ interface Classmate {
   accessories?: AvatarAccessories;
   background?: string;
   online: boolean;
+  birthdayToday?: boolean;
 }
 
 interface MailboxData {
@@ -53,11 +58,13 @@ export default function ClassMailbox({
   coins: number;
   onCoinsChange: (coins: number) => void;
 }) {
+  const router = useRouter();
   const [data, setData] = useState<MailboxData | null>(null);
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"recibidos" | "enviar">("recibidos");
   const [to, setTo] = useState<Classmate | null>(null);
   const [kind, setKind] = useState<MessageKind>("mensaje");
+  const [duelMode, setDuelMode] = useState<"turnos" | "vivo">("turnos");
   const [status, setStatus] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
 
@@ -97,14 +104,23 @@ export default function ClassMailbox({
     setSending(true);
     setStatus(null);
     try {
-      const r = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, to: to.code, kind, ...payload }),
-      });
+      const r =
+        kind === "desafio"
+          ? await fetch("/api/competition", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ code, action: "challenge", to: to.code, mode: duelMode, presetId: payload.presetId }),
+            })
+          : await fetch("/api/messages", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ code, to: to.code, kind, ...payload }),
+            });
       const d = await r.json();
       if (!r.ok) {
         setStatus(`⚠️ ${d.error}`);
+      } else if (kind === "desafio" && duelMode === "vivo") {
+        router.push(`/student/competencia/jugar?duelo=${encodeURIComponent(d.duelId)}`);
       } else {
         if (typeof d.coins === "number") onCoinsChange(d.coins);
         setStatus(`✅ ¡Listo! Se lo mandaste a ${to.name}.`);
@@ -189,11 +205,19 @@ export default function ClassMailbox({
                             {m.fromName}
                           </span>
                           <span className="block text-white text-sm">
-                            {m.kind === "mensaje" ? `“${d.text}”` : d.text}
+                            {m.kind === "mensaje" || m.kind === "desafio" ? `“${d.text}”` : d.text}
                           </span>
                         </span>
-                        <span className="text-[10px] text-slate-500">
-                          {timeAgo(m.at)}
+                        <span className="flex flex-col items-end gap-1">
+                          <span className="text-[10px] text-slate-500">{timeAgo(m.at)}</span>
+                          {m.kind === "desafio" && (
+                            <Link
+                              href="/student/competencia"
+                              className="rounded-lg bg-amber-400 text-slate-900 text-[11px] font-black px-2 py-1"
+                            >
+                              Ver desafío →
+                            </Link>
+                          )}
                         </span>
                       </li>
                     );
@@ -264,18 +288,19 @@ export default function ClassMailbox({
                       Cambiar
                     </button>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-4 gap-1.5">
                     {(
                       [
                         ["mensaje", "💬 Mensaje"],
                         ["regalo", "🎁 Regalo"],
                         ["monedas", "🪙 Monedas"],
+                        ["desafio", "⚔️ Desafío"],
                       ] as const
                     ).map(([k, label]) => (
                       <button
                         key={k}
                         onClick={() => setKind(k)}
-                        className={`rounded-xl py-2 text-sm font-bold ${
+                        className={`rounded-xl py-2 text-xs font-bold leading-tight ${
                           kind === k
                             ? "bg-pink-400 text-slate-900"
                             : "bg-slate-800 text-slate-300"
@@ -288,7 +313,10 @@ export default function ClassMailbox({
 
                   {kind === "mensaje" && (
                     <div className="grid grid-cols-1 gap-1.5 max-h-[40vh] overflow-y-auto">
-                      {PRESET_MESSAGES.map((p) => (
+                      {to.birthdayToday && (
+                      <p className="text-yellow-300 text-xs font-bold mt-1">🎂 ¡Hoy es su cumpleaños! Saludalo:</p>
+                    )}
+                    {[...(to.birthdayToday ? BIRTHDAY_MESSAGES : []), ...PRESET_MESSAGES].map((p) => (
                         <button
                           key={p.id}
                           disabled={sending}
@@ -300,7 +328,46 @@ export default function ClassMailbox({
                       ))}
                     </div>
                   )}
-                  {kind === "regalo" && (
+                  {kind === "desafio" && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-slate-400 text-xs">
+                      Un duelo de memoria: los dos juegan la misma partida (3 juegos) y gana quien tenga menos errores.
+                      ¡Todos ganan monedas!
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => setDuelMode("turnos")}
+                        className={`rounded-xl py-2 text-xs font-bold ${duelMode === "turnos" ? "bg-amber-400 text-slate-900" : "bg-slate-800 text-slate-300"}`}
+                      >
+                        🕐 Por turnos
+                        <span className="block font-normal text-[10px]">cada uno juega cuando entra</span>
+                      </button>
+                      <button
+                        disabled={!to.online}
+                        onClick={() => setDuelMode("vivo")}
+                        className={`rounded-xl py-2 text-xs font-bold disabled:opacity-40 ${duelMode === "vivo" ? "bg-amber-400 text-slate-900" : "bg-slate-800 text-slate-300"}`}
+                      >
+                        ⚡ En vivo
+                        <span className="block font-normal text-[10px]">
+                          {to.online ? "los dos ahora mismo" : "no está conectado"}
+                        </span>
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 gap-1.5">
+                      {CHALLENGE_MESSAGES.map((p) => (
+                        <button
+                          key={p.id}
+                          disabled={sending}
+                          onClick={() => void send({ presetId: p.id })}
+                          className="text-left rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-white text-sm"
+                        >
+                          {p.emoji} {p.text}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {kind === "regalo" && (
                     <div className="grid grid-cols-3 gap-2">
                       {PRESET_GIFTS.map((g) => (
                         <button

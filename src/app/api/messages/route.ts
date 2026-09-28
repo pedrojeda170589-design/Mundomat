@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
 import { findStudentByCode, getProgress, getStudents, saveProgress } from "@/lib/data";
 import { displayName } from "@/lib/news";
+import { isBirthdayToday } from "@/lib/seasons";
 import {
   COIN_AMOUNTS,
   ClassMessage,
@@ -9,7 +10,8 @@ import {
   MAX_MESSAGES_PER_DAY,
   MessageKind,
   PRESET_GIFTS,
-  PRESET_MESSAGES,
+  ALL_TEXT_MESSAGES,
+  BIRTHDAY_MESSAGES,
   getMessages,
   isMessagingEnabled,
   isOnline,
@@ -59,6 +61,7 @@ export async function GET(request: NextRequest) {
           accessories: p.avatarAccessories,
           background: p.avatarBackground,
           online: isOnline(presence[s.code]),
+          birthdayToday: isBirthdayToday(s.birthday),
         };
       })
   );
@@ -132,8 +135,11 @@ export async function POST(request: NextRequest) {
   };
 
   if (msg.kind === "mensaje") {
-    if (!PRESET_MESSAGES.some((p) => p.id === presetId)) {
+    if (!ALL_TEXT_MESSAGES.some((p) => p.id === presetId)) {
       return Response.json({ error: "Mensaje inválido." }, { status: 400 });
+    }
+    if (BIRTHDAY_MESSAGES.some((p) => p.id === presetId) && !isBirthdayToday(target.birthday)) {
+      return Response.json({ error: "Los saludos de cumpleaños son para el día del cumple." }, { status: 400 });
     }
     msg.presetId = presetId;
   } else if (msg.kind === "regalo") {

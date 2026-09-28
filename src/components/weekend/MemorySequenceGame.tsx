@@ -12,7 +12,7 @@ const WRONG_SHOW_MS = 1100;
 // no es la que se busca, se muestra un momento y se vuelve a tapar (sin
 // castigo: sirve para recordar dónde está); si es la correcta, queda a la
 // vista y se pasa al número siguiente.
-export default function MemorySequenceGame({ activity, onComplete }: WeekendGameProps) {
+export default function MemorySequenceGame({ activity, onComplete, onProgress }: WeekendGameProps) {
   const { values, layout } = activity;
   const [found, setFound] = useState<Set<number>>(new Set()); // posiciones descubiertas
   const [wrongPos, setWrongPos] = useState<number | null>(null);
@@ -35,6 +35,7 @@ export default function MemorySequenceGame({ activity, onComplete }: WeekendGame
       next.add(pos);
       setFound(next);
       setJustFound(pos);
+      onProgress?.(next.size, values.length);
       if (next.size === values.length) {
         setDone(true);
         timer.current = setTimeout(() => onComplete({ errors }), 1400);
