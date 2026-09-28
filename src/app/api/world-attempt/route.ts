@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { findStudentByCode, getProgress, saveProgress } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
+import { addNews, newsForWorldProgress } from "@/lib/news";
 
 // POST: el alumno terminó una vuelta completa de un mundo (las 10
 // actividades respondidas). Acá se decide, según el sistema de refuerzo del
@@ -33,6 +34,8 @@ export async function POST(request: NextRequest) {
     totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD
   );
   await saveProgress(updated);
+  // Pizarrón de novedades: mundo completado / medalla nueva.
+  await addNews(newsForWorldProgress(student, progress, updated));
 
   return Response.json({ progress: updated, outcome, coinsEarned });
 }

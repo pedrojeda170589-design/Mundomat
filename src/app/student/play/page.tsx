@@ -15,6 +15,7 @@ import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
 import WeekendBanner, { WeekendSummary } from "@/components/weekend/WeekendBanner";
 import SeasonalBanner from "@/components/SeasonalBanner";
+import NewsBoard from "@/components/NewsBoard";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 
@@ -227,6 +228,8 @@ export default function StudentPlayPage() {
       {weekend?.available && (
         <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
       )}
+
+      <NewsBoard code={code} />
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {

@@ -53,6 +53,12 @@ export default function Home() {
         >
           🧑‍🏫 Soy docente
         </Link>
+        <Link
+          href="/familias"
+          className="rounded-2xl bg-white/90 text-slate-800 font-bold text-base py-3 text-center shadow border-2 border-white/60 hover:brightness-105 active:scale-[0.98] transition"
+        >
+          👨‍👩‍👧 Familias: fichas para imprimir
+        </Link>
       </div>
 
       {ready && (

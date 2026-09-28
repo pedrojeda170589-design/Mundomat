@@ -18,6 +18,7 @@ import {
   maxPointsForDay,
 } from "@/lib/weekend/plan";
 import { WEEKEND_REWARD_IDS } from "@/types";
+import { addNews, displayName } from "@/lib/news";
 
 // GET: plan de la Aventura de fin de semana de hoy (10 actividades, iguales
 // para todos los alumnos ese día) y el avance del alumno. Entre semana
@@ -84,6 +85,16 @@ export async function POST(request: NextRequest) {
       { error: "Esta actividad no se puede registrar ahora." },
       { status: 409 }
     );
+  }
+  if (result.record.finished) {
+    const who = displayName(student, result.progress);
+    const items: Parameters<typeof addNews>[0] = [
+      { code: student.code, who, kind: "finde", emoji: "🃏", text: `completó la Aventura de fin de semana con ${result.record.points} puntos` },
+    ];
+    if ((result.streak ?? 0) >= 2) {
+      items.push({ code: student.code, who, kind: "racha", emoji: "🔥", text: `lleva ${result.streak} fines de semana seguidos jugando` });
+    }
+    await addNews(items);
   }
   return Response.json({
     record: result.record,

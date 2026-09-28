@@ -3,26 +3,17 @@
 import Image from "next/image";
 import { WorldDef } from "@/types";
 
-// Los primeros dos mundos de cada materia tienen una ilustración propia
-// (ver public/theme/worlds/). El resto sigue usando el degradé de color
-// plano definido en cada WorldDef.
-const WORLD_ART: Record<number, string> = {
-  1: "/theme/worlds/world-1.jpg",
-  2: "/theme/worlds/world-2.jpg",
-  15: "/theme/worlds/world-3.jpg",
-  16: "/theme/worlds/world-4.jpg",
-  27: "/theme/worlds/world-5.jpg",
-  28: "/theme/worlds/world-6.jpg",
-  39: "/theme/worlds/world-7.jpg",
-  40: "/theme/worlds/world-8.jpg",
-};
+// Cada mundo se ve como una pequeña isla ilustrada (PNG con fondo
+// transparente) que representa su tema: una aldea, un bosque, un castillo...
+// Ver public/theme/islands/mundo-<id>.png.
+const islandSrc = (id: number) => `/theme/islands/mundo-${id}.png`;
 
 // Desplazamiento horizontal (en %) de cada isla para que el camino
 // zigzaguee, como el "mapa de mundos" del póster de la escuela, en vez de
 // una grilla prolija.
 const ZIGZAG_OFFSETS = [50, 26, 74];
-const ROW_HEIGHT = 138; // separación vertical entre islas, en px
-const ISLAND_SIZE = 100; // diámetro de cada isla, en px
+const ROW_HEIGHT = 158; // separación vertical entre islas, en px
+const ISLAND_SIZE = 124; // tamaño de cada isla, en px
 
 interface Props {
   worlds: WorldDef[];
@@ -87,58 +78,49 @@ export default function WorldMap({
         const completed = completedWorlds.includes(world.id);
         const pendingRetry = worldsPendingRetry.includes(world.id);
         const needsReview = worldsNeedingReview.includes(world.id);
-        const art = WORLD_ART[world.id];
         const classmatesHere = classmateCounts[world.id] ?? 0;
         const point = points[i];
 
         return (
-          <button
+          <div
             key={world.id}
-            disabled={!enabled}
-            onClick={() => onSelectWorld(world)}
-            className="absolute flex flex-col items-center gap-1.5 disabled:opacity-60 transition active:scale-95"
+            className="absolute"
             style={{
               left: `${point.xPct}%`,
               top: point.yPx,
-              width: ISLAND_SIZE + 40,
+              width: ISLAND_SIZE + 30,
               transform: "translate(-50%, -50%)",
             }}
           >
-            <span
-              className="relative"
-              style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}
+            <button
+              disabled={!enabled}
+              onClick={() => onSelectWorld(world)}
+              className="w-full flex flex-col items-center gap-1 transition active:scale-95 hover:-translate-y-0.5 disabled:cursor-not-allowed"
+              aria-label={`${world.name}${enabled ? "" : " (bloqueado)"}`}
             >
-              <span
-                className="absolute inset-0 rounded-full overflow-hidden border-4 shadow-lg"
-                style={{
-                  borderColor: enabled ? "#5c3714" : "#8a8a8a",
-                  ...(art
-                    ? {}
-                    : {
-                        background: `linear-gradient(135deg, ${world.colorFrom}, ${world.colorTo})`,
-                      }),
-                }}
-              >
-                {art && (
-                  <Image
-                    src={art}
-                    alt=""
-                    fill
-                    sizes="100px"
-                    className="object-cover"
-                  />
+              <span className="relative block" style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}>
+                <Image
+                  src={islandSrc(world.id)}
+                  alt=""
+                  fill
+                  sizes="124px"
+                  className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
+                    enabled ? "" : "grayscale opacity-70"
+                  }`}
+                />
+                {!enabled && (
+                  <span className="absolute inset-0 flex items-center justify-center text-3xl drop-shadow">
+                    🔒
+                  </span>
                 )}
-                <span className="absolute inset-0 flex items-center justify-center text-3xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                  {enabled ? world.emoji : "🔒"}
-                </span>
                 {completed && (
-                  <span className="absolute top-0.5 right-0.5 text-base">
+                  <span className="absolute top-0 right-0 text-lg drop-shadow" title="¡Completado!">
                     ✅
                   </span>
                 )}
                 {!completed && pendingRetry && (
                   <span
-                    className="absolute top-0.5 right-0.5 text-base"
+                    className="absolute top-0 right-0 text-lg drop-shadow"
                     title="¡Casi! Repetilo una vez más para completarlo"
                   >
                     ⭐
@@ -146,40 +128,51 @@ export default function WorldMap({
                 )}
                 {!completed && !pendingRetry && needsReview && (
                   <span
-                    className="absolute top-0.5 right-0.5 text-base"
+                    className="absolute top-0 right-0 text-lg drop-shadow"
                     title="Necesitás fortalecer este mundo"
                   >
                     🌱
                   </span>
                 )}
+                {classmatesHere > 0 && (
+                  <span
+                    className="absolute top-0 left-0 z-10 flex items-center gap-0.5 rounded-full bg-white border-2 border-amber-500 px-1.5 py-0.5 text-[10px] font-black text-amber-700 shadow"
+                    title={
+                      classmatesHere === 1
+                        ? "1 compañero/a está en este mundo"
+                        : `${classmatesHere} compañeros/as están en este mundo`
+                    }
+                  >
+                    🧑‍🤝‍🧑{classmatesHere}
+                  </span>
+                )}
               </span>
-              {classmatesHere > 0 && (
-                <span
-                  className="absolute -top-1.5 -left-1.5 z-10 flex items-center gap-0.5 rounded-full bg-white border-2 border-amber-500 px-1.5 py-0.5 text-[10px] font-black text-amber-700 shadow"
-                  title={
-                    classmatesHere === 1
-                      ? "1 compañero/a está en este mundo"
-                      : `${classmatesHere} compañeros/as están en este mundo`
-                  }
-                >
-                  🧑‍🤝‍🧑{classmatesHere}
+              <span className="wood-panel-light rounded-lg px-2 py-1 text-[11px] font-black text-center leading-tight w-full">
+                {world.emoji} {world.name}
+              </span>
+              {world.tables && world.tables.length > 0 && (
+                <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
+                  Tablas del {world.tables.join(", ")}
                 </span>
               )}
-            </span>
-            <span className="wood-panel-light rounded-lg px-2 py-1 text-[11px] font-black text-center leading-tight w-full">
-              {world.name}
-            </span>
-            {world.tables && world.tables.length > 0 && (
-              <span className="text-[10px] font-bold text-slate-800 -mt-1 bg-white/80 rounded-md px-1.5">
-                Tablas del {world.tables.join(", ")}
-              </span>
-            )}
-            {!enabled && (
-              <span className="text-[10px] font-bold text-slate-800 -mt-1 bg-white/80 rounded-md px-1.5">
-                Esperando al Docente
-              </span>
-            )}
-          </button>
+              {!enabled && (
+                <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
+                  Esperando al Docente
+                </span>
+              )}
+            </button>
+            <a
+              href={`/fichas/mundo-${world.id}.pdf`}
+              target="_blank"
+              rel="noopener"
+              className="absolute right-0 rounded-full bg-white border-2 border-sky-500 w-8 h-8 flex items-center justify-center text-sm shadow hover:scale-110 transition"
+              style={{ top: ISLAND_SIZE - 30 }}
+              title="Ficha para imprimir (PDF)"
+              aria-label={`Ficha para imprimir de ${world.name}`}
+            >
+              📄
+            </a>
+          </div>
         );
       })}
     </div>

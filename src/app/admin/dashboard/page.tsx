@@ -8,6 +8,7 @@ import { WORLDS, getWorld } from "@/lib/worlds";
 import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
+import NewsAdmin from "@/components/admin/NewsAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
 
@@ -206,6 +207,7 @@ export default function AdminDashboardPage() {
               onViewStats={handleViewStats}
               selectedCode={selectedCode}
             />
+            <NewsAdmin adminPassword={adminPassword} />
           </div>
         )}
 
