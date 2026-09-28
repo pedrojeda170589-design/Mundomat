@@ -9,6 +9,7 @@ import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
 import NewsAdmin from "@/components/admin/NewsAdmin";
+import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
 
@@ -208,6 +209,7 @@ export default function AdminDashboardPage() {
               selectedCode={selectedCode}
             />
             <NewsAdmin adminPassword={adminPassword} />
+            <MailboxAdmin adminPassword={adminPassword} />
           </div>
         )}
 

@@ -1,0 +1,167 @@
+import { NextRequest } from "next/server";
+import { checkAdminPassword } from "@/lib/auth";
+import { findStudentByCode, getProgress, getStudents, saveProgress } from "@/lib/data";
+import { displayName } from "@/lib/news";
+import {
+  COIN_AMOUNTS,
+  ClassMessage,
+  MAX_COINS_SENT_PER_DAY,
+  MAX_MESSAGES_PER_DAY,
+  MessageKind,
+  PRESET_GIFTS,
+  PRESET_MESSAGES,
+  getMessages,
+  isMessagingEnabled,
+  isOnline,
+  sameArgDay,
+  saveMessages,
+  setMessagingEnabled,
+  touchPresence,
+} from "@/lib/messages";
+
+// GET ?code=  → buzón del alumno + compañeros (con quién está conectado).
+//               También marca al alumno como conectado.
+// GET ?adminPassword= → historial completo y estado (para el docente).
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const adminPassword = searchParams.get("adminPassword");
+  const enabled = await isMessagingEnabled();
+  const students = await getStudents();
+  const nameOf = (code: string) => students.find((s) => s.code === code)?.name ?? code;
+
+  if (adminPassword) {
+    if (!checkAdminPassword(adminPassword)) {
+      return Response.json({ error: "No autorizado." }, { status: 401 });
+    }
+    const all = await getMessages();
+    return Response.json({
+      enabled,
+      messages: all.slice(0, 100).map((m) => ({ ...m, fromName: nameOf(m.from), toName: nameOf(m.to) })),
+    });
+  }
+
+  const code = searchParams.get("code");
+  if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
+  const me = await findStudentByCode(code);
+  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+
+  const presence = await touchPresence(me.code);
+  const all = await getMessages();
+  const classmates = await Promise.all(
+    students
+      .filter((s) => s.code !== me.code)
+      .map(async (s) => {
+        const p = await getProgress(s.code);
+        return {
+          code: s.code,
+          name: displayName(s, p),
+          avatar: p.avatar,
+          accessories: p.avatarAccessories,
+          background: p.avatarBackground,
+          online: isOnline(presence[s.code]),
+        };
+      })
+  );
+  classmates.sort((a, b) => Number(b.online) - Number(a.online) || a.name.localeCompare(b.name));
+  const inbox = all
+    .filter((m) => m.to === me.code)
+    .slice(0, 30)
+    .map((m) => ({ ...m, fromName: classmates.find((c) => c.code === m.from)?.name ?? "Un compañero" }));
+  const now = new Date().toISOString();
+  const sentToday = all.filter((m) => m.from === me.code && sameArgDay(m.at, now));
+  return Response.json({
+    enabled,
+    classmates,
+    inbox,
+    unread: inbox.filter((m) => !m.read).length,
+    coinsSentToday: sentToday.filter((m) => m.kind === "monedas").reduce((s, m) => s + (m.amount ?? 0), 0),
+    messagesSentToday: sentToday.length,
+  });
+}
+
+// POST { code, to, kind, presetId?, amount? } → enviar.
+// POST { code, markRead: true } → marcar el buzón como leído.
+// POST { adminPassword, enabled } → el docente prende/apaga el buzón.
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  if (body.adminPassword !== undefined) {
+    if (!checkAdminPassword(body.adminPassword)) {
+      return Response.json({ error: "No autorizado." }, { status: 401 });
+    }
+    await setMessagingEnabled(!!body.enabled);
+    return Response.json({ ok: true, enabled: !!body.enabled });
+  }
+
+  const { code, to, kind, presetId, amount, markRead } = body as {
+    code?: string;
+    to?: string;
+    kind?: MessageKind;
+    presetId?: string;
+    amount?: number;
+    markRead?: boolean;
+  };
+  if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
+  const me = await findStudentByCode(code);
+  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  const all = await getMessages();
+
+  if (markRead) {
+    await saveMessages(all.map((m) => (m.to === me.code ? { ...m, read: true } : m)));
+    return Response.json({ ok: true });
+  }
+
+  if (!(await isMessagingEnabled())) {
+    return Response.json({ error: "El buzón está apagado por el docente." }, { status: 403 });
+  }
+  const target = to ? await findStudentByCode(to) : undefined;
+  if (!target || target.code === me.code) {
+    return Response.json({ error: "Elegí a un compañero." }, { status: 400 });
+  }
+  const now = new Date().toISOString();
+  const sentToday = all.filter((m) => m.from === me.code && sameArgDay(m.at, now));
+  if (sentToday.length >= MAX_MESSAGES_PER_DAY) {
+    return Response.json({ error: "Por hoy ya mandaste muchos mensajes. ¡Mañana podés seguir!" }, { status: 429 });
+  }
+
+  const msg: ClassMessage = {
+    id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+    at: now,
+    from: me.code,
+    to: target.code,
+    kind: kind ?? "mensaje",
+  };
+
+  if (msg.kind === "mensaje") {
+    if (!PRESET_MESSAGES.some((p) => p.id === presetId)) {
+      return Response.json({ error: "Mensaje inválido." }, { status: 400 });
+    }
+    msg.presetId = presetId;
+  } else if (msg.kind === "regalo") {
+    if (!PRESET_GIFTS.some((p) => p.id === presetId)) {
+      return Response.json({ error: "Regalo inválido." }, { status: 400 });
+    }
+    msg.presetId = presetId;
+  } else if (msg.kind === "monedas") {
+    if (!amount || !COIN_AMOUNTS.includes(amount)) {
+      return Response.json({ error: "Cantidad inválida." }, { status: 400 });
+    }
+    const coinsToday = sentToday.filter((m) => m.kind === "monedas").reduce((s, m) => s + (m.amount ?? 0), 0);
+    if (coinsToday + amount > MAX_COINS_SENT_PER_DAY) {
+      return Response.json({ error: `Podés regalar hasta ${MAX_COINS_SENT_PER_DAY} monedas por día.` }, { status: 429 });
+    }
+    const mine = await getProgress(me.code);
+    if (mine.coins < amount) {
+      return Response.json({ error: "No tenés suficientes monedas." }, { status: 400 });
+    }
+    const theirs = await getProgress(target.code);
+    await saveProgress({ ...mine, coins: mine.coins - amount });
+    await saveProgress({ ...theirs, coins: theirs.coins + amount });
+    msg.amount = amount;
+  } else {
+    return Response.json({ error: "Tipo inválido." }, { status: 400 });
+  }
+
+  await saveMessages([msg, ...all]);
+  const mine = await getProgress(me.code);
+  return Response.json({ ok: true, coins: mine.coins });
+}

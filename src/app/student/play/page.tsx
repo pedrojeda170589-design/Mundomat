@@ -16,6 +16,7 @@ import SubjectBadge from "@/components/SubjectBadge";
 import WeekendBanner, { WeekendSummary } from "@/components/weekend/WeekendBanner";
 import SeasonalBanner from "@/components/SeasonalBanner";
 import NewsBoard from "@/components/NewsBoard";
+import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 
@@ -176,6 +177,11 @@ export default function StudentPlayPage() {
               {weekend.streak}
             </div>
           )}
+          <ClassMailbox
+            code={code}
+            coins={progress.coins}
+            onCoinsChange={(coins) => setProgress((p) => (p ? { ...p, coins } : p))}
+          />
           <CoinBadge coins={progress.coins} />
           <div
             className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border bg-black/15 text-sm font-bold"

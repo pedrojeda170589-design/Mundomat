@@ -17,6 +17,9 @@ import FindErrorActivity from "@/components/activities/FindErrorActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
+import Image from "next/image";
+import VisualAid from "@/components/activities/VisualAid";
+import Burst from "@/components/weekend/Burst";
 
 interface Props {
   world: WorldDef;
@@ -175,9 +178,25 @@ export default function ActivityRunner({
         </span>
         <CoinBadge coins={coins} />
       </div>
+      <div className="relative z-10 max-w-md w-full mx-auto mb-3 flex items-center gap-3">
+        <span className="relative w-16 h-16 shrink-0 wk-float">
+          <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="64px" className="object-contain drop-shadow-lg" />
+        </span>
+        <span className="flex-1 flex gap-1" aria-label={`Actividad ${index + 1} de ${activities.length}`}>
+          {activities.map((_, i) => (
+            <span
+              key={i}
+              className={`h-2.5 flex-1 rounded-full ${
+                i < index ? "bg-emerald-400" : i === index ? "bg-amber-400 animate-pulse" : "bg-white/25"
+              }`}
+            />
+          ))}
+        </span>
+      </div>
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
+            <VisualAid key={`aid-${index}`} activity={activity} world={world} />
             {activity.type === "mc" && (
               <McActivity
                 prompt={activity.prompt}
@@ -271,8 +290,12 @@ export default function ActivityRunner({
         )}
 
         {phase === "feedback" && (
-          <div className="parchment-panel w-full max-w-md rounded-3xl p-8 text-center">
-            <p className="text-5xl mb-3">{lastCorrect ? "🎉" : "💪"}</p>
+          <div className="parchment-panel relative w-full max-w-md rounded-3xl p-8 text-center">
+            {lastCorrect && <Burst />}
+            <span className="relative block w-28 h-28 mx-auto mb-2 wk-float">
+              <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="112px" className="object-contain drop-shadow-lg" />
+            </span>
+            <p className="text-4xl mb-2">{lastCorrect ? "🎉" : "💪"}</p>
             <p className="text-xl font-bold text-amber-950 mb-1">
               {lastCorrect ? "¡Muy bien!" : "¡Seguí practicando!"}
             </p>
@@ -338,7 +361,11 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
     <div className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 text-center overflow-hidden bg-explorer-night">
       <Mountains isDay={false} />
       <div className="parchment-panel relative z-10 rounded-3xl px-8 py-10 max-w-sm w-full mx-4">
-        <p className="text-6xl mb-4">{emoji}</p>
+        {outcome?.kind === "completed" && <Burst big count={20} />}
+        <span className="relative block w-36 h-36 mx-auto mb-2 wk-float">
+          <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="144px" className="object-contain drop-shadow-lg" />
+        </span>
+        <p className="text-5xl mb-3">{emoji}</p>
         <h2 className="text-2xl font-black text-amber-800 mb-2">{title}</h2>
         <p className="text-amber-950/80 mb-2">{message}</p>
         {coinsNote && (
