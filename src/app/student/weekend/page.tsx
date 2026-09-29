@@ -51,7 +51,7 @@ export default function WeekendPage() {
   const load = useCallback(async (c: string) => {
     const [w, p] = await Promise.all([
       fetch(`/api/weekend?code=${encodeURIComponent(c)}`).then((r) => r.json()),
-      fetch(`/api/progress?code=${encodeURIComponent(c)}`).then((r) => r.json()),
+      fetch(`/api/progress?code=${encodeURIComponent(c)}&lite=1`).then((r) => r.json()),
     ]);
     setData(w);
     setCoins(p.progress?.coins ?? 0);

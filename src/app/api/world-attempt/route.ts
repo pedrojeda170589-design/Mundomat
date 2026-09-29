@@ -1,5 +1,7 @@
-import { NextRequest } from "next/server";
-import { findStudentByCode, getProgress, saveProgress } from "@/lib/data";
+import { NextRequest, after } from "next/server";
+import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
+import { getMedalTier } from "@/lib/medals";
+import { findStudentByCode, getProgress, saveProgress, liteProgress } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
@@ -10,7 +12,8 @@ import { addNews, newsForWorldProgress } from "@/lib/news";
 // fortalecer" (a tratar por el docente).
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, worldId, correctCount, totalActivities } = body as {
+  const { code, worldId, correctCount, totalActivities, clientId } = body as {
+    clientId?: string;
     code?: string;
     worldId?: number;
     correctCount?: number;
@@ -35,7 +38,36 @@ export async function POST(request: NextRequest) {
   );
   await saveProgress(updated);
   // Pizarrón de novedades: mundo completado / medalla nueva.
-  await addNews(newsForWorldProgress(student, progress, updated));
+  await addNews(newsForWorldProgress(student, progress, updated), student.classroomId);
 
-  return Response.json({ progress: updated, outcome, coinsEarned });
+  // Historial académico en la plataforma.
+  const total = totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD;
+  after(async () => {
+    const newlyCompleted = outcome.kind === "completed" && !outcome.alreadyCompleted;
+    await recordWorldAttempt({
+      code: student.code,
+      clientId:
+        typeof clientId === "string" && /^[A-Za-z0-9-]{8,80}$/.test(clientId)
+          ? clientId
+          : `${student.code}-w${worldId}-${Date.now()}`,
+      worldId,
+      correctCount,
+      total,
+      scorePct: Math.round((Math.min(correctCount, total) / Math.max(1, total)) * 100),
+      outcome: outcome.kind === "completed" && outcome.alreadyCompleted ? "review" : outcome.kind,
+      worldStatus:
+        outcome.kind === "completed"
+          ? "completed"
+          : outcome.kind === "pending-retry"
+            ? "pending_retry"
+            : "needs_review",
+      newlyCompleted,
+    });
+    const tier = getMedalTier(updated.completedWorlds.length);
+    if (newlyCompleted && tier !== getMedalTier(progress.completedWorlds.length) && tier !== "ninguna") {
+      await recordAchievement(student.code, "medalla", tier);
+    }
+  });
+
+  return Response.json({ progress: liteProgress(updated), outcome, coinsEarned });
 }

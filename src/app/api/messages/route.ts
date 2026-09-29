@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
-import { findStudentByCode, getProgress, getStudents, saveProgress } from "@/lib/data";
+import { classmatesOf, findStudentByCode, getClassSnapshot, getProgress, getStudents, sameClassroom, saveProgress } from "@/lib/data";
 import { displayName } from "@/lib/news";
 import { isBirthdayToday } from "@/lib/seasons";
 import {
@@ -19,6 +19,7 @@ import {
   saveMessages,
   setMessagingEnabled,
   touchPresence,
+  getPresenceMap,
 } from "@/lib/messages";
 
 // GET ?code=  → buzón del alumno + compañeros (con quién está conectado).
@@ -35,7 +36,9 @@ export async function GET(request: NextRequest) {
     if (!checkAdminPassword(adminPassword)) {
       return Response.json({ error: "No autorizado." }, { status: 401 });
     }
-    const all = await getMessages();
+    // El panel de siempre es el del aula piloto: solo ve sus mensajes.
+    const pilot = new Set(students.filter((s) => !s.classroomId).map((s) => s.code));
+    const all = (await getMessages()).filter((m) => pilot.has(m.from) && pilot.has(m.to));
     return Response.json({
       enabled,
       messages: all.slice(0, 100).map((m) => ({ ...m, fromName: nameOf(m.from), toName: nameOf(m.to) })),
@@ -47,24 +50,35 @@ export async function GET(request: NextRequest) {
   const me = await findStudentByCode(code);
   if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
 
-  const presence = await touchPresence(me.code);
-  const all = await getMessages();
-  const classmates = await Promise.all(
-    students
-      .filter((s) => s.code !== me.code)
-      .map(async (s) => {
-        const p = await getProgress(s.code);
-        return {
-          code: s.code,
-          name: displayName(s, p),
-          avatar: p.avatar,
-          accessories: p.avatarAccessories,
-          background: p.avatarBackground,
-          online: isOnline(presence[s.code]),
-          birthdayToday: isBirthdayToday(s.birthday),
-        };
-      })
-  );
+  // Consulta liviana (cada minuto, para el numerito de no leídos): no arma
+  // la lista de compañeros.
+  if (searchParams.get("light")) {
+    const [, all] = await Promise.all([touchPresence(me.code), getMessages()]);
+    return Response.json({ enabled, unread: all.filter((m) => m.to === me.code && !m.read).length });
+  }
+
+  const mates = classmatesOf(me, students);
+  const [, all, snapshot, presence] = await Promise.all([
+    touchPresence(me.code),
+    getMessages(),
+    getClassSnapshot(),
+    getPresenceMap(mates.map((s) => s.code)),
+  ]);
+  presence[me.code] = new Date().toISOString();
+  const classmates = mates
+    .filter((s) => s.code !== me.code)
+    .map((s) => {
+      const p = snapshot.progress.get(s.code);
+      return {
+        code: s.code,
+        name: displayName(s, p),
+        avatar: p?.avatar,
+        accessories: p?.avatarAccessories,
+        background: p?.avatarBackground,
+        online: isOnline(presence[s.code]),
+        birthdayToday: isBirthdayToday(s.birthday),
+      };
+    });
   classmates.sort((a, b) => Number(b.online) - Number(a.online) || a.name.localeCompare(b.name));
   const inbox = all
     .filter((m) => m.to === me.code)
@@ -117,7 +131,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "El buzón está apagado por el docente." }, { status: 403 });
   }
   const target = to ? await findStudentByCode(to) : undefined;
-  if (!target || target.code === me.code) {
+  if (!target || target.code === me.code || !sameClassroom(target, me)) {
     return Response.json({ error: "Elegí a un compañero." }, { status: 400 });
   }
   const now = new Date().toISOString();

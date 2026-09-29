@@ -31,20 +31,25 @@ export function displayName(student: Student, progress?: StudentProgress): strin
   return student.name.trim() || "Un compañero";
 }
 
-export async function getNews(): Promise<NewsItem[]> {
-  return getJSON<NewsItem[]>(NEWS_KEY, []);
+// Cada aula tiene su pizarrón (el aula piloto usa el de siempre).
+function newsKey(classroomId?: string): string {
+  return classroomId ? `${NEWS_KEY}:${classroomId}` : NEWS_KEY;
 }
 
-export async function addNews(items: Omit<NewsItem, "id" | "at">[]): Promise<void> {
+export async function getNews(classroomId?: string): Promise<NewsItem[]> {
+  return getJSON<NewsItem[]>(newsKey(classroomId), []);
+}
+
+export async function addNews(items: Omit<NewsItem, "id" | "at">[], classroomId?: string): Promise<void> {
   if (items.length === 0) return;
   const now = new Date().toISOString();
-  const current = await getNews();
+  const current = await getNews(classroomId);
   const added = items.map((it, i) => ({
     ...it,
     at: now,
     id: `${Date.now().toString(36)}-${i}-${Math.random().toString(36).slice(2, 7)}`,
   }));
-  await setJSON(NEWS_KEY, [...added, ...current].slice(0, MAX_NEWS));
+  await setJSON(newsKey(classroomId), [...added, ...current].slice(0, MAX_NEWS));
 }
 
 export async function clearNews(): Promise<void> {

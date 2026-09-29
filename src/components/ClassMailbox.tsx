@@ -68,23 +68,34 @@ export default function ClassMailbox({
   const [status, setStatus] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
 
+  // Completo (compañeros, recibidos): solo cuando se abre el buzón.
   const load = useCallback(async () => {
     const r = await fetch(`/api/messages?code=${encodeURIComponent(code)}`);
     if (r.ok) setData(await r.json());
   }, [code]);
 
+  // Liviano (cada minuto): solo el numerito de no leídos.
+  const [light, setLight] = useState<{ enabled: boolean; unread: number } | null>(null);
+  const loadLight = useCallback(async () => {
+    const r = await fetch(`/api/messages?code=${encodeURIComponent(code)}&light=1`);
+    if (r.ok) setLight(await r.json());
+  }, [code]);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    void load();
-    const t = setInterval(() => void load(), 60_000);
+    void loadLight();
+    const t = setInterval(() => void loadLight(), 60_000);
     return () => clearInterval(t);
-  }, [load]);
+  }, [loadLight]);
 
   async function openBox() {
     setOpen(true);
-    setTab(data && data.unread > 0 ? "recibidos" : "enviar");
+    const unread = light?.unread ?? 0;
+    setTab(unread > 0 ? "recibidos" : "enviar");
     setStatus(null);
-    if (data?.unread) {
+    await load();
+    if (unread) {
+      setLight((l) => (l ? { ...l, unread: 0 } : l));
       await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,7 +107,7 @@ export default function ClassMailbox({
   function close() {
     setOpen(false);
     setTo(null);
-    void load();
+    void loadLight();
   }
 
   async function send(payload: { presetId?: string; amount?: number }) {
@@ -132,7 +143,7 @@ export default function ClassMailbox({
     }
   }
 
-  if (!data?.enabled) return null;
+  if (!light?.enabled) return null;
 
   return (
     <>
@@ -142,15 +153,20 @@ export default function ClassMailbox({
         title="Buzón de la clase"
       >
         💌
-        {data.unread > 0 && (
+        {light.unread > 0 && (
           <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[11px] font-black flex items-center justify-center">
-            {data.unread}
+            {light.unread}
           </span>
         )}
       </button>
 
       {open &&
         createPortal(
+          !data ? (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
+              <p className="rounded-2xl bg-slate-900 text-white px-5 py-3 font-bold">Abriendo el buzón…</p>
+            </div>
+          ) : (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 py-6 overflow-y-auto">
             <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 p-5 flex flex-col gap-4 my-auto">
               <div className="flex items-center justify-between">
@@ -414,7 +430,8 @@ export default function ClassMailbox({
                 <p className="text-sm text-center text-white">{status}</p>
               )}
             </div>
-          </div>,
+          </div>
+          ),
           document.body,
         )}
     </>

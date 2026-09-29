@@ -6,6 +6,12 @@ import LiveClock from "@/components/LiveClock";
 import { useSkyTheme } from "@/lib/useSkyTheme";
 import { SEASON_INFO } from "@/lib/skyTheme";
 
+// Textos de la portada (configurables por instalación; por defecto, los del
+// piloto actual).
+const HOME_SCHOOL =
+  process.env.NEXT_PUBLIC_HOME_SCHOOL ?? "Escuela Hogar Primaria Provincial Rural N°2 - Héroes de Malvinas";
+const HOME_TEACHER = process.env.NEXT_PUBLIC_HOME_TEACHER ?? "Prof. Pedro Ojeda";
+
 export default function Home() {
   const { period, season, moon, ready } = useSkyTheme();
   const isDay = ready && period === "day";
@@ -21,10 +27,10 @@ export default function Home() {
 
       <div className="relative z-10 text-center mb-8">
         <p className="text-sm mb-1 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
-          Escuela Hogar Primaria Provincial Rural N°2 - Héroes de Malvinas
+          {HOME_SCHOOL}
         </p>
         <p className="text-sm mb-6 text-slate-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
-          Prof. Pedro Ojeda
+          {HOME_TEACHER}
         </p>
 
         <div className="explorer-title-plaque inline-block px-8 py-5">
@@ -48,7 +54,7 @@ export default function Home() {
           🎒 Soy alumno/a
         </Link>
         <Link
-          href="/admin"
+          href={process.env.NEXT_PUBLIC_SUPABASE_URL ? "/docente" : "/admin"}
           className="rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-lg py-4 text-center shadow-lg shadow-blue-600/20 border-2 border-blue-800/40 hover:brightness-105 active:scale-[0.98] transition"
         >
           🧑‍🏫 Soy docente

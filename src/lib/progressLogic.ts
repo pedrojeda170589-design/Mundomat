@@ -7,6 +7,9 @@ import {
   COINS_BONUS_WORLD_COMPLETE,
 } from "@/types";
 
+const MAX_LOG_ENTRIES = 300;
+const KEEP_LOG_ENTRIES = 200;
+
 export interface ApplyResultOutcome {
   progress: StudentProgress;
   coinsEarned: number;
@@ -19,7 +22,23 @@ export function applyActivityResult(
   progress: StudentProgress,
   result: ActivityResult
 ): ApplyResultOutcome {
-  const activityLog = [...progress.activityLog, result];
+  let activityLog = [...progress.activityLog, result];
+  let activitySummary = progress.activitySummary;
+  // Se guardan en detalle las últimas actividades; las más viejas se suman
+  // al resumen por mundo (las estadísticas del docente no cambian).
+  if (activityLog.length > MAX_LOG_ENTRIES) {
+    const old = activityLog.slice(0, activityLog.length - KEEP_LOG_ENTRIES);
+    activityLog = activityLog.slice(-KEEP_LOG_ENTRIES);
+    activitySummary = { ...(activitySummary ?? {}) };
+    for (const r of old) {
+      const cur = activitySummary[r.worldId] ?? { correct: 0, incorrect: 0, timeSpentSeconds: 0 };
+      activitySummary[r.worldId] = {
+        correct: cur.correct + r.correct,
+        incorrect: cur.incorrect + r.incorrect,
+        timeSpentSeconds: cur.timeSpentSeconds + r.timeSpentSeconds,
+      };
+    }
+  }
 
   let coinsEarned = 0;
   if (result.correct > 0) {
@@ -29,6 +48,7 @@ export function applyActivityResult(
   const updated: StudentProgress = {
     ...progress,
     activityLog,
+    ...(activitySummary ? { activitySummary } : {}),
     coins: progress.coins + coinsEarned,
     lastPlayedAt: new Date().toISOString(),
   };
@@ -135,27 +155,31 @@ export function computeStudentStats(
   progress: StudentProgress,
   worldNameById: (id: number) => string
 ): StudentStats {
-  const totalCorrect = progress.activityLog.reduce((s, r) => s + r.correct, 0);
-  const totalIncorrect = progress.activityLog.reduce(
-    (s, r) => s + r.incorrect,
-    0
-  );
-  const totalAttempts = totalCorrect + totalIncorrect;
-  const accuracyPct =
-    totalAttempts === 0 ? 0 : Math.round((totalCorrect / totalAttempts) * 100);
-  const totalTimeSeconds = progress.activityLog.reduce(
-    (s, r) => s + r.timeSpentSeconds,
-    0
-  );
-
-  // Fortalezas / a reforzar por mundo, según precisión relativa.
+  // Totales por mundo: resumen de lo viejo + registro reciente.
   const perWorld = new Map<number, { correct: number; incorrect: number }>();
+  let totalTimeSeconds = 0;
+  for (const [id, sum] of Object.entries(progress.activitySummary ?? {})) {
+    perWorld.set(Number(id), { correct: sum.correct, incorrect: sum.incorrect });
+    totalTimeSeconds += sum.timeSpentSeconds;
+  }
   for (const r of progress.activityLog) {
     const cur = perWorld.get(r.worldId) ?? { correct: 0, incorrect: 0 };
     cur.correct += r.correct;
     cur.incorrect += r.incorrect;
     perWorld.set(r.worldId, cur);
+    totalTimeSeconds += r.timeSpentSeconds;
   }
+  let totalCorrect = 0;
+  let totalIncorrect = 0;
+  for (const w of perWorld.values()) {
+    totalCorrect += w.correct;
+    totalIncorrect += w.incorrect;
+  }
+  const totalAttempts = totalCorrect + totalIncorrect;
+  const accuracyPct =
+    totalAttempts === 0 ? 0 : Math.round((totalCorrect / totalAttempts) * 100);
+
+  // Fortalezas / a reforzar por mundo, según precisión relativa.
   const strengths: string[] = [];
   const toImprove: string[] = [];
   for (const [worldId, s] of perWorld.entries()) {

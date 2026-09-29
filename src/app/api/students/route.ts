@@ -2,8 +2,15 @@ import { NextRequest } from "next/server";
 import { addStudent, deleteStudent, getStudents, setStudentBirthday } from "@/lib/data";
 import { checkAdminPassword } from "@/lib/auth";
 
-export async function GET() {
-  const students = await getStudents();
+// Lista del aula piloto para el panel de siempre (con la contraseña del
+// docente). Antes era pública: ya no se exponen nombres ni códigos. Los
+// alumnos de otras aulas se ven en el panel de la plataforma (/docente).
+export async function GET(request: NextRequest) {
+  const adminPassword = new URL(request.url).searchParams.get("adminPassword");
+  if (!adminPassword || !checkAdminPassword(adminPassword)) {
+    return Response.json({ error: "No autorizado." }, { status: 401 });
+  }
+  const students = (await getStudents()).filter((s) => !s.classroomId);
   return Response.json({ students });
 }
 

@@ -1,10 +1,9 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
-import { findStudentByCode, getProgress, getStudents, getWorldsConfig, saveProgress } from "@/lib/data";
+import { classmatesOf, findStudentByCode, getClassSnapshot, getEnabledWorldIdsFor, getProgress, getStudents, sameClassroom, saveProgress } from "@/lib/data";
 import { addNews, displayName } from "@/lib/news";
-import { getMessages, isOnline, saveMessages } from "@/lib/messages";
+import { getMessages, getPresenceMap, isOnline, saveMessages } from "@/lib/messages";
 import { CHALLENGE_MESSAGES, ClassMessage, sameArgDay } from "@/lib/messagesShared";
-import { getJSON } from "@/lib/store";
 import { Student, StudentProgress } from "@/types";
 import {
   DUEL_COINS,
@@ -20,6 +19,8 @@ import {
   getCompetitionConfig,
   getDuel,
   getDuelIndex,
+  getPaidFlags,
+  getRecentDuelsTo,
   getDuelsFor,
   getEligibility,
   getTournamentEntries,
@@ -44,18 +45,20 @@ function newId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 }
 
+// `students` = compañeros de la misma aula (todos comparten sus mundos).
 async function playersInfo(students: Student[]) {
-  const [presence, worlds] = await Promise.all([
-    getJSON<Record<string, string>>("presence", {}),
-    getWorldsConfig(),
+  const [presence, enabledWorldIds, snapshot] = await Promise.all([
+    getPresenceMap(students.map((s) => s.code)),
+    getEnabledWorldIdsFor(students[0]),
+    getClassSnapshot(),
   ]);
-  const progresses = await Promise.all(students.map((s) => getProgress(s.code)));
+  const worlds = { enabledWorldIds };
   const map = new Map<
     string,
     { code: string; name: string; avatar?: string; accessories?: StudentProgress["avatarAccessories"]; background?: string; online: boolean; eligible: boolean }
   >();
-  students.forEach((s, i) => {
-    const p = progresses[i];
+  students.forEach((s) => {
+    const p = snapshot.progress.get(s.code) ?? { code: s.code, completedWorlds: [], activityLog: [], coins: 0 };
     const pending = worlds.enabledWorldIds.filter((id) => !p.completedWorlds.includes(id)).length;
     map.set(s.code, {
       code: s.code,
@@ -71,8 +74,9 @@ async function playersInfo(students: Student[]) {
 }
 
 // Premio de un duelo terminado, para UN jugador (cada uno cobra el suyo).
-async function payIfNeeded(duel: Duel, code: string): Promise<number> {
-  if (duel.status !== "terminado" || (await isDuelPaid(duel.id, code))) return 0;
+async function payIfNeeded(duel: Duel, code: string, alreadyPaid?: boolean): Promise<number> {
+  if (duel.status !== "terminado") return 0;
+  if (alreadyPaid ?? (await isDuelPaid(duel.id, code))) return 0;
   const other = code === duel.from ? duel.to : duel.from;
   const cmp = compareResults(duel.results[code], duel.results[other]);
   const coins = cmp < 0 ? DUEL_COINS.win : cmp === 0 ? DUEL_COINS.tie : DUEL_COINS.lose;
@@ -128,18 +132,15 @@ export async function GET(request: NextRequest) {
   // invitó a un duelo en vivo recién?
   if (searchParams.get("invites")) {
     if (!canPlayToday) return Response.json({ invites: [] });
-    const index = await getDuelIndex();
-    const recent = index.filter(
-      (d) => d.to === me.code && Date.now() - new Date(d.createdAt).getTime() < LIVE_INVITE_SECONDS * 1000
+    const duels = (await getRecentDuelsTo(me.code, LIVE_INVITE_SECONDS * 1000)).filter(
+      (d) => d.mode === "vivo" && d.status === "pendiente"
     );
-    const duels = (await Promise.all(recent.map((d) => getDuel(d.id)))).filter(
-      (d): d is Duel => !!d && d.mode === "vivo" && d.status === "pendiente"
-    );
-    const students = await getStudents();
+    if (duels.length === 0) return Response.json({ invites: [] });
+    const snapshot = await getClassSnapshot();
     const invites = await Promise.all(
       duels.map(async (d) => {
-        const s = students.find((x) => x.code === d.from);
-        const p = s ? await getProgress(s.code) : undefined;
+        const s = snapshot.students.find((x) => x.code === d.from);
+        const p = snapshot.progress.get(d.from);
         return {
           id: d.id,
           fromName: s ? displayName(s, p) : "Un compañero",
@@ -153,7 +154,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ invites });
   }
 
-  const students = await getStudents();
+  const students = classmatesOf(me, await getStudents());
 
   // Detalle de un duelo (sala del duelo; en vivo se consulta cada 2 s, así
   // que solo se leen los datos de los dos jugadores).
@@ -182,14 +183,18 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const players = await playersInfo(students);
-  const eligibility = await getEligibility(me.code);
-  const duels = await getDuelsFor(me.code);
-  let coinsEarned = 0;
-  for (const d of duels) coinsEarned += await payIfNeeded(d, me.code);
-
   const week = tournamentWeekKey();
-  const entries = rankTournament(await getTournamentEntries(week, students.map((s) => s.code)));
+  const [players, eligibility, duels, entriesRaw] = await Promise.all([
+    playersInfo(students),
+    getEligibility(me.code),
+    getDuelsFor(me.code),
+    getTournamentEntries(week, students.map((s) => s.code)),
+  ]);
+  const finished = duels.filter((d) => d.status === "terminado");
+  const paid = await getPaidFlags(finished.map((d) => d.id), me.code);
+  let coinsEarned = 0;
+  for (let i = 0; i < finished.length; i++) coinsEarned += await payIfNeeded(finished[i], me.code, paid[i]);
+  const entries = rankTournament(entriesRaw);
   return Response.json({
     config: { enabled: config.enabled, anyDay: config.anyDay },
     canPlayToday,
@@ -247,7 +252,9 @@ export async function POST(request: NextRequest) {
     const { to, mode, presetId } = body as { to?: string; mode?: DuelMode; presetId?: string };
     if (!(await getEligibility(me.code)).eligible) return notEligible();
     const target = to ? await findStudentByCode(to) : undefined;
-    if (!target || target.code === me.code) return Response.json({ error: "Elegí a un compañero." }, { status: 400 });
+    if (!target || target.code === me.code || !sameClassroom(target, me)) {
+      return Response.json({ error: "Elegí a un compañero." }, { status: 400 });
+    }
     if (!(await getEligibility(target.code)).eligible) {
       return Response.json(
         { error: "Tu compañero todavía tiene mundos por completar. ¡Cuando se ponga al día lo podés desafiar!" },
@@ -260,7 +267,7 @@ export async function POST(request: NextRequest) {
     const liveMode: DuelMode = mode === "vivo" ? "vivo" : "turnos";
     if (liveMode === "vivo") {
       if (!canPlayToday) return Response.json({ error: "Los duelos en vivo se juegan el fin de semana." }, { status: 400 });
-      const presence = await getJSON<Record<string, string>>("presence", {});
+      const presence = await getPresenceMap([target.code]);
       if (!isOnline(presence[target.code])) {
         return Response.json({ error: "Tu compañero no está conectado ahora. Probá un duelo por turnos." }, { status: 400 });
       }
@@ -362,12 +369,12 @@ export async function POST(request: NextRequest) {
       const w = winnerOf(after);
       const [a, b] = [await name(after.from), await name(after.to)];
       if (w === "empate") {
-        await addNews([{ code: after.from, who: a, kind: "duelo", emoji: "🤝", text: `y ${b} empataron un duelo de memoria` }]);
+        await addNews([{ code: after.from, who: a, kind: "duelo", emoji: "🤝", text: `y ${b} empataron un duelo de memoria` }], me.classroomId);
       } else if (w) {
         const loser = w === after.from ? b : a;
         await addNews([
           { code: w, who: w === after.from ? a : b, kind: "duelo", emoji: "⚔️", text: `ganó un duelo de memoria contra ${loser}` },
-        ]);
+        ], me.classroomId);
       }
     }
     const view = await getDuel(duel.id);
@@ -388,7 +395,7 @@ export async function POST(request: NextRequest) {
     await setTournamentEntry(week, { code: me.code, errors, timeMs, at: new Date().toISOString() });
     const p = await getProgress(me.code);
     await saveProgress({ ...p, coins: p.coins + TOURNAMENT_COINS });
-    const students = await getStudents();
+    const students = classmatesOf(me, await getStudents());
     const ranking = rankTournament(await getTournamentEntries(week, students.map((s) => s.code)));
     const position = ranking.findIndex((e) => e.code === me.code) + 1;
     const who = displayName(me, p);
@@ -396,7 +403,7 @@ export async function POST(request: NextRequest) {
       position === 1 && ranking.length > 1
         ? { code: me.code, who, kind: "torneo", emoji: "🏆", text: "pasó al primer puesto del torneo de la semana" }
         : { code: me.code, who, kind: "torneo", emoji: "🎯", text: "jugó el torneo de memoria de la semana" },
-    ]);
+    ], me.classroomId);
     return Response.json({ ok: true, position, total: ranking.length, coinsEarned: TOURNAMENT_COINS });
   }
 

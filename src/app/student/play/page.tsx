@@ -39,8 +39,8 @@ export default function StudentPlayPage() {
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
     const [progressRes, worldsRes, challengeRes] = await Promise.all([
-      fetch(`/api/progress?code=${encodeURIComponent(studentCode)}`),
-      fetch("/api/worlds"),
+      fetch(`/api/progress?code=${encodeURIComponent(studentCode)}&lite=1`),
+      fetch(`/api/worlds?code=${encodeURIComponent(studentCode)}`),
       fetch(`/api/weekend?code=${encodeURIComponent(studentCode)}`),
     ]);
     const progressData = await progressRes.json();

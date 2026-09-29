@@ -14,9 +14,10 @@ import {
   getValidAccessoryIdsForAvatar,
   isBackgroundSelectable,
 } from "@/types";
-import { getJSON, setJSON } from "@/lib/store";
+import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
+import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -98,6 +99,7 @@ export async function addStudent(
   };
   const updated = [...students, student];
   await setJSON(STUDENTS_KEY, updated);
+  classSnapshotCache = null;
   return student;
 }
 
@@ -105,6 +107,7 @@ export async function deleteStudent(code: string): Promise<void> {
   const students = await getStudents();
   const updated = students.filter((s) => s.code !== code);
   await setJSON(STUDENTS_KEY, updated);
+  classSnapshotCache = null;
 }
 
 export async function setStudentBirthday(
@@ -118,6 +121,7 @@ export async function setStudentBirthday(
   updated[idx] = { ...updated[idx], birthday };
   if (!birthday) delete updated[idx].birthday;
   await setJSON(STUDENTS_KEY, updated);
+  classSnapshotCache = null;
   return true;
 }
 
@@ -125,20 +129,119 @@ export async function findStudentByCode(
   code: string
 ): Promise<Student | undefined> {
   const students = await getStudents();
-  return students.find((s) => s.code.toUpperCase() === code.toUpperCase());
+  const found = students.find((s) => s.code.toUpperCase() === code.toUpperCase());
+  if (found || !isPlatformEnabled()) return found;
+  // Alumno inscripto desde el panel de la plataforma que todavía no entró
+  // nunca al juego: se lo incorpora con su mismo código.
+  return syncStudentWithPlatform(code);
+}
+
+// Mantiene al alumno del juego al día con la plataforma: lo crea si hace
+// falta y actualiza su aula actual (tras una promoción, un cambio de aula
+// o un traslado) y su fecha de nacimiento. No toca su progreso.
+export async function syncStudentWithPlatform(code: string): Promise<Student | undefined> {
+  const students = await getStudents();
+  const idx = students.findIndex((s) => s.code.toUpperCase() === code.toUpperCase());
+  const current = idx >= 0 ? students[idx] : undefined;
+  if (!isPlatformEnabled()) return current;
+  const entry = await lookupStudent(code);
+  if (!entry) return current;
+  const classroomId = entry.isLegacyPilot ? undefined : entry.classroomId ?? undefined;
+  const birthday = entry.birthDate ?? entry.birthdayMmdd ?? current?.birthday;
+  if (!current) {
+    const student: Student = {
+      code: entry.accessCode,
+      name: entry.fullName,
+      type: "aula",
+      createdAt: new Date().toISOString(),
+      ...(birthday ? { birthday } : {}),
+      ...(classroomId ? { classroomId } : {}),
+    };
+    await setJSON(STUDENTS_KEY, [...students, student]);
+    classSnapshotCache = null;
+    return student;
+  }
+  if (current.classroomId === classroomId && current.birthday === birthday) return current;
+  const updated: Student = { ...current, classroomId, birthday };
+  if (!classroomId) delete updated.classroomId;
+  if (!birthday) delete updated.birthday;
+  const list = [...students];
+  list[idx] = updated;
+  await setJSON(STUDENTS_KEY, list);
+  classSnapshotCache = null;
+  return updated;
+}
+
+// Compañeros de aula: los alumnos con la misma aula actual (los del aula
+// piloto no tienen aula asignada y siguen juntos como siempre).
+export function sameClassroom(a: Student, b: Student): boolean {
+  return (a.classroomId ?? null) === (b.classroomId ?? null);
+}
+
+export function classmatesOf(me: Student, students: Student[]): Student[] {
+  return students.filter((s) => sameClassroom(s, me));
+}
+
+function emptyProgress(code: string): StudentProgress {
+  return { code, completedWorlds: [], activityLog: [], coins: 0 };
 }
 
 export async function getProgress(code: string): Promise<StudentProgress> {
-  return getJSON<StudentProgress>(`${PROGRESS_KEY_PREFIX}${code}`, {
-    code,
-    completedWorlds: [],
-    activityLog: [],
-    coins: 0,
-  });
+  return getJSON<StudentProgress>(`${PROGRESS_KEY_PREFIX}${code}`, emptyProgress(code));
+}
+
+// Progreso sin el registro detallado (para responder a las pantallas del
+// alumno, que no lo usan).
+export function liteProgress(p: StudentProgress): StudentProgress {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { activityLog, activitySummary, ...rest } = p;
+  return { ...rest, activityLog: [] };
+}
+
+// Progreso de varios alumnos en una sola consulta.
+export async function getProgressMany(codes: string[]): Promise<StudentProgress[]> {
+  return getJSONMany<StudentProgress>(
+    codes.map((c) => `${PROGRESS_KEY_PREFIX}${c}`),
+    (key) => emptyProgress(key.slice(PROGRESS_KEY_PREFIX.length))
+  );
 }
 
 export async function saveProgress(progress: StudentProgress): Promise<void> {
   await setJSON(`${PROGRESS_KEY_PREFIX}${progress.code}`, progress);
+  classSnapshotCache = null;
+}
+
+// "Foto" de la clase (alumnos + progreso de cada uno) para las pantallas que
+// muestran a los compañeros (buzón, pizarrón, competencia, mapa). Se guarda
+// unos segundos en memoria: así varias consultas seguidas no vuelven a leer
+// todo. Para esas pantallas no importa si un dato tiene unos segundos.
+const CLASS_SNAPSHOT_TTL_MS = 15_000;
+let classSnapshotCache: { at: number; value: Promise<ClassSnapshot> } | null = null;
+
+export interface ClassSnapshot {
+  students: Student[];
+  progress: Map<string, StudentProgress>;
+}
+
+export function getClassSnapshot(): Promise<ClassSnapshot> {
+  const now = Date.now();
+  if (classSnapshotCache && now - classSnapshotCache.at < CLASS_SNAPSHOT_TTL_MS) {
+    return classSnapshotCache.value;
+  }
+  const value = (async () => {
+    const students = await getStudents();
+    const list = await getProgressMany(students.map((s) => s.code));
+    // En memoria no hace falta el registro detallado de actividades.
+    return {
+      students,
+      progress: new Map(list.map((p, i) => [students[i].code, { ...p, activityLog: [] }])),
+    };
+  })();
+  classSnapshotCache = { at: now, value };
+  value.catch(() => {
+    classSnapshotCache = null;
+  });
+  return value;
 }
 
 // Sanea el apodo que elige el alumno: recorta espacios, saca caracteres de
@@ -333,23 +436,16 @@ export async function completeWeekendActivity(
 // compañeros sin exponer nombres ni apodos de nadie.
 export async function getClassmateWorldCounts(
   subjectWorldIdsInOrder: number[],
-  excludeCode: string
+  me: Student
 ): Promise<Record<number, number>> {
-  const students = await getStudents();
+  const { students, progress: all } = await getClassSnapshot();
   const counts: Record<number, number> = {};
-  await Promise.all(
-    students
-      .filter((s) => s.code.toUpperCase() !== excludeCode.toUpperCase())
-      .map(async (s) => {
-        const progress = await getProgress(s.code);
-        const currentWorldId = subjectWorldIdsInOrder.find(
-          (id) => !progress.completedWorlds.includes(id)
-        );
-        if (currentWorldId !== undefined) {
-          counts[currentWorldId] = (counts[currentWorldId] ?? 0) + 1;
-        }
-      })
-  );
+  for (const s of classmatesOf(me, students)) {
+    if (s.code.toUpperCase() === me.code.toUpperCase()) continue;
+    const progress = all.get(s.code) ?? emptyProgress(s.code);
+    const currentWorldId = subjectWorldIdsInOrder.find((id) => !progress.completedWorlds.includes(id));
+    if (currentWorldId !== undefined) counts[currentWorldId] = (counts[currentWorldId] ?? 0) + 1;
+  }
   return counts;
 }
 
@@ -357,6 +453,17 @@ export async function getWorldsConfig(): Promise<WorldsConfig> {
   return getJSON<WorldsConfig>(WORLDS_CONFIG_KEY, {
     enabledWorldIds: [WORLDS[0].id], // por defecto solo el primer mundo habilitado
   });
+}
+
+// Mundos habilitados para un alumno: los de su aula en la plataforma, o
+// los del aula piloto (configuración de siempre).
+export async function getEnabledWorldIdsFor(student: Student | undefined): Promise<number[]> {
+  if (student?.classroomId) {
+    const ids = await getClassroomWorlds(student.classroomId);
+    if (ids) return ids;
+    return [WORLDS[0].id];
+  }
+  return (await getWorldsConfig()).enabledWorldIds;
 }
 
 export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {

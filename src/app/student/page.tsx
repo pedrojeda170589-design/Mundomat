@@ -18,7 +18,7 @@ export default function StudentLoginPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/progress?code=${encodeURIComponent(code.trim())}`
+        `/api/progress?code=${encodeURIComponent(code.trim())}&lite=1`
       );
       const data = await res.json();
       if (!res.ok) {

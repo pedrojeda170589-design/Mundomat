@@ -1,5 +1,5 @@
 // Buzón de la clase: funciones de guardado (solo servidor).
-import { getJSON, setJSON } from "@/lib/store";
+import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import type { ClassMessage } from "@/lib/messagesShared";
 
 export * from "@/lib/messagesShared";
@@ -27,10 +27,17 @@ export async function setMessagingEnabled(enabled: boolean): Promise<void> {
 }
 
 // Presencia: cuándo se vio por última vez a cada alumno (para mostrar quién
-// está conectado ahora).
-export async function touchPresence(code: string): Promise<Record<string, string>> {
-  const p = await getJSON<Record<string, string>>(PRESENCE_KEY, {});
-  p[code] = new Date().toISOString();
-  await setJSON(PRESENCE_KEY, p);
-  return p;
+// está conectado ahora). Una clave por alumno: escribir es una sola
+// operación y dos alumnos nunca se pisan.
+export async function touchPresence(code: string): Promise<void> {
+  await setJSON(`${PRESENCE_KEY}:${code}`, new Date().toISOString());
+}
+
+export async function getPresenceMap(codes: string[]): Promise<Record<string, string>> {
+  const list = await getJSONMany<string | null>(codes.map((c) => `${PRESENCE_KEY}:${c}`), () => null);
+  const out: Record<string, string> = {};
+  codes.forEach((c, i) => {
+    if (list[i]) out[c] = list[i]!;
+  });
+  return out;
 }

@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# copias de seguridad con datos de alumnos (no subir)
+/backups/

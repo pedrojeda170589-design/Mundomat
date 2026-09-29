@@ -12,6 +12,9 @@ export interface Student {
   // avatar del alumno aparece festejando (corona, fondo y torta) y se gana
   // la corona y el fondo de cumpleaños para siempre.
   birthday?: string;
+  // Aula actual en la plataforma (Supabase). Sin valor = aula piloto de
+  // siempre. Sirve para separar compañeros, mundos y novedades por aula.
+  classroomId?: string;
 }
 
 export interface ActivityResult {
@@ -27,6 +30,9 @@ export interface StudentProgress {
   code: string;
   completedWorlds: number[]; // ids de mundos completados (todas las 10 actividades con buen puntaje)
   activityLog: ActivityResult[];
+  // Resumen de las actividades más viejas (para que el registro no crezca
+  // sin fin y la app siga rápida): totales por mundo.
+  activitySummary?: Record<number, { correct: number; incorrect: number; timeSpentSeconds: number }>;
   lastPlayedAt?: string;
   coins: number; // moneda ganada por respuestas correctas / mundos completados
   // Personalización propia del alumno (no afecta el nombre real, que sigue

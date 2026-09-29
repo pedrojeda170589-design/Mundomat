@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
 import { clearNews, displayName, encouragement, getNews } from "@/lib/news";
-import { findStudentByCode, getProgress, getStudents } from "@/lib/data";
+import { classmatesOf, getClassSnapshot, getProgress } from "@/lib/data";
 import { birthdayAge, isBirthdayToday } from "@/lib/seasons";
 import { getMessages, isMessagingEnabled } from "@/lib/messages";
 import { BIRTHDAY_MESSAGES, sameArgDay } from "@/lib/messagesShared";
@@ -14,7 +14,9 @@ const BIRTHDAY_GIFTS = new Set(["torta", "regalito", "globo"]);
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const items = await getNews();
+  const snapshot = code ? await getClassSnapshot() : null;
+  const me = code ? snapshot!.students.find((s) => s.code.toUpperCase() === code.toUpperCase()) : undefined;
+  const items = await getNews(me?.classroomId);
   let message: string | undefined;
   let birthdays: {
     code: string;
@@ -29,11 +31,11 @@ export async function GET(request: NextRequest) {
   }[] = [];
   let messagingEnabled = false;
   if (code) {
-    const student = await findStudentByCode(code);
+    const student = me;
+    const students = student ? classmatesOf(student, snapshot!.students) : [];
     if (student) {
-      const progress = await getProgress(student.code);
+      const progress = snapshot!.progress.get(student.code) ?? (await getProgress(student.code));
       message = encouragement(progress, displayName(student, progress));
-      const students = await getStudents();
       const today = students.filter((s) => isBirthdayToday(s.birthday));
       if (today.length > 0) {
         const [msgs, enabled] = await Promise.all([getMessages(), isMessagingEnabled()]);
@@ -45,15 +47,15 @@ export async function GET(request: NextRequest) {
             (m.kind === "regalo" && BIRTHDAY_GIFTS.has(m.presetId ?? "")));
         birthdays = await Promise.all(
           today.map(async (s) => {
-            const p = await getProgress(s.code);
+            const p = snapshot!.progress.get(s.code);
             const received = msgs.filter((m) => m.to === s.code && isGreeting(m));
             return {
               code: s.code,
               name: displayName(s, p),
               age: birthdayAge(s.birthday),
-              avatar: p.avatar,
-              accessories: p.avatarAccessories,
-              background: p.avatarBackground,
+              avatar: p?.avatar,
+              accessories: p?.avatarAccessories,
+              background: p?.avatarBackground,
               me: s.code === student.code,
               greeted: received.some((m) => m.from === student.code),
               greetings: new Set(received.map((m) => m.from)).size,

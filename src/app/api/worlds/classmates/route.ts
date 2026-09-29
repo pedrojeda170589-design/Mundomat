@@ -34,6 +34,6 @@ export async function GET(request: NextRequest) {
   const subjectWorldIds = WORLDS.filter((w) => w.subject === subject).map(
     (w) => w.id
   );
-  const counts = await getClassmateWorldCounts(subjectWorldIds, student.code);
+  const counts = await getClassmateWorldCounts(subjectWorldIds, student);
   return Response.json({ counts });
 }

@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     if ((result.streak ?? 0) >= 2) {
       items.push({ code: student.code, who, kind: "racha", emoji: "🔥", text: `lleva ${result.streak} fines de semana seguidos jugando` });
     }
-    await addNews(items);
+    await addNews(items, student.classroomId);
   }
   return Response.json({
     record: result.record,

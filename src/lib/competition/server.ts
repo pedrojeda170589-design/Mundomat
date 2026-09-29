@@ -2,8 +2,8 @@
 // un jugador va en su propia clave, así dos alumnos jugando a la vez nunca
 // se pisan los datos.
 
-import { getJSON, setJSON } from "@/lib/store";
-import { getProgress, getWorldsConfig } from "@/lib/data";
+import { getJSON, getJSONMany, setJSON } from "@/lib/store";
+import { findStudentByCode, getEnabledWorldIdsFor, getProgress } from "@/lib/data";
 import { getWorld } from "@/lib/worlds";
 import {
   DUEL_EXPIRE_DAYS,
@@ -42,8 +42,9 @@ export async function setCompetitionConfig(c: CompetitionConfig): Promise<void> 
 }
 
 export async function getEligibility(code: string): Promise<Eligibility> {
-  const [config, progress] = await Promise.all([getWorldsConfig(), getProgress(code)]);
-  const pending = config.enabledWorldIds
+  const student = await findStudentByCode(code);
+  const [enabled, progress] = await Promise.all([getEnabledWorldIdsFor(student), getProgress(code)]);
+  const pending = enabled
     .filter((id) => !progress.completedWorlds.includes(id))
     .map((id) => getWorld(id))
     .filter((w): w is NonNullable<typeof w> => !!w)
@@ -74,31 +75,26 @@ function expired(duel: Duel, now: number): boolean {
   return now - new Date(duel.createdAt).getTime() > DUEL_EXPIRE_DAYS * 86_400_000;
 }
 
-// Lee un duelo completo, juntando lo que escribió cada jugador.
-export async function getDuel(id: string): Promise<Duel | null> {
-  const duel = await getJSON<Duel | null>(`duel:${id}`, null);
-  if (!duel) return null;
+type LiveInfo = { round: number; done: number; total: number; at: string };
+
+function partKeys(id: string, from: string, to: string): string[] {
+  return [from, to].flatMap((c) => [`duel:${id}:result:${c}`, `duel:${id}:ready:${c}`, `duel:${id}:live:${c}`]);
+}
+
+// Junta el duelo con lo que escribió cada jugador (resultado, sala, avance).
+function assemble(duel: Duel, parts: unknown[]): Duel {
   if (duel.status === "rechazado") {
     duel.results = {};
-    return duel; // no hace falta leer nada más
+    return duel;
   }
-  const players = [duel.from, duel.to];
-  const [results, ready, live] = await Promise.all([
-    Promise.all(players.map((c) => getJSON<MatchResult | null>(`duel:${id}:result:${c}`, null))),
-    Promise.all(players.map((c) => getJSON<string | null>(`duel:${id}:ready:${c}`, null))),
-    Promise.all(
-      players.map((c) =>
-        getJSON<{ round: number; done: number; total: number; at: string } | null>(`duel:${id}:live:${c}`, null)
-      )
-    ),
-  ]);
   duel.results = {};
   duel.ready = {};
   duel.live = {};
-  players.forEach((c, i) => {
-    if (results[i]) duel.results[c] = results[i]!;
-    if (ready[i]) duel.ready![c] = ready[i]!;
-    if (live[i]) duel.live![c] = live[i]!;
+  [duel.from, duel.to].forEach((c, i) => {
+    const [result, ready, live] = parts.slice(i * 3, i * 3 + 3) as [MatchResult | null, string | null, LiveInfo | null];
+    if (result) duel.results[c] = result;
+    if (ready) duel.ready![c] = ready;
+    if (live) duel.live![c] = live;
   });
   if (duel.results[duel.from] && duel.results[duel.to]) {
     duel.status = "terminado";
@@ -114,6 +110,33 @@ export async function getDuel(id: string): Promise<Duel | null> {
     duel.startAt = new Date(last + 3500).toISOString();
   }
   return duel;
+}
+
+// Lee un duelo completo (2 consultas en total).
+export async function getDuel(id: string): Promise<Duel | null> {
+  const duel = await getJSON<Duel | null>(`duel:${id}`, null);
+  if (!duel) return null;
+  const parts = await getJSONMany<unknown>(partKeys(id, duel.from, duel.to), () => null);
+  return assemble(duel, parts);
+}
+
+// Lee varios duelos de una sola vez (1 consulta para todos).
+async function getDuelsBatch(items: DuelIndexItem[]): Promise<Duel[]> {
+  const keys = items.flatMap((d) => [`duel:${d.id}`, ...partKeys(d.id, d.from, d.to)]);
+  const values = await getJSONMany<unknown>(keys, () => null);
+  const out: Duel[] = [];
+  items.forEach((_, i) => {
+    const chunk = values.slice(i * 7, i * 7 + 7);
+    const duel = chunk[0] as Duel | null;
+    if (duel) out.push(assemble(duel, chunk.slice(1)));
+  });
+  return out;
+}
+
+export async function getRecentDuelsTo(code: string, withinMs: number): Promise<Duel[]> {
+  const index = await getDuelIndex();
+  const recent = index.filter((d) => d.to === code && Date.now() - new Date(d.createdAt).getTime() < withinMs);
+  return recent.length ? getDuelsBatch(recent) : [];
 }
 
 export async function setDuelResult(id: string, code: string, r: MatchResult): Promise<void> {
@@ -140,8 +163,11 @@ export async function markDuelPaid(id: string, code: string): Promise<void> {
 export async function getDuelsFor(code: string, limit = 10): Promise<Duel[]> {
   const index = await getDuelIndex();
   const mine = index.filter((d) => d.from === code || d.to === code).slice(0, limit);
-  const duels = await Promise.all(mine.map((d) => getDuel(d.id)));
-  return duels.filter((d): d is Duel => !!d);
+  return mine.length ? getDuelsBatch(mine) : [];
+}
+
+export async function getPaidFlags(ids: string[], code: string): Promise<boolean[]> {
+  return getJSONMany<boolean>(ids.map((id) => `duel:${id}:paid:${code}`), () => false);
 }
 
 // ---------- Torneo de la semana ----------
@@ -155,6 +181,6 @@ export async function setTournamentEntry(week: string, entry: TournamentEntry): 
 }
 
 export async function getTournamentEntries(week: string, codes: string[]): Promise<TournamentEntry[]> {
-  const all = await Promise.all(codes.map((c) => getTournamentEntry(week, c)));
+  const all = await getJSONMany<TournamentEntry | null>(codes.map((c) => `tournament:${week}:${c}`), () => null);
   return all.filter((e): e is TournamentEntry => !!e);
 }

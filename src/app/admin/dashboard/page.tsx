@@ -29,10 +29,10 @@ export default function AdminDashboardPage() {
     "alumnos"
   );
 
-  const loadAll = useCallback(async () => {
+  const loadAll = useCallback(async (pw: string) => {
     setLoading(true);
     const [studentsRes, worldsRes] = await Promise.all([
-      fetch("/api/students"),
+      fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}`),
       fetch("/api/worlds"),
     ]);
     const studentsData = await studentsRes.json();
@@ -51,7 +51,7 @@ export default function AdminDashboardPage() {
     // Sincroniza el estado con sessionStorage (API externa al render).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setAdminPassword(pw);
-    void loadAll();
+    void loadAll(pw);
   }, [router, loadAll]);
 
   const aula = useMemo(

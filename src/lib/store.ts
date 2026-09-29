@@ -89,6 +89,39 @@ export async function getJSON<T>(key: string, fallback: T): Promise<T> {
   }
 }
 
+// Lee varias claves en UNA sola consulta (MGET). Mucho más rápido que leer
+// clave por clave cuando hay que mirar a toda la clase.
+export async function getJSONMany<T>(keys: string[], fallback: (key: string) => T): Promise<T[]> {
+  if (keys.length === 0) return [];
+  let raws: (string | null)[];
+  if (!KV_URL || !KV_TOKEN) {
+    const db = readLocalDb();
+    raws = keys.map((k) => db[k] ?? null);
+  } else {
+    const res = await fetch(KV_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${KV_TOKEN}` },
+      body: JSON.stringify(["MGET", ...keys]),
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      // Si falla, se lee una por una (más lento pero seguro).
+      raws = await Promise.all(keys.map((k) => kvGetRaw(k)));
+    } else {
+      raws = ((await res.json()) as { result: (string | null)[] }).result ?? [];
+    }
+  }
+  return keys.map((k, i) => {
+    const raw = raws[i];
+    if (raw === null || raw === undefined) return fallback(k);
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return fallback(k);
+    }
+  });
+}
+
 export async function setJSON<T>(key: string, value: T): Promise<void> {
   await kvSetRaw(key, JSON.stringify(value));
 }

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { findStudentByCode, updateStudentProfile } from "@/lib/data";
+import { findStudentByCode, updateStudentProfile, liteProgress } from "@/lib/data";
 import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 
 // El alumno personaliza su avatar (personaje + accesorios) y/o apodo con su
@@ -53,5 +53,5 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return Response.json({ progress: updated });
+  return Response.json({ progress: liteProgress(updated) });
 }

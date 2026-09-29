@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { COINS_BONUS_WORLD_COMPLETE, WorldDef } from "@/types";
+import { COINS_BONUS_WORLD_COMPLETE, COINS_PER_CORRECT_ANSWER, WorldDef } from "@/types";
 import { ActivitySpec, buildActivitiesForWorld } from "@/lib/activities";
 import { WorldMasteryOutcome } from "@/lib/progressLogic";
 import McActivity from "@/components/activities/McActivity";
@@ -69,6 +69,9 @@ export default function ActivityRunner({
   const [attemptOutcome, setAttemptOutcome] =
     useState<WorldMasteryOutcome | null>(null);
   const startTimeRef = useRef<number>(0);
+  // Los resultados se guardan "de fondo" (la respuesta se muestra al
+  // instante) pero en orden, uno detrás de otro, para no pisarse.
+  const saveQueue = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -76,45 +79,52 @@ export default function ActivityRunner({
 
   const activity = activities[index];
 
-  async function submitResult(correct: boolean) {
+  function submitResult(correct: boolean) {
     const timeSpentSeconds = Math.round(
       (Date.now() - startTimeRef.current) / 1000
     );
     setLastCorrect(correct);
     if (correct) setCorrectCount((c) => c + 1);
-    try {
-      const res = await fetch("/api/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: studentCode,
-          worldId: world.id,
-          activityIndex: index,
-          correct: correct ? 1 : 0,
-          incorrect: correct ? 0 : 1,
-          timeSpentSeconds,
-        }),
-      });
-      const data = await res.json();
-      if (data.coinsEarned) {
-        onCoinsChange(data.progress.coins);
-        setLastCoinsEarned(data.coinsEarned);
-      } else {
-        setLastCoinsEarned(0);
-      }
-    } catch {
-      // si falla la red, igual dejamos seguir jugando
-    }
+    setLastCoinsEarned(correct ? COINS_PER_CORRECT_ANSWER : 0);
     setPhase("feedback");
+    const payload = JSON.stringify({
+      clientId: newClientId(),
+      code: studentCode,
+      worldId: world.id,
+      activityIndex: index,
+      correct: correct ? 1 : 0,
+      incorrect: correct ? 0 : 1,
+      timeSpentSeconds,
+    });
+    saveQueue.current = saveQueue.current.then(async () => {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const res = await fetch("/api/progress", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
+          });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.progress) onCoinsChange(data.progress.coins);
+          return;
+        } catch {
+          // si falla la red, se reintenta una vez y se sigue jugando
+        }
+      }
+    });
   }
 
   async function finishWorldAttempt(finalCorrectCount: number) {
     setPhase("finishing");
     try {
+      // Primero terminan de guardarse las respuestas pendientes.
+      await saveQueue.current;
       const res = await fetch("/api/world-attempt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          clientId: newClientId(),
           code: studentCode,
           worldId: world.id,
           correctCount: finalCorrectCount,
@@ -380,4 +390,11 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
       </div>
     </div>
   );
+}
+
+// Identificador único de cada respuesta: si se reenvía (reintento), la
+// plataforma no la duplica.
+function newClientId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 }
