@@ -1,6 +1,15 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
-import { clearNews, displayName, encouragement, getNews } from "@/lib/news";
+import {
+  MAX_TEACHER_NOTE_LENGTH,
+  addTeacherNote,
+  clearNews,
+  deleteTeacherNote,
+  displayName,
+  encouragement,
+  getNews,
+  getTeacherNotes,
+} from "@/lib/news";
 import { classmatesOf, getClassSnapshot, getProgress } from "@/lib/data";
 import { birthdayAge, isBirthdayToday } from "@/lib/seasons";
 import { getMessages, isMessagingEnabled } from "@/lib/messages";
@@ -16,7 +25,7 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const snapshot = code ? await getClassSnapshot() : null;
   const me = code ? snapshot!.students.find((s) => s.code.toUpperCase() === code.toUpperCase()) : undefined;
-  const items = await getNews(me?.classroomId);
+  const [items, notes] = await Promise.all([getNews(me?.classroomId), getTeacherNotes(me?.classroomId)]);
   let message: string | undefined;
   let birthdays: {
     code: string;
@@ -65,15 +74,43 @@ export async function GET(request: NextRequest) {
       }
     }
   }
-  return Response.json({ items: items.slice(0, 20), message, birthdays, messagingEnabled });
+  return Response.json({ items: items.slice(0, 20), notes, message, birthdays, messagingEnabled });
 }
 
-// DELETE: el docente borra el pizarrón.
+const NOTE_EMOJIS = ["📣", "⭐", "🎉", "📚", "🧠", "🌟", "👏", "📅", "🏆", "💡", "❤️", "🌈"];
+
+// POST: el docente escribe un mensaje en el pizarrón (aula piloto).
+export async function POST(request: NextRequest) {
+  const body = (await request.json()) as { adminPassword?: string; text?: string; emoji?: string };
+  if (!body.adminPassword || !checkAdminPassword(body.adminPassword)) {
+    return Response.json({ error: "No autorizado." }, { status: 401 });
+  }
+  // Texto limpio: sin caracteres de control ni saltos de más.
+  const text = (body.text ?? "")
+    .replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  if (!text) return Response.json({ error: "Escribí un mensaje." }, { status: 400 });
+  if (text.length > MAX_TEACHER_NOTE_LENGTH) {
+    return Response.json({ error: `El mensaje puede tener hasta ${MAX_TEACHER_NOTE_LENGTH} letras.` }, { status: 400 });
+  }
+  const emoji = NOTE_EMOJIS.includes(body.emoji ?? "") ? body.emoji! : "📣";
+  const note = await addTeacherNote(text, emoji);
+  return Response.json({ ok: true, note });
+}
+
+// DELETE ?noteId= → borra un mensaje del docente.
+// DELETE (sin noteId) → borra las novedades automáticas del pizarrón.
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const adminPassword = searchParams.get("adminPassword");
   if (!adminPassword || !checkAdminPassword(adminPassword)) {
     return Response.json({ error: "No autorizado." }, { status: 401 });
+  }
+  const noteId = searchParams.get("noteId");
+  if (noteId) {
+    await deleteTeacherNote(noteId);
+    return Response.json({ ok: true });
   }
   await clearNews();
   return Response.json({ ok: true });

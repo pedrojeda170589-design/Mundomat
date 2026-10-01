@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import AvatarDisplay from "@/components/AvatarDisplay";
-import type { NewsItem } from "@/lib/news";
+import type { NewsItem, TeacherNote } from "@/lib/news";
 import { BIRTHDAY_MESSAGES, PRESET_GIFTS } from "@/lib/messagesShared";
 import { AvatarAccessories } from "@/types";
 
@@ -36,6 +36,7 @@ const BIRTHDAY_GIFTS = PRESET_GIFTS.filter((g) => ["torta", "regalito", "globo"]
 // animar al alumno a seguir participando.
 export default function NewsBoard({ code }: { code: string }) {
   const [items, setItems] = useState<NewsItem[] | null>(null);
+  const [notes, setNotes] = useState<TeacherNote[]>([]);
   const [message, setMessage] = useState<string | undefined>();
   const [birthdays, setBirthdays] = useState<BirthdayInfo[]>([]);
   const [canGreet, setCanGreet] = useState(false);
@@ -48,6 +49,7 @@ export default function NewsBoard({ code }: { code: string }) {
     try {
       const d = await fetch(`/api/news?code=${encodeURIComponent(code)}`).then((r) => r.json());
       setItems(d.items ?? []);
+      setNotes(d.notes ?? []);
       setMessage(d.message);
       setBirthdays(d.birthdays ?? []);
       setCanGreet(!!d.messagingEnabled);
@@ -106,6 +108,28 @@ export default function NewsBoard({ code }: { code: string }) {
           )}
         </div>
 
+        {notes.length > 0 && (
+          <ul className="flex flex-col gap-2 mb-3">
+            {notes.map((n) => (
+              <li
+                key={n.id}
+                className="relative rounded-xl bg-yellow-100 text-amber-950 px-3 py-2 shadow-md -rotate-[0.6deg]"
+                style={{ fontFamily: "inherit" }}
+              >
+                <span className="absolute -top-2.5 right-3 text-lg" aria-hidden>
+                  📌
+                </span>
+                <span className="block text-[11px] font-bold uppercase tracking-wide text-amber-700">
+                  Mensaje del docente · {timeAgo(n.at)}
+                </span>
+                <span className="block text-sm font-bold leading-snug whitespace-pre-line">
+                  {n.emoji} {n.text}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+
         {birthdays.length > 0 && (
           <ul className="flex flex-col gap-2 mb-3">
             {birthdays.map((b) => (
@@ -163,7 +187,7 @@ export default function NewsBoard({ code }: { code: string }) {
         )}
 
         {message && <p className="text-yellow-200 font-bold text-sm mb-2 leading-snug">✨ {message}</p>}
-        {items.length === 0 ? (
+        {items.length === 0 && notes.length === 0 ? (
           <p className="text-white/80 text-sm">
             Todavía no hay novedades. ¡Superá un mundo y aparecé en el pizarrón!
           </p>

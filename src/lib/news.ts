@@ -52,6 +52,42 @@ export async function addNews(items: Omit<NewsItem, "id" | "at">[], classroomId?
   await setJSON(newsKey(classroomId), [...added, ...current].slice(0, MAX_NEWS));
 }
 
+// ---------- Mensajes del docente (los escribe el docente; quedan fijos
+// arriba del pizarrón hasta que los borre) ----------
+export interface TeacherNote {
+  id: string;
+  at: string;
+  emoji: string;
+  text: string;
+}
+export const MAX_TEACHER_NOTES = 6;
+export const MAX_TEACHER_NOTE_LENGTH = 280;
+
+function notesKey(classroomId?: string): string {
+  return classroomId ? `teacherNotes:${classroomId}` : "teacherNotes";
+}
+
+export async function getTeacherNotes(classroomId?: string): Promise<TeacherNote[]> {
+  return getJSON<TeacherNote[]>(notesKey(classroomId), []);
+}
+
+export async function addTeacherNote(text: string, emoji: string, classroomId?: string): Promise<TeacherNote> {
+  const note: TeacherNote = {
+    id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+    at: new Date().toISOString(),
+    emoji,
+    text,
+  };
+  const current = await getTeacherNotes(classroomId);
+  await setJSON(notesKey(classroomId), [note, ...current].slice(0, MAX_TEACHER_NOTES));
+  return note;
+}
+
+export async function deleteTeacherNote(id: string, classroomId?: string): Promise<void> {
+  const current = await getTeacherNotes(classroomId);
+  await setJSON(notesKey(classroomId), current.filter((n) => n.id !== id));
+}
+
 export async function clearNews(): Promise<void> {
   await setJSON(NEWS_KEY, []);
 }
