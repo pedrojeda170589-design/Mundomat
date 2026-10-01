@@ -51,6 +51,9 @@ export interface StudentProgress {
   // al menos una actividad mientras esa estación o festividad está activa, y
   // quedan para siempre. Ver src/lib/seasons.ts.
   seasonalCollection?: string[];
+  // Lo comprado en la tienda con monedas (avatares y objetos): queda para
+  // siempre.
+  shopCollection?: string[];
   nickname?: string; // apodo elegido por el alumno para verse en el juego
   // Desafío Especial de fin de semana (memorama con recompensa extra): fecha
   // "YYYY-MM-DD" de la última vez que lo jugó, para permitir uno por día.
@@ -114,6 +117,13 @@ export const AVATAR_OPTIONS: string[] = [
   "curiosa",
   "estandar-nena",
   "estandar-nino",
+  // Avatares de la tienda (se compran con monedas, ver SHOP_AVATARS).
+  "san-martin",
+  "belgrano",
+  "juana-azurduy",
+  "puma",
+  "guardaparque",
+  "dragon",
 ];
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
@@ -135,7 +145,49 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   curiosa: { label: "Curiosa", emoji: "🔍" },
   "estandar-nena": { label: "Exploradora Estándar", emoji: "👧" },
   "estandar-nino": { label: "Explorador Estándar", emoji: "👦" },
+  "san-martin": { label: "José de San Martín", emoji: "🇦🇷" },
+  belgrano: { label: "Manuel Belgrano", emoji: "🇦🇷" },
+  "juana-azurduy": { label: "Juana Azurduy", emoji: "🇦🇷" },
+  puma: { label: "Puma", emoji: "🐆" },
+  guardaparque: { label: "Guardaparque", emoji: "🌲" },
+  dragon: { label: "Dragón amigo", emoji: "🐉" },
 };
+
+// --- Tienda ---
+// Avatares y objetos que se compran con monedas. Lo comprado queda para
+// siempre en la colección del alumno (StudentProgress.shopCollection).
+export interface ShopAvatar {
+  id: string;
+  price: number;
+  category: "proceres" | "fauna" | "oficios" | "fantasia";
+  blurb: string;
+}
+
+export const SHOP_AVATARS: ShopAvatar[] = [
+  { id: "puma", price: 150, category: "fauna", blurb: "El gran felino de la estepa patagónica." },
+  { id: "guardaparque", price: 160, category: "oficios", blurb: "Cuida los parques nacionales y su fauna." },
+  { id: "dragon", price: 180, category: "fantasia", blurb: "Un dragón amigo al que le encanta aprender." },
+  { id: "belgrano", price: 220, category: "proceres", blurb: "Creador de la Bandera argentina." },
+  { id: "juana-azurduy", price: 230, category: "proceres", blurb: "Heroína de la independencia." },
+  { id: "san-martin", price: 250, category: "proceres", blurb: "Libertador de Argentina, Chile y Perú." },
+];
+
+export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
+  proceres: "🇦🇷 Próceres",
+  fauna: "🐾 Fauna",
+  oficios: "🧰 Oficios",
+  fantasia: "✨ Fantasía",
+};
+
+export function getShopAvatar(id: string): ShopAvatar | undefined {
+  return SHOP_AVATARS.find((a) => a.id === id);
+}
+
+// ¿Puede usar este personaje? Los de siempre, sí; los de la tienda, si
+// los compró.
+export function canUseAvatar(id: string, shopCollection: string[] = []): boolean {
+  return AVATAR_OPTIONS.includes(id) && (!getShopAvatar(id) || shopCollection.includes(id));
+}
 
 // Los dos avatares "estándar" tienen un guardarropa mucho más amplio (ver
 // ACCESSORY_CATALOG_ESTANDAR): gorros, camperas, mochilas y pañuelos de
@@ -169,7 +221,7 @@ export type AccessorySlot =
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
 
-export type AccessoryGroup = "legacy" | "estandar" | "temporada";
+export type AccessoryGroup = "legacy" | "estandar" | "temporada" | "tienda";
 
 export interface AccessoryDef {
   id: string;
@@ -183,6 +235,8 @@ export interface AccessoryDef {
   // Solo para "temporada": la estación o festividad que lo entrega (ver
   // SEASONAL_EVENTS en src/lib/seasons.ts).
   eventId?: string;
+  // Solo para "tienda": precio en monedas.
+  price?: number;
 }
 
 // Catálogo "de siempre": accesorios simples (íconos planos) para los 14
@@ -270,6 +324,23 @@ export const ACCESSORY_CATALOG_TEMPORADA: AccessoryDef[] = [
   { id: "medalla-estrella", slot: "pendant", label: "Medalla de la memoria", emoji: "🏅", group: "temporada", eventId: "fin-de-semana" },
 ];
 
+// Objetos de la tienda: se compran con monedas y se pueden usar con
+// cualquier personaje (cabeza, ojos, cuello o colgante).
+export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
+  { id: "bicornio-granadero", slot: "headwear", label: "Bicornio de granadero", emoji: "🎩", group: "tienda", price: 80 },
+  { id: "galera", slot: "headwear", label: "Galera de gala", emoji: "🎩", group: "tienda", price: 60 },
+  { id: "casco-bombero", slot: "headwear", label: "Casco de bombero", emoji: "🚒", group: "tienda", price: 70 },
+  { id: "sombrero-guardaparque", slot: "headwear", label: "Sombrero de guardaparque", emoji: "🌲", group: "tienda", price: 55 },
+  { id: "cuernitos-dragon", slot: "headwear", label: "Vincha de cuernitos de dragón", emoji: "🐉", group: "tienda", price: 65 },
+  { id: "tiara-estrellas", slot: "headwear", label: "Tiara de estrellas", emoji: "✨", group: "tienda", price: 75 },
+  { id: "lentes-aviador", slot: "eyewear", label: "Lentes de aviador", emoji: "🕶️", group: "tienda", price: 45 },
+  { id: "lentes-corazon", slot: "eyewear", label: "Lentes de corazón", emoji: "💖", group: "tienda", price: 35 },
+  { id: "antiparras-cientifico", slot: "eyewear", label: "Antiparras de científico", emoji: "🥽", group: "tienda", price: 50 },
+  { id: "corbatin-lunares", slot: "face", label: "Corbatín a lunares", emoji: "🎀", group: "tienda", price: 30 },
+  { id: "sol-de-mayo", slot: "pendant", label: "Colgante Sol de Mayo", emoji: "🌞", group: "tienda", price: 60 },
+  { id: "collar-caracoles", slot: "pendant", label: "Collar de caracoles", emoji: "🐚", group: "tienda", price: 40 },
+];
+
 export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(
   (a) => a.eventId === "fin-de-semana"
 ).map((a) => a.id);
@@ -278,6 +349,7 @@ export const ALL_ACCESSORIES: AccessoryDef[] = [
   ...ACCESSORY_CATALOG,
   ...ACCESSORY_CATALOG_ESTANDAR,
   ...ACCESSORY_CATALOG_TEMPORADA,
+  ...ACCESSORY_CATALOG_TIENDA,
 ];
 
 // Qué catálogo de accesorios corresponde según el personaje elegido.
@@ -305,6 +377,7 @@ export function getValidAccessoryIdsForAvatar(avatar?: string): Set<string> {
   return new Set([
     ...getAccessoryCatalogForAvatar(avatar).map((a) => a.id),
     ...ACCESSORY_CATALOG_TEMPORADA.map((a) => a.id),
+    ...ACCESSORY_CATALOG_TIENDA.map((a) => a.id),
   ]);
 }
 
@@ -313,12 +386,15 @@ export function getValidAccessoryIdsForAvatar(avatar?: string): Set<string> {
 export function getEquippableAccessoryIds(
   completedWorldsCount: number,
   avatar: string | undefined,
-  seasonalCollection: string[] = []
+  seasonalCollection: string[] = [],
+  shopCollection: string[] = []
 ): Set<string> {
   const earned = new Set(seasonalCollection);
+  const bought = new Set(shopCollection);
   return new Set([
     ...getUnlockedAccessoryIds(completedWorldsCount, avatar),
     ...ACCESSORY_CATALOG_TEMPORADA.filter((a) => earned.has(a.id)).map((a) => a.id),
+    ...ACCESSORY_CATALOG_TIENDA.filter((a) => bought.has(a.id)).map((a) => a.id),
   ]);
 }
 
@@ -330,6 +406,7 @@ const ACCESSORY_FOLDER: Record<AccessoryGroup, string> = {
   legacy: "accessories",
   estandar: "accessories-estandar",
   temporada: "accessories-temporada",
+  tienda: "accessories-tienda",
 };
 
 export function getAccessorySrc(id: string): string {

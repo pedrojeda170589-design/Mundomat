@@ -9,7 +9,10 @@ import {
   WEEKEND_REWARD_IDS,
   WeekendRecord,
   WorldsConfig,
+  ACCESSORY_CATALOG_TIENDA,
+  canUseAvatar,
   getAccessoryById,
+  getShopAvatar,
   getEquippableAccessoryIds,
   getValidAccessoryIdsForAvatar,
   isBackgroundSelectable,
@@ -280,6 +283,10 @@ export async function updateStudentProfile(
     return null;
   }
   const progress = await getProgress(code);
+  // Los avatares de la tienda solo si los compró.
+  if (update.avatar !== undefined && !canUseAvatar(update.avatar, progress.shopCollection)) {
+    return null;
+  }
   // El personaje "efectivo" contra el que se validan los accesorios: el
   // nuevo, si se está cambiando en esta misma actualización, o si no el que
   // ya tenía. Cada personaje tiene su propio catálogo (ver
@@ -292,7 +299,8 @@ export async function updateStudentProfile(
     const unlocked = getEquippableAccessoryIds(
       progress.completedWorlds.length,
       effectiveAvatar,
-      progress.seasonalCollection
+      progress.seasonalCollection,
+      progress.shopCollection
     );
     const merged: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
     for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
@@ -468,4 +476,31 @@ export async function getEnabledWorldIdsFor(student: Student | undefined): Promi
 
 export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {
   await setJSON(WORLDS_CONFIG_KEY, config);
+}
+
+// ---------- Tienda ----------
+export type PurchaseResult =
+  | { ok: true; progress: StudentProgress }
+  | { ok: false; error: string };
+
+// Compra un avatar u objeto de la tienda con monedas. Se valida todo en el
+// servidor (precio, monedas y que no lo tenga ya).
+export async function buyShopItem(code: string, itemId: string): Promise<PurchaseResult> {
+  const avatar = getShopAvatar(itemId);
+  const accessory = ACCESSORY_CATALOG_TIENDA.find((a) => a.id === itemId);
+  const price = avatar?.price ?? accessory?.price;
+  if (!price) return { ok: false, error: "Ese objeto no está en la tienda." };
+  const progress = await getProgress(code);
+  const owned = progress.shopCollection ?? [];
+  if (owned.includes(itemId)) return { ok: false, error: "¡Ya lo tenés!" };
+  if (progress.coins < price) {
+    return { ok: false, error: `Te faltan ${price - progress.coins} monedas.` };
+  }
+  const next: StudentProgress = {
+    ...progress,
+    coins: progress.coins - price,
+    shopCollection: [...owned, itemId],
+  };
+  await saveProgress(next);
+  return { ok: true, progress: next };
 }

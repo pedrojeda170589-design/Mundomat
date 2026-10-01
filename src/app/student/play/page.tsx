@@ -9,6 +9,7 @@ import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
+import ShopModal from "@/components/ShopModal";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
@@ -34,6 +35,7 @@ export default function StudentPlayPage() {
   const [birthday, setBirthday] = useState<string | undefined>(undefined);
   const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
 
   const refresh = useCallback(async (studentCode: string) => {
@@ -183,7 +185,16 @@ export default function StudentPlayPage() {
             coins={progress.coins}
             onCoinsChange={(coins) => setProgress((p) => (p ? { ...p, coins } : p))}
           />
-          <CoinBadge coins={progress.coins} />
+          <button
+            onClick={() => setShopOpen(true)}
+            className="relative rounded-full hover:brightness-110 active:scale-95 transition"
+            title="Tienda: gastá tus monedas en avatares y objetos"
+          >
+            <CoinBadge coins={progress.coins} />
+            <span className="absolute -top-2 -right-1.5 text-base drop-shadow" aria-hidden>
+              🛍️
+            </span>
+          </button>
           <div
             className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border bg-black/15 text-sm font-bold"
             style={{
@@ -197,6 +208,15 @@ export default function StudentPlayPage() {
         </div>
       </div>
 
+      {shopOpen && (
+        <ShopModal
+          code={code}
+          progress={progress}
+          onClose={() => setShopOpen(false)}
+          onProgress={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
+        />
+      )}
+
       {editingProfile && (
         <ProfileEditor
           code={code}
@@ -206,6 +226,7 @@ export default function StudentPlayPage() {
           currentBackground={progress.avatarBackground}
           isBirthday={isBirthday}
           seasonalCollection={progress.seasonalCollection}
+          shopCollection={progress.shopCollection}
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
           onClose={() => setEditingProfile(false)}

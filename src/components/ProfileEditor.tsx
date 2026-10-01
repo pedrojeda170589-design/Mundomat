@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import {
   ACCESSORY_CATALOG_TEMPORADA,
+  ACCESSORY_CATALOG_TIENDA,
+  getShopAvatar,
   AUTO_BACKGROUND,
   AVATAR_OPTIONS,
   AVATAR_INFO,
@@ -45,6 +47,7 @@ interface Props {
   currentNickname?: string;
   currentBackground?: string;
   seasonalCollection?: string[];
+  shopCollection?: string[];
   isBirthday?: boolean;
   realName: string;
   completedWorldsCount: number;
@@ -84,6 +87,7 @@ export default function ProfileEditor({
   currentNickname,
   currentBackground,
   seasonalCollection = [],
+  shopCollection = [],
   isBirthday = false,
   realName,
   completedWorldsCount,
@@ -108,8 +112,12 @@ export default function ProfileEditor({
   const unlockedIds = getEquippableAccessoryIds(
     completedWorldsCount,
     avatar,
-    seasonalCollection
+    seasonalCollection,
+    shopCollection
   );
+  const boughtAccessories = ACCESSORY_CATALOG_TIENDA.filter((a) => shopCollection.includes(a.id));
+  // Personajes disponibles: los de siempre + los comprados en la tienda.
+  const avatarChoices = AVATAR_OPTIONS.filter((a) => !getShopAvatar(a) || shopCollection.includes(a));
   const owned = new Set(seasonalCollection);
   const activeEventIds = new Set(getActiveEvents().map((e) => e.id));
   const autoBackground = getBackgroundById(getAutoBackgroundId());
@@ -213,7 +221,7 @@ export default function ProfileEditor({
         <div>
           <p className="text-slate-400 text-xs mb-2">Elegí tu personaje</p>
           <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto pr-1">
-            {AVATAR_OPTIONS.map((a) => (
+            {avatarChoices.map((a) => (
               <button
                 key={a}
                 onClick={() => handleSelectAvatar(a)}
@@ -308,6 +316,29 @@ export default function ProfileEditor({
             </p>
           )}
         </div>
+
+        {boughtAccessories.length > 0 && (
+          <div>
+            <p className="text-slate-400 text-xs mb-2">🛍️ Comprados en la tienda</p>
+            <div className="grid grid-cols-4 gap-2">
+              {boughtAccessories.map((acc) => {
+                const selected = accessories[acc.slot] === acc.id;
+                return (
+                  <button
+                    key={acc.id}
+                    onClick={() => toggleAccessory(acc.slot, acc.id)}
+                    title={acc.label}
+                    className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-slate-800 ${
+                      selected ? "border-amber-400 ring-2 ring-amber-400/50" : "border-slate-700"
+                    }`}
+                  >
+                    <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="64px" className="object-contain p-1.5" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div>
           <p className="text-slate-400 text-xs mb-1">
