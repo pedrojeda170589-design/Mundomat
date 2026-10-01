@@ -127,3 +127,84 @@ export function fromBank(bank: Q[], n: number, prefix: string, skills: string[])
 export function numbered(acts: ActivitySpec[]): ActivitySpec[] {
   return acts.map((a, i) => ({ ...a, title: `Actividad ${i + 1}` }));
 }
+
+// Genera una actividad de ordenar con secuencia correcta asegurada y desordenada en pantalla.
+export function makeOrder(
+  id: string,
+  prompt: string,
+  sequence: string[],
+  hint: string,
+  skills: string[]
+): ActivitySpec {
+  const n = sequence.length;
+  const perm = n === 3 ? [1, 2, 0] : n === 4 ? [2, 0, 3, 1] : [1, 0, 2];
+  const items = perm.map((idx) => sequence[idx]);
+  const correctOrder = Array.from({ length: n }, (_, k) => perm.indexOf(k));
+  return {
+    type: "order",
+    id,
+    title: "Actividad",
+    prompt,
+    items,
+    correctOrder,
+    hint,
+    skills,
+  };
+}
+
+// Genera una actividad de clasificar con dos categorías y elementos etiquetados.
+export function makeClassify(
+  id: string,
+  prompt: string,
+  categories: [string, string],
+  items: { label: string; cat: 0 | 1 }[],
+  hint: string,
+  skills: string[]
+): ActivitySpec {
+  return {
+    type: "classify",
+    id,
+    title: "Actividad",
+    prompt,
+    categories,
+    items: items.map((it) => ({ label: it.label, categoryIndex: it.cat })),
+    hint,
+    skills,
+  };
+}
+
+// Genera una actividad pick con cuento para escuchar/leer y responder.
+export function makeStoryPick(
+  id: string,
+  story: { title: string; text: string },
+  prompt: string,
+  options: Opt[],
+  answerIndex: number,
+  hint: string,
+  skills: string[]
+): ActivitySpec {
+  return qToPick(
+    q(prompt, options, answerIndex, hint, { story, skills }),
+    id,
+    "Actividad",
+    skills
+  );
+}
+
+// Genera una actividad pick con varias respuestas correctas.
+export function makeMultiPick(
+  id: string,
+  prompt: string,
+  options: Opt[],
+  answers: number[],
+  hint: string,
+  skills: string[]
+): ActivitySpec {
+  return qToPick(
+    q(prompt, options, answers, hint, { skills }),
+    id,
+    "Actividad",
+    skills
+  );
+}
+

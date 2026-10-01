@@ -3,9 +3,9 @@ import type { ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
 import { buildLenguaActivities } from "./lengua";
 import { buildMatematicaActivities } from "./matematica";
-import { SOCIALES_BANK } from "./sociales";
-import { NATURALES_BANK } from "./naturales";
-import { fromBank, numbered, shuffle } from "./util";
+import { SOCIALES_BANK, EXTRA_SOCIALES } from "./sociales";
+import { NATURALES_BANK, EXTRA_NATURALES } from "./naturales";
+import { fromBank, numbered, sample, shuffle } from "./util";
 import { GRADE1_WORLDS } from "../worlds";
 
 // Zona de práctica: actividades de una habilidad, de los mundos que ya jugó.
@@ -30,10 +30,28 @@ export function buildGrade1Activities(world: WorldDef): ActivitySpec[] {
       return buildLenguaActivities(world);
     case "matematica":
       return buildMatematicaActivities(world);
-    case "sociales":
-      return numbered(fromBank(SOCIALES_BANK[n] ?? [], count, `s${n}`, world.skills ?? []));
-    case "naturales":
-      return numbered(fromBank(NATURALES_BANK[n] ?? [], count, `n${n}`, world.skills ?? []));
+    case "sociales": {
+      const qCount = Math.max(0, count - 2);
+      const qActs = fromBank(SOCIALES_BANK[n] ?? [], qCount, `s${n}`, world.skills ?? []);
+      const extraPool = EXTRA_SOCIALES[n] ?? [];
+      const extraActs = sample(extraPool, Math.min(count - qActs.length, extraPool.length)).map((a, i) => ({
+        ...a,
+        id: `${a.id || `s${n}-ex-${i}`}`,
+        skills: a.skills ?? world.skills ?? [],
+      }));
+      return numbered(shuffle([...qActs, ...extraActs]));
+    }
+    case "naturales": {
+      const qCount = Math.max(0, count - 2);
+      const qActs = fromBank(NATURALES_BANK[n] ?? [], qCount, `n${n}`, world.skills ?? []);
+      const extraPool = EXTRA_NATURALES[n] ?? [];
+      const extraActs = sample(extraPool, Math.min(count - qActs.length, extraPool.length)).map((a, i) => ({
+        ...a,
+        id: `${a.id || `n${n}-ex-${i}`}`,
+        skills: a.skills ?? world.skills ?? [],
+      }));
+      return numbered(shuffle([...qActs, ...extraActs]));
+    }
   }
 }
 

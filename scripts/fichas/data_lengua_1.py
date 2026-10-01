@@ -1,0 +1,1566 @@
+# Fichas complementarias de Lengua de 1.º grado (39 mundos: 11001 - 11039).
+# Consignas breves para lectores iniciales, con apoyo familiar, juegos y dibujo. Sin emojis.
+
+LENGUA_1 = {
+    "11001": [{
+        "title": "La ronda de los saludos",
+        "purpose": "Acompañen al estudiante a practicar pautas de la conversación: esperar el turno, saludar y agradecer con una sonrisa.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Nuestra ronda en casa",
+                "steps": [
+                    "Nos sentamos en ronda con la familia en el living.",
+                    "Nos saludamos mirándonos a los ojos y diciendo nuestro nombre con voz clara.",
+                    "Contamos algo lindo que nos pasó en el día esperando cada uno su turno."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El mate de la palabra",
+                "steps": [
+                    "Pasamos un mate o un vasito liviano en la ronda.",
+                    "Solo puede hablar la persona que tiene el mate en la mano; los demás escuchan atentos.",
+                    "Decimos por favor antes de pedirlo y gracias al recibirlo."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El saludo que más me gusta",
+                "steps": [
+                    "Dibujá a dos personas saludándose amablemente.",
+                    "Escribí con ayuda la palabra linda que usás para saludar: ¡Hola!"
+                ],
+                "draw": "Dibujá a dos amigos saludándose con una gran sonrisa.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo saludar con amabilidad a las personas que me rodean.",
+            "Puedo esperar mi turno para hablar en una ronda familiar.",
+            "Puedo decir por favor y gracias al pedir algo."
+        ]
+    }],
+
+    "11002": [{
+        "title": "El bosque de los sonidos",
+        "purpose": "Desarrollo de la atención auditiva para identificar y discriminar sonidos de la casa y de la naturaleza.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Un minuto de silencio atento",
+                "steps": [
+                    "Cerramos los ojos y nos quedamos en silencio total durante un minuto.",
+                    "Escuchamos con atención: ¿se escucha el viento en el techo, la pava o un auto?",
+                    "Al abrir los ojos contamos qué sonido descubrió cada uno."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Qué suena ahí?",
+                "steps": [
+                    "Un adulto se pone detrás del chico y hace un sonido con un objeto casero.",
+                    "Puede arrugar un papel, golpear dos cucharas o hacer sonar las llaves.",
+                    "El chico adivina qué objeto produjo el sonido sin darse vuelta."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El viento patagónico silbando",
+                "steps": [
+                    "El viento en Santa Cruz hace un silbido fuerte cuando sopla entre las ramas.",
+                    "Dibujá árboles doblados por el viento y espirales que representen su sonido."
+                ],
+                "draw": "Dibujá el viento soplando con fuerza en el paisaje.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo guardar silencio para escuchar con atención.",
+            "Puedo reconocer objetos cotidianos por el sonido que hacen.",
+            "Puedo imitar sonidos suaves y sonidos fuertes con la voz."
+        ]
+    }],
+
+    "11003": [{
+        "title": "Seguimos consignas de dos pasos",
+        "purpose": "Acompañen al estudiante a ejercitar la memoria de trabajo escuchando y cumpliendo dos instrucciones consecutivas.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Instrucciones de la escuela",
+                "steps": [
+                    "Recordá consignas que da la señorita en el aula: Abrir la mochila y sacar el cuaderno.",
+                    "Conversen sobre por qué es importante escuchar toda la consigna antes de empezar.",
+                    "Hagan una prueba en casa: Tocar la mesa y dar dos saltos."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Misión doble del explorador",
+                "steps": [
+                    "Un adulto da una consigna de dos pasos: Buscá una cuchara y apoyala sobre la silla.",
+                    "El chico repite la consigna en voz alta y luego la cumple en el orden exacto.",
+                    "Si cumple los dos pasos, suma un punto y da la siguiente consigna."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Dos pasos en un dibujo",
+                "steps": [
+                    "Paso uno: dibujá un árbol grande con copa verde.",
+                    "Paso dos: dibujá dos manzanas rojas colgadas de las ramas."
+                ],
+                "draw": "Dibujá un árbol y luego agregale dos manzanas rojas.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo escuchar una instrucción completa sin interrumpir.",
+            "Puedo recordar y hacer dos acciones en el orden indicado.",
+            "Puedo explicar con mis palabras qué tarea me pidieron hacer."
+        ]
+    }],
+
+    "11004": [{
+        "title": "Palabras largas y palabras cortas",
+        "purpose": "Estimulación de la conciencia silábica mediante aplausos y conteo de partes en palabras de diferente longitud.",
+        "blocks": [
+            {
+                "kind": "hacer",
+                "title": "Aplaudimos los nombres",
+                "steps": [
+                    "Decí tu nombre separando las sílabas con un aplauso: por ejemplo, Lu-cas (dos aplausos).",
+                    "Aplaudan los nombres de los integrantes de la familia y de las mascotas.",
+                    "Descubran cuál nombre es más largo (más aplausos) y cuál es más corto."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El tren de las palabras",
+                "steps": [
+                    "Colocamos dos cajas: una para palabras cortas (1 o 2 aplausos) y otra para largas (3 o 4 aplausos).",
+                    "Decimos palabras: sol, mariposa, pan, cocinero, sal, patineta.",
+                    "El chico aplaude y deposita una tapita en la caja que corresponde."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Una palabra gigante y una chiquita",
+                "steps": [
+                    "Pensá en un objeto con nombre muy largo (rinoceronte) y otro con nombre corto (pez).",
+                    "Dibujá los dos elementos y debajo hacé tantos circulitos como aplausos tienen."
+                ],
+                "draw": "Dibujá un objeto de nombre largo y otro de nombre corto.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo separar palabras en partes dando aplausos.",
+            "Puedo reconocer si una palabra es larga o corta.",
+            "Puedo contar cuántas sílabas tiene mi propio nombre."
+        ]
+    }],
+
+    "11005": [{
+        "title": "Jugamos con rimas sonoras",
+        "purpose": "Acompañen al estudiante a descubrir palabras que terminan con el mismo sonido a través de canciones y coplas.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Palabras que cantan juntas",
+                "steps": [
+                    "Escuchen estas palabras: botón y ratón, gato y zapato.",
+                    "Noten cómo la parte final suena igualita y parece una música graciosa.",
+                    "Piensen qué rima con caracol: ¿girasol o mesa?"
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "La rima disparatada",
+                "steps": [
+                    "Un jugador dice una palabra: por ejemplo, queso.",
+                    "El otro responde una palabra que termine igual aunque sea un disparate: hueso, beso, espeso.",
+                    "Se festeja con risas cada rima acertada."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Pareja de rimas dibujadas",
+                "steps": [
+                    "Elegí dos cosas que rimen al final: corazón y avión, o estrella y botella.",
+                    "Dibujá las dos cosas juntas en el recuadro."
+                ],
+                "draw": "Dibujá dos elementos cuyas palabras rimen al final.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo identificar cuándo dos palabras terminan igual.",
+            "Puedo inventar una palabra que rime con otra.",
+            "Puedo disfrutar de rimas y canciones infantiles."
+        ]
+    }],
+
+    "11006": [{
+        "title": "Palabras que empiezan igual",
+        "purpose": "Reconocimiento y aislamiento de la sílaba inicial para afianzar la conciencia fonológica.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Empiezan con la misma parte",
+                "steps": [
+                    "Miren estas dos palabras: pelota y perro. Las dos empiezan con pe.",
+                    "Miren estas dos: mano y mariposa. Las dos empiezan con ma.",
+                    "Buscá en la cocina dos cosas que empiecen con la misma sílaba: taza y tapa."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El tren de la sílaba cargadora",
+                "steps": [
+                    "La locomotora sale cargada con cosas que empiezan con ca: cama, casa, caballo.",
+                    "Por turnos cada jugador debe nombrar un elemento nuevo que suba al tren con ca.",
+                    "Pierde el que repite o tarda más de cinco segundos en contestar."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Dos amigos que empiezan con la misma parte",
+                "steps": [
+                    "Elegí una sílaba fácil como pa.",
+                    "Dibujá dos cosas que empiecen con pa: pato y payaso, o pan y pala."
+                ],
+                "draw": "Dibujá dos objetos que comiencen con la misma sílaba.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo decir con qué sílaba empieza una palabra.",
+            "Puedo agrupar objetos que empiezan con la misma parte.",
+            "Puedo pensar palabras nuevas a partir de una sílaba dada."
+        ]
+    }],
+
+    "11007": [{
+        "title": "Palabras que terminan igual",
+        "purpose": "Identificación de la sílaba final para consolidar la estructura interna de las palabras.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Mirando la cola de la palabra",
+                "steps": [
+                    "Decí despacito: ven-ta-na y man-za-na. Las dos terminan con na.",
+                    "Decí: pe-lo-ta y ga-lle-ta. Las dos terminan con ta.",
+                    "Exagerá el final con la voz para sentir cómo suena la última parte."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Pesca de palabras con la misma terminación",
+                "steps": [
+                    "Elegimos la terminación to.",
+                    "Buscamos en la casa cosas que terminen con to: pato, plato, auto, zapato, gato.",
+                    "Cada objeto encontrado suma una ficha en el vaso ganador."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Dos dibujos con la misma cola",
+                "steps": [
+                    "Elegí dos palabras que terminen con la sílaba to.",
+                    "Dibujá un gato jugando con un zapato."
+                ],
+                "draw": "Dibujá dos elementos que terminen con la misma sílaba.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo escuchar y aislar la sílaba final de una palabra.",
+            "Puedo emparejar palabras que terminan con la misma sílaba.",
+            "Puedo pronunciar alargando la última parte para escucharla bien."
+        ]
+    }],
+
+    "11008": [{
+        "title": "¿Con qué sonido empieza?",
+        "purpose": "Iniciación al reconocimiento fonémico: aislar el primer sonido (fonema) de una palabra.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El primer sonido con la boca",
+                "steps": [
+                    "Decí la palabra sol alargando el comienzo: sssssss-ol.",
+                    "Decí la palabra luna: lllllll-una.",
+                    "Notá la forma en que se acomodan los labios y la lengua al hacer cada sonido."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Veo veo sonoro",
+                "steps": [
+                    "Un jugador dice: Veo veo una cosita que empieza con el sonido mmmmm.",
+                    "Los demás buscan en la habitación cosas que empiecen con ese sonido: mesa, mate, manzana.",
+                    "El que acierta propone el próximo sonido."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi sonido favorito",
+                "steps": [
+                    "Elegí el primer sonido de tu propio nombre.",
+                    "Dibujá dos cosas que empiecen exactamente con ese mismo sonido."
+                ],
+                "draw": "Dibujá dos cosas que comiencen con el primer sonido de tu nombre.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo aislar el primer sonido de una palabra alargándolo.",
+            "Puedo reconocer si dos palabras empiezan con el mismo fonema.",
+            "Puedo asociar el sonido inicial con elementos de mi alrededor."
+        ]
+    }],
+
+    "11009": [{
+        "title": "Mi nombre y las letras queridas",
+        "purpose": "Acompañen al estudiante a explorar la escritura de su nombre propio, su letra inicial y la cantidad de letras.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Las letras de mi nombre",
+                "steps": [
+                    "Escribí tu nombre en imprenta mayúscula en un papel grande.",
+                    "Contá cuántas letras tiene y señalá cuál es la primera (la inicial).",
+                    "Buscá esa misma letra inicial en carteles o envases de casa."
+                ]
+            },
+            {
+                "kind": "hacer",
+                "title": "Mi nombre en plastilina o fideos",
+                "steps": [
+                    "Hacé tiritas de plastilina o usá fideos secos sobre la mesa.",
+                    "Modelá cada una de las letras de tu nombre en orden de izquierda a derecha.",
+                    "Pasale el dedo por encima sintiendo el recorrido de cada letra."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Cartel para mi puerta",
+                "steps": [
+                    "Escribí tu nombre con letras grandes y decoradas con colores alegres.",
+                    "Alrededor dibujá cosas que te gusten mucho: pelotas, estrellas o flores."
+                ],
+                "draw": "Escribí y decorá tu nombre para que todos lo conozcan.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo escribir mi nombre propio en imprenta mayúscula.",
+            "Puedo reconocer la letra inicial de mi nombre y decir su sonido.",
+            "Puedo saber cuántas letras componen mi nombre."
+        ]
+    }],
+
+    "11010": [{
+        "title": "La casa de la A y la E",
+        "purpose": "Reconocimiento visual y auditivo de las vocales A y E, sus formas de trazo y su presencia en palabras.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Boca abierta para la A y sonrisa para la E",
+                "steps": [
+                    "Mirate en el espejo al decir ¡AAAAA! con la boca bien abierta como un bostezo.",
+                    "Mirate al decir ¡EEEEE! con la boca estirada como una sonrisa.",
+                    "Buscá cosas en casa que tengan A: taza, cama, agua. Y con E: tele, peine, mesa."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Saltar a la casa de A o de E",
+                "steps": [
+                    "Dibujamos en el piso dos círculos grandes: uno con la letra A y otro con la E.",
+                    "Un adulto dice una palabra: auto, elefante, avión, estrella, anillo, escalera.",
+                    "El chico salta adentro del círculo de la vocal con que empieza la palabra."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Avión y estrella",
+                "steps": [
+                    "De un lado dibujá un avión volando (A).",
+                    "Del otro lado dibujá una estrella brillante en el cielo (E)."
+                ],
+                "draw": "Dibujá un avión que empieza con A y una estrella con E.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo trazar las vocales A y E correctamente.",
+            "Puedo reconocer si una palabra empieza con A o con E.",
+            "Puedo encontrar las vocales A y E dentro de las palabras."
+        ]
+    }],
+
+    "11011": [{
+        "title": "La casa de la I, la O y la U",
+        "purpose": "Acompañen al estudiante a explorar los sonidos y trazos de las vocales I, O y U mediante juegos orales.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Formas de la boca para I, O y U",
+                "steps": [
+                    "Para decir la I mostramos los dientitos finos: ¡IIIII!",
+                    "Para decir la O ponemos la boca redonda como una rueda: ¡OOOOO!",
+                    "Para decir la U cerramos los labios como para dar un beso: ¡UUUUU!"
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El eco de las tres vocales",
+                "steps": [
+                    "Un adulto dice una palabra: isla, oso, uva, imán, ojo, uno.",
+                    "El chico responde de inmediato cuál es su vocal inicial haciendo el gesto de la boca.",
+                    "Luego intercambian los roles jugando en familia."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Isla, oso y uvas",
+                "steps": [
+                    "Dibujá tres elementos representativos: una isla en el agua (I), un oso simpático (O) y un racimo de uvas (U).",
+                    "Escribí al lado de cada uno la vocal con que empieza."
+                ],
+                "draw": "Dibujá una isla (I), un oso (O) y unas uvas (U).",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo trazar las vocales I, O y U sin dificultad.",
+            "Puedo distinguir el sonido de cada una al escucharlas.",
+            "Puedo dar ejemplos de palabras que empiezan con I, O y U."
+        ]
+    }],
+
+    "11012": [{
+        "title": "Las cinco vocales juntas",
+        "purpose": "Integración y discriminación de las cinco vocales (A, E, I, O, U) en palabras orales y escritas.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "El coro de las vocales",
+                "steps": [
+                    "Repitan en orden las cinco amigas: A, E, I, O, U.",
+                    "Prueben decirlas cantando rápido, luego en susurro y luego bien fuerte.",
+                    "Fijate qué vocales tiene tu propio nombre: ¿las tiene a todas?"
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El detective de vocales",
+                "steps": [
+                    "Escriban una palabra corta en un papel: por ejemplo, PATO o SOL.",
+                    "El chico encierra con un círculo de color todas las vocales que encuentre.",
+                    "Las lee en voz alta marcando su sonido con claridad."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El arcoíris de las vocales",
+                "steps": [
+                    "Dibujá cinco flores o globos en fila.",
+                    "En cada uno escribí una vocal diferente (A, E, I, O, U) y pintalos con colores alegres."
+                ],
+                "draw": "Dibujá cinco globos llevando cada uno una vocal.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo decir las cinco vocales en orden sin dudar.",
+            "Puedo encontrar las vocales adentro de cualquier palabra.",
+            "Puedo escribir A, E, I, O, U con letra clara."
+        ]
+    }],
+
+    "11013": [{
+        "title": "La M de mamá y de mate",
+        "purpose": "Asociación del grafema M con el fonema /m/ y lectura de sílabas iniciales (ma, me, mi, mo, mu).",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El sonido más rico",
+                "steps": [
+                    "Juntá los dos labios y hacé el sonido como cuando algo te parece delicioso: ¡Mmmmmm!",
+                    "Decí palabras que empiecen con M: mamá, mate, mano, mesa, muela.",
+                    "Sentí la vibración en los labios al sostener el sonido."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Ronda con el mate patagónico",
+                "steps": [
+                    "En la ronda del mate en familia, cada vez que alguien recibe el mate nombra una palabra con M.",
+                    "Valen nombres de personas (Mateo, Micaela), comidas (manzana) o cosas (mochila).",
+                    "Gana el que recuerde más palabras sin repetir."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El mate y la mano",
+                "steps": [
+                    "Dibujá una mano sosteniendo un mate calentito.",
+                    "Con ayuda escribí debajo con letras grandes la palabra: MATE."
+                ],
+                "draw": "Dibujá un mate calentito y una mano que lo sostiene.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo reconocer la letra M y hacer su sonido cerrando los labios.",
+            "Puedo leer sílabas con M: ma, me, mi, mo, mu.",
+            "Puedo escribir palabras sencillas como mamá y mate."
+        ]
+    }],
+
+    "11014": [{
+        "title": "La P de papá y de pan",
+        "purpose": "Acompañen al estudiante a relacionar la letra P con su sonido explosivo /p/ y a formar palabras con M y P.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El globo que explota con la P",
+                "steps": [
+                    "Juntá los labios y soltá el aire de golpe como un globito que hace: ¡P! ¡P!",
+                    "Decí palabras con P: papá, pan, pato, pelota, puerta, puma.",
+                    "Notá que el aire sale de golpe contra tu mano si la ponés cerca de la boca."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Unir M y P en palabras",
+                "steps": [
+                    "Con cartelitos de sílabas: ma, pa, me, pe, mi, pi.",
+                    "Juntamos pa y pa para leer: ¡papá!",
+                    "Juntamos ma y pa para leer: ¡mapa! Festejamos cada palabra armada."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Un pato comiendo pan",
+                "steps": [
+                    "Pensá en un pato en la laguna comiendo miguitas de pan.",
+                    "Dibujalo y escribí al lado con ayuda: PATO y PAN."
+                ],
+                "draw": "Dibujá un simpático pato comiendo pan.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo reconocer la letra P y su sonido explosivo.",
+            "Puedo leer sílabas con P: pa, pe, pi, po, pu.",
+            "Puedo combinar sílabas para formar palabras como mapa y puma."
+        ]
+    }],
+
+    "11015": [{
+        "title": "La L de luna y de lana",
+        "purpose": "Práctica de la letra L con la lengua arriba del paladar y lectura de nuevas palabras decodificables.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "La lengua arriba con la L",
+                "steps": [
+                    "Apoyá la punta de la lengua en el techo de la boca (detrás de los dientes): ¡Llllll!",
+                    "Decí palabras del sur con L: luna, lana, lenga, lupa, lago.",
+                    "Mantené la lengua arriba mientras cantás: la, la, la."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Lectura veloz de palabras",
+                "steps": [
+                    "Escriban en cartelitos: LUPA, LIMA, PALA, MULA, LOMA.",
+                    "El chico da vuelta un cartel y lo lee despacito estirando los sonidos.",
+                    "El adulto aplaude cada palabra leída con autonomía."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "La luna sobre la lenga",
+                "steps": [
+                    "La lenga es el árbol típico de los bosques cordilleranos del sur.",
+                    "Dibujá un árbol de lenga y arriba en el cielo una hermosa luna brillante."
+                ],
+                "draw": "Dibujá la luna iluminando un árbol de lenga.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo pronunciar la letra L colocando la lengua arriba.",
+            "Puedo leer palabras combinando L con vocales: pala, lupa, luna.",
+            "Puedo escribir la letra L en imprenta mayúscula."
+        ]
+    }],
+
+    "11016": [{
+        "title": "La S de sol y de sal",
+        "purpose": "Asociación de la letra S con el silbido /s/ y formación de palabras de uso cotidiano.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El silbido de la serpiente",
+                "steps": [
+                    "Juntá los dientes y dejá salir el aire silbando despacito: ¡Sssssss!",
+                    "Decí palabras con S: sol, sal, sopa, sapo, suma, silla.",
+                    "Sentí el aire fresco que sale entre los dientes."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Búsqueda de tesoros con S",
+                "steps": [
+                    "En la mesa hay salero, servilleta, sobre y sombrero.",
+                    "Un jugador dice una adivinanza: Sirve para ponerle sabor a la comida.",
+                    "El chico señala el salero y lee la palabra: SAL."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El sol sobre la meseta",
+                "steps": [
+                    "Dibujá un gran sol amarillo brillante con sus rayos largos.",
+                    "Escribí abajo con letras claras: SOL."
+                ],
+                "draw": "Dibujá un sol radiante iluminando la tierra.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo hacer el sonido de la S como un silbido suave.",
+            "Puedo leer palabras con S: sol, sopa, mesa, masa.",
+            "Puedo trazar la letra S con forma de caminito con curvas."
+        ]
+    }],
+
+    "11017": [{
+        "title": "¡Ya puedo leer palabras!",
+        "purpose": "Celebración de los primeros logros lectores integrando las cuatro consonantes trabajadas: M, P, L y S.",
+        "blocks": [
+            {
+                "kind": "hacer",
+                "title": "Mi cartelera de palabras leídas",
+                "steps": [
+                    "Escriban en tiras de papel: MESA, PALA, SOPA, LOMA, PUMA, MASA.",
+                    "El chico lee cada palabra señalando con el dedo de izquierda a derecha.",
+                    "Pega las que leyó solo en la puerta de la heladera con orgullo."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El dibujo misterioso",
+                "steps": [
+                    "El adulto escribe una palabra en secreto y se la muestra al chico.",
+                    "El chico la lee en silencio y hace el dibujo de lo que leyó sin decir nada.",
+                    "El adulto adivina qué palabra leyó mirando el dibujo."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Un puma en la loma",
+                "steps": [
+                    "El puma es un felino salvaje que vive en las montañas y mesetas patagónicas.",
+                    "Dibujá un puma descansando sobre una loma de pasto y escribí: PUMA."
+                ],
+                "draw": "Dibujá un puma sobre una loma patagónica.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo leer palabras cortas decodificando letra por letra.",
+            "Puedo comprender el significado de lo que leo.",
+            "Puedo sentir alegría y confianza con mis avances en la lectura."
+        ]
+    }],
+
+    "11018": [{
+        "title": "La T de tomate y de tela",
+        "purpose": "Acompañen al estudiante a reconocer el sonido /t/ y a sumar nuevas palabras a su repertorio lector.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El chasquido de la lengua con la T",
+                "steps": [
+                    "Apoyá la lengua detrás de los dientes de arriba y soltá con fuerza: ¡T! ¡T!",
+                    "Decí palabras con T: tomate, taza, torta, tijera, techo, tero.",
+                    "El tero es un ave muy común en los campos que avisa con su grito."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Adivinanzas de la cocina con T",
+                "steps": [
+                    "Un adulto dice: Es redonda y sirve para tomar el té (la taza).",
+                    "Es roja, jugosa y se pone en la ensalada (el tomate).",
+                    "El chico adivina y escribe la primera sílaba con T."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Una taza de té calentito",
+                "steps": [
+                    "Dibujá una taza humeante con un platito abajo.",
+                    "Escribí la palabra TAZA en imprenta mayúscula al lado."
+                ],
+                "draw": "Dibujá una taza de té calentita para una tarde fría.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo reconocer la letra T y su sonido chasqueante.",
+            "Puedo leer sílabas con T: ta, te, ti, to, tu.",
+            "Puedo escribir palabras como taza, tomate y pato."
+        ]
+    }],
+
+    "11019": [{
+        "title": "La D de dedo y de dado",
+        "purpose": "Exploración del fonema /d/ colocando la lengua suavemente entre los dientes.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "La lengua entre los dientes",
+                "steps": [
+                    "Asomá apenas la punta de la lengua entre los dientes: ¡Dddddd!",
+                    "Decí palabras con D: dedo, dado, diente, dulce, dinosaurio.",
+                    "Sentí el sonido suave y vibrante en la boca."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Tiramos el dado y leemos",
+                "steps": [
+                    "Tiramos un dado: según el número que salga, leemos una palabra de la lista.",
+                    "1: DADO, 2: DEDO, 3: DÍA, 4: DAMA, 5: DOS, 6: DUDA.",
+                    "Gana el primero que logra leer tres palabras distintas."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mis dedos y un dado",
+                "steps": [
+                    "Dibujá un dado con sus puntitos negros marcando el número tres.",
+                    "Al lado dibujá una mano señalando con el dedo índice y escribí: DADO y DEDO."
+                ],
+                "draw": "Dibujá un dado con puntos y una mano con dedos.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo articular el sonido de la D con la lengua entre los dientes.",
+            "Puedo leer palabras con D: dedo, dado, día, pomada.",
+            "Puedo trazar la letra D con una línea recta y una panza grande."
+        ]
+    }],
+
+    "11020": [{
+        "title": "La N de nido y de nieve",
+        "purpose": "Acompañen al estudiante a reconocer el sonido nasal /n/ y relacionarlo con paisajes invernales del sur.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El sonido que sale por la nariz",
+                "steps": [
+                    "Tocá los costados de tu nariz y hacé el sonido: ¡Nnnnnn!",
+                    "Sentí cómo vibra la nariz al decir: nieve, nido, noche, nube, nena.",
+                    "En Santa Cruz la nieve blanca cubre las calles y cerros en invierno."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "La nube de palabras con N",
+                "steps": [
+                    "Dibujamos una nube grande en un papel.",
+                    "Adentro escribimos palabras que empiezan con N y algunas tramposas que no.",
+                    "El chico debe pescar con un color solo las palabras que tienen N."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Nieve sobre la montaña",
+                "steps": [
+                    "Pensá en un cerro nevado bajo una nube blanca de invierno.",
+                    "Dibujalo y escribí las palabras: NUBE y NIEVE."
+                ],
+                "draw": "Dibujá un cerro cubierto de nieve blanca con nubes.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo pronunciar el sonido nasal de la N.",
+            "Puedo leer palabras con N: nido, nube, mano, luna.",
+            "Puedo diferenciar la N de la M fijándome en la cantidad de patitas."
+        ]
+    }],
+
+    "11021": [{
+        "title": "La R: suave como pera, fuerte como ratón",
+        "purpose": "Discriminación de los dos sonidos de la letra R (vibrante simple y múltiple) en contextos significativos.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El motor de la lengua",
+                "steps": [
+                    "Hacé vibrar la punta de la lengua como el motor de un auto: ¡Rrrrrrr! (fuerte, como ratón o río).",
+                    "Hacé un toquecito suave en el paladar: /r/ (suave, como pera o caracol).",
+                    "Decí despacito: río Chico (fuerte al inicio) y madera (suave en el medio)."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Fuerte o suave?",
+                "steps": [
+                    "Un adulto dice una palabra: rosa, loro, rueda, mariposa, rey, tortuga.",
+                    "Si la R suena fuerte, el chico ruge como león.",
+                    "Si suena suave, aletea como mariposa con calma."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El río Chico de Santa Cruz",
+                "steps": [
+                    "Dibujá el agua azul de un río patagónico corriendo entre las piedras.",
+                    "Escribí con letras claras: RÍO."
+                ],
+                "draw": "Dibujá un río corriendo veloz por la meseta.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo reconocer cuándo la R suena fuerte al principio de la palabra.",
+            "Puedo notar cuándo la R suena suave entre dos vocales.",
+            "Puedo leer palabras como río, ratón, pera y aro."
+        ]
+    }],
+
+    "11022": [{
+        "title": "La C de casa, copa y cuna",
+        "purpose": "Acompañen al estudiante a reconocer el sonido fuerte de la C con las vocales a, o, u (ca, co, cu).",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El chasquido en la garganta",
+                "steps": [
+                    "Sentí el sonido /k/ que nace atrás en el fondo de la boca: ¡K! ¡K!",
+                    "Decí palabras con ca, co, cu: casa, copa, cuna, caballo, calafate.",
+                    "El calafate es el arbusto emblemático de Santa Cruz."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El cofre de las palabras con C",
+                "steps": [
+                    "Imaginamos un cofre pirata que solo acepta cosas con ca, co, cu.",
+                    "Por turnos guardamos: cama, cono, cuchara, corazón, camino.",
+                    "Cada jugador suma un punto por palabra bien pronunciada."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi casa abrigada",
+                "steps": [
+                    "Dibujá tu casa con paredes firmes, techo y chimenea.",
+                    "Escribí al lado la palabra: CASA."
+                ],
+                "draw": "Dibujá una casa acogedora y escribí su nombre.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo leer sílabas con ca, co y cu.",
+            "Puedo reconocer la letra C en palabras cotidianas.",
+            "Puedo escribir palabras como casa, cuna y copa."
+        ]
+    }],
+
+    "11023": [{
+        "title": "La F de foca y de fuego",
+        "purpose": "Asociación de la letra F con el soplido labiodental /f/ y lectura de nuevas palabras.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El soplido con los dientes de arriba",
+                "steps": [
+                    "Apoyá los dientes de arriba en el labio inferior y soplá: ¡Ffffff!",
+                    "Decí palabras con F: foca, fuego, farol, familia, fiesta, foto.",
+                    "Sentí el viento suave que escapa por tu boca."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El farol encendido",
+                "steps": [
+                    "Prendemos una linterna que hace de farol.",
+                    "Cada vez que el farol se enciende, decimos una palabra con F a toda velocidad.",
+                    "Cuando se apaga, nos quedamos mudos y atentos."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Una foca en la costa del sur",
+                "steps": [
+                    "En las costas marinas de Santa Cruz viven focas y lobos marinos.",
+                    "Dibujá una foca jugando sobre una roca cerca de las olas y escribí: FOCA."
+                ],
+                "draw": "Dibujá una foca sobre una roca cerca del mar.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo pronunciar el soplido de la letra F con los dientes.",
+            "Puedo leer sílabas con F: fa, fe, fi, fo, fu.",
+            "Puedo escribir palabras como foca, foto y farol."
+        ]
+    }],
+
+    "11024": [{
+        "title": "La B y la V suenan igual",
+        "purpose": "Reconocimiento de que las letras B y V comparten el mismo sonido en nuestra lengua: bote y vaca.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Dos letras hermanas",
+                "steps": [
+                    "Escuchá bien: bote y vaca. Las dos empiezan exactamente con el mismo sonido /b/.",
+                    "Una se escribe con B de bebé y la otra con V de viento.",
+                    "A medida que leamos más libros, iremos recordando cuál lleva cada palabra."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "La granja de las dos letras",
+                "steps": [
+                    "En una tarjeta escribimos B y en otra V.",
+                    "El adulto muestra dibujos: ballena, vaca, bota, vela, burro, violín.",
+                    "El chico señala con qué letra se escribe cada uno con ayuda."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "La vaca y el barco",
+                "steps": [
+                    "Dibujá una vaca en el campo (V) y un barquito navegando en el agua (B).",
+                    "Escribí con ayuda: VACA y BARCO."
+                ],
+                "draw": "Dibujá una vaca pastando y un barco navegando.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo saber que la B y la V tienen el mismo sonido al hablar.",
+            "Puedo reconocer la B mayúscula y la V mayúscula.",
+            "Puedo escribir palabras conocidas como bebé, vaca y barco."
+        ]
+    }],
+
+    "11025": [{
+        "title": "La G de gato y de guanaco",
+        "purpose": "Acompañen al estudiante a explorar el sonido suave de la G con a, o, u (ga, go, gu) en palabras locales.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El sonido suave de garganta",
+                "steps": [
+                    "Sentí el sonido suave que sale de la garganta: ¡G! ¡G!",
+                    "Decí palabras con ga, go, gu: gato, gota, gusano, gorro, guanaco.",
+                    "El guanaco es el animal silvestre más conocido de Santa Cruz."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El gato cazador de palabras",
+                "steps": [
+                    "Jugamos a que somos gatitos que caminan con pasos suaves.",
+                    "Cuando el adulto dice una palabra con ga, go, gu, damos un salto felino.",
+                    "Si dice otra palabra, nos frotamos los bigotes con las patitas."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Un gato con gorro de lana",
+                "steps": [
+                    "Para no tener frío en invierno, un gato se puso un gorro de lana abrigado.",
+                    "Dibujalo con bigotes largos y escribí al lado: GATO y GORRO."
+                ],
+                "draw": "Dibujá un gato simpático con gorro de invierno.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo pronunciar el sonido suave de la G.",
+            "Puedo leer sílabas ga, go y gu.",
+            "Puedo escribir palabras como gato, gota y guanaco."
+        ]
+    }],
+
+    "11026": [{
+        "title": "La Ñ de ñandú, la J de jirafa y la LL de llave",
+        "purpose": "Exploración de tres grafemas especiales: la Ñ con su sombrerito, la J con su carraspeo y la doble LL.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Tres sonidos con personalidad",
+                "steps": [
+                    "La Ñ lleva una ondita arriba y suena por la nariz: ¡Ñandú! ¡Uña! ¡Montaña!",
+                    "La J raspa la garganta como un suspiro fuerte: ¡Jirafa! ¡Jugo! ¡Ojo!",
+                    "La LL junta dos eles para hacer llover: ¡Llave! ¡Lluvia! ¡Llama!"
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Cuál de las tres es?",
+                "steps": [
+                    "El adulto dice una palabra: jarra, piña, lluvia, jabón, año, pollo.",
+                    "El chico responde con cuál letra se escribe: si es con Ñ, con J o con LL.",
+                    "Gana una medalla de detective de letras al acertar cinco seguidas."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "El ñandú bajo la lluvia",
+                "steps": [
+                    "El ñandú o choique corre por el campo patagónico.",
+                    "Dibujá al ñandú corriendo mientras caen gotitas de lluvia desde una nube."
+                ],
+                "draw": "Dibujá un ñandú corriendo bajo la lluvia patagónica.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo reconocer la letra Ñ por su tilde u ondita superior.",
+            "Puedo leer y pronunciar palabras con J y con LL.",
+            "Puedo identificar letras menos frecuentes al leer textos."
+        ]
+    }],
+
+    "11027": [{
+        "title": "El tren de todas las letras: abecedario",
+        "purpose": "Aproximación exploratoria al abecedario completo como orden convenido de las letras de nuestra lengua.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "El abecedario de la pared",
+                "steps": [
+                    "Miren el póster del abecedario o busquen uno en un libro.",
+                    "Recorran con el dedo desde la A hasta la Z diciendo sus nombres.",
+                    "Busquen dónde está la letra de su nombre y la de sus familiares."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El abecedario cantado",
+                "steps": [
+                    "Cantamos la canción del abecedario despacito siguiendo el ritmo.",
+                    "Un jugador frena de golpe en una letra: por ejemplo la M.",
+                    "El otro jugador debe nombrar un animal o cosa que empiece con esa letra."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi letra favorita del abecedario",
+                "steps": [
+                    "Elegí tu letra preferida de todo el abecedario.",
+                    "Dibujala gigante en el recuadro y decorala con brillantina imaginaria y dibujos que empiecen con ella."
+                ],
+                "draw": "Dibujá tu letra favorita bien grande y decorada.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo saber que el abecedario reúne todas las letras que usamos.",
+            "Puedo ubicar letras en el orden del abecedario.",
+            "Puedo cantar la canción del abecedario en familia."
+        ]
+    }],
+
+    "11028": [{
+        "title": "Armamos palabras con fichas y sílabas",
+        "purpose": "Consolidación de la escritura y lectura combinando sílabas móviles para formar palabras nuevas.",
+        "blocks": [
+            {
+                "kind": "hacer",
+                "title": "Fichas de sílabas en cartón",
+                "steps": [
+                    "Recorten cuadraditos de papel y escriban sílabas: MA, ME, PA, PE, LA, LO, SA, SO, TA, TO.",
+                    "Mezclen las fichas sobre la mesa como piezas de un rompecabezas.",
+                    "Junten dos fichas para armar una palabra: MA + PA = MAPA; SO + PA = SOPA."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Quién forma más palabras?",
+                "steps": [
+                    "Con las fichas sobre la mesa, armamos tantas palabras reales como podamos.",
+                    "Leemos cada palabra en voz alta para que cuente como punto.",
+                    "Armamos una lista anotando los hallazgos de la partida."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Palabra ilustrada",
+                "steps": [
+                    "Elegí tu palabra favorita de las que armaste con fichas (por ejemplo: PELOTA).",
+                    "Dibujala bien colorida y escribí sus sílabas separadas abajo: PE - LO - TA."
+                ],
+                "draw": "Dibujá el objeto de la palabra que armaste con sílabas.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo combinar sílabas para formar palabras completas.",
+            "Puedo leer lo que armé uniendo los sonidos con fluidez.",
+            "Puedo corregir una palabra si puse las sílabas al revés."
+        ]
+    }],
+
+    "11029": [{
+        "title": "Separo las palabras en la oración",
+        "purpose": "Acompañen al estudiante a reconocer la palabra como unidad separada por espacios, el inicio con mayúscula y el punto final.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Los espacios que dejan respirar",
+                "steps": [
+                    "Mirá esta oración: El sol brilla.",
+                    "Notá que entre El y sol hay un espacio en blanco para no chocar las palabras.",
+                    "Notá que empieza con una letra mayúscula grande y termina con un puntito final."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Separamos con aplausos",
+                "steps": [
+                    "El adulto dice una oración corta: Mi mamá me ama.",
+                    "Por cada palabra damos un aplauso y un paso al frente: Mi (paso), mamá (paso), me (paso), ama (paso).",
+                    "Contamos cuántos pasos dimos: ¡fueron cuatro palabras separadas!"
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi oración ilustrada",
+                "steps": [
+                    "Escribí con ayuda una oración cortita de tres palabras: El perro juega.",
+                    "Dejá un dedo de espacio entre cada palabra y poné el punto final al terminar.",
+                    "Hacé el dibujo de lo que cuenta tu oración."
+                ],
+                "draw": "Dibujá la escena que describe tu oración.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo dejar espacio entre las palabras al escribir.",
+            "Puedo reconocer que las oraciones terminan con un punto.",
+            "Puedo contar cuántas palabras tiene una oración hablada."
+        ]
+    }],
+
+    "11030": [{
+        "title": "Leemos oraciones cortitas",
+        "purpose": "Práctica de lectura comprensiva de oraciones breves apoyadas en ilustraciones contextuales.",
+        "blocks": [
+            {
+                "kind": "hacer",
+                "title": "Tarjetas de lectura y unión",
+                "steps": [
+                    "Escriban tres oraciones en tiras de papel: El gato duerme. La nena salta. El auto viaja.",
+                    "Hagan tres dibujitos rápidos de cada acción en papeles separados.",
+                    "El chico lee cada oración y la une con su dibujo correspondiente."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Verdad o disparate?",
+                "steps": [
+                    "El adulto escribe oraciones graciosas: El pez camina por la calle. La luna brilla de noche.",
+                    "El chico las lee en voz alta y dice si es una verdad o un disparate total.",
+                    "Se ríen juntos de los disparates inventados."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi propia oración de lectura",
+                "steps": [
+                    "Pensá en algo lindo que haga tu mascota o un animalito del sur.",
+                    "Escribí una oración con ayuda: El choique corre en la estepa.",
+                    "Hacé el dibujo bien detallado que acompaña la oración."
+                ],
+                "draw": "Dibujá lo que cuenta tu oración de lectura.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo leer oraciones completas palabra por palabra.",
+            "Puedo comprender qué acción realiza el personaje de la oración.",
+            "Puedo verificar si una oración coincide con su dibujo."
+        ]
+    }],
+
+    "11031": [{
+        "title": "Leemos cartelitos y notas breves",
+        "purpose": "Acompañen al estudiante a localizar información puntual en textos cotidianos breves (carteles, etiquetas, recetas).",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Carteles en la cocina",
+                "steps": [
+                    "Miren envases de alimentos: busquen la palabra LECHE, ARROZ o TÉ.",
+                    "Miren un cartel de la heladera: un recordatorio o una nota de cariño.",
+                    "Descubran para qué sirve leer cartelitos en la vida diaria."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El cartel misterioso",
+                "steps": [
+                    "El adulto escribe tres carteles con nombres de lugares de la casa: MESA, PUERTA, CAMA.",
+                    "El chico lee cada cartelito y corre a pegarlo en el lugar correcto con cinta suave.",
+                    "Festejan cuando los tres carteles están en su lugar."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Cartel para mi habitación",
+                "steps": [
+                    "Escribí un cartel para la puerta de tu cuarto: BIENVENIDOS o SALA DE JUEGOS.",
+                    "Decoralo con dibujos alrededor para que se vea alegre y prolijo."
+                ],
+                "draw": "Dibujá y escribí un cartel decorativo para tu pieza.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo localizar información en carteles y etiquetas.",
+            "Puedo leer notas cortas que me dejan en casa.",
+            "Puedo entender la utilidad práctica de la lectura cotidiana."
+        ]
+    }],
+
+    "11032": [{
+        "title": "La biblioteca de los cuentos",
+        "purpose": "Escucha atenta y comprensión de cuentos tradicionales o familiares: personajes, conflicto y resolución feliz.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "La hora del cuento en familia",
+                "steps": [
+                    "Elijan un cuento que les guste para leer juntos antes de dormir o en la merienda.",
+                    "El adulto lee con linda entonación haciendo voces de los personajes.",
+                    "Al terminar conversan: ¿quién era el protagonista?, ¿qué problema tuvo?, ¿cómo se solucionó?"
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "¿Qué personaje soy?",
+                "steps": [
+                    "Un jugador actúa como un personaje del cuento que leyeron (hace gestos, camina o dice frases).",
+                    "Los demás tienen que adivinar qué personaje es sin que diga su nombre.",
+                    "Se turnan para interpretar a distintos héroes o animales del cuento."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "La tapa de mi libro favorito",
+                "steps": [
+                    "Imaginá la tapa del cuento que más te gustó escuchar.",
+                    "Dibujá al personaje principal en el centro y con ayuda escribí el título arriba."
+                ],
+                "draw": "Dibujá la tapa de tu cuento favorito con su personaje.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo escuchar un cuento con atención de principio a fin.",
+            "Puedo identificar al personaje principal y lo que le pasa.",
+            "Puedo renarrar con mis palabras qué pasó en la historia."
+        ]
+    }],
+
+    "11033": [{
+        "title": "Poemas, coplas y canciones de ronda",
+        "purpose": "Disfrute estético del lenguaje poético, el ritmo y la musicalidad en coplas y rondas infantiles.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Coplas del viento del sur",
+                "steps": [
+                    "Reciten juntos una copla tradicional: En el cielo las estrellas, en el campo las espinas...",
+                    "Sientan cómo las palabras tienen un compás parecido al de una canción.",
+                    "Acompañen el recitado golpeando suavemente las rodillas al ritmo de los versos."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "La ronda de los nombres",
+                "steps": [
+                    "Cantamos en ronda tomados de las manos una canción infantil conocida.",
+                    "En cada estrofa nombramos a un integrante de la familia que se tiene que agachar.",
+                    "Seguimos jugando hasta que todos estén en cuclillas riéndose."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "La luna en el poema",
+                "steps": [
+                    "Pensá en un verso de una canción de cuna o poema sobre la luna o las estrellas.",
+                    "Dibujá una luna sonriente con gorrito de dormir descansando en una nube."
+                ],
+                "draw": "Dibujá una escena poética con la luna y las estrellas.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo seguir el ritmo de una poesía con palmas o pasos.",
+            "Puedo memorizar estrofas cortitas de canciones infantiles.",
+            "Puedo disfrutar de la música que tienen las palabras."
+        ]
+    }],
+
+    "11034": [{
+        "title": "Adivinanzas y trabalenguas divertidos",
+        "purpose": "Acompañen al estudiante a ejercitar la agilidad mental y la articulación verbal con juegos del lenguaje.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "¿Qué cosa es?",
+                "steps": [
+                    "Un adulto dice una adivinanza tradicional: Oro parece, plata no es, quien no lo adivine bien tonto es (el plátano o banana).",
+                    "Tiene orejas largas, come zanahorias y salta en el campo (el conejo).",
+                    "El chico descubre las pistas ocultas en las palabras."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Trabalenguas a toda marcha",
+                "steps": [
+                    "Repetimos despacito: Tres tristes tigres comen trigo en un trigal.",
+                    "Lo decimos un poquito más rápido sin trabarse la lengua.",
+                    "Festejamos cuando nos equivocamos y nos reímos de los enredos."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Dibujo la respuesta secreta",
+                "steps": [
+                    "Inventá una adivinanza sencilla sobre un animal que conozcas.",
+                    "Dibujá la respuesta secreta adentro del recuadro para que los demás la descubran."
+                ],
+                "draw": "Dibujá la respuesta a una adivinanza inventada por vos.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo prestar atención a las pistas para resolver adivinanzas.",
+            "Puedo intentar decir trabalenguas controlando la respiración.",
+            "Puedo inventar preguntas ingeniosas para que otros adivinen."
+        ]
+    }],
+
+    "11035": [{
+        "title": "¿Qué pasó primero, después y al final?",
+        "purpose": "Ordenamiento cronológico de acciones y hechos de una narración para fortalecer la renarración oral.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Los tres momentos de nuestro día",
+                "steps": [
+                    "Conversen sobre cómo empieza el día: nos levantamos y desayunamos (primero).",
+                    "A la tarde vamos a la escuela y jugamos (después).",
+                    "A la noche cenamos y nos vamos a dormir abrigados (al final)."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Historias desordenadas",
+                "steps": [
+                    "El adulto cuenta una historia corta con los hechos al revés: Se comió la manzana, la lavó y la compró.",
+                    "El chico grita ¡Alerta desorden! y acomoda la historia en el orden verdadero.",
+                    "Repiten con otras situaciones graciosas."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "La semillita en tres pasos",
+                "steps": [
+                    "Dividí el cuadro en tres casilleros: 1, 2 y 3.",
+                    "En el 1 dibujá la semilla bajo tierra. En el 2 el brote saliendo. En el 3 la planta con flor."
+                ],
+                "draw": "Dibujá tres pasos ordenados del crecimiento de una planta.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo usar palabras de tiempo como primero, después y al final.",
+            "Puedo ordenar tres escenas de una historia según sucedieron.",
+            "Puedo renarrar un suceso cotidiano con secuencia lógica."
+        ]
+    }],
+
+    "11036": [{
+        "title": "Trazos y caminos con el dedo y el lápiz",
+        "purpose": "Afianzamiento de la motricidad fina, direccionalidad de izquierda a derecha y control del trazo.",
+        "blocks": [
+            {
+                "kind": "hacer",
+                "title": "Caminos en el aire y en la espalda",
+                "steps": [
+                    "Con el brazo extendido, dibujá en el aire líneas rectas, olas de mar y rulitos.",
+                    "Con el dedo índice trazá caminos suaves en la espalda de un adulto.",
+                    "El adulto adivina si hiciste una línea recta, un círculo o un zigzag."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "La pista de carreras de dedos",
+                "steps": [
+                    "Dibujamos en una hoja un camino con curvas bien cerradas.",
+                    "Con una tapita o el dedo, recorremos la pista sin salirnos de las líneas.",
+                    "Cronometramos para ver quién recorre la pista con precisión y prolijidad."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Las olas del lago patagónico",
+                "steps": [
+                    "El viento en los lagos del sur forma olas de agua cristalina.",
+                    "Trazá con lápices de colores muchas líneas onduladas continuas de izquierda a derecha."
+                ],
+                "draw": "Dibujá olas y curvas continuas sin levantar el lápiz de la hoja.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo sostener el lápiz con comodidad y soltura.",
+            "Puedo trazar líneas siguiendo la dirección de izquierda a derecha.",
+            "Puedo controlar mi mano para no salirme de los límites."
+        ]
+    }],
+
+    "11037": [{
+        "title": "Escribo palabras que ya conozco",
+        "purpose": "Acompañen al estudiante a animarse a escribir palabras completas respetando la correspondencia entre sonidos y letras.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "Decir la palabra muy despacito",
+                "steps": [
+                    "Cuando queremos escribir una palabra, la decimos estirando cada sonido como un chicle.",
+                    "Por ejemplo para escribir MESA: mmmmm-eeee-sssss-aaaa.",
+                    "Anotamos cada letra a medida que la vamos escuchando en la boca."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Escribir con letras móviles de papel",
+                "steps": [
+                    "Preparen letras sueltas recortadas en cartón.",
+                    "El adulto dice una palabra: PATO, LUNA, SOL, NIDO.",
+                    "El chico busca las letras correspondientes y las ordena sobre la mesa."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Mi palabra campeona",
+                "steps": [
+                    "Elegí una palabra que te encante saber escribir (por ejemplo: MAMÁ, PAPÁ o AMOR).",
+                    "Escribila en el renglón con tu mejor letra y hacé un dibujo que la acompañe."
+                ],
+                "draw": "Dibujá lo que significa tu palabra campeona.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo estirar los sonidos de una palabra para no saltearme letras.",
+            "Puedo escribir palabras conocidas con autonomía creciente.",
+            "Puedo revisar lo que escribí volviéndolo a leer con el dedo."
+        ]
+    }],
+
+    "11038": [{
+        "title": "Hacemos listas y ponemos títulos",
+        "purpose": "Aproximación a textos de uso práctico: confección de listas de compras o juegos y elección de títulos para ilustraciones.",
+        "blocks": [
+            {
+                "kind": "investigo",
+                "title": "La lista del almacén",
+                "steps": [
+                    "Miren una lista de compras que usen en casa.",
+                    "Observen que cada elemento va en un renglón separado, uno debajo del otro.",
+                    "Anoten tres cosas que hagan falta para la merienda: pan, leche, fruta."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "Lista de juguetes favoritos",
+                "steps": [
+                    "Escribimos una lista de cuatro juguetes que nos gusten mucho.",
+                    "A medida que los anotamos, le ponemos un puntito o guion al inicio de cada renglón.",
+                    "Leemos la lista completa a la familia como si fuera un menú de juegos."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Un gran dibujo con su título",
+                "steps": [
+                    "Hacé un dibujo de un momento lindo en la escuela o en casa.",
+                    "Arriba de todo poné un título que cuente de qué se trata con pocas palabras."
+                ],
+                "draw": "Hacé un dibujo especial y escribí su título arriba.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo organizar una lista escribiendo un elemento por renglón.",
+            "Puedo inventar títulos breves para identificar un dibujo.",
+            "Puedo valorar el uso de listas para recordar cosas importantes."
+        ]
+    }],
+
+    "11039": [{
+        "title": "Mensajes de cariño e invitaciones",
+        "purpose": "Reconocimiento de la función social de la escritura para comunicarse a la distancia y celebrar juntos.",
+        "blocks": [
+            {
+                "kind": "converso",
+                "title": "Cartitas y mensajes en la heladera",
+                "steps": [
+                    "Conversen sobre los mensajes que dejamos cuando alguien no está: Te quiero mucho, Volví pronto.",
+                    "Noten qué importante es que el mensaje diga para quién es y quién lo manda.",
+                    "Recuerden las tarjetas de invitación de cumpleaños que recibieron."
+                ]
+            },
+            {
+                "kind": "juego",
+                "title": "El cartero secreto de la casa",
+                "steps": [
+                    "Escribí un mensaje muy cortito de cariño para alguien de la familia: TE QUIERO.",
+                    "Doblalo como una cartita y escondelo debajo de su almohada o servilleta.",
+                    "Esperá con una sonrisa la sorpresa de quien lo encuentre."
+                ]
+            },
+            {
+                "kind": "creo",
+                "title": "Invitación a mi fiesta soñada",
+                "steps": [
+                    "Imaginá una invitación para tus amigos de primer grado.",
+                    "Dibujá globos festivos y escribí: VENÍ A MI CUMPLE con la fecha o tu nombre."
+                ],
+                "draw": "Dibujá una linda tarjeta de invitación con globos y guirnaldas.",
+                "lines": 1
+            }
+        ],
+        "selfCheck": [
+            "Puedo entender para qué sirve enviar un mensaje o una invitación.",
+            "Puedo escribir frases breves de cariño para mi familia.",
+            "Puedo identificar los datos de una tarjeta: nombre, fecha y motivo."
+        ]
+    }]
+}

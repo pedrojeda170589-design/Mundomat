@@ -1,4 +1,5 @@
-import { Q, q } from "./util";
+import type { ActivitySpec } from "@/lib/activities";
+import { makeClassify, makeOrder, makeStoryPick, Q, q } from "./util";
 
 // Banco de preguntas por número de mundo de Ciencias Naturales de 1.º.
 export const NATURALES_BANK: Record<number, Q[]> = {
@@ -210,5 +211,548 @@ export const NATURALES_BANK: Record<number, Q[]> = {
     q("¿De qué están hechas las nubes?", [["💧", "Gotitas de agua"], ["🧶", "Lana"], ["🍦", "Helado"]], 0, "Pista: cuando caen, llueve.", { promptEmoji: "☁️" }),
     q("¿Qué hay en el cielo cuando llueve con sol?", [["🌋", "Volcán"], ["🌈", "Arcoíris"], ["🚀", "Cohete"]], 1, "Pista: tiene muchos colores.", { promptEmoji: "🌦️" }),
     q("Tocá todo lo que vemos en el cielo", [["☀️", "Sol"], ["☁️", "Nubes"], ["⭐", "Estrellas"], ["🐟", "Peces"]], [0, 1, 2], "Pista: está arriba de nuestras cabezas.", { promptEmoji: "🔭" }),
+  ],
+};
+
+// Actividades de variedad (order, classify, story, multi-pick) por número de mundo.
+export const EXTRA_NATURALES: Record<number, ActivitySpec[]> = {
+  // 1. Un Mundo Lleno de Vida (n-seres-vivos)
+  1: [
+    makeClassify(
+      "n1-ex-0",
+      "Clasificá entre seres vivos y elementos sin vida:",
+      ["Ser vivo", "Sin vida"],
+      [
+        { label: "🐶 Perro juguetón", cat: 0 },
+        { label: "🪨 Piedra del camino", cat: 1 },
+        { label: "🌲 Árbol de lenga", cat: 0 },
+        { label: "🚗 Auto a nafta", cat: 1 },
+      ],
+      "Pista: los seres vivos nacen, se alimentan, crecen y respiran.",
+      ["n-seres-vivos"]
+    ),
+    makeOrder(
+      "n1-ex-1",
+      "Ordená el ciclo vital de un ser vivo:",
+      ["Nacer de su mamá o de una semilla", "Alimentarse y crecer día a día", "Tener hijitos o dar semillas"],
+      "Pista: todos los seres vivos comienzan naciendo chiquitos.",
+      ["n-seres-vivos"]
+    ),
+    makeStoryPick(
+      "n1-ex-2",
+      {
+        title: "El caracol del jardín",
+        text: "Camila encontró un caracolito sobre una hoja mojada. Vio que se movía despacio, sacaba sus antenas y comía una hojita verde. ¡Comprobó que era un ser vivo!",
+      },
+      "¿Cómo supo Camila que el caracol tenía vida?",
+      [["🐌", "Porque se movía y comía hojitas"], ["🔋", "Porque tenía pilas adentro"], ["🧸", "Porque era de peluche"]],
+      0,
+      "Pista: los seres vivos necesitan alimentarse y reaccionan al entorno.",
+      ["n-seres-vivos"]
+    ),
+  ],
+
+  // 2. Plantas y Animales de mi Lugar (n-animales, n-plantas)
+  2: [
+    makeClassify(
+      "n2-ex-0",
+      "¿En qué ambiente vive cada uno?",
+      ["De Santa Cruz (Patagonia)", "De la selva tropical"],
+      [
+        { label: "🦙 Guanaco de la estepa", cat: 0 },
+        { label: "🐒 Mono trepador de árboles", cat: 1 },
+        { label: "🫐 Arbusto de calafate", cat: 0 },
+        { label: "🦜 Tucán de pico gigante", cat: 1 },
+      ],
+      "Pista: el guanaco y el calafate están adaptados al frío y al viento del sur.",
+      ["n-animales", "n-plantas"]
+    ),
+    makeOrder(
+      "n2-ex-1",
+      "Ordená los cambios de la lenga según las estaciones:",
+      ["Brotes y hojas verdes en primavera", "Hojas rojas y doradas en otoño", "Ramas sin hojas cubiertas de nieve en invierno"],
+      "Pista: en otoño las hojas de los árboles caducifolios cambian de color antes de caer.",
+      ["n-animales", "n-plantas"]
+    ),
+    makeStoryPick(
+      "n2-ex-2",
+      {
+        title: "El choique en la estepa",
+        text: "Cerca de la ruta patagónica vimos una tropilla de choiques. Estas aves no vuelan por el aire, pero corren a gran velocidad abriendo sus alas para mantener el equilibrio.",
+      },
+      "¿Cómo se desplaza el choique por la meseta?",
+      [["🏃", "Corriendo con sus patas fuertes"], ["🕊️", "Volando alto en el cielo"], ["🏊", "Buceando bajo el agua"]],
+      0,
+      "Pista: el choique tiene patas largas y fuertes para correr rápido.",
+      ["n-animales", "n-plantas"]
+    ),
+  ],
+
+  // 3. ¿Cómo Son los Animales? (n-animales)
+  3: [
+    makeClassify(
+      "n3-ex-0",
+      "¿Qué cobertura tiene el cuerpo del animal?",
+      ["Pelos", "Plumas o escamas"],
+      [
+        { label: "🦊 Zorro colorado", cat: 0 },
+        { label: "🦅 Cóndor andino", cat: 1 },
+        { label: "🐑 Oveja con lana", cat: 0 },
+        { label: "🐟 Trucha del río", cat: 1 },
+      ],
+      "Pista: las aves tienen plumas y los peces escamas; los mamíferos tienen pelos o lana.",
+      ["n-animales"]
+    ),
+    makeOrder(
+      "n3-ex-1",
+      "Ordená cómo busca alimento un ave cazadora:",
+      ["Observar la estepa desde lo alto", "Bajar en picada con sus alas", "Atrapar su comida con las garras"],
+      "Pista: primero busca con su excelente vista antes de descender.",
+      ["n-animales"]
+    ),
+    makeStoryPick(
+      "n3-ex-2",
+      {
+        title: "Las patas del guanaco",
+        text: "A diferencia de las vacas y ovejas que tienen pezuñas duras, el guanaco tiene almohadillas suaves en las patas. Por eso camina por la meseta sin romper el pasto ni erosionar el suelo.",
+      },
+      "¿Por qué las patas del guanaco cuidan el suelo patagónico?",
+      [["🦙", "Porque tienen almohadillas blandas"], ["👟", "Porque usa zapatillas de goma"], ["🪶", "Porque vuela sin pisar"]],
+      0,
+      "Pista: las almohadillas apoyan suavemente sobre la tierra.",
+      ["n-animales"]
+    ),
+  ],
+
+  // 4. ¿Cómo Son las Plantas? (n-plantas)
+  4: [
+    makeOrder(
+      "n4-ex-0",
+      "Ordená el crecimiento de una planta:",
+      ["Semilla plantada en la tierra húmeda", "Aparición de la raíz y del primer brote", "Crecimiento del tallo con hojas y flores"],
+      "Pista: la semilla bajo tierra es el inicio de una nueva planta.",
+      ["n-plantas"]
+    ),
+    makeClassify(
+      "n4-ex-1",
+      "¿Dónde se ubica cada parte de la planta?",
+      ["Bajo la tierra", "Sobre el suelo al aire"],
+      [
+        { label: "🥕 Raíz que absorbe agua", cat: 0 },
+        { label: "🍃 Hoja verde que recibe sol", cat: 1 },
+        { label: "🌰 Raíz de sostén", cat: 0 },
+        { label: "🌸 Flor con pétalos coloridos", cat: 1 },
+      ],
+      "Pista: las raíces crecen hacia abajo en el suelo para tomar agua y nutrientes.",
+      ["n-plantas"]
+    ),
+    makeStoryPick(
+      "n4-ex-2",
+      {
+        title: "Las espinas del calafate",
+        text: "El arbusto del calafate tiene ricas bayas violetas y espinas afiladas. Esas espinas le sirven a la planta para defenderse y evitar que los herbívoros se coman sus ramas tiernas.",
+      },
+      "¿Para qué utiliza el calafate sus espinas?",
+      [["🛡️", "Para protegerse de los animales que quieren comerlo"], ["🎣", "Para pescar en el río"], ["🧹", "Para barrer las hojas secas"]],
+      0,
+      "Pista: las espinas son una protección natural de muchos arbustos de la estepa.",
+      ["n-plantas"]
+    ),
+  ],
+
+  // 5. Todos Crecemos (n-seres-vivos)
+  5: [
+    makeOrder(
+      "n5-ex-0",
+      "Ordená el crecimiento del pollito:",
+      ["Huevo en el nido empollado con calor", "El pichón rompe el cascarón y sale", "El pollito crece y se convierte en gallina"],
+      "Pista: primero está el huevo antes de que nazca el pichón.",
+      ["n-seres-vivos"]
+    ),
+    makeClassify(
+      "n5-ex-1",
+      "¿Quién lo necesita para vivir?",
+      ["Todos los seres vivos", "Solo las personas"],
+      [
+        { label: "💧 Beber agua potable", cat: 0 },
+        { label: "📱 Usar teléfono celular", cat: 1 },
+        { label: "🌬️ Respirar oxígeno del aire", cat: 0 },
+        { label: "🚗 Conducir un automóvil", cat: 1 },
+      ],
+      "Pista: respirar y tomar agua son funciones vitales de animales, plantas y personas.",
+      ["n-seres-vivos"]
+    ),
+    makeStoryPick(
+      "n5-ex-2",
+      {
+        title: "El potrillito nuevo",
+        text: "Ayer nació un potrillo en el campo. Apenas podía sostenerse en pie y tomaba leche tibia de su mamá yegua. Con los días se volvió fuerte y correteaba feliz.",
+      },
+      "¿De qué se alimenta el potrillo recién nacido?",
+      [["🥛", "De la leche de su mamá"], ["🍖", "De hamburguesas"], ["🍎", "De manzanas asadas"]],
+      0,
+      "Pista: los mamíferos toman leche materna al nacer.",
+      ["n-seres-vivos"]
+    ),
+  ],
+
+  // 6. Mi Cuerpo (n-cuerpo)
+  6: [
+    makeClassify(
+      "n6-ex-0",
+      "¿Con qué sentido percibimos cada estímulo?",
+      ["Sentido de la vista (ojos)", "Sentido del oído (orejas)"],
+      [
+        { label: "🌈 Colores brillantes del arcoíris", cat: 0 },
+        { label: "🎶 Canto alegre de un zorzal", cat: 1 },
+        { label: "📖 Letras escritas en el cuaderno", cat: 0 },
+        { label: "🚨 Sirena de los bomberos en la calle", cat: 1 },
+      ],
+      "Pista: los ojos captan la luz y las orejas captan los sonidos.",
+      ["n-cuerpo"]
+    ),
+    makeOrder(
+      "n6-ex-1",
+      "Ordená las partes del cuerpo humano de arriba hacia abajo:",
+      ["Cabeza con ojos, nariz y boca", "Tronco con pecho, espalda y panza", "Piernas y pies para sostenernos"],
+      "Pista: empezamos por la parte superior donde está la cabeza.",
+      ["n-cuerpo"]
+    ),
+    makeStoryPick(
+      "n6-ex-2",
+      {
+        title: "La merienda de los sentidos",
+        text: "Tomás entró a la cocina: con la nariz sintió el olor a tostadas, con los ojos vio la mermelada y con la lengua saboreó el dulce de leche.",
+      },
+      "¿Con qué parte del cuerpo sintió el sabor dulce de la tostada?",
+      [["👅", "Con la lengua usando el gusto"], ["👂", "Con el oído"], ["👃", "Con la nariz"]],
+      0,
+      "Pista: el sentido del gusto está en las papilas de la lengua.",
+      ["n-cuerpo"]
+    ),
+  ],
+
+  // 7. Me Cuido y te Cuido (n-cuerpo)
+  7: [
+    makeOrder(
+      "n7-ex-0",
+      "Ordená los pasos para cepillarnos los dientes:",
+      ["Poner pasta dental en el cepillo", "Cepillar dientes y muelas con cuidado", "Enjuagar con agua y escupir"],
+      "Pista: primero colocamos la pasta antes de frotar los dientes.",
+      ["n-cuerpo"]
+    ),
+    makeClassify(
+      "n7-ex-1",
+      "¿Es un hábito saludable para todos los días?",
+      ["Hábito saludable diario", "Para hacer solo a veces o evitar"],
+      [
+        { label: "🍎 Comer frutas y verduras frescas", cat: 0 },
+        { label: "🍭 Comer golosinas todo el día", cat: 1 },
+        { label: "🧼 Lavarse las manos con agua y jabón", cat: 0 },
+        { label: "📺 Pasar horas sin moverse frente a la pantalla", cat: 1 },
+      ],
+      "Pista: la higiene y la comida sana cuidan nuestro crecimiento.",
+      ["n-cuerpo"]
+    ),
+    makeStoryPick(
+      "n7-ex-2",
+      {
+        title: "Manos limpias antes de almorzar",
+        text: "Martín estuvo jugando con tierra y autitos en el patio. Antes de sentarse a la mesa con su familia, se lavó muy bien las manos con jabón para quitar todos los microbios.",
+      },
+      "¿Por qué es importante lavarse las manos antes de comer?",
+      [["🧼", "Para no tragar bacterias ni microbios"], ["🎨", "Para que queden de colores"], ["🧊", "Para enfriar los dedos"]],
+      0,
+      "Pista: el agua y el jabón eliminan la suciedad que no se ve.",
+      ["n-cuerpo"]
+    ),
+  ],
+
+  // 8. ¿De Qué Está Hecho? (n-materiales)
+  8: [
+    makeClassify(
+      "n8-ex-0",
+      "¿De qué material principal está fabricado?",
+      ["De madera", "De metal"],
+      [
+        { label: "🪵 Cuchara de palo para cocinar", cat: 0 },
+        { label: "🔑 Llave para abrir la puerta", cat: 1 },
+        { label: "🪑 Banco de plaza de madera", cat: 0 },
+        { label: "🔩 Tornillo con tuerca", cat: 1 },
+      ],
+      "Pista: la madera viene de los árboles y el metal es brillante y pesado.",
+      ["n-materiales"]
+    ),
+    makeOrder(
+      "n8-ex-1",
+      "Ordená cómo se fabrica una prenda de lana:",
+      ["Esquilar el vellón suave de la oveja", "Hilar la lana para formar madejas", "Tejer la bufanda calentita con agujas"],
+      "Pista: primero se obtiene la materia prima de la oveja.",
+      ["n-materiales"]
+    ),
+    makeStoryPick(
+      "n8-ex-2",
+      {
+        title: "El piloto impermeable",
+        text: "Cuando llueve con viento, Julieta usa su campera de plástico impermeable. El agua resbala por la tela sin mojarle la ropa de abajo.",
+      },
+      "¿Por qué el plástico del piloto es ideal para la lluvia?",
+      [["🌧️", "Porque no deja pasar el agua líquida"], ["🧽", "Porque chupa el agua como una esponja"], ["❄️", "Porque se derrite al contacto"]],
+      0,
+      "Pista: los materiales impermeables no absorben los líquidos.",
+      ["n-materiales"]
+    ),
+  ],
+
+  // 9. Lo Descubro con mis Sentidos (n-materiales)
+  9: [
+    makeClassify(
+      "n9-ex-0",
+      "¿Cómo se siente este material al tocarlo?",
+      ["Duro y resistente", "Blando o elástico"],
+      [
+        { label: "🪨 Piedra del río", cat: 0 },
+        { label: "🧸 Peluche de algodón", cat: 1 },
+        { label: "🔨 Martillo de hierro", cat: 0 },
+        { label: "🧽 Esponja de baño", cat: 1 },
+      ],
+      "Pista: lo duro no se deforma al apretarlo con las manos.",
+      ["n-materiales"]
+    ),
+    makeOrder(
+      "n9-ex-1",
+      "Ordená estos elementos de más áspero a más suave:",
+      ["Piedra pómez muy rugosa", "Tabla de madera lijada", "Pañuelo de seda delicado"],
+      "Pista: la piedra rugosa raspa mucho y la seda casi no ofrece resistencia.",
+      ["n-materiales"]
+    ),
+    makeStoryPick(
+      "n9-ex-2",
+      {
+        title: "Adivinar con las manos",
+        text: "Con los ojos vendados, Mateo tocó un objeto misterioso: era frío, muy liso y no se doblaba al apretarlo. ¡Adivinó que era una cuchara de metal!",
+      },
+      "¿Qué sentido usó Mateo para reconocer el material?",
+      [["✋", "El tacto con las yemas de sus dedos"], ["👀", "La vista a través de la venda"], ["👃", "El olfato con la nariz"]],
+      0,
+      "Pista: el tacto nos permite sentir texturas, dureza y temperatura.",
+      ["n-materiales"]
+    ),
+  ],
+
+  // 10. Sólidos y Líquidos (n-materiales)
+  10: [
+    makeClassify(
+      "n10-ex-0",
+      "¿En qué estado se encuentra este elemento?",
+      ["Líquido (fluye)", "Sólido (mantiene su forma)"],
+      [
+        { label: "🥛 Leche en la taza", cat: 0 },
+        { label: "🧱 Ladrillo de construcción", cat: 1 },
+        { label: "🧃 Jugo de frutas en vaso", cat: 0 },
+        { label: "✏️ Lápiz para dibujar", cat: 1 },
+      ],
+      "Pista: los líquidos se derraman si no tienen un recipiente que los contenga.",
+      ["n-materiales"]
+    ),
+    makeOrder(
+      "n10-ex-1",
+      "Ordená los estados del agua cuando le damos calor:",
+      ["Hielo duro y frío en el congelador", "Agua líquida que corre por la canilla", "Vapor que sale de la pava al hervir"],
+      "Pista: el hielo se derrite en agua líquida y con más calor se evapora.",
+      ["n-materiales"]
+    ),
+    makeStoryPick(
+      "n10-ex-2",
+      {
+        title: "El vaso volcado",
+        text: "A Pedro se le resbaló el vaso de agua en la mesa. Como los líquidos no tienen forma fija propia, el agua se escurrió rápidamente y mojó todo el mantel.",
+      },
+      "¿Por qué el agua se desparrama al caer del vaso?",
+      [["💧", "Porque los líquidos adoptan la forma del lugar y fluyen"], ["🪨", "Porque es dura como una piedra"], ["⚽", "Porque rebota como pelota de goma"]],
+      0,
+      "Pista: los líquidos adoptan la forma del recipiente que los contiene.",
+      ["n-materiales"]
+    ),
+  ],
+
+  // 11. Aplastar, Estirar, Empujar (n-materiales, n-fenomenos)
+  11: [
+    makeClassify(
+      "n11-ex-0",
+      "¿Qué le pasa al material al apretarlo con fuerza?",
+      ["Se deforma con facilidad", "Mantiene su forma rígida"],
+      [
+        { label: "🟢 Masa de plastilina", cat: 0 },
+        { label: "🥄 Cuchara de acero", cat: 1 },
+        { label: "🧽 Esponja de lavar", cat: 0 },
+        { label: "🪙 Moneda de metal", cat: 1 },
+      ],
+      "Pista: los materiales plásticos o elásticos cambian de forma con la fuerza de las manos.",
+      ["n-materiales", "n-fenomenos"]
+    ),
+    makeOrder(
+      "n11-ex-1",
+      "Ordená los pasos para modelar un autito de masa:",
+      ["Amasar un bollo de masa suave", "Aplanar y modelar la carrocería y ruedas", "Unir las partes para terminar el autito"],
+      "Pista: primero ablandamos la masa antes de armar los detalles.",
+      ["n-materiales", "n-fenomenos"]
+    ),
+    makeStoryPick(
+      "n11-ex-2",
+      {
+        title: "La gomita elástica",
+        text: "Martina estiró una bandita elástica entre sus dos manos. Al soltarla, la gomita volvió de inmediato a su tamaño original sin romperse. ¡Es un material muy elástico!",
+      },
+      "¿Qué cualidad tiene la bandita elástica?",
+      [["➰", "Vuelve a su forma original al soltarla"], ["🧱", "Se quiebra como un vidrio"], ["🕯️", "Se derrite al estirarla"]],
+      0,
+      "Pista: los materiales elásticos recuperan su forma inicial.",
+      ["n-materiales", "n-fenomenos"]
+    ),
+  ],
+
+  // 12. Luz y Sombra (n-fenomenos)
+  12: [
+    makeClassify(
+      "n12-ex-0",
+      "¿Cómo se produce esta luz?",
+      ["Fuente de luz natural", "Fuente de luz artificial"],
+      [
+        { label: "☀️ El Sol en el cielo", cat: 0 },
+        { label: "🔦 Linterna con pilas", cat: 1 },
+        { label: "⭐ Las estrellas en la noche", cat: 0 },
+        { label: "💡 Lámpara del velador", cat: 1 },
+      ],
+      "Pista: la luz artificial fue inventada por el ser humano.",
+      ["n-fenomenos"]
+    ),
+    makeOrder(
+      "n12-ex-1",
+      "Ordená cómo se hace sombra con las manos:",
+      ["Prender una linterna apuntando a la pared", "Colocar las manos entre la luz y la pared", "Ver la silueta proyectada sobre el muro"],
+      "Pista: la sombra aparece cuando un objeto opaco tapa el paso de la luz.",
+      ["n-fenomenos"]
+    ),
+    makeStoryPick(
+      "n12-ex-2",
+      {
+        title: "Sombras en la carpa",
+        text: "En el campamento, Nico alumbró con su linterna una rama seca. Detrás de la rama se formó una sombra oscura sobre la lona blanca de la carpa porque la luz no podía atravesar la madera.",
+      },
+      "¿Por qué se forma una sombra detrás de la rama?",
+      [["🌳", "Porque la madera no deja pasar la luz"], ["👻", "Porque había un fantasma"], ["🌧️", "Porque empezó a llover"]],
+      0,
+      "Pista: cuando un objeto opaco bloquea la luz, se produce una sombra.",
+      ["n-fenomenos"]
+    ),
+  ],
+
+  // 13. Los Paisajes (n-fenomenos, n-ambiente)
+  13: [
+    makeClassify(
+      "n13-ex-0",
+      "¿De qué paisaje es característico?",
+      ["De la Patagonia (sur)", "De la selva misionera (norte)"],
+      [
+        { label: "❄️ Glaciar con témpanos de hielo", cat: 0 },
+        { label: "🌴 Palmeras altas con lianas verdes", cat: 1 },
+        { label: "🌾 Meseta con pasto coirón", cat: 0 },
+        { label: "🦜 Selva con mucha humedad y calor", cat: 1 },
+      ],
+      "Pista: la Patagonia tiene mesetas, vientos, estepa y glaciares.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+    makeOrder(
+      "n13-ex-1",
+      "Ordená el camino del agua en el paisaje:",
+      ["Nieve en la cumbre de la montaña", "Arroyo que baja y forma un gran río", "El río que desemboca en el mar"],
+      "Pista: el deshielo de las montañas alimenta los arroyos que bajan hacia el mar.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+    makeStoryPick(
+      "n13-ex-2",
+      {
+        title: "El viento en la estepa",
+        text: "En Santa Cruz el viento sopla con fuerza sobre la meseta. Hace girar las aspas de los molinos de agua y moldea los arbustos achaparrados hacia un mismo costado.",
+      },
+      "¿Qué efecto produce el viento fuerte sobre los arbustos del campo?",
+      [["🌬️", "Los inclina y adapta al clima árido"], ["🌊", "Los convierte en peces"], ["🔥", "Los prende fuego"]],
+      0,
+      "Pista: la vegetación de la estepa crece baja y doblada por el viento.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+  ],
+
+  // 14. Paisajes que Cambian (n-fenomenos, n-ambiente)
+  14: [
+    makeOrder(
+      "n14-ex-0",
+      "Ordená el paso de las estaciones del año:",
+      ["Verano con días largos y cálidos", "Otoño con hojas secas que caen", "Invierno con frío, escarcha y nieve"],
+      "Pista: el otoño llega después del verano y prepara la llegada del invierno.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+    makeClassify(
+      "n14-ex-1",
+      "¿Quién produce este cambio en el paisaje?",
+      ["La propia naturaleza", "Las acciones de las personas"],
+      [
+        { label: "❄️ La nieve que cubre los cerros en invierno", cat: 0 },
+        { label: "🛣️ Abrir una ruta asfaltada entre montañas", cat: 1 },
+        { label: "🍂 Las hojas que caen en otoño", cat: 0 },
+        { label: "🏗️ Construir un barrio de casas nuevas", cat: 1 },
+      ],
+      "Pista: el clima y las estaciones son naturales; los puentes y casas son construidos.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+    makeStoryPick(
+      "n14-ex-2",
+      {
+        title: "El deshielo de primavera",
+        text: "Al llegar la primavera a la cordillera, el calor del sol derrite la nieve acumulada. Los arroyos bajan con gran caudal de agua limpia que alimenta los lagos y regadíos.",
+      },
+      "¿Qué provoca el deshielo de las montañas?",
+      [["☀️", "El aumento del calor en primavera"], ["❄️", "El frío congelado de la noche"], ["🌪️", "Un tornado misterioso"]],
+      0,
+      "Pista: el sol calienta el ambiente y transforma la nieve en agua líquida.",
+      ["n-fenomenos", "n-ambiente"]
+    ),
+  ],
+
+  // 15. El Cielo de Día y de Noche (n-fenomenos)
+  15: [
+    makeClassify(
+      "n15-ex-0",
+      "¿En qué momento podemos observar este cuerpo celeste?",
+      ["En el cielo de día", "En el cielo de noche"],
+      [
+        { label: "☀️ El Sol que ilumina y abriga", cat: 0 },
+        { label: "⭐ Miles de estrellas brillantes", cat: 1 },
+        { label: "☁️ Nubes blancas con luz solar", cat: 0 },
+        { label: "✨ Constelación de la Cruz del Sur", cat: 1 },
+      ],
+      "Pista: las estrellas lejanas se aprecian en la oscuridad de la noche.",
+      ["n-fenomenos"]
+    ),
+    makeOrder(
+      "n15-ex-1",
+      "Ordená los momentos del día según la luz:",
+      ["Amanecer: sale el Sol por el este", "Mediodía: el Sol está bien alto", "Atardecer: oscurece y sale la Luna"],
+      "Pista: el amanecer marca el comienzo del día con la primera luz solar.",
+      ["n-fenomenos"]
+    ),
+    makeStoryPick(
+      "n15-ex-2",
+      {
+        title: "Mirando el cielo en el campo",
+        text: "Lejos de las luces del pueblo, el cielo de la noche patagónica es transparente y oscuro. Joaquín y su abuelo salieron al patio a buscar las cuatro estrellas de la Cruz del Sur.",
+      },
+      "¿Qué observaban Joaquín y su abuelo en la noche?",
+      [["✨", "Las estrellas y la Cruz del Sur"], ["☀️", "El Sol radiante del mediodía"], ["🌈", "Un arcoíris bajo la lluvia"]],
+      0,
+      "Pista: la noche sin luces de la ciudad permite ver nítidamente las constelaciones.",
+      ["n-fenomenos"]
+    ),
   ],
 };

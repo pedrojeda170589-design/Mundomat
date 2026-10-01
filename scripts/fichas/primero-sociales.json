@@ -1,0 +1,740 @@
+{
+  "13001": [
+    {
+      "title": "Mi historia en fotos",
+      "purpose": "Acompañen al chico a mirar fotos o recuerdos familiares para descubrir cómo cambió desde que nació.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Historias de cuando era bebé",
+          "steps": [
+            "Buscá con un adulto fotos o ropita de cuando eras bebé.",
+            "Preguntales qué cosas te gustaba hacer y cuál fue tu primera palabra.",
+            "Conversen sobre qué cosas podés hacer hoy que antes no podías."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná la foto",
+          "steps": [
+            "Mezclen fotos familiares de distintas edades.",
+            "Por turnos eligen una foto y los demás adivinan quién es y qué edad tenía.",
+            "El que acierta cuenta una anécdota divertida de ese momento."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi autorretrato de primer grado",
+          "steps": [
+            "Mirate en un espejo y observá cómo sos hoy.",
+            "Dibujate con tu guardapolvo o tu ropa favorita de la escuela."
+          ],
+          "draw": "Dibujate como sos hoy en primer grado.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer cambios en mi cuerpo desde que era bebé.",
+        "Puedo escuchar historias de mi infancia en familia.",
+        "Puedo contar qué cosas nuevas aprendí a hacer solo."
+      ]
+    }
+  ],
+  "13002": [
+    {
+      "title": "Mi familia y mis amigos",
+      "purpose": "Propuesta para conversar sobre el afecto, la diversidad de familias y los momentos compartidos con amigos.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Costumbres en casa",
+          "steps": [
+            "Conversen en familia sobre qué cosas les gusta compartir juntos.",
+            "Recuerden una comida especial o un paseo que hayan disfrutado mucho.",
+            "Nombren a las personas queridas que los cuidan todos los días."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El abrazo musical",
+          "steps": [
+            "Pongan música alegre y bailen en familia por la habitación.",
+            "Cuando la música se detiene, nos damos un abrazo suave de a dos.",
+            "Repetimos cambiando de pareja en cada vuelta."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi rincón de los amigos",
+          "steps": [
+            "Pensá en un amigo o amiga de la escuela.",
+            "Dibujá un juego que les guste jugar juntos en el recreo."
+          ],
+          "draw": "Dibujá un momento divertido jugando con un amigo o amiga.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar a los integrantes de mi familia que me cuidan.",
+        "Puedo compartir juegos respetando a mis amigos.",
+        "Puedo expresar el cariño que siento por los demás."
+      ]
+    }
+  ],
+  "13003": [
+    {
+      "title": "Lo que necesitamos para vivir",
+      "purpose": "Ayuden al chico a distinguir entre necesidades indispensables para la vida y deseos o gustos personales.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Cosas indispensables en casa",
+          "steps": [
+            "Recorran la casa buscando elementos que necesitamos para vivir sanos.",
+            "Señalen la canilla de agua, el abrigo, la cama y la comida del almuerzo.",
+            "Conversen sobre por qué son indispensables para estar bien."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La valija del viaje patagónico",
+          "steps": [
+            "Imaginamos que vamos a viajar al campo con mucho viento y frío.",
+            "Cada jugador nombra una cosa indispensable para llevar: campera, agua, bufanda.",
+            "Si alguien nombra un juguete o golosina, explicamos si es necesario o un gusto."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi plato saludable",
+          "steps": [
+            "Pensá en alimentos ricos y saludables que te dan fuerza para crecer.",
+            "Dibujá en el plato tu comida favorita con verduras o frutas."
+          ],
+          "draw": "Dibujá un plato con comida rica y saludable.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer que el agua, el abrigo y la comida son necesidades básicas.",
+        "Puedo diferenciar una necesidad de un capricho o deseo.",
+        "Puedo valorar el esfuerzo de mi familia para cuidarme."
+      ]
+    }
+  ],
+  "13004": [
+    {
+      "title": "Lugares que cuidan al pueblo",
+      "purpose": "Acompañen al estudiante a reconocer las instituciones de la localidad y el trabajo de las personas que nos ayudan.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Las instituciones de mi pueblo",
+          "steps": [
+            "Conversen sobre qué lugares de ayuda conocen: hospital, cuartel de bomberos, escuela o comisaría.",
+            "Recuerden alguna vez que fueron a la salita de salud o a la biblioteca.",
+            "Mencionen qué personas trabajan en cada lugar."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "¿A quién llamamos?",
+          "steps": [
+            "Un adulto plantea una situación: hay humo en un pastizal, me duele la panza, quiero un libro.",
+            "El chico responde rápido a qué lugar o persona acudir: bomberos, doctor, bibliotecaria.",
+            "Cambian de rol y el chico inventa la situación."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El cuartel de bomberos",
+          "steps": [
+            "Pensá en los bomberos voluntarios que apagan incendios.",
+            "Dibujá el camión autobomba con su escalera y manguera de agua."
+          ],
+          "draw": "Dibujá el camión de los bomberos ayudando en el pueblo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar al menos tres instituciones de mi localidad.",
+        "Puedo decir para qué sirve el hospital y la escuela.",
+        "Puedo reconocer a los trabajadores que cuidan a los vecinos."
+      ]
+    }
+  ],
+  "13005": [
+    {
+      "title": "Reglas para vivir felices",
+      "purpose": "Proponemos dialogar sobre la importancia de los acuerdos de convivencia en la casa y en el aula.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Acuerdos en nuestro hogar",
+          "steps": [
+            "Conversen sobre qué reglas ayudan a que en casa no haya peleas.",
+            "Por ejemplo: no gritar, avisar antes de agarrar algo ajeno y ordenar los juguetes.",
+            "Elijan entre todos el acuerdo más importante del día."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El semáforo de las actitudes",
+          "steps": [
+            "Un adulto dice una acción cotidiana en voz alta.",
+            "Si ayuda a convivir, el chico salta y dice verde: compartir, escuchar, abrazar.",
+            "Si trae problemas, se agacha y dice rojo: empujar, gritar, burlarse."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi cartel de la paz",
+          "steps": [
+            "Elegí una palabra linda para convivir: por favor, gracias o perdón.",
+            "Dibujá a dos personas dándose la mano amablemente."
+          ],
+          "draw": "Dibujá una escena de ayuda y compañerismo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo entender por qué existen las normas en casa y en la escuela.",
+        "Puedo pedir por favor y dar las gracias.",
+        "Puedo resolver pequeños problemas hablando sin empujar."
+      ]
+    }
+  ],
+  "13006": [
+    {
+      "title": "Mis derechos y responsabilidades",
+      "purpose": "Acompañen al estudiante a reconocer sus derechos de niña o niño y sus tareas diarias de colaboración.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Mi documento de identidad",
+          "steps": [
+            "Mirá con un adulto tu documento nacional de identidad.",
+            "Leé tu nombre, tu apellido y la fecha en que naciste.",
+            "Conversen sobre el derecho a tener un nombre y una nacionalidad."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Misión colaboración en casa",
+          "steps": [
+            "Elegí una tarea sencilla para colaborar hoy en casa: poner las servilletas o guardar los zapatos.",
+            "Hacé la tarea con alegría y ponete una medalla imaginaria de superayudante.",
+            "Los adultos te felicitan con un aplauso fuerte."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Derecho a jugar y soñar",
+          "steps": [
+            "Todos los chicos tienen derecho a jugar y divertirse.",
+            "Dibujá tu juego favorito al aire libre o con tu familia."
+          ],
+          "draw": "Dibujá lo que más te gusta jugar en tu tiempo libre.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo saber que tengo derecho a estudiar, jugar y ser cuidado.",
+        "Puedo colaborar con pequeñas tareas del hogar.",
+        "Puedo reconocer mi nombre en mi documento."
+      ]
+    }
+  ],
+  "13007": [
+    {
+      "title": "El campo y el pueblo",
+      "purpose": "Actividad para comparar las características de los espacios rurales patagónicos con las zonas urbanas.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Paisajes cercanos y lejanos",
+          "steps": [
+            "Conversen sobre cómo es el lugar donde viven: ¿hay calles asfaltadas o de tierra?",
+            "Preguntale a un adulto si alguna vez visitó una estancia o un campo con ovejas.",
+            "Comparen los ruidos de la ciudad con el silencio y el viento del campo."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "¿Campo o pueblo?",
+          "steps": [
+            "Un jugador nombra un elemento del paisaje.",
+            "El otro responde rápido si es típico del campo o del pueblo.",
+            "Ejemplos: molino de viento, semáforo, rebaño de ovejas, edificio alto, tranquera."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La tranquera de la estancia",
+          "steps": [
+            "Imaginá una estancia patagónica con pasto coirón y cielo amplio.",
+            "Dibujá una tranquera de madera con ovejas o guanacos a lo lejos."
+          ],
+          "draw": "Dibujá un paisaje de campo patagónico con sus animales.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo distinguir elementos del campo y del pueblo.",
+        "Puedo nombrar animales que viven en las estancias.",
+        "Puedo describir cómo es el barrio donde vivo."
+      ]
+    }
+  ],
+  "13008": [
+    {
+      "title": "Naturaleza y construcciones",
+      "purpose": "Acompañen al estudiante a observar a su alrededor para diferenciar elementos naturales de los construidos por la sociedad.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Mirando por la ventana",
+          "steps": [
+            "Asomate a la ventana o salí al patio con un adulto.",
+            "Señalá con el dedo cosas hechas por la naturaleza: el cielo, las nubes, la tierra, un cerro.",
+            "Señalá cosas construidas por personas: el poste de luz, la vereda, el cerco, una casa."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Cacería de materiales",
+          "steps": [
+            "Buscamos en el patio una piedra y una ramita (naturales).",
+            "Buscamos un tornillo o un pedacito de cartón (construidos).",
+            "Colocamos cada objeto en dos cajas distintas según su origen."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El puente sobre el arroyo",
+          "steps": [
+            "Pensá en un arroyo de agua natural.",
+            "Dibujá un puente construido por personas para que la gente pueda cruzarlo."
+          ],
+          "draw": "Dibujá un río natural con un puente construido por personas.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo identificar elementos que son de la naturaleza.",
+        "Puedo reconocer objetos y construcciones hechas por las personas.",
+        "Puedo explicar para qué sirve un puente o una casa."
+      ]
+    }
+  ],
+  "13009": [
+    {
+      "title": "Del campo a nuestra mesa",
+      "purpose": "Propuesta para descubrir el recorrido que hacen los alimentos y productos desde la naturaleza hasta el hogar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "El camino de la leche y el pan",
+          "steps": [
+            "Miren el pan o la leche que tienen en la cocina.",
+            "Conversen sobre de dónde viene la leche (de la vaca en el campo) y el pan (del trigo molido).",
+            "Nombren a las personas que trabajan para que los alimentos lleguen al almacén."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná de dónde viene",
+          "steps": [
+            "Un adulto muestra un alimento: manzana, queso, fideo, huevo.",
+            "El chico adivina si proviene de una planta o de un animal del campo.",
+            "Suman un punto por cada acierto y aplauden al final."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El vellón de la oveja",
+          "steps": [
+            "En Santa Cruz las ovejas nos dan lana calentita para tejer.",
+            "Dibujá una oveja en la meseta y decorale el cuerpo con rulitos de lápiz."
+          ],
+          "draw": "Dibujá una oveja con su lana esponjosa en el campo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo comprender que los alimentos vienen de la naturaleza.",
+        "Puedo valorar el trabajo de las personas que producen la comida.",
+        "Puedo nombrar productos que obtenemos de los animales y las plantas."
+      ]
+    }
+  ],
+  "13010": [
+    {
+      "title": "Servicios que nos ayudan",
+      "purpose": "Acompañen al chico a reconocer los servicios básicos del pueblo (agua corriente, luz, gas, recolección) y a cuidarlos.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Los caños y cables de casa",
+          "steps": [
+            "Acompañado por un adulto, observá por dónde entra el agua a la casa.",
+            "Mirá las teclas de luz en la pared y los calefactores que dan calor.",
+            "Conversen sobre cómo sería la vida si no tuviéramos agua en la canilla."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Guardianes de la canilla",
+          "steps": [
+            "Jugamos a ser guardianes del agua en la cocina y el baño.",
+            "Revisamos que ninguna canilla quede goteando agua sin querer.",
+            "Cada vez que alguien se lava los dientes, cerramos la canilla mientras cepillamos."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El camión recolector",
+          "steps": [
+            "Los recolectores de basura limpian los tachos del pueblo.",
+            "Dibujá el camión recolector pasando por la vereda de tu cuadra."
+          ],
+          "draw": "Dibujá el camión recolector cuidando la limpieza del barrio.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar servicios esenciales como agua, luz y gas.",
+        "Puedo cuidar el agua cerrando las canillas en casa.",
+        "Puedo reconocer la importancia de mantener limpio el pueblo."
+      ]
+    }
+  ],
+  "13011": [
+    {
+      "title": "Cómo viajamos y nos movemos",
+      "purpose": "Actividad para explorar los medios de transporte de la región y cómo conectan pueblos, estancias y ciudades.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Viajes por las rutas del sur",
+          "steps": [
+            "Conversen sobre los viajes que hicieron: en auto, colectivo, bicicleta o a caballo.",
+            "Recuerden cuánto tiempo tardaron y qué paisajes vieron por la ventanilla.",
+            "Hablen sobre los camiones grandes que traen comida por la ruta nacional."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Tierra, agua y aire",
+          "steps": [
+            "Un jugador dice un transporte: colectivo, lancha, avión, caballo, tren.",
+            "El otro responde por dónde viaja: tierra, agua o aire.",
+            "Hacen la mímica o el sonido del motor mientras responden."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi transporte favorito",
+          "steps": [
+            "Pensá en cómo te gustaría viajar por la Patagonia.",
+            "Dibujá tu transporte preferido andando por una ruta o camino de tierra."
+          ],
+          "draw": "Dibujá tu medio de transporte favorito en un camino patagónico.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar distintos medios de transporte terrestres, aéreos y acuáticos.",
+        "Puedo reconocer que los transportes unen a las personas y los pueblos.",
+        "Puedo recordar normas de seguridad como usar cinturón o casco."
+      ]
+    }
+  ],
+  "13012": [
+    {
+      "title": "Mirar los lugares desde arriba",
+      "purpose": "Iniciación lúdica al croquis y la vista aérea mediante el dibujo y la ubicación de objetos conocidos.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "La mesa vista como un pájaro",
+          "steps": [
+            "Colocá sobre la mesa un plato, una taza y una cuchara.",
+            "Parate sobre una banqueta firme y miralos bien desde arriba.",
+            "Notá que el plato y la taza se ven como círculos planos."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Búsqueda del tesoro en la pieza",
+          "steps": [
+            "Un adulto esconde una moneda o tapita en la habitación.",
+            "Dibuja un croquis muy simple en un papel con una X roja.",
+            "El chico sigue el mapa mirando desde arriba y encuentra el tesoro."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El plano de mi mesa de merienda",
+          "steps": [
+            "Imaginá tu mesa vista desde el techo.",
+            "Dibujá la mesa grande y adentro los círculos de tu taza y tu plato."
+          ],
+          "draw": "Dibujá tu mesa de merienda vista desde arriba.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo entender qué significa mirar un objeto desde arriba.",
+        "Puedo seguir un mapa o croquis sencillo para encontrar algo.",
+        "Puedo representar formas básicas de los muebles en un papel."
+      ]
+    }
+  ],
+  "13013": [
+    {
+      "title": "La vida antes y ahora",
+      "purpose": "Propuesta para comparar costumbres, objetos y tecnologías del pasado con las comodidades de hoy.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Charlas con los abuelos",
+          "steps": [
+            "Preguntale a un abuelo o adulto mayor cómo era su infancia sin teléfonos celulares.",
+            "Averiguá cómo escuchaban música o cómo iluminaban las casas sin luz eléctrica.",
+            "Conversen sobre qué cosas cambiaron y qué cosas siguen igual."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "¿Antes o ahora?",
+          "steps": [
+            "El adulto muestra o nombra dos objetos parecidos: vela y foco de luz, carta y mensaje de audio.",
+            "El chico señala cuál se usaba antes y cuál se usa ahora.",
+            "Explica con sus palabras por qué el nuevo es más rápido o cómodo."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Un farol antiguo y una lámpara moderna",
+          "steps": [
+            "Pensá en los faroles a querosene que usaban los pobladores pioneros.",
+            "Dibujá el farol antiguo al lado de una bombita de luz actual."
+          ],
+          "draw": "Dibujá cómo se iluminaban antes y cómo nos iluminamos hoy.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar objetos del pasado con objetos del presente.",
+        "Puedo valorar las historias que me cuentan las personas mayores.",
+        "Puedo reconocer que las formas de vivir van cambiando con el tiempo."
+      ]
+    }
+  ],
+  "13014": [
+    {
+      "title": "Trabajos de antes y máquinas de hoy",
+      "purpose": "Acompañen al estudiante a conocer cómo se producían las cosas artesanalmente antes de las fábricas modernas.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "El tejido a mano en casa",
+          "steps": [
+            "Buscá en casa un pulóver, bufanda o manta tejida a dos agujas o telar.",
+            "Tocá los puntos de lana y sentí la textura suave y calentita.",
+            "Conversen sobre el tiempo y la paciencia que lleva hacer algo a mano."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Panaderos artesanales",
+          "steps": [
+            "Con un poco de harina, agua y sal en un bol, jugamos a amasar con las manos.",
+            "Hacemos bollitos redondos sintiendo la fuerza que se necesita.",
+            "Comentamos la diferencia entre amasar a mano y usar una máquina amasadora."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El horno de barro",
+          "steps": [
+            "En muchas estancias y casas de campo se cocina en horno de barro con leña.",
+            "Dibujá el horno redondo de barro con humo saliendo por la chimenea."
+          ],
+          "draw": "Dibujá un horno de barro tradicional cocinando pan casero.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo diferenciar un trabajo hecho a mano de uno hecho con máquinas.",
+        "Puedo valorar los oficios tradicionales como tejer y hornear pan.",
+        "Puedo experimentar con materiales simples como masa o lana."
+      ]
+    }
+  ],
+  "13015": [
+    {
+      "title": "Comprar, vender y ahorrar",
+      "purpose": "Iniciación al uso del dinero social, los precios en los negocios y el valor del ahorro familiar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Visita al almacén del barrio",
+          "steps": [
+            "Acompañá a un adulto a hacer una compra chica en el negocio cercano.",
+            "Observá cómo miran el cartel del precio y pagan en la caja.",
+            "Mirá cuando el almacenero entrega el vuelto con monedas o billetes."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El kiosquito en el living",
+          "steps": [
+            "Ponemos sobre la mesa tres objetos con cartelitos de precios fáciles: 1, 2 o 5 pesos.",
+            "Usamos tapitas o papeles recortados como monedas.",
+            "Jugamos a comprar, pagar justo o dar el vuelto."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi alcancía de los sueños",
+          "steps": [
+            "Ahorrar significa guardar moneditas para algo importante en el futuro.",
+            "Dibujá una alcancía divertida con forma de chanchito o cajita decorada."
+          ],
+          "draw": "Dibujá tu alcancía con monedas para ahorrar en familia.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo entender que las cosas del negocio se pagan con dinero.",
+        "Puedo reconocer qué es el precio y qué es el vuelto.",
+        "Puedo comprender la importancia de cuidar y ahorrar en casa."
+      ]
+    }
+  ],
+  "13016": [
+    {
+      "title": "Los antiguos habitantes: aonikenk",
+      "purpose": "Aproximación respetuosa a la cultura de los pueblos originarios tehuelches de Santa Cruz y su forma de vida en la meseta.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "La vida de los aonikenk",
+          "steps": [
+            "Conversen sobre los aonikenk, que vivieron miles de años en nuestra provincia.",
+            "Ellos no tenían casas de ladrillo: armaban toldos de palos y cueros de guanaco.",
+            "Se trasladaban siguiendo a los animales y cuidaban la naturaleza de la estepa."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Rastreadores en la meseta",
+          "steps": [
+            "Un jugador hace huellitas en el piso con los dedos imitando a un guanaco o choique.",
+            "El otro jugador sigue las huellas con pasos silenciosos y atentos.",
+            "Cuando encuentra al animalito, se dan las manos con una sonrisa."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El toldo en la meseta",
+          "steps": [
+            "Pensá en un campamento aonikenk bajo el cielo azul de Santa Cruz.",
+            "Dibujá el toldo de cueros sostenido por palos y un fueguito al frente."
+          ],
+          "draw": "Dibujá un toldo aonikenk en medio de la estepa patagónica.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo conocer quiénes fueron los aonikenk en Santa Cruz.",
+        "Puedo saber cómo se protegían del frío con cueros y toldos.",
+        "Puedo tratar con respeto a las culturas originarias de mi tierra."
+      ]
+    }
+  ],
+  "13017": [
+    {
+      "title": "Huellas que cuentan historias",
+      "purpose": "Acompañen al estudiante a valorar los testimonios del pasado, como las pinturas rupestres y los recuerdos familiares.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Pinturas en la roca",
+          "steps": [
+            "Conversen sobre la Cueva de las Manos, cerca de Perito Moreno en Santa Cruz.",
+            "Hace miles de años, cazadores antiguos apoyaron sus manos y soplaron pintura mineral.",
+            "Esas marcas se conservaron hasta hoy y son un tesoro de toda la humanidad."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El museo de los tesoros de casa",
+          "steps": [
+            "Buscamos tres objetos antiguos que guarde la familia: un reloj viejo, una carta, un dedal.",
+            "Los colocamos sobre una tela limpia como si fuera una sala de museo.",
+            "El chico hace de guía de museo y explica de quién era cada objeto."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La huella de mi mano",
+          "steps": [
+            "Apoyá tu mano abierta en el recuadro.",
+            "Con un lápiz o crayón recorré el borde de tus dedos para dejar tu propia marca."
+          ],
+          "draw": "Apoyá tu mano y trazá su silueta como en las cuevas antiguas.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo conocer la Cueva de las Manos de nuestra provincia.",
+        "Puedo reconocer que los objetos antiguos guardan recuerdos valiosos.",
+        "Puedo valorar y cuidar el patrimonio histórico y cultural."
+      ]
+    }
+  ],
+  "13018": [
+    {
+      "title": "Nuestra bandera y fiestas patrias",
+      "purpose": "Propuesta para celebrar las fechas patrias en familia y reflexionar sobre los símbolos que nos unen como argentinos.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Los colores de nuestra patria",
+          "steps": [
+            "Miren la Bandera Nacional Argentina: celeste, blanca y con el sol en el medio.",
+            "Recuerden a Manuel Belgrano, quien la creó a orillas del río Paraná.",
+            "Conversen sobre cómo se siente cantar el Himno Nacional en los actos de la escuela."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La marcha patriótica",
+          "steps": [
+            "Escuchen una marcha patriótica o canción escolar en casa.",
+            "Marchamos con paso firme sosteniendo una banderita de papel en alto.",
+            "Al terminar la música, decimos todos juntos: ¡Viva la Patria!"
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi escarapela en el pecho",
+          "steps": [
+            "En las fiestas patrias llevamos una escarapela redonda en el pecho.",
+            "Dibujala con círculos celestes y blancos, y un sol brillante en el centro."
+          ],
+          "draw": "Dibujá una escarapela celeste y blanca para lucir con orgullo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer los colores de la Bandera Argentina.",
+        "Puedo saber qué recordamos en los actos patrios de la escuela.",
+        "Puedo participar con respeto y alegría de las fiestas de mi país."
+      ]
+    }
+  ]
+}

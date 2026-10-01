@@ -26,9 +26,18 @@ FONT_DIR = os.environ.get("FONT_DIR", "/tmp/fonts2")
 OUT = os.path.join(ROOT, "private", "fichas")
 ISLANDS = os.path.join(ROOT, "public", "theme", "islands")
 
-pdfmetrics.registerFont(TTFont("Andika", os.path.join(FONT_DIR, "Andika-Regular.ttf")))
-pdfmetrics.registerFont(TTFont("AndikaB", os.path.join(FONT_DIR, "Andika-Bold.ttf")))
-pdfmetrics.registerFont(TTFont("Fredoka", os.path.join(FONT_DIR, "Fredoka-Bold.ttf")))
+
+def find_font(filename):
+    for d in (FONT_DIR, HERE, "/tmp/fonts2"):
+        p = os.path.join(d, filename)
+        if os.path.exists(p):
+            return p
+    return os.path.join(FONT_DIR, filename)
+
+
+pdfmetrics.registerFont(TTFont("Andika", find_font("Andika-Regular.ttf")))
+pdfmetrics.registerFont(TTFont("AndikaB", find_font("Andika-Bold.ttf")))
+pdfmetrics.registerFont(TTFont("Fredoka", find_font("Fredoka-Bold.ttf")))
 
 W, H = A4
 M = 40
@@ -49,11 +58,25 @@ KINDS = {
 
 
 def world_names():
-    """Nombre y materia de cada mundo, leídos de src/lib/worlds.ts."""
+    """Nombre y materia de cada mundo, leídos de src/lib/worlds.ts y src/lib/grade1/worlds.ts."""
     src = open(os.path.join(ROOT, "src", "lib", "worlds.ts"), encoding="utf-8").read()
     out = {}
     for m in re.finditer(r'\{\s*id: (\d+),\s*name: "([^"]+)",\s*emoji: "[^"]*",\s*subject: "(\w+)"', src):
         out[int(m.group(1))] = (m.group(2), m.group(3))
+
+    g1_path = os.path.join(ROOT, "src", "lib", "grade1", "worlds.ts")
+    if os.path.exists(g1_path):
+        g1_src = open(g1_path, encoding="utf-8").read()
+        bases = {"lengua": 11000, "matematica": 12000, "sociales": 13000, "naturales": 14000}
+        for subj, base in bases.items():
+            pattern = rf'build\("{subj}",\s*\[(.*?)\]\);'
+            block_match = re.search(pattern, g1_src, re.DOTALL)
+            if block_match:
+                block = block_match.group(1)
+                for m in re.finditer(r'\{\s*n:\s*(\d+),\s*name:\s*"([^"]+)"', block):
+                    n = int(m.group(1))
+                    name = m.group(2)
+                    out[base + n] = (name, subj)
     return out
 
 
@@ -320,15 +343,32 @@ def main():
     made = 0
     pages = {}
     for subject in ("matematica", "lengua", "naturales", "sociales"):
-        data = json.load(open(os.path.join(HERE, f"{subject}.json"), encoding="utf-8"))
-        for wid_s, versions in data.items():
-            wid = int(wid_s)
-            name, subj = names[wid]
-            assert subj == subject, (wid, subj, subject)
-            for v, ficha in enumerate(versions, 1):
-                path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
-                pages[(wid, v)] = Sheet(path, wid, name, subject, v, ficha).build()
-                made += 1
+        # 3.º grado
+        p3 = os.path.join(HERE, f"{subject}.json")
+        if os.path.exists(p3):
+            data = json.load(open(p3, encoding="utf-8"))
+            for wid_s, versions in data.items():
+                wid = int(wid_s)
+                name, subj = names[wid]
+                assert subj == subject, (wid, subj, subject)
+                for v, ficha in enumerate(versions, 1):
+                    path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
+                    pages[(wid, v)] = Sheet(path, wid, name, subject, v, ficha).build()
+                    made += 1
+
+        # 1.º grado
+        p1 = os.path.join(HERE, f"primero-{subject}.json")
+        if os.path.exists(p1):
+            data = json.load(open(p1, encoding="utf-8"))
+            for wid_s, versions in data.items():
+                wid = int(wid_s)
+                name, subj = names[wid]
+                assert subj == subject, (wid, subj, subject)
+                for v, ficha in enumerate(versions, 1):
+                    path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
+                    pages[(wid, v)] = Sheet(path, wid, name, subject, v, ficha).build()
+                    made += 1
+
     print(f"{made} fichas generadas en {OUT}")
     print("hojas por ficha:", sorted(set(pages.values())), "· más largas:", [k for k, p in pages.items() if p > 2])
 

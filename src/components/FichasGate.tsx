@@ -1,26 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Las fichas para imprimir se descargan solo con un código de alumno. Si el
 // chico ya entró a la app en esta pestaña, se usa su código sin pedirlo.
-export default function FichasGate({ children }: { children: React.ReactNode }) {
+export default function FichasGate({
+  children,
+  onUnlocked,
+}: {
+  children: React.ReactNode;
+  onUnlocked?: (grade: number) => void;
+}) {
   const [state, setState] = useState<"checking" | "locked" | "open">("checking");
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  async function unlock(value: string): Promise<boolean> {
+  const onUnlockedRef = useRef(onUnlocked);
+  useEffect(() => {
+    onUnlockedRef.current = onUnlocked;
+  }, [onUnlocked]);
+
+  const unlock = useCallback(async (value: string): Promise<boolean> => {
     const res = await fetch("/api/fichas/acceso", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: value }),
     });
-    if (res.ok) return true;
+    if (res.ok) {
+      const d = await res.json().catch(() => ({}));
+      if (typeof d.grade === "number") onUnlockedRef.current?.(d.grade);
+      return true;
+    }
     const d = await res.json().catch(() => ({}));
     setError(d.error ?? "No se pudo verificar el código.");
     return false;
-  }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,7 +43,10 @@ export default function FichasGate({ children }: { children: React.ReactNode }) 
       try {
         const d = await fetch("/api/fichas/acceso").then((r) => r.json());
         if (cancelled) return;
-        if (d.ok) return setState("open");
+        if (d.ok) {
+          if (typeof d.grade === "number") onUnlockedRef.current?.(d.grade);
+          return setState("open");
+        }
         let stored: string | null = null;
         try {
           stored = sessionStorage.getItem("mundomat_code");
@@ -39,6 +57,7 @@ export default function FichasGate({ children }: { children: React.ReactNode }) 
           if (!cancelled) setState("open");
           return;
         }
+
         if (!cancelled) {
           setError(null);
           setState("locked");
@@ -50,7 +69,7 @@ export default function FichasGate({ children }: { children: React.ReactNode }) 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [unlock]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

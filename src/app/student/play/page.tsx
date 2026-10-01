@@ -446,7 +446,7 @@ export default function StudentPlayPage() {
           worldsNeedingReview={progress.worldsNeedingTeacherReview}
           classmateCounts={classmateCounts}
           mapStage={mapStage.stage}
-          showFichas={!isTrialStudent && grade === DEFAULT_GRADE}
+          showFichas={!isTrialStudent}
           lockedLabel={isTrialStudent ? "Fuera de la prueba" : undefined}
           onSelectWorld={setSelectedWorld}
         />

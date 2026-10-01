@@ -6,7 +6,7 @@ import { FICHAS_COOKIE, FICHAS_COOKIE_MAX_AGE, studentForFichas } from "@/lib/fi
 export async function GET() {
   const jar = await cookies();
   const student = await studentForFichas(jar.get(FICHAS_COOKIE)?.value);
-  return Response.json({ ok: !!student });
+  return Response.json({ ok: !!student, grade: student?.grade ?? 3 });
 }
 
 // POST { code } → habilita las descargas con el código de alumno.
@@ -27,5 +27,5 @@ export async function POST(request: NextRequest) {
     path: "/",
     maxAge: FICHAS_COOKIE_MAX_AGE,
   });
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, grade: student.grade ?? 3 });
 }

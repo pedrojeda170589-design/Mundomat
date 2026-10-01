@@ -1,0 +1,989 @@
+{
+  "12001": [
+    {
+      "title": "Números por todos lados",
+      "purpose": "Acompañen al estudiante a descubrir los distintos usos sociales de los números en casa y en la calle.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Cacería de números en casa",
+          "steps": [
+            "Recorran la casa buscando dónde aparecen números escritos.",
+            "Encuentren números en el reloj, en el calendario, en el control remoto y en una regla.",
+            "Conversen para qué sirve cada número: para saber la hora, el día o el canal."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El número de la suerte",
+          "steps": [
+            "Cada jugador piensa un número del 1 al 10 en secreto.",
+            "Por turnos hacen preguntas: ¿es mayor que 5?, ¿viene después del 3?",
+            "El primero en adivinar el número del compañero gana la ronda."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El número de mi casa",
+          "steps": [
+            "Mirá el número que está en la puerta o el frente de tu casa.",
+            "Dibujá tu casa bien linda y escribí su número en la puerta."
+          ],
+          "draw": "Dibujá el frente de tu casa con su número en la puerta.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar números en objetos de mi vida diaria.",
+        "Puedo explicar para qué sirve el número del reloj o del calendario.",
+        "Puedo reconocer el número de mi casa o de mi aula."
+      ]
+    }
+  ],
+  "12002": [
+    {
+      "title": "Mirar y decir cuántos hay",
+      "purpose": "Estimulación del reconocimiento visual rápido de cantidades pequeñas (hasta 5) sin necesidad de contar de a uno.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Dedos al instante",
+          "steps": [
+            "Un adulto muestra una mano con 2, 3 o 4 dedos levantados por un segundo.",
+            "El chico dice rápido cuántos dedos vio sin contarlos uno por uno.",
+            "Cambian de rol y el chico muestra sus dedos."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La tirada de dados",
+          "steps": [
+            "Tiren un dado sobre la mesa.",
+            "El primero que nombra la cantidad de puntos que salieron se queda con un poroto.",
+            "El que junta cinco porotos gana el juego."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mis cinco manzanas",
+          "steps": [
+            "En un frutero hay frutas listas para comer.",
+            "Dibujá un frutero grande con exactamente cuatro o cinco manzanas rojas."
+          ],
+          "draw": "Dibujá un plato con cinco frutas sabrosas.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo decir cantidades chicas de golpe con solo mirar.",
+        "Puedo reconocer los puntos del dado rápidamente.",
+        "Puedo dibujar colecciones de hasta cinco elementos."
+      ]
+    }
+  ],
+  "12003": [
+    {
+      "title": "Contamos hasta diez con cuidado",
+      "purpose": "Práctica del conteo uno a uno con correspondencia exacta entre el dedo y la palabra numérica.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La fila de tapitas o cucharas",
+          "steps": [
+            "Juntá diez tapitas, cucharas o broches de ropa.",
+            "Acomodalos en una hilera ordenada sobre la mesa.",
+            "Tocá cada uno con el dedo mientras decís: uno, dos, tres... hasta diez."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Pasar los porotos",
+          "steps": [
+            "Tiramos un dado: contamos los puntos que salieron.",
+            "Agarramos esa cantidad justa de porotos o fideitos y los ponemos en un pocillo.",
+            "Jugamos hasta que el pocillo tenga exactamente diez porotos en total."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mis diez huellitas",
+          "steps": [
+            "Apoyá tus dos manos abiertas con los dedos separados.",
+            "Contá tus dedos uno a uno desde el meñique hasta llegar a diez.",
+            "Dibujá tus dos manos y numerá cada dedo del 1 al 10."
+          ],
+          "draw": "Dibujá tus dos manos contando sus diez dedos.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar hasta diez objetos sin saltearme ninguno.",
+        "Puedo tocar cada elemento al mismo tiempo que digo el número.",
+        "Puedo saber cuántos hay en total al terminar de contar."
+      ]
+    }
+  ],
+  "12004": [
+    {
+      "title": "Escribimos los números hasta diez",
+      "purpose": "Acompañen al estudiante a trazar y reconocer las cifras del 1 al 10 relacionándolas con colecciones reales.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Trazos en harina o arena",
+          "steps": [
+            "Esparcí una capita fina de harina o polenta sobre una bandeja plana.",
+            "Con tu dedo índice trazá los números del 1 al 10 empezando siempre desde arriba.",
+            "Borrá moviendo suavemente la bandeja para volver a practicar."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Memoria de números y dedos",
+          "steps": [
+            "Escriban en cartelitos los números del 1 al 10.",
+            "Un jugador levanta un cartelito y el otro debe mostrar esa cantidad justa con sus dedos.",
+            "Si lo hace bien, se guarda la tarjeta como punto ganado."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El tren de los números",
+          "steps": [
+            "Dibujá una locomotora con tres vagones de carga.",
+            "Escribí en cada vagón un número en orden: 1, 2, 3... y adentro dibujá esa cantidad de pelotitas."
+          ],
+          "draw": "Dibujá vagones de tren con números y cantidades.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo escribir los números del 1 al 10 sin invertirlos.",
+        "Puedo asociar cada número escrito con su cantidad correspondiente.",
+        "Puedo ordenar tarjetas del 1 al 10 de menor a mayor."
+      ]
+    }
+  ],
+  "12005": [
+    {
+      "title": "¿Dónde hay más y dónde hay menos?",
+      "purpose": "Comparación directa de cantidades mediante emparejamiento uno a uno sin necesidad de cálculos complejos.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Tazas y platos en la merienda",
+          "steps": [
+            "Al preparar la merienda, colocá cuatro platos y tres tazas.",
+            "Poné una taza sobre cada plato para emparejarlos.",
+            "Fijate qué sobró para saber si hay más platos o más tazas."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Guerra de cartas de cantidades",
+          "steps": [
+            "Usen un mazo de cartas españolas sacando las figuras.",
+            "Cada jugador da vuelta una carta al mismo tiempo.",
+            "El que tiene el número más grande se lleva las dos cartas de la mesa."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Dos canastas de flores",
+          "steps": [
+            "Dibujá dos canastas en el recuadro.",
+            "En una canasta dibujá muchas flores (por ejemplo, seis) y en la otra poquitas (dos)."
+          ],
+          "draw": "Dibujá una canasta con muchas flores y otra con poquitas.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar dos colecciones y decir cuál tiene más o menos.",
+        "Puedo emparejar elementos para comprobar si hay igual cantidad.",
+        "Puedo usar palabras como mayor, menor o igual."
+      ]
+    }
+  ],
+  "12006": [
+    {
+      "title": "El número anterior y el posterior",
+      "purpose": "Práctica oral y escrita de la serie numérica reconociendo qué número viene antes y cuál después hasta el 20.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Vecinos en la fila",
+          "steps": [
+            "Elegí un número fácil como el 7 o el 12.",
+            "Pensá: si doy un paso atrás, ¿en qué número caigo? (el 6 o el 11).",
+            "Si doy un paso adelante, ¿en qué número estoy? (el 8 o el 13)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La pelota de los vecinos",
+          "steps": [
+            "Nos pasamos una pelota o almohadón liviano con las manos.",
+            "Quien tira la pelota dice un número en voz alta: por ejemplo ¡ocho!",
+            "Quien la atrapa debe decir su vecino anterior (siete) o posterior (nueve)."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Casitas con vecinos",
+          "steps": [
+            "Dibujá tres casitas juntas en fila.",
+            "En la casa del medio escribí el número 15.",
+            "Escribí en la casita de la izquierda su anterior y en la de la derecha su posterior."
+          ],
+          "draw": "Dibujá tres casitas y completá los números vecinos.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo decir el número que está antes de otro hasta el 20.",
+        "Puedo decir el número que viene inmediatamente después.",
+        "Puedo ubicar números vecinos en la serie numérica."
+      ]
+    }
+  ],
+  "12007": [
+    {
+      "title": "Saltamos por la recta numérica",
+      "purpose": "Uso de la recta y caminos numerados como modelo espacial para avanzar, retroceder y comparar números.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La pista de baldosas en casa",
+          "steps": [
+            "Con tiza en el patio o cartelitos de papel pegados con cinta, armá un camino del 1 al 15.",
+            "Parate en el 4 y da tres saltos hacia adelante: ¿a qué número llegaste? (al 7).",
+            "Parate en el 9 y da dos saltos hacia atrás: ¿dónde estás? (en el 7)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La rana saltarina",
+          "steps": [
+            "Dibujá en una hoja una línea recta con marcas del 0 al 20.",
+            "Con un poroto que hace de ranita, tiramos un dado y saltamos casilleros hacia adelante.",
+            "El primero que llega exactamente al número 20 gana la carrera."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi recta ilustrada",
+          "steps": [
+            "Dibujá una recta numérica con marcas del 1 al 10.",
+            "Dibujá flechitas de saltos que vayan del 2 al 6 sumando cuatro pasos."
+          ],
+          "draw": "Dibujá una recta numérica con los saltos de un animalito.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo ubicar números en una recta graduada.",
+        "Puedo avanzar dando saltos hacia adelante.",
+        "Puedo retroceder dando saltos hacia atrás."
+      ]
+    }
+  ],
+  "12008": [
+    {
+      "title": "Los números del calendario hasta el 30",
+      "purpose": "Acompañen al estudiante a usar el calendario del mes como herramienta real de numeración y organización.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Buscando fechas en el calendario",
+          "steps": [
+            "Abran el almanaque de la cocina en el mes actual.",
+            "Recorran los números con el dedo del 1 al 30 o 31.",
+            "Busquen el número del día de hoy y márquenlo con un redondel suave."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná el cumpleaños",
+          "steps": [
+            "Un jugador piensa el número del día de su cumpleaños (por ejemplo, el 18).",
+            "Da pistas numéricas: está en la fila del 10, es mayor que 15 y termina en 8.",
+            "Los demás buscan el número en el calendario hasta encontrarlo."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La hoja de mi semana",
+          "steps": [
+            "Dibujá una cuadrícula de siete casilleros para los días de la semana.",
+            "Escribí los números que corresponden a esta semana que estamos viviendo."
+          ],
+          "draw": "Dibujá la tira de días de esta semana con sus números.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer números de dos cifras hasta el 30.",
+        "Puedo ubicar fechas en el calendario del mes.",
+        "Puedo reconocer las familias del 10 y del 20."
+      ]
+    }
+  ],
+  "12009": [
+    {
+      "title": "Secretos del cuadro de números hasta 100",
+      "purpose": "Exploración de regularidades en el cuadro de 100: de uno en uno en las filas y de diez en diez en las columnas.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "La columna de los dieces redondos",
+          "steps": [
+            "Mirá el cuadro de números del aula o de tu libro.",
+            "Leé en voz alta la última columna: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100.",
+            "Observá que todos los números redondos terminan con la cifra cero."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El número escondido",
+          "steps": [
+            "Tapá con una moneda un casillero del cuadro de números.",
+            "Mirá los vecinos de arriba, de abajo y de los costados.",
+            "Descubrí qué número quedó escondido debajo de la moneda."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Una ventanita del cuadro",
+          "steps": [
+            "Elegí un número con dieces y unos (por ejemplo, el 34).",
+            "Dibujá una cruz como una ventana y completá quién está arriba (-10), abajo (+10), a la izquierda (-1) y a la derecha (+1)."
+          ],
+          "draw": "Dibujá una ventana en cruz del cuadro con sus cuatro vecinos.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar de 10 en 10 hasta 100 con números redondos.",
+        "Puedo usar los números que terminan en cero para orientarme.",
+        "Puedo descubrir regularidades en las filas y columnas del cuadro."
+      ]
+    }
+  ],
+  "12010": [
+    {
+      "title": "Dieces y unos con dinero",
+      "purpose": "Comprensión del valor posicional a través del uso de billetes de 10 pesos y monedas de 1 peso.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armar dinero de fantasía",
+          "steps": [
+            "Recorten rectángulos de papel y escriban 10 bien grande (billetes de $10).",
+            "Recorten circulitos y escriban 1 (monedas de $1).",
+            "Armen con ellos cantidades fáciles: para 23 necesitamos 2 billetes de $10 y 3 monedas de $1."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El cajero del banco",
+          "steps": [
+            "Un jugador dice un precio: por ejemplo, treinta y cuatro pesos.",
+            "El cajero debe entregar exactamente la cantidad de dieces y unos que corresponde.",
+            "Cuentan juntos: diez, veinte, treinta, treinta y uno, treinta y dos, treinta y tres, treinta y cuatro."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El juguete y su precio",
+          "steps": [
+            "Pensá en un autito o muñeco que te guste mucho.",
+            "Dibujalo con un cartel de precio de dos cifras y al lado dibujá los billetes de $10 y monedas de $1 para pagarlo."
+          ],
+          "draw": "Dibujá un juguete y el dinero exacto para comprarlo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo saber cuántos dieces y cuántos unos tiene un número.",
+        "Puedo armar cantidades usando billetes de 10 y monedas de 1.",
+        "Puedo contar dinero de 10 en 10 y luego de 1 en 1."
+      ]
+    }
+  ],
+  "12011": [
+    {
+      "title": "Amigos que juntos forman el diez",
+      "purpose": "Memorización y exploración de parejas aditivas que suman 10 (1+9, 2+8, 3+7, 4+6, 5+5).",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Los diez dedos en equipo",
+          "steps": [
+            "Levantá los diez dedos de tus dos manos.",
+            "Bajá 3 dedos: ¿cuántos quedaron parados? (quedaron 7, porque 3 y 7 forman 10).",
+            "Bajá 4 dedos: ¿cuántos quedaron parados? (quedaron 6, porque 4 y 6 forman 10)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El juego del diez",
+          "steps": [
+            "Colocamos diez tapitas sobre la mesa.",
+            "Un jugador agarra algunas en su puño cerrado y muestra las que quedaron en la mesa.",
+            "El otro jugador debe adivinar cuántas tapitas están escondidas en la mano para llegar a 10."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El arcoíris del 10",
+          "steps": [
+            "Dibujá un gran arcoíris con líneas que unan números amigos del diez.",
+            "Uní el 1 con el 9, el 2 con el 8, el 3 con el 7, el 4 con el 6 y el 5 con el 5."
+          ],
+          "draw": "Dibujá un arcoíris que una las parejas que suman diez.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo recordar de memoria parejas de números que suman 10.",
+        "Puedo saber cuánto le falta a un número para llegar al diez.",
+        "Puedo usar mis dedos para comprobar cálculos mentales."
+      ]
+    }
+  ],
+  "12012": [
+    {
+      "title": "Juntar y agregar con cosas ricas",
+      "purpose": "Resolución de situaciones problemáticas de suma (unir y agregar colecciones) con apoyo de materiales concretos.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Juntamos galletitas en la merienda",
+          "steps": [
+            "Poné 3 galletitas en un plato y 4 galletitas en otro plato.",
+            "Juntalas todas en una fuente grande para compartirlas.",
+            "Contá cuántas hay en total al juntar las dos partes (3 más 4 son 7)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El trencito cargador",
+          "steps": [
+            "Un vagón viene con 5 pasajeros (porotos).",
+            "En la estación suben 3 pasajeros más.",
+            "¿Cuántos pasajeros viajan ahora en el vagón? Tiramos y sumamos en cada parada."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Problema con dibujo",
+          "steps": [
+            "Inventá una historia sencilla: En un árbol había 4 pajaritos y llegaron 2 más.",
+            "Dibujá el árbol con todos los pajaritos juntos y escribí la cuenta abajo."
+          ],
+          "draw": "Dibujá los pajaritos que estaban y los que llegaron volando.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo resolver problemas de juntar dos cantidades.",
+        "Puedo calcular el total cuando se agregan elementos.",
+        "Puedo representar una suma con dibujos y números."
+      ]
+    }
+  ],
+  "12013": [
+    {
+      "title": "Quitar y ver cuántos quedan",
+      "purpose": "Acompañen al estudiante a resolver situaciones de resta (quitar, comer, perder) mediante acciones concretas.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Comemos bombones de fruta",
+          "steps": [
+            "Colocá 6 caramelos o pasas de uva en un platito.",
+            "Comete o regalá 2 a un familiar.",
+            "Contá cuántos caramelos quedaron en el platito después de quitar (6 menos 2 son 4)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Bolos en el pasillo",
+          "steps": [
+            "Armamos 6 botellas de plástico vacías en triángulo.",
+            "Tiramos una pelota rodando: contamos cuántas botellas se cayeron.",
+            "Restamos las caídas para saber cuántas quedaron paradas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Globos que se van al cielo",
+          "steps": [
+            "Un nene tenía 5 globos de colores en la mano y se le escaparon 2 al viento.",
+            "Dibujá los globos que quedaron bien atados y los 2 que vuelan lejos."
+          ],
+          "draw": "Dibujá los globos que quedaron y los que se escaparon.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo resolver problemas donde se quitan elementos.",
+        "Puedo contar cuántos quedan después de una pérdida o gasto.",
+        "Puedo usar el signo menos en situaciones cotidianas."
+      ]
+    }
+  ],
+  "12014": [
+    {
+      "title": "Avanzamos y retrocedemos en el juego",
+      "purpose": "Vivencia de la suma y la resta como avances y retrocesos sobre un tablero lúdico de casilleros.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Tablero casero de casilleros",
+          "steps": [
+            "En una hoja grande dibujen una víbora con 20 casilleros numerados del 1 al 20.",
+            "Pongan fichitas de colores o botones para cada jugador en la salida.",
+            "Tiren el dado y avancen según lo que indica la tirada."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Casilleros con trampa",
+          "steps": [
+            "Pinten de rojo el casillero 8 con un cartel que dice: ¡Resbalaste! Retrocedé 3 casilleros.",
+            "Pinten de verde el casillero 12: ¡Superimpulso! Avanzá 4 casilleros.",
+            "Jueguen en familia hasta que alguien llegue a la meta final."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi casillero favorito",
+          "steps": [
+            "Elegí tu casillero preferido del recorrido.",
+            "Dibujá el premio o festejo que espera al jugador que llega a la meta del 20."
+          ],
+          "draw": "Dibujá la llegada triunfal a la meta del tablero.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo avanzar casilleros sumando los puntos del dado.",
+        "Puedo retroceder casilleros restando pasos.",
+        "Puedo respetar los turnos en un juego de mesa familiar."
+      ]
+    }
+  ],
+  "12015": [
+    {
+      "title": "Cálculos que ya sé de memoria",
+      "purpose": "Consolidación de cálculos mentales rápidos: dobles de números chicos (1+1, 2+2, 3+3, 4+4, 5+5) y sumarle 1 a un número.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Los dobles en nuestro cuerpo",
+          "steps": [
+            "Pensá: tenemos 2 ojos, 2 orejas, 2 brazos y 2 piernas.",
+            "Una mano tiene 5 dedos: el doble (dos manos) son 10 dedos.",
+            "Repitan en voz alta: uno más uno es dos, dos más dos es cuatro, tres más tres es seis."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El eco veloz de dobles",
+          "steps": [
+            "Un adulto dice un número bajito: ¡cuatro!",
+            "El chico responde de inmediato como un eco con su doble: ¡ocho!",
+            "Prueban con todos los números del 1 al 5 a toda velocidad."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Las alas de la mariposa",
+          "steps": [
+            "Una mariposa tiene las dos alas exactamente iguales con los mismos dibujos.",
+            "Dibujá una mariposa con 3 lunares en el ala izquierda y 3 lunares en el ala derecha (doble de 3 = 6)."
+          ],
+          "draw": "Dibujá una mariposa con lunares iguales en las dos alas.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo decir los dobles de memoria del 1 al 5.",
+        "Puedo sumar 1 a cualquier número sin contar con los dedos.",
+        "Puedo confiar en mi cálculo mental rápido."
+      ]
+    }
+  ],
+  "12016": [
+    {
+      "title": "Grupos con la misma cantidad",
+      "purpose": "Primeras aproximaciones intuitivas a la multiplicación a través de sumas repetidas de grupos iguales.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armar paquetitos iguales",
+          "steps": [
+            "Juntá botones o tapitas sobre la mesa.",
+            "Armá 3 platitos con 2 botones en cada uno.",
+            "Contá de a dos en dos para saber el total: dos, cuatro, seis botones."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Las patas de los patos",
+          "steps": [
+            "Cada pato de la laguna tiene 2 patas.",
+            "Si hay 4 patos nadando juntos, ¿cuántas patas hay en total?",
+            "Contamos con los dedos de 2 en 2 hasta llegar a ocho."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Floreros con flores iguales",
+          "steps": [
+            "Dibujá 3 floreros sobre una mesa.",
+            "En cada florero poné exactamente 2 flores hermosas.",
+            "Anotá cuántas flores hay en total contando de a dos."
+          ],
+          "draw": "Dibujá tres floreros con dos flores cada uno.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar grupos que tengan la misma cantidad.",
+        "Puedo contar de a dos en dos con soltura.",
+        "Puedo calcular el total de varios grupos iguales."
+      ]
+    }
+  ],
+  "12017": [
+    {
+      "title": "Repartir para que todos tengan igual",
+      "purpose": "Exploración de situaciones de reparto equitativo con objetos reales para que a nadie le falte.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Repartir caramelos entre dos amigos",
+          "steps": [
+            "Tomá 8 porotos o tapitas que simulan ser caramelos.",
+            "Repartilos entre dos muñecos dando uno a uno a cada uno.",
+            "Comprobá que los dos muñecos tengan exactamente 4 caramelos cada uno."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El mozo justo",
+          "steps": [
+            "Ponemos 3 tacitas en la mesa para tres invitados.",
+            "Tenemos 6 galletitas para repartir en partes iguales.",
+            "El chico hace de mozo y entrega las galletitas asegurándose de que nadie tenga de más."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Huesos para los dos perritos",
+          "steps": [
+            "Hay 6 huesos deliciosos para repartir entre 2 perritos hambrientos.",
+            "Dibujá a los dos perritos con su platito y los 3 huesos que le tocan a cada uno."
+          ],
+          "draw": "Dibujá dos perritos con igual cantidad de huesos en su plato.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo repartir objetos de a uno hasta terminar.",
+        "Puedo verificar que todas las partes reciban la misma cantidad.",
+        "Puedo reconocer si sobra algo al terminar de repartir."
+      ]
+    }
+  ],
+  "12018": [
+    {
+      "title": "Jugamos a comprar en el almacén",
+      "purpose": "Integración del cálculo aditivo, la lectura de precios y el uso social del dinero en un juego de rol.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Montamos el negocio en la mesa",
+          "steps": [
+            "Acomoden sobre la mesa una caja de leche vacía, un paquete de fideos y una manzana.",
+            "Pónganles etiquetas de precios redondos: $10, $20 y $30.",
+            "Preparen los billetes de $10 que hicieron en la ficha 10."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Compras con presupuesto",
+          "steps": [
+            "El comprador sale con $50 en billetes de diez.",
+            "Elige dos productos para llevar y calcula cuánto dinero necesita en total.",
+            "Paga al almacenero y espera el vuelto si corresponde."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi lista de compras con precios",
+          "steps": [
+            "Dibujá tu changuito o bolsa de compras con dos productos ricos.",
+            "Al lado escribí el precio de cada uno y la suma total que vas a pagar."
+          ],
+          "draw": "Dibujá dos productos con su precio y el dinero para pagar.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo sumar precios de números redondos con billetes de diez.",
+        "Puedo calcular el total de dos compras sencillas.",
+        "Puedo participar del juego de comprar y vender en familia."
+      ]
+    }
+  ],
+  "12019": [
+    {
+      "title": "Arriba, abajo, adelante y al lado",
+      "purpose": "Afianzamiento de las nociones espaciales y relaciones de posición de objetos respecto del propio cuerpo y de otros puntos de referencia.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Posiciones en el comedor",
+          "steps": [
+            "Poné una cuchara sobre la mesa (arriba).",
+            "Poné una pantufla debajo de la mesa (abajo).",
+            "Parate adelante de la silla y luego pasá a ponerte detrás de ella."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El muñeco equilibrista",
+          "steps": [
+            "Con un peluche en las manos, seguimos instrucciones rápidas de un adulto.",
+            "¡Muñeco arriba de la cabeza! ¡Muñeco atrás de la espalda! ¡Muñeco al lado del pie derecho!",
+            "Cambiamos de rol para que el chico sea el que da las órdenes espaciales."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi gato travieso",
+          "steps": [
+            "Dibujá una mesa con cuatro patas firmes.",
+            "Dibujá un gato durmiendo abajo de la mesa y un florero arriba de ella."
+          ],
+          "draw": "Dibujá una mesa con un florero arriba y un gato durmiendo abajo.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo usar palabras de ubicación como arriba, abajo, adelante y atrás.",
+        "Puedo colocar objetos siguiendo indicaciones de posición.",
+        "Puedo describir dónde están guardadas las cosas en mi casa."
+      ]
+    }
+  ],
+  "12020": [
+    {
+      "title": "Caminos y laberintos en casa",
+      "purpose": "Acompañen al estudiante a interpretar y comunicar recorridos espaciales mediante pasos, giros y croquis.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El robot teledirigido",
+          "steps": [
+            "El chico se convierte en un robot que solo camina con instrucciones precisas.",
+            "El adulto le dice: avanzá 3 pasos derechos, girá hacia la puerta, avanzá 2 pasos.",
+            "El robot llega al objetivo fijado en la habitación."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El laberinto de almohadones",
+          "steps": [
+            "Colocamos tres almohadones en el piso del living como obstáculos.",
+            "Hay que cruzar la habitación sin tocar ningún almohadón.",
+            "El jugador describe en voz alta por dónde va pasando."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El camino del conejo a la zanahoria",
+          "steps": [
+            "Dibujá un conejito de un lado y una zanahoria del otro lado de la hoja.",
+            "Dibujá un camino con curvas que pase esquivando dos piedras grandes."
+          ],
+          "draw": "Dibujá el recorrido con curvas de un conejito hacia su comida.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo seguir indicaciones de avance y giro en el espacio.",
+        "Puedo describir un camino usando puntos de referencia conocidos.",
+        "Puedo trazar recorridos en papel sin levantar el lápiz."
+      ]
+    }
+  ],
+  "12021": [
+    {
+      "title": "Círculos, cuadrados y triángulos",
+      "purpose": "Identificación de figuras geométricas planas por sus características: lados rectos, bordes curvos y vértices.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Figuras escondidas en casa",
+          "steps": [
+            "Buscá objetos redondos con borde curvo: tapa de frasco, moneda, plato.",
+            "Buscá objetos cuadrados o rectangulares con esquinas rectas: libro, ventana, portarretrato.",
+            "Conversen sobre los triángulos que tienen exactamente 3 lados y 3 esquinas."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Figuras con escarbadientes o palitos",
+          "steps": [
+            "Usá palitos o fideos secos y bolitas de masa para las esquinas.",
+            "Armá un triángulo usando 3 palitos y 3 bolitas.",
+            "Armá un cuadrado usando 4 palitos iguales y 4 bolitas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El robot de figuras geométricas",
+          "steps": [
+            "Dibujá un robot divertido usando solo figuras geométricas.",
+            "Hacé la cabeza cuadrada, los ojos redondos, el sombrero triangular y el cuerpo rectangular."
+          ],
+          "draw": "Dibujá un robot simpático compuesto por distintas figuras.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo distinguir círculos, cuadrados, rectángulos y triángulos.",
+        "Puedo contar los lados y las esquinas de una figura plana.",
+        "Puedo encontrar formas geométricas en las cosas que me rodean."
+      ]
+    }
+  ],
+  "12022": [
+    {
+      "title": "Cajas, latas y pelotas: cuerpos geométricos",
+      "purpose": "Exploración de cuerpos del espacio: cilindros que ruedan, cajas con caras planas y esferas.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Rueda o se desliza?",
+          "steps": [
+            "Buscá una pelota de tenis, una lata de arvejas y una cajita de remedio.",
+            "Apoyalos sobre una tabla inclinada o rampa suave.",
+            "Notá que la pelota y la lata ruedan fácil, pero la caja se desliza sin rodar."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Torre de cuerpos resistentes",
+          "steps": [
+            "Usando cajitas vacías de té, armen una torre lo más alta posible.",
+            "¿Podemos apoyar una pelota debajo de una caja sin que se caiga? Comprueben por qué no.",
+            "Descubran qué caras planas sirven para apilar cosas firmes."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Un castillo con cajas y torres",
+          "steps": [
+            "Imaginá un castillo construido con cajas cuadradas y torres redondas de lata.",
+            "Dibujalo con almenas y una bandera flameando en la punta."
+          ],
+          "draw": "Dibujá un castillo usando formas de cajas y cilindros.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo diferenciar cuerpos que ruedan de los que no ruedan.",
+        "Puedo reconocer que las cajas tienen caras planas.",
+        "Puedo armar construcciones estables usando cuerpos geométricos."
+      ]
+    }
+  ],
+  "12023": [
+    {
+      "title": "Más largo, más corto y más pesado",
+      "purpose": "Comparación directa de longitudes y pesos utilizando unidades no convencionales (manos, pasos, balanza casera).",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Medir con pasos y palmos",
+          "steps": [
+            "Medí el largo de la mesa usando tu mano abierta (palmo) de punta a punta.",
+            "Medí el largo del pasillo contando cuántos pasos tuyos se necesitan.",
+            "Compará cuántos pasos da un adulto en la misma distancia."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "Balanza de dos manos",
+          "steps": [
+            "Estirá los dos brazos con las palmas hacia arriba como una balanza.",
+            "En una mano poné un libro pesado y en la otra una cuchara de plástico.",
+            "Sentí cuál mano se va para abajo porque sostiene más peso."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Tres lápices de distinto largo",
+          "steps": [
+            "Dibujá tres lápices acostados en fila.",
+            "Hacé uno muy largo, uno mediano y otro cortito y gastado por escribir mucho."
+          ],
+          "draw": "Dibujá tres lápices ordenados del más largo al más corto.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar longitudes directamente apoyando los objetos juntos.",
+        "Puedo medir distancias usando pasos o manos.",
+        "Puedo estimar qué objeto es más pesado usando mis brazos."
+      ]
+    }
+  ],
+  "12024": [
+    {
+      "title": "Días de la semana y meses del año",
+      "purpose": "Reconocimiento de la secuencia temporal de los días de la semana y uso del calendario para planificar actividades.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "La ronda de los siete días",
+          "steps": [
+            "Nombren juntos los días de la semana: lunes, martes, miércoles, jueves, viernes, sábado y domingo.",
+            "Recuerden qué días van a la escuela y qué días se quedan descansando en familia.",
+            "Preguntale al chico: si hoy es miércoles, ¿qué día fue ayer y qué día será mañana?"
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La canción de la semana",
+          "steps": [
+            "Cantamos o recitamos una rima con los días dando un aplauso por cada día.",
+            "Un jugador se detiene de golpe y el otro debe decir el día siguiente sin dudar.",
+            "Repetimos empezando desde distintos días."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El día más divertido",
+          "steps": [
+            "Pensá en tu día favorito de la semana.",
+            "Dibujá lo que más te gusta hacer ese día: ir a la plaza, andar en bici o jugar con primos."
+          ],
+          "draw": "Dibujá tu actividad favorita de fin de semana.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo decir los siete días de la semana en orden.",
+        "Puedo reconocer los días escolares y los días de descanso.",
+        "Puedo ubicar qué día fue ayer y qué día será mañana."
+      ]
+    }
+  ]
+}

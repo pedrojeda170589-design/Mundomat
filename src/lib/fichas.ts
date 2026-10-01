@@ -6,7 +6,7 @@ import { WorldDef } from "@/types";
 // sobre el contenido de cada mundo. Se generan con
 // scripts/fichas/generar_fichas.py a partir de scripts/fichas/<materia>.json.
 export function fichaVersions(world: WorldDef): number {
-  void world;
+  if (world.grade === 1 || world.id >= 10000) return 1;
   return 2;
 }
 

@@ -7,9 +7,30 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-01 | [Aula abierta de prueba para 3.º grado](./tareas/AG-01-aula-abierta.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
 | CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🟢 UNIDA A MAIN |
-| AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | ⏳ PENDIENTE |
+| AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | ✅ LISTA PARA REVISAR |
 
 ## Resúmenes de tareas terminadas
+
+### AG-02 · 1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º (Antigravity)
+- **Variedad en Sociales y Naturales (1.º grado):**
+  - Se agregaron helpers tipados en `src/lib/grade1/content/util.ts` (`makeOrder`, `makeClassify`, `makeStoryPick`, `makeMultiPick`) con ordenamientos desordenados con permutación matemáticamente exacta (`correctOrder = Array.from({length: n}, (_, k) => perm.indexOf(k))`), pistas que comienzan con «Pista: », habilidades del mundo y emojis compatibles (≤ Emoji 13).
+  - Se crearon y exportaron `EXTRA_SOCIALES` (3 actividades extra por cada uno de los 18 mundos = 54 actividades: secuencias temporales, clasificaciones campo/ciudad, transporte, materiales y relatos históricos locales santacruceños) y `EXTRA_NATURALES` (3 actividades extra por cada uno de los 15 mundos = 45 actividades: etapas de crecimiento vegetal y animal, hábitats patagónicos, estados de la materia, seres vivos y no vivos, órganos y sentidos).
+  - En `src/lib/grade1/content/index.ts`, `buildGrade1Activities` combina al azar 6 preguntas del banco tradicional con 2 actividades de la colección extra (8 en total por vuelta), asegurando IDs únicos, skills alineadas y variedad en cada intento.
+  - Verificación exhaustiva: 96 mundos × 30 iteraciones (22.717 actividades generadas) con 0 errores de consistencia (opciones presentes, respuestas correctas válidas, sin IDs duplicados).
+- **Fichas complementarias de 1.º grado (96 mundos):**
+  - Contenido pedagógico diseñado específicamente para lectores emergentes: consignas breves para compartir en familia, actividades prácticas con objetos del hogar, observación directa y dibujo (sin emojis en el texto impreso, respetando `FORMATO.md`).
+  - Archivos de datos: `scripts/fichas/primero-lengua.json` (39 mundos), `scripts/fichas/primero-matematica.json` (24 mundos), `scripts/fichas/primero-sociales.json` (18 mundos), `scripts/fichas/primero-naturales.json` (15 mundos), generados mediante scripts modulares en `scripts/fichas/data_*_1.py` y `build_primero_fichas.py`.
+  - Generador PDF (`scripts/fichas/generar_fichas.py`): adaptado para leer mundos de 1.º desde `src/lib/grade1/worlds.ts`, resolución multiplataforma de fuentes tipográficas (Andika, Andika-Bold, Fredoka-Bold) y generación de 1 ficha por mundo (`private/fichas/mundo-<id>-1.pdf`). Se generaron las 96 fichas de 1.º grado (190 PDFs en total con 3.º), todas con 1 o 2 páginas exactas sin desbordes.
+- **Acceso y visualización de fichas:**
+  - En `src/lib/fichas.ts`, `fichaVersions(world)` retorna 1 para mundos de 1.º grado (`world.grade === 1 || world.id >= 10000`) y 2 para 3.º grado.
+  - La API `/api/fichas/acceso` devuelve en la respuesta el `grade` del alumno validado.
+  - `src/components/FichasGate.tsx` notifica el grado desbloqueado a través del callback `onUnlocked`.
+  - En `/familias` (`src/app/familias/page.tsx` y `src/app/familias/FichasView.tsx`), la vista se adapta automáticamente al grado del alumno (mostrando tarjetas de 1.º grado con gradiente y emoji de materia, o islas ilustradas para 3.º grado), con pestañas para alternar entre grados y anclaje por hash `#mundo-<id>`.
+  - En el mapa de 1.º grado (`src/app/student/play/page.tsx`), se reactivó el botón 📄 de fichas (`showFichas={!isTrialStudent}`) para todos los alumnos que no pertenezcan al aula abierta de prueba.
+- **Control de calidad:**
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 errores / 0 advertencias.
+  - `npm run build`: compilación de producción exitosa con Turbopack.
 
 ### AG-01 · Aula abierta de prueba para 3.º grado (Antigravity)
 - **Modelos y tipos:** Se agregó `"prueba"` a `StudentType` y los campos opcionales `trialStartedAt` y `trialEndsAt` a `Student` en `src/types/index.ts`.
