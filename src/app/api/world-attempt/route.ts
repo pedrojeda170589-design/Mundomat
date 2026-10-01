@@ -5,6 +5,7 @@ import { findStudentByCode, getProgress, saveProgress, liteProgress } from "@/li
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 
 // POST: el alumno terminó una vuelta completa de un mundo (las 10
 // actividades respondidas). Acá se decide, según el sistema de refuerzo del
@@ -27,6 +28,9 @@ export async function POST(request: NextRequest) {
   const student = await findStudentByCode(code);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
   const progress = await getProgress(student.code);

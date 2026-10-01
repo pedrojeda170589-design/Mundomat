@@ -54,6 +54,12 @@ export default function Home() {
           🎒 Soy alumno/a
         </Link>
         <Link
+          href="/prueba"
+          className="rounded-2xl bg-amber-100/95 text-amber-950 font-bold text-base py-3 text-center shadow border-2 border-amber-500/60 hover:brightness-105 active:scale-[0.98] transition"
+        >
+          ✨ Probar MundoTest26
+        </Link>
+        <Link
           href={process.env.NEXT_PUBLIC_SUPABASE_URL ? "/docente" : "/admin"}
           className="rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-lg py-4 text-center shadow-lg shadow-blue-600/20 border-2 border-blue-800/40 hover:brightness-105 active:scale-[0.98] transition"
         >

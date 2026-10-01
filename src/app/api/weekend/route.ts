@@ -19,6 +19,7 @@ import {
 } from "@/lib/weekend/plan";
 import { WEEKEND_REWARD_IDS } from "@/types";
 import { addNews, displayName } from "@/lib/news";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 
 // GET: plan de la Aventura de fin de semana de hoy (10 actividades, iguales
 // para todos los alumnos ese día) y el avance del alumno. Entre semana
@@ -74,6 +75,9 @@ export async function POST(request: NextRequest) {
   const student = await findStudentByCode(code);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
   const result = await completeWeekendActivity(
     student.code,

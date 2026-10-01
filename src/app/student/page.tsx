@@ -4,12 +4,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import SkyScene from "@/components/SkyScene";
+import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 
 export default function StudentLoginPage() {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [expiredStudent, setExpiredStudent] = useState<{
+    code: string;
+    name: string;
+  } | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,6 +27,14 @@ export default function StudentLoginPage() {
       );
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 403 && data.trialExpired) {
+          setExpiredStudent({
+            code: data.student?.code || code.trim(),
+            name: data.student?.name || "Estudiante",
+          });
+          setLoading(false);
+          return;
+        }
         setError(data.error || "No pudimos encontrar ese código.");
         setLoading(false);
         return;
@@ -38,15 +51,52 @@ export default function StudentLoginPage() {
   return (
     <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden">
       <SkyScene showCelestial={false} />
-      <div className="relative z-10 w-full max-w-sm">
-        <div className="explorer-title-plaque px-6 py-4 mb-2 text-center">
-          <h1 className="text-2xl font-black text-amber-50">
-            🧭 MundoTest26
-          </h1>
+      {expiredStudent ? (
+        <div className="relative z-10 w-full max-w-md mx-auto flex flex-col gap-4">
+          <div className="parchment-panel rounded-2xl p-6 sm:p-8 flex flex-col gap-4 text-center shadow-xl border-2 border-amber-600/40">
+            <span className="text-4xl">🌅</span>
+            <h2 className="text-xl sm:text-2xl font-black text-amber-950">
+              ¡Gracias por probar MundoTest26!
+            </h2>
+            <p className="text-sm text-amber-900 leading-relaxed">
+              Hola, <strong>{expiredStudent.name}</strong>. Tu período de prueba de 30 días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
+            </p>
+
+            <TrialRatingCard studentCode={expiredStudent.code} />
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setExpiredStudent(null);
+                  setCode("");
+                }}
+                className="text-xs text-amber-900/80 underline font-semibold hover:text-amber-950"
+              >
+                Ingresar con otro código
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center mt-2">
+            <Link
+              href="/"
+              className="text-slate-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] text-sm underline hover:text-white"
+            >
+              ← Volver al inicio
+            </Link>
+          </div>
         </div>
-        <p className="text-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] mb-8 mt-4">
-          Ingresá tu código de acceso
-        </p>
+      ) : (
+        <div className="relative z-10 w-full max-w-sm">
+          <div className="explorer-title-plaque px-6 py-4 mb-2 text-center">
+            <h1 className="text-2xl font-black text-amber-50">
+              🧭 MundoTest26
+            </h1>
+          </div>
+          <p className="text-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] mb-8 mt-4">
+            Ingresá tu código de acceso
+          </p>
 
         <form
           onSubmit={handleSubmit}
@@ -81,6 +131,7 @@ export default function StudentLoginPage() {
           </Link>
         </div>
       </div>
+      )}
     </main>
   );
 }

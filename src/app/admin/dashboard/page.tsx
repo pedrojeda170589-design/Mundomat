@@ -11,6 +11,7 @@ import StudentBlock from "@/components/admin/StudentBlock";
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
+import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
 
@@ -212,6 +213,7 @@ export default function AdminDashboardPage() {
             <NewsAdmin adminPassword={adminPassword} />
             <MailboxAdmin adminPassword={adminPassword} />
             <CompetitionAdmin adminPassword={adminPassword} />
+            <OpenClassroomAdmin adminPassword={adminPassword} />
           </div>
         )}
 

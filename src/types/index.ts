@@ -1,6 +1,6 @@
 // Tipos compartidos de MundoMat
 
-export type StudentType = "aula" | "agregado";
+export type StudentType = "aula" | "agregado" | "prueba";
 
 export interface Student {
   code: string;
@@ -15,6 +15,9 @@ export interface Student {
   // Aula actual en la plataforma (Supabase). Sin valor = aula piloto de
   // siempre. Sirve para separar compañeros, mundos y novedades por aula.
   classroomId?: string;
+  // Período de prueba para alumnos del aula abierta pública.
+  trialStartedAt?: string;
+  trialEndsAt?: string;
 }
 
 export interface ActivityResult {

@@ -3,6 +3,7 @@ import { checkAdminPassword } from "@/lib/auth";
 import { classmatesOf, findStudentByCode, getClassSnapshot, getProgress, getStudents, sameClassroom, saveProgress } from "@/lib/data";
 import { displayName } from "@/lib/news";
 import { isBirthdayToday } from "@/lib/seasons";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 import {
   COIN_AMOUNTS,
   ClassMessage,
@@ -120,6 +121,7 @@ export async function POST(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   const all = await getMessages();
 
   if (markRead) {

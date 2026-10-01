@@ -3,6 +3,7 @@ import { recordActivityResult } from "@/lib/platform/server";
 import { findStudentByCode, getProgress, liteProgress, saveProgress, syncStudentWithPlatform } from "@/lib/data";
 import { applyActivityResult } from "@/lib/progressLogic";
 import { collectActiveSeasonalRewards } from "@/lib/seasons";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 import { ActivityResult } from "@/types";
 
 export async function GET(request: NextRequest) {
@@ -16,6 +17,9 @@ export async function GET(request: NextRequest) {
   const student = (await syncStudentWithPlatform(code)) ?? (await findStudentByCode(code));
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ trialExpired: true, student, error: "Tu período de prueba terminó." }, { status: 403 });
   }
   const progress = await getProgress(student.code);
   // ?lite=1 (pantallas del alumno): sin el registro detallado de
@@ -46,6 +50,9 @@ export async function POST(request: NextRequest) {
   const student = await findStudentByCode(code);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
   const progress = await getProgress(student.code);

@@ -21,7 +21,9 @@ import CompetitionBanner from "@/components/competition/CompetitionBanner";
 import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
-
+import Link from "next/link";
+import { getTrialDaysLeft } from "@/lib/openClassroomShared";
+import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -37,6 +39,10 @@ export default function StudentPlayPage() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
+  const [isTrialStudent, setIsTrialStudent] = useState(false);
+  const [trialEndsAt, setTrialEndsAt] = useState<string | undefined>(undefined);
+  const [trialExpired, setTrialExpired] = useState(false);
+  const [showEarlyRating, setShowEarlyRating] = useState(false);
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
@@ -46,10 +52,20 @@ export default function StudentPlayPage() {
       fetch(`/api/weekend?code=${encodeURIComponent(studentCode)}`),
     ]);
     const progressData = await progressRes.json();
+    if (progressRes.status === 403 && progressData.trialExpired) {
+      setTrialExpired(true);
+      if (progressData.student?.name) setName(progressData.student.name);
+      setLoading(false);
+      return;
+    }
     const worldsData = await worldsRes.json();
     setProgress(progressData.progress);
     setBirthday(progressData.student?.birthday);
-    setEnabledWorldIds(worldsData.config.enabledWorldIds ?? []);
+    if (progressData.student) {
+      setIsTrialStudent(progressData.student.type === "prueba");
+      setTrialEndsAt(progressData.student.trialEndsAt);
+    }
+    setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
     if (challengeRes.ok) {
       setWeekend(await challengeRes.json());
     }
@@ -98,6 +114,44 @@ export default function StudentPlayPage() {
     router.replace("/student");
   }
 
+  if (trialExpired) {
+    return (
+      <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden min-h-screen">
+        <div className="relative z-10 w-full max-w-md mx-auto flex flex-col gap-4">
+          <div className="parchment-panel rounded-2xl p-6 sm:p-8 flex flex-col gap-4 text-center shadow-xl border-2 border-amber-600/40">
+            <span className="text-4xl">🌅</span>
+            <h2 className="text-xl sm:text-2xl font-black text-amber-950">
+              ¡Gracias por probar MundoTest26!
+            </h2>
+            <p className="text-sm text-amber-900 leading-relaxed">
+              Hola, <strong>{name}</strong>. Tu período de prueba de 30 días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
+            </p>
+
+            <TrialRatingCard studentCode={code || ""} />
+
+            <div className="pt-2">
+              <button
+                onClick={handleLogout}
+                className="text-xs text-amber-900/80 underline font-semibold hover:text-amber-950"
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center mt-2">
+            <Link
+              href="/"
+              className="text-slate-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] text-sm underline hover:text-white"
+            >
+              ← Volver al inicio
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   if (loading || !progress || !code) {
     return (
       <main className="flex-1 flex items-center justify-center">
@@ -135,6 +189,26 @@ export default function StudentPlayPage() {
     <main className="relative flex-1 flex flex-col bg-explorer-day py-8 overflow-hidden">
       <CloudsBackground />
       <Mountains isDay />
+
+      {isTrialStudent && trialEndsAt && (
+        <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-2 flex items-center justify-between bg-amber-950/70 border border-amber-500/40 text-amber-100 rounded-xl px-3.5 py-1.5 text-xs font-semibold backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <span>⏳</span>
+            <span>
+              Prueba: {getTrialDaysLeft(trialEndsAt) <= 1 ? "último día" : `te quedan ${getTrialDaysLeft(trialEndsAt)} días`}
+            </span>
+          </div>
+          {getTrialDaysLeft(trialEndsAt) <= 3 && (
+            <button
+              onClick={() => setShowEarlyRating(true)}
+              className="text-yellow-300 hover:text-white underline text-xs font-bold"
+            >
+              ⭐ Dejar opinión
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="wood-panel-light relative z-10 flex items-center justify-between max-w-3xl w-full mx-auto px-4 py-2.5 mb-6 rounded-2xl">
         <button
           onClick={() => setEditingProfile(true)}
@@ -215,6 +289,26 @@ export default function StudentPlayPage() {
           onClose={() => setShopOpen(false)}
           onProgress={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
         />
+      )}
+
+      {showEarlyRating && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+          <div className="relative w-full max-w-md">
+            <TrialRatingCard
+              studentCode={code}
+              onSubmitted={() => setShowEarlyRating(false)}
+            />
+            <div className="text-center mt-2">
+              <button
+                type="button"
+                onClick={() => setShowEarlyRating(false)}
+                className="text-white text-xs underline font-semibold hover:text-amber-200"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {editingProfile && (

@@ -21,6 +21,7 @@ import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
+import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -464,8 +465,15 @@ export async function getWorldsConfig(): Promise<WorldsConfig> {
 }
 
 // Mundos habilitados para un alumno: los de su aula en la plataforma, o
-// los del aula piloto (configuración de siempre).
+// los del aula abierta de prueba, o los del aula piloto (configuración de siempre).
 export async function getEnabledWorldIdsFor(student: Student | undefined): Promise<number[]> {
+  if (student?.classroomId === OPEN_CLASSROOM_ID) {
+    const openWorlds = await getJSON<WorldsConfig | null>(`worldsConfig:${OPEN_CLASSROOM_ID}`, null);
+    if (openWorlds?.enabledWorldIds && openWorlds.enabledWorldIds.length > 0) {
+      return openWorlds.enabledWorldIds;
+    }
+    return (await getWorldsConfig()).enabledWorldIds;
+  }
   if (student?.classroomId) {
     const ids = await getClassroomWorlds(student.classroomId);
     if (ids) return ids;
