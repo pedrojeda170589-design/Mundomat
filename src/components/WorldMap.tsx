@@ -26,6 +26,10 @@ interface Props {
   classmateCounts?: Record<number, number>;
   // Etapa del paisaje de fondo (1..4), según el avance en las 4 áreas.
   mapStage?: number;
+  // Botón 📄 de fichas para imprimir (no se muestra en el aula de prueba).
+  showFichas?: boolean;
+  // Cartel de los mundos bloqueados (por defecto, "Esperando al Docente").
+  lockedLabel?: string;
   onSelectWorld: (world: WorldDef) => void;
 }
 
@@ -38,6 +42,8 @@ export default function WorldMap({
   classmateCounts = {},
   mapStage = 1,
   onSelectWorld,
+  showFichas = true,
+  lockedLabel = "Esperando al Docente",
 }: Props) {
   const points = worlds.map((_, i) => ({
     xPct: ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length],
@@ -157,10 +163,11 @@ export default function WorldMap({
               )}
               {!enabled && (
                 <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
-                  Esperando al Docente
+                  {lockedLabel}
                 </span>
               )}
             </button>
+            {showFichas && (
             <a
               href={`/familias#mundo-${world.id}`}
               className="absolute right-0 rounded-full bg-white border-2 border-sky-500 w-8 h-8 flex items-center justify-center text-sm shadow hover:scale-110 transition"
@@ -170,6 +177,7 @@ export default function WorldMap({
             >
               📄
             </a>
+            )}
           </div>
         );
       })}

@@ -21,9 +21,9 @@ export default function FamiliasPage() {
           <div>
             <h1 className="text-white font-black text-xl sm:text-2xl">📄 Fichas para imprimir</h1>
             <p className="text-amber-100 text-sm">
-              Actividades de refuerzo de cada mundo para trabajar en casa: repasar con el lápiz,
-              escribir, dibujar, resolver y recortar cartas para jugar a la memoria. Cada ficha
-              trae actividades distintas (en Matemática, con otros números) y las soluciones al pie.
+              Propuestas para seguir aprendiendo en casa lo que se trabajó en cada mundo, sin
+              repetir la app: hacer con objetos de la casa, jugar en familia, investigar,
+              conversar y crear. Cada mundo tiene dos fichas distintas.
             </p>
           </div>
           <Link href="/" className="text-amber-100 text-sm font-bold underline shrink-0">

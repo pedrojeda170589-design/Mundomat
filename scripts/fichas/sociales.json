@@ -1,0 +1,881 @@
+{
+  "39": [
+    {
+      "title": "Croquis de mi barrio",
+      "purpose": "Proponemos recorrer el barrio y dibujar un croquis con sus elementos. Acompañen la caminata y ayuden a ubicar las cosas, sin dibujar por el chico o la chica.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Caminata de observación",
+          "steps": [
+            "Caminá con un adulto una o dos cuadras alrededor de tu casa.",
+            "Anotá lo que ves: casas, calles, plazas, negocios, árboles, postes, escuela.",
+            "Separá lo que construyeron las personas de lo que es natural."
+          ],
+          "table": {
+            "cols": [
+              "Lo construyeron las personas",
+              "Es natural"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi croquis",
+          "steps": [
+            "Dibujá tu manzana vista desde arriba, como la vería un pájaro.",
+            "Marcá tu casa con una X y dibujá las calles.",
+            "Usá símbolos sencillos: un círculo para los árboles y un cuadrado para los negocios.",
+            "Agregá una referencia que explique tus símbolos."
+          ],
+          "draw": "Dibujá el croquis de tu manzana visto desde arriba."
+        },
+        {
+          "kind": "juego",
+          "title": "¿Dónde estoy?",
+          "steps": [
+            "Usando tu croquis, pensá en un lugar del barrio sin decirlo.",
+            "Dales pistas a los demás: estoy al lado de la plaza, frente a la escuela.",
+            "Los demás señalan en el croquis dónde creen que estás.",
+            "Quien acierta da las próximas pistas."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo observar los elementos de mi barrio.",
+        "Puedo dibujar un croquis con referencias.",
+        "Puedo ubicar lugares usando palabras como al lado, frente y cerca."
+      ]
+    },
+    {
+      "title": "Ciudad y campo",
+      "purpose": "La ficha compara el paisaje urbano del pueblo con el paisaje rural de la estancia. Conversen sobre lugares que conocen y las diferencias en la vida de cada uno.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Vivir en el pueblo y en el campo",
+          "steps": [
+            "Preguntá a alguien que haya vivido o trabajado en una estancia cómo es la vida ahí.",
+            "Preguntale qué hay en el campo que no hay en el pueblo, y al revés.",
+            "Anotá las diferencias en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "En el pueblo",
+              "En el campo"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Tutti frutti urbano y rural",
+          "steps": [
+            "Cada jugador dibuja en un papel dos columnas: pueblo y campo.",
+            "Una persona dice una letra.",
+            "Todos escriben un elemento del pueblo y uno del campo que empiecen con esa letra, por ejemplo P: plaza y potrero.",
+            "Cuando alguien termina dice basta y se cuentan los puntos.",
+            "Jueguen cinco rondas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Dos paisajes",
+          "steps": [
+            "Dibujá un paisaje urbano y uno rural uno al lado del otro.",
+            "En cada uno, incluí al menos tres elementos que lo caractericen.",
+            "Escribí debajo qué trabajos hace la gente en cada lugar."
+          ],
+          "draw": "Dibujá un paisaje urbano y uno rural.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo diferenciar un paisaje urbano de uno rural.",
+        "Puedo nombrar elementos y trabajos de cada paisaje.",
+        "Puedo contar cómo se vive en el campo y en el pueblo."
+      ]
+    }
+  ],
+  "40": [
+    {
+      "title": "Un día en la colonia",
+      "purpose": "Proponemos imaginar cómo vivían los distintos grupos sociales en la época colonial y compararlo con la vida de hoy. Acompañen la lectura y la charla.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Antes y ahora en casa",
+          "steps": [
+            "En la época colonial no había luz eléctrica ni agua de canilla: se usaban velas y el agua la traía el aguatero.",
+            "Charlá con tu familia: ¿cómo haríamos hoy sin esas cosas?",
+            "Recorran la casa y anoten cómo se hacía cada tarea en la colonia y cómo se hace hoy."
+          ],
+          "table": {
+            "cols": [
+              "Tarea",
+              "En la colonia",
+              "Hoy"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Pregones coloniales",
+          "steps": [
+            "En la colonia, los vendedores ambulantes cantaban pregones para vender: el aguatero, el vendedor de velas, la mazamorrera.",
+            "Cada jugador elige un oficio colonial e inventa un pregón corto.",
+            "Lo dice en voz alta sin nombrar el oficio y los demás adivinan quién es.",
+            "Quien adivina suma una tapita."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Postal desde la colonia",
+          "steps": [
+            "Imaginá que sos un chico o una chica de la época colonial.",
+            "Dibujá un momento de tu día: buscar agua, ir a misa, jugar en el patio o ayudar en el trabajo.",
+            "Escribí unas líneas contando tu día."
+          ],
+          "draw": "Dibujá un momento de un día en la colonia.",
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar oficios de la época colonial.",
+        "Puedo comparar la vida cotidiana de la colonia con la de hoy.",
+        "Puedo contar que había distintos grupos sociales con vidas diferentes."
+      ]
+    },
+    {
+      "title": "Quién era quién en la colonia",
+      "purpose": "Esta ficha trabaja los grupos sociales coloniales: españoles, criollos, mestizos, indígenas y africanos esclavizados, y las diferencias en sus derechos. Conversen sobre la justicia de esas diferencias.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Fichas de los grupos sociales",
+          "steps": [
+            "Con ayuda de un adulto o del cuaderno de clase, buscá información sobre los grupos sociales de la colonia.",
+            "Para cada grupo, anotá qué trabajos hacían y cómo vivían.",
+            "Marcá cuáles tenían más derechos y cuáles menos."
+          ],
+          "table": {
+            "cols": [
+              "Grupo",
+              "¿Qué trabajos hacían?",
+              "¿Cómo vivían?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Memoria colonial",
+          "steps": [
+            "Recorten 12 cartas de papel.",
+            "En seis escriban un grupo u oficio colonial: aguatero, lavandera, farolero, pulpero, vendedor de velas, comerciante.",
+            "En las otras seis dibujen el objeto que usaba cada uno: tinaja, batea, farol, mostrador, vela, barco.",
+            "Jueguen a la memoria uniendo cada oficio con su objeto."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Era justo?",
+          "steps": [
+            "Charlá con un adulto: en la colonia, algunas personas eran esclavizadas y no podían decidir sobre su vida.",
+            "Piensen juntos: ¿era justo? ¿Qué derechos tenemos hoy todas las personas?",
+            "Escribí lo que pensás."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar los grupos sociales de la época colonial.",
+        "Puedo contar qué trabajos hacía cada grupo.",
+        "Puedo explicar que hoy todas las personas tenemos los mismos derechos."
+      ]
+    }
+  ],
+  "41": [
+    {
+      "title": "Normas para convivir",
+      "purpose": "Proponemos pensar en las normas de la casa, la escuela y la localidad, y en por qué existen. Conversen en familia y dejen que proponga sus propias ideas.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Las normas de casa",
+          "steps": [
+            "Charlá con tu familia sobre las normas que hay en casa.",
+            "Pregunten: ¿quién las decidió? ¿Para qué sirven? ¿Qué pasa si no se cumplen?",
+            "Anotá tres normas y para qué sirve cada una."
+          ],
+          "table": {
+            "cols": [
+              "Norma",
+              "¿Para qué sirve?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Juego sin reglas",
+          "steps": [
+            "Jueguen una ronda de un juego conocido, como la oca o las cartas, pero sin reglas: cada uno hace lo que quiere.",
+            "Después jueguen otra ronda respetando las reglas.",
+            "Charlen: ¿cuál de las dos rondas fue más divertida y justa?",
+            "Inventen juntos una regla nueva para el juego y pruébenla."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Un cartel para mi barrio",
+          "steps": [
+            "Pensá en una norma que ayudaría a convivir mejor en tu barrio o en la escuela.",
+            "Hacé un cartel con un dibujo y una frase corta.",
+            "Escribí quién debería hacer cumplir esa norma."
+          ],
+          "draw": "Diseñá tu cartel con la norma.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar para qué sirven las normas.",
+        "Puedo nombrar normas de mi casa y de la escuela.",
+        "Puedo proponer una norma para convivir mejor."
+      ]
+    },
+    {
+      "title": "Del Cabildo a mi localidad",
+      "purpose": "La ficha compara las autoridades del Cabildo colonial con las autoridades de nuestra localidad hoy, y propone resolver conflictos conversando. Acompañen la entrevista y la charla.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Quién decide en mi localidad?",
+          "steps": [
+            "Preguntá a un adulto quién es el intendente o la intendenta de tu localidad.",
+            "Averiguá también quiénes trabajan en la policía, el hospital y la escuela.",
+            "Anotá qué hace cada autoridad."
+          ],
+          "table": {
+            "cols": [
+              "Autoridad",
+              "¿Qué hace?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Teatro del conflicto",
+          "steps": [
+            "Elijan un conflicto común: dos hermanos quieren el mismo juguete o dos vecinos discuten por un perro suelto.",
+            "Dos personas actúan el conflicto y una tercera hace de mediadora.",
+            "La mediadora escucha a los dos y ayuda a buscar una solución que sirva para ambos.",
+            "Cambien de roles y prueben con otro conflicto."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "El Cabildo de antes",
+          "steps": [
+            "En la época colonial, el Cabildo se ocupaba de los asuntos de la ciudad, como la limpieza y los precios.",
+            "Charlá con un adulto: ¿quién se ocupa hoy de esas cosas en tu localidad?",
+            "Escribí las parecidas y las diferencias."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar autoridades de mi localidad.",
+        "Puedo ayudar a resolver un conflicto conversando.",
+        "Puedo comparar el Cabildo con las autoridades de hoy."
+      ]
+    }
+  ],
+  "42": [
+    {
+      "title": "El viaje de la lana",
+      "purpose": "Proponemos seguir el recorrido de la lana desde la oveja hasta un pulóver, conociendo a las personas que trabajan en cada etapa. Si conocen a alguien del campo, es un gran entrevistado.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Entrevista a quien conoce el campo",
+          "steps": [
+            "Preguntá a alguien que haya trabajado en una estancia cómo es la esquila.",
+            "Preguntale qué se hace con la lana después de esquilar y adónde se lleva.",
+            "Anotá las etapas y quiénes trabajan en cada una."
+          ],
+          "table": {
+            "cols": [
+              "Etapa",
+              "¿Quién trabaja?",
+              "¿Qué herramientas usa?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La carrera de la lana",
+          "steps": [
+            "Dibujen en un papel un camino con 20 casilleros desde la estancia hasta el negocio.",
+            "Escriban en algunos casilleros etapas: esquila, enfardado, camión, lavado, hilado, tejido, venta.",
+            "Tiren un dado por turno y avancen con una tapita.",
+            "Al caer en una etapa, hay que contar qué pasa ahí o retroceder dos casilleros.",
+            "Gana quien llega primero al negocio."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Historieta de la lana",
+          "steps": [
+            "Dividí el recuadro en cuatro cuadritos.",
+            "Dibujá cuatro momentos del viaje de la lana: la oveja, la esquila, la fábrica y el pulóver.",
+            "Escribí una frase corta debajo de cada uno."
+          ],
+          "draw": "Dibujá la historieta del viaje de la lana en cuatro cuadritos."
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar las etapas del circuito de la lana.",
+        "Puedo nombrar trabajadores que participan en un circuito productivo.",
+        "Puedo explicar que un producto pasa por muchas manos."
+      ]
+    },
+    {
+      "title": "¿De dónde viene lo que comemos?",
+      "purpose": "Esta ficha investiga el circuito productivo de un alimento de la casa. Ayuden a leer los envases y a pensar en las etapas, sin dar todas las respuestas.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Detectives de envases",
+          "steps": [
+            "Buscá en la cocina tres alimentos con envase: leche, yerba, harina u otro.",
+            "Leé con un adulto dónde se hizo cada uno.",
+            "Anotá el producto, de dónde viene y qué materia prima tiene."
+          ],
+          "table": {
+            "cols": [
+              "Producto",
+              "¿Dónde se hizo?",
+              "¿De qué está hecho?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Del trigo al pan",
+          "steps": [
+            "Pensá qué etapas hay desde el trigo en el campo hasta el pan en la mesa.",
+            "Escribí cada etapa en un papelito.",
+            "Mezclalos y pedile a alguien de tu familia que los ordene.",
+            "Revisen juntos si quedó bien y anotá el orden final."
+          ],
+          "lines": 5
+        },
+        {
+          "kind": "juego",
+          "title": "Teléfono descompuesto productivo",
+          "steps": [
+            "Cada jugador hace de un trabajador del circuito del pan: agricultor, camionero, molinero, panadero, vendedor.",
+            "El primero dice en secreto qué entrega al siguiente, y así pasa de mano en mano.",
+            "El último dice en voz alta qué recibió.",
+            "Charlen: ¿qué pasa si falta un trabajador en el circuito?"
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo averiguar de dónde viene un alimento.",
+        "Puedo ordenar las etapas de un circuito productivo.",
+        "Puedo explicar que cada trabajador es importante en el circuito."
+      ]
+    }
+  ],
+  "43": [
+    {
+      "title": "El museo de mi familia",
+      "purpose": "Proponemos buscar objetos antiguos de la familia y conversar sobre cómo cambió la vida. Cuiden los objetos y acompañen las entrevistas a los mayores.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Entrevista a un abuelo o abuela",
+          "steps": [
+            "Preguntá a una persona mayor cómo era tu localidad cuando era chica.",
+            "Preguntale a qué jugaba, cómo se calefaccionaba la casa y cómo se comunicaba con la familia lejana.",
+            "Anotá lo que cambió y lo que sigue igual."
+          ],
+          "table": {
+            "cols": [
+              "Tema",
+              "Antes",
+              "Ahora"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "Objetos con historia",
+          "steps": [
+            "Buscá con tu familia un objeto viejo: una plancha, una foto, una herramienta de esquila, un mate o una radio.",
+            "Preguntá de quién era y para qué se usaba.",
+            "Dibujalo y escribí su historia como si fuera la tarjeta de un museo."
+          ],
+          "draw": "Dibujá el objeto con historia.",
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "¿Para qué servía?",
+          "steps": [
+            "Cada integrante de la familia piensa en un objeto antiguo que conozca.",
+            "Lo describe sin decir el nombre: era de hierro, se calentaba en la cocina y servía para la ropa.",
+            "Los demás adivinan qué es y para qué servía.",
+            "Quien adivina suma un poroto."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo preguntar a los mayores cómo era la vida antes.",
+        "Puedo encontrar cosas que cambiaron y cosas que siguen igual.",
+        "Puedo contar la historia de un objeto de mi familia."
+      ]
+    },
+    {
+      "title": "Patrimonio de mi pueblo",
+      "purpose": "La ficha busca reconocer los bienes patrimoniales de la localidad: edificios, lugares, costumbres y saberes. Recorran juntos y conversen sobre por qué hay que cuidarlos.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Recorrido patrimonial",
+          "steps": [
+            "Con un adulto, recorré tu pueblo y buscá edificios antiguos, monumentos o lugares importantes.",
+            "Preguntá qué historia tienen.",
+            "Anotalos en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Lugar o edificio",
+              "¿Por qué es importante?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Costumbres que heredamos",
+          "steps": [
+            "El patrimonio también son costumbres: tomar mate, la esquila, las comidas, las canciones y las fiestas.",
+            "Preguntá a tu familia qué costumbre aprendieron de sus abuelos.",
+            "Escribí cuál es y quién la enseñó."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Guías de museo",
+          "steps": [
+            "Elijan entre todos tres objetos de la casa que tengan historia.",
+            "Armen un pequeño museo sobre una mesa con un cartelito para cada objeto.",
+            "Un jugador hace de guía y explica cada objeto a los visitantes.",
+            "Los visitantes hacen preguntas y después cambian de rol."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar bienes patrimoniales de mi localidad.",
+        "Puedo explicar por qué hay que cuidar el patrimonio.",
+        "Puedo reconocer costumbres que heredamos de los mayores."
+      ]
+    }
+  ],
+  "44": [
+    {
+      "title": "Un día en el municipio",
+      "purpose": "Proponemos conocer quiénes gobiernan la localidad y qué hacen: el intendente y el Concejo Deliberante. Ayuden a averiguar nombres y lugares, y conversen sobre lo que le hace falta al barrio.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Qué hace el municipio?",
+          "steps": [
+            "Recorré tu barrio con un adulto y buscá cosas que cuida o hace el municipio.",
+            "Pueden ser el alumbrado, la recolección de residuos, las calles, las plazas o el agua.",
+            "Anotá lo que encontraste y cómo está."
+          ],
+          "table": {
+            "cols": [
+              "Servicio",
+              "¿Dónde lo vi?",
+              "¿Cómo está?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Sesión del Concejo en casa",
+          "steps": [
+            "Cada integrante de la familia hace de concejal.",
+            "Una persona propone una ordenanza para la casa, por ejemplo: los sábados se juega a las cartas.",
+            "Todos opinan por turno, sin interrumpir.",
+            "Votan levantando la mano: si gana la mayoría, la ordenanza se aprueba y la escriben."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "converso",
+          "title": "Lo que necesita mi barrio",
+          "steps": [
+            "Charlá con tu familia: ¿qué le hace falta al barrio?",
+            "Piensen a quién del municipio habría que pedírselo.",
+            "Escribí tu pedido como si fuera una carta al intendente."
+          ],
+          "lines": 5
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar qué hace el municipio en mi barrio.",
+        "Puedo explicar que el Concejo Deliberante vota ordenanzas.",
+        "Puedo escribir un pedido para mejorar mi barrio."
+      ]
+    },
+    {
+      "title": "Ordenanzas para todos",
+      "purpose": "La ficha trabaja qué son las ordenanzas y cómo se decide en el municipio. Pueden contar experiencias de trámites o pedidos al municipio y ayudar a pensar propuestas.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Preguntas sobre mi municipio",
+          "steps": [
+            "Preguntá a un adulto dónde queda la municipalidad de tu localidad.",
+            "Preguntá si alguna vez hizo un trámite o un pedido ahí y cómo fue.",
+            "Anotá lo que te contó."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "creo",
+          "title": "Mi ordenanza",
+          "steps": [
+            "Inventá una ordenanza para mejorar tu localidad, por ejemplo sobre perros sueltos, basura o plazas.",
+            "Escribí el título, qué dice y a quién le sirve.",
+            "Hacé un dibujo que la explique."
+          ],
+          "draw": "Dibujá cómo cambiaría la localidad con tu ordenanza.",
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "Intendente por un día",
+          "steps": [
+            "Escriban en papelitos problemas del pueblo: un pozo en la calle, la plaza sin luz, mucha basura con viento.",
+            "Por turno, cada jugador saca un papelito y hace de intendente.",
+            "Tiene que decir qué haría y a quién le pediría ayuda.",
+            "Los demás votan si la solución les gusta: cada voto es una tapita."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar qué es una ordenanza.",
+        "Puedo nombrar quiénes gobiernan mi localidad.",
+        "Puedo proponer ideas para resolver problemas del pueblo."
+      ]
+    }
+  ],
+  "45": [
+    {
+      "title": "¿Cómo llegan las cosas a mi pueblo?",
+      "purpose": "Proponemos investigar los transportes que conectan la localidad con otros lugares y cómo llegan las mercaderías. Acompañen la observación en la ruta o en el pueblo.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Contamos vehículos",
+          "steps": [
+            "Con un adulto, mirá durante diez minutos una calle o la ruta desde un lugar seguro.",
+            "Contá cuántos vehículos de cada tipo pasan con palitos en la tabla.",
+            "Fijate si llevan personas o cargas."
+          ],
+          "table": {
+            "cols": [
+              "Vehículo",
+              "¿Cuántos pasaron?",
+              "¿Qué llevaba?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Viajes de la familia",
+          "steps": [
+            "Preguntá a tu familia cómo viajan a Río Gallegos u otra ciudad: en auto, colectivo o avión.",
+            "Preguntá cuánto tardan y por qué ruta van.",
+            "Preguntá también cómo llegan las frutas y verduras al almacén."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "La ruta del camión",
+          "steps": [
+            "Dibujen en un papel un camino de casilleros desde una ciudad lejana hasta tu pueblo.",
+            "Pongan obstáculos en algunos casilleros: viento fuerte, nieve en la ruta, pinchadura.",
+            "Tiren el dado y avancen; al caer en un obstáculo pierden un turno.",
+            "Gana el primer camión que llega con la mercadería."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar transportes que llegan a mi localidad.",
+        "Puedo contar cómo llegan las mercaderías al pueblo.",
+        "Puedo registrar datos observando la calle o la ruta."
+      ]
+    },
+    {
+      "title": "Guardianes del ambiente",
+      "purpose": "La ficha trabaja los recursos naturales de la zona y cómo cuidarlos. Conversen sobre las costumbres de la casa y acompañen la campaña de cuidado.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Recursos de mi zona",
+          "steps": [
+            "Charlá con un adulto sobre qué recursos naturales se usan en la zona: el agua del río, el pasto para las ovejas, el suelo, el viento.",
+            "Para cada uno, anotá para qué se usa y cómo se puede cuidar."
+          ],
+          "table": {
+            "cols": [
+              "Recurso",
+              "¿Para qué se usa?",
+              "¿Cómo lo cuidamos?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Carrera de la basura",
+          "steps": [
+            "Junten residuos limpios de la casa: botellas, papeles, cartón, cáscaras.",
+            "Preparen tres cajas o bolsas: reciclables, orgánicos y otros.",
+            "Por turno, cada jugador saca un residuo y lo pone en la caja correcta.",
+            "Quien se equivoca devuelve una tapita al pozo; gana quien tiene más al final."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Campaña de cuidado",
+          "steps": [
+            "Pensá en un problema del ambiente de tu localidad, como las bolsas que vuela el viento.",
+            "Hacé un afiche con un dibujo y una frase para cuidar el ambiente.",
+            "Mostralo a tu familia y pegalo en un lugar visible."
+          ],
+          "draw": "Diseñá tu afiche para cuidar el ambiente.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar recursos naturales de mi zona.",
+        "Puedo separar residuos en casa.",
+        "Puedo proponer acciones para cuidar el ambiente."
+      ]
+    }
+  ],
+  "46": [
+    {
+      "title": "Mi línea de tiempo familiar",
+      "purpose": "Proponemos ordenar acontecimientos de la familia en una línea de tiempo para entender antes, después, pasado y presente. Busquen juntos fotos o fechas importantes.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Fechas de la familia",
+          "steps": [
+            "Preguntá a tu familia en qué año nació cada uno, cuándo llegaron a la localidad y otros momentos importantes.",
+            "Pueden mirar fotos viejas para ayudarse.",
+            "Anotá los acontecimientos con su año."
+          ],
+          "table": {
+            "cols": [
+              "Año",
+              "¿Qué pasó?"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Armo la línea de tiempo",
+          "steps": [
+            "Pegá varias hojas a lo largo o usá un hilo con broches.",
+            "Ubicá los acontecimientos en orden, del más antiguo al más reciente.",
+            "Agregá un dibujo para cada uno.",
+            "Dibujá abajo un resumen de tu línea."
+          ],
+          "draw": "Dibujá un resumen de tu línea de tiempo familiar."
+        },
+        {
+          "kind": "juego",
+          "title": "¿Qué pasó primero?",
+          "steps": [
+            "Escriban en papelitos acontecimientos de la familia y de la historia: nací yo, nació la abuela, 25 de mayo de 1810, 9 de julio de 1816.",
+            "Saquen dos papelitos por vez.",
+            "Quien dice correctamente cuál pasó primero se queda con los dos papelitos.",
+            "Gana quien junta más papelitos."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo ordenar acontecimientos del más antiguo al más reciente.",
+        "Puedo usar palabras como antes, después, pasado y presente.",
+        "Puedo armar una línea de tiempo de mi familia."
+      ]
+    },
+    {
+      "title": "Calendario de conmemoraciones",
+      "purpose": "La ficha trabaja las fechas patrias y conmemoraciones argentinas y por qué las recordamos. Conversen sobre cómo se celebran en la escuela y en la familia.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Fechas en el calendario",
+          "steps": [
+            "Con un calendario de la casa, buscá estas fechas: 2 de abril, 25 de mayo, 20 de junio, 9 de julio y 17 de agosto.",
+            "Preguntá a un adulto o mirá el cuaderno para saber qué se recuerda en cada una.",
+            "Completá la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Fecha",
+              "¿Qué recordamos?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Cómo lo vivimos",
+          "steps": [
+            "Preguntá a un adulto cómo se celebraba el 25 de mayo o el 9 de julio cuando era chico.",
+            "Preguntá si se comía algo especial, como locro o pastelitos.",
+            "Anotá lo que te contó."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "Lotería de fechas patrias",
+          "steps": [
+            "Cada jugador dibuja un cartón con cuatro casilleros y escribe cuatro de las fechas de la tabla.",
+            "Un adulto lee en voz alta qué se recuerda, por ejemplo: Día de la Bandera.",
+            "Quien tiene esa fecha en su cartón la tapa con un poroto.",
+            "Gana quien completa primero el cartón."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo ubicar fechas patrias en el calendario.",
+        "Puedo contar qué se recuerda en cada conmemoración.",
+        "Puedo ordenar acontecimientos de la historia argentina."
+      ]
+    }
+  ],
+  "47": [
+    {
+      "title": "Muchas culturas, un mismo pueblo",
+      "purpose": "Proponemos descubrir de dónde vienen las familias del barrio y la escuela, y valorar la diversidad cultural. Compartan historias familiares, comidas y palabras.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "¿De dónde viene mi familia?",
+          "steps": [
+            "Preguntá a tu familia de dónde vinieron los abuelos o bisabuelos.",
+            "Preguntá qué comidas, palabras, músicas o costumbres trajeron.",
+            "Anotá lo que te contaron."
+          ],
+          "table": {
+            "cols": [
+              "Familiar",
+              "¿De dónde vino?",
+              "¿Qué costumbre trajo?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Ronda de juegos del mundo",
+          "steps": [
+            "Pregunten a los mayores a qué jugaban de chicos.",
+            "Elijan un juego que no conozcan, como la payana, el tejo o la rayuela.",
+            "Que la persona mayor explique las reglas y jueguen todos juntos.",
+            "Después cuenten de dónde viene ese juego."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Recetario de la diversidad",
+          "steps": [
+            "Elegí una comida típica de tu familia.",
+            "Dibujala y escribí sus ingredientes principales.",
+            "Contá quién la prepara y de dónde viene esa receta."
+          ],
+          "draw": "Dibujá la comida típica de tu familia.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar de dónde viene mi familia.",
+        "Puedo valorar costumbres de distintas culturas.",
+        "Puedo compartir un juego o una comida de mi familia."
+      ]
+    },
+    {
+      "title": "Derechos en acción",
+      "purpose": "La ficha trabaja los derechos de niñas y niños y cómo, entre todos, podemos llevar adelante un proyecto colectivo. Conversen y acompañen el proyecto familiar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Mis derechos",
+          "steps": [
+            "Charlá con tu familia sobre los derechos de los chicos: a jugar, a aprender, a la salud, a tener un nombre, a ser escuchados.",
+            "Piensen ejemplos de cada uno en la vida de todos los días.",
+            "Anotá tres derechos y un ejemplo."
+          ],
+          "table": {
+            "cols": [
+              "Derecho",
+              "Un ejemplo en mi vida"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La ruleta de los derechos",
+          "steps": [
+            "Hagan una ruleta con un plato de papel y un broche, o usen un dado.",
+            "Asignen un derecho a cada número del 1 al 6.",
+            "Por turno, tiren y cuenten una situación en la que ese derecho se cumple.",
+            "Si los demás están de acuerdo, ganan una tapita."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Proyecto en familia",
+          "steps": [
+            "Elijan juntos un proyecto pequeño para ayudar: juntar ropa de abrigo, ordenar la plaza o plantar algo.",
+            "Repartan las tareas para que todos participen.",
+            "Hagan el proyecto y escribí cómo salió y qué aprendiste."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar derechos de niñas y niños.",
+        "Puedo dar ejemplos de derechos en mi vida diaria.",
+        "Puedo participar en un proyecto con otras personas."
+      ]
+    }
+  ]
+}

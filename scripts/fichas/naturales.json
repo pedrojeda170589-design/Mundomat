@@ -1,0 +1,1196 @@
+{
+  "27": [
+    {
+      "title": "Guardaparques de mi zona",
+      "purpose": "Esta ficha invita a observar animales y plantas de la zona y a pensar en nuestro cuerpo. Acompañen las salidas y las charlas, y dejen que el chico o la chica describa con sus palabras.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Salida de observación",
+          "steps": [
+            "Salí con un adulto a dar una vuelta por el barrio, el campo o la plaza.",
+            "Buscá tres animales (pueden ser pájaros, insectos, ovejas o perros) y tres plantas.",
+            "Mirá bien cómo se mueven, de qué se cubren y dónde viven.",
+            "Anotá lo que viste en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Ser vivo",
+              "¿Dónde estaba?",
+              "¿Cómo es su cuerpo?"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Adivina, adivinador de animales",
+          "steps": [
+            "Jueguen de a dos o más: una persona piensa en un animal de Santa Cruz.",
+            "Los demás hacen preguntas que se responden solo con sí o no.",
+            "Por ejemplo: ¿Tiene plumas? ¿Vive en el agua? ¿Come pasto?",
+            "Quien adivina con menos de diez preguntas gana un poroto.",
+            "Prueben con guanaco, choique, zorro, puma, cauquén y trucha."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi ficha de un ser vivo",
+          "steps": [
+            "Elegí un animal o una planta que hayas visto en la salida.",
+            "Dibujalo con todos los detalles que recuerdes.",
+            "Escribí qué come o qué necesita para vivir y dónde lo encontraste."
+          ],
+          "draw": "Dibujá el ser vivo que elegiste, en el lugar donde vive.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo observar animales y plantas y describir cómo son.",
+        "Puedo nombrar animales que viven en Santa Cruz.",
+        "Puedo hacer preguntas para descubrir de qué animal se trata."
+      ]
+    },
+    {
+      "title": "Mi cuerpo en movimiento",
+      "purpose": "Proponemos conocer el propio cuerpo moviéndose y comparándolo con el de los animales. Pueden jugar juntos y ayudar a medir, sin corregir de más.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Mi corazón y mi respiración",
+          "steps": [
+            "Poné la mano en el pecho y contá cuántas veces respirás mientras un adulto mira el reloj un minuto.",
+            "Después saltá en el lugar durante un ratito.",
+            "Volvé a contar las respiraciones en un minuto.",
+            "Anotá los resultados y compará."
+          ],
+          "table": {
+            "cols": [
+              "Momento",
+              "Respiraciones en un minuto"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Simón dice con partes del cuerpo",
+          "steps": [
+            "Una persona hace de Simón y da órdenes: Simón dice tocate el codo.",
+            "Solo hay que obedecer si la orden empieza con Simón dice.",
+            "Usen palabras como rodilla, tobillo, hombro, muñeca, cuello y columna.",
+            "Quien se equivoca pasa a ser Simón."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Animales y personas",
+          "steps": [
+            "Charlá con un adulto: ¿qué tenemos parecido con un guanaco? ¿Y qué diferente?",
+            "Piensen en patas y piernas, pelo y lana, cómo comen y cómo se mueven.",
+            "Escribí dos parecidos y dos diferencias."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar partes de mi cuerpo.",
+        "Puedo notar que mi cuerpo cambia cuando hago ejercicio.",
+        "Puedo comparar mi cuerpo con el de un animal."
+      ]
+    }
+  ],
+  "28": [
+    {
+      "title": "Cocineros de mezclas",
+      "purpose": "Vamos a mezclar materiales de la cocina para ver qué pasa: algunos se disuelven y otros no. Un adulto acompaña y ayuda a limpiar; dejen que el chico o la chica anticipe antes de probar.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "¿Se disuelve o no?",
+          "steps": [
+            "Prepará cuatro vasos con agua fría, con ayuda de un adulto.",
+            "En cada vaso poné una cucharadita de algo distinto: sal, azúcar, arena y aceite.",
+            "Antes de revolver, escribí qué creés que va a pasar.",
+            "Revolvé y esperá un minuto mirando con atención.",
+            "Anotá lo que pasó de verdad."
+          ],
+          "table": {
+            "cols": [
+              "Material",
+              "Lo que pensé",
+              "Lo que pasó"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La lotería de las mezclas",
+          "steps": [
+            "Escriban en papelitos: sal, azúcar, arena, aceite, piedritas, harina, yerba y café.",
+            "Pongan los papelitos boca abajo y saquen uno por turno.",
+            "Quien saca uno dice si cree que se disuelve en agua o no, y por qué.",
+            "Si los demás están de acuerdo, gana una tapita.",
+            "Las dudas las prueban después con un adulto en un vaso."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Mezclas en mi casa",
+          "steps": [
+            "Preguntá a un adulto qué mezclas se preparan en casa: el mate, la leche con cacao, la sopa.",
+            "Charlen: ¿se ven las partes de la mezcla o no?",
+            "Anotá dos mezclas de tu casa."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo anticipar qué va a pasar antes de mezclar.",
+        "Puedo contar qué materiales se disuelven en agua y cuáles no.",
+        "Puedo encontrar mezclas en mi casa."
+      ]
+    },
+    {
+      "title": "Detectives del agua",
+      "purpose": "La propuesta es comparar mezclas en las que se ven las partes y mezclas en las que no. Ayuden con los materiales y pregunten qué observa, sin dar la explicación.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Agua con arena y agua con sal",
+          "steps": [
+            "Con un adulto, prepará un frasco con agua y arena y otro con agua y sal.",
+            "Revolvé los dos frascos y dejalos quietos un rato.",
+            "Observá: ¿en cuál ves todavía el material? ¿En cuál no?",
+            "Dibujá cómo quedó cada frasco."
+          ],
+          "draw": "Dibujá los dos frascos después de esperar.",
+          "lines": 2
+        },
+        {
+          "kind": "hacer",
+          "title": "Más o menos sal",
+          "steps": [
+            "En un vaso con agua, poné una pizca de sal y revolvé.",
+            "Seguí agregando de a una cucharadita y contá cuántas ponés.",
+            "Pará cuando veas que la sal ya queda en el fondo aunque revuelvas.",
+            "Anotá cuántas cucharaditas pusiste."
+          ],
+          "lines": 1
+        },
+        {
+          "kind": "juego",
+          "title": "¿Qué hay en el vaso?",
+          "steps": [
+            "Un adulto prepara en secreto tres vasos: agua sola, agua con sal y agua con azúcar.",
+            "Tenés que descubrir cuál es cuál sin probar, solo mirando.",
+            "Después, con permiso, podés probar una gotita con el dedo.",
+            "Cambien de rol: ahora vos preparás y el adulto adivina."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo diferenciar mezclas donde se ven las partes y donde no.",
+        "Puedo contar qué pasa cuando agrego mucha sal al agua.",
+        "Puedo registrar lo que observo con dibujos y palabras."
+      ]
+    }
+  ],
+  "29": [
+    {
+      "title": "Empujo, estiro y aplasto",
+      "purpose": "Esta ficha trabaja qué les pasa a los materiales cuando los empujamos, estiramos o aplastamos. Ofrezcan materiales de la casa y dejen que pruebe y cuente lo que nota.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Pruebo con las manos",
+          "steps": [
+            "Juntá materiales: una bandita elástica, plastilina o masa, una esponja, un papel y una piedra.",
+            "Probá estirar, aplastar y doblar cada uno.",
+            "Fijate si vuelve a su forma o se queda cambiado.",
+            "Anotalo en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Material",
+              "¿Qué le hice?",
+              "¿Volvió a su forma?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Carrera de tapitas",
+          "steps": [
+            "Marquen con hilo una línea de salida y una de llegada en el piso.",
+            "Cada jugador empuja su tapita con un dedo, de a un golpecito por turno.",
+            "Si la tapita se pasa de la mesa o de la cancha, vuelve a la salida.",
+            "Gana quien llega primero a la meta.",
+            "Charlen: ¿qué pasa si empujan fuerte? ¿Y si empujan suave?"
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Fuerzas en el campo",
+          "steps": [
+            "Preguntá a un adulto qué se empuja, se estira o se aplasta en una estancia o en casa.",
+            "Pueden pensar en el alambrado, la prensa de lana, el amasado del pan o una carretilla.",
+            "Anotá dos ejemplos."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar qué pasa cuando estiro o aplasto un material.",
+        "Puedo notar la diferencia entre empujar fuerte y suave.",
+        "Puedo dar ejemplos de empujar, estirar y aplastar en la vida diaria."
+      ]
+    },
+    {
+      "title": "Calentito y fresquito",
+      "purpose": "Proponemos explorar el calor y el frío con objetos de la casa, sin fuego. Un adulto prepara el agua tibia y acompaña; pregunten qué siente y qué cree que pasa.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Qué se siente más frío?",
+          "steps": [
+            "Tocá con la mano objetos que estén en la misma habitación: una cuchara de metal, una de madera, un vaso de vidrio y una tela.",
+            "Ordenalos del que se siente más frío al que se siente menos frío.",
+            "Charlá con un adulto: si están en el mismo lugar, ¿por qué se sienten distinto?",
+            "Anotá tu orden."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "hacer",
+          "title": "El cubito que se derrite",
+          "steps": [
+            "Poné un cubito de hielo en un plato al sol o cerca de la estufa, sin tocarla, con un adulto.",
+            "Poné otro cubito igual en un plato a la sombra.",
+            "Mirá cada cinco minutos cuál se derrite más rápido.",
+            "Anotá lo que pasa."
+          ],
+          "table": {
+            "cols": [
+              "Minutos",
+              "Cubito al calor",
+              "Cubito a la sombra"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Frío o caliente",
+          "steps": [
+            "Una persona esconde un objeto en la casa.",
+            "Quien lo busca camina y el otro le dice: frío si está lejos, tibio si se acerca y caliente si está muy cerca.",
+            "Cuando lo encuentra, cambian de rol.",
+            "Jueguen tres rondas y anoten cuánto tardó cada uno."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo notar que algunos materiales se sienten más fríos que otros.",
+        "Puedo contar qué le pasa al hielo cuando hay calor.",
+        "Puedo registrar cambios mirando cada cierto tiempo."
+      ]
+    }
+  ],
+  "30": [
+    {
+      "title": "Mi paisaje y la rosa de los vientos",
+      "purpose": "Vamos a mirar el paisaje de la zona y a ubicarnos con los puntos cardinales. Acompañen la salida y ayuden a encontrar por dónde sale el sol, sin dar la respuesta enseguida.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Por dónde sale el sol?",
+          "steps": [
+            "A la mañana temprano, con un adulto, mirá por dónde aparece el sol.",
+            "Ese lado es el este: marcalo con una piedra o una ramita en el patio.",
+            "Parado mirando al este, tu espalda está al oeste, tu mano izquierda al norte y tu derecha al sur.",
+            "Anotá qué hay hacia cada lado de tu casa."
+          ],
+          "table": {
+            "cols": [
+              "Punto cardinal",
+              "¿Qué hay para ese lado?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Búsqueda del tesoro cardinal",
+          "steps": [
+            "Un adulto esconde un objeto en el patio o la casa.",
+            "Te da pistas solo con puntos cardinales y pasos: tres pasos al norte, dos al este.",
+            "Seguí las pistas hasta encontrar el tesoro.",
+            "Después escondés vos y das las pistas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Postal de mi paisaje",
+          "steps": [
+            "Mirá el paisaje desde tu ventana o desde una loma.",
+            "Dibujá lo que ves: meseta, río, bardas, casas, caminos, nieve o animales.",
+            "Escribí qué elementos son naturales y cuáles hicieron las personas."
+          ],
+          "draw": "Dibujá tu paisaje como una postal.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar el este mirando por dónde sale el sol.",
+        "Puedo ubicar los cuatro puntos cardinales.",
+        "Puedo describir los elementos del paisaje donde vivo."
+      ]
+    },
+    {
+      "title": "Paisajes de Santa Cruz",
+      "purpose": "Esta ficha compara paisajes de la provincia: meseta, cordillera, costa y glaciares. Conversen sobre lugares que conocen o de los que escucharon hablar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Lugares que conocemos",
+          "steps": [
+            "Preguntá a tu familia qué lugares de Santa Cruz conocen o de cuáles escucharon hablar.",
+            "Pregunten cómo es cada lugar: si hay montañas, mar, lagos, hielo o meseta.",
+            "Anotá tres lugares y cómo es su paisaje."
+          ],
+          "table": {
+            "cols": [
+              "Lugar",
+              "¿Cómo es el paisaje?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Memoria de paisajes",
+          "steps": [
+            "Recorten 12 cartas de papel del mismo tamaño.",
+            "Dibujen de a pares el mismo elemento: meseta, lago, glaciar, mar, montaña y río.",
+            "Mezclen y pongan las cartas boca abajo.",
+            "Por turno, den vuelta dos cartas: si son iguales, se las quedan y dicen un lugar donde se ve eso.",
+            "Gana quien junta más pares."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Maqueta en la bandeja",
+          "steps": [
+            "Con arena o tierra húmeda en una bandeja, armá un paisaje de la provincia.",
+            "Usá piedras para la cordillera, un papel azul o agua para un lago y ramitas para los arbustos.",
+            "Marcá con papelitos dónde quedan el norte, el sur, el este y el oeste.",
+            "Mostrale la maqueta a alguien de tu familia y explicala."
+          ],
+          "draw": "Dibujá cómo quedó tu maqueta vista desde arriba."
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar distintos paisajes de Santa Cruz.",
+        "Puedo diferenciar meseta, cordillera, costa y lagos.",
+        "Puedo marcar los puntos cardinales en un dibujo o maqueta."
+      ]
+    }
+  ],
+  "31": [
+    {
+      "title": "¿Quién come a quién?",
+      "purpose": "Proponemos armar cadenas alimentarias con animales y plantas de la zona. Pueden ayudar a nombrar animales, pero dejen que el chico o la chica arme las relaciones.",
+      "blocks": [
+        {
+          "kind": "creo",
+          "title": "Mi cadena patagónica",
+          "steps": [
+            "Pensá en un animal de la zona y averiguá qué come.",
+            "Buscá también quién se lo come a él, si es que alguien lo come.",
+            "Dibujá la cadena con flechas que vayan del que es comido al que come.",
+            "Empezá siempre por una planta."
+          ],
+          "draw": "Dibujá tu cadena alimentaria con flechas.",
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "El ovillo de la naturaleza",
+          "steps": [
+            "Cada jugador elige ser un ser vivo: pasto, coirón, guanaco, liebre, zorro, puma o choique.",
+            "El pasto empieza con un ovillo de hilo en la mano.",
+            "Le pasa el hilo a quien lo come, y así siguen formando una red.",
+            "Al final, si alguien suelta el hilo, miren qué pasa con la red.",
+            "Charlen: ¿qué pasaría si se acaba el pasto?"
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Preguntas al que sabe",
+          "steps": [
+            "Preguntá a alguien que trabaje o haya trabajado en el campo qué come el zorro, el puma o el cóndor.",
+            "Preguntale si alguna vez vio a un animal cazando o comiendo.",
+            "Anotá lo que te contó."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar una cadena alimentaria que empieza con una planta.",
+        "Puedo contar quién come a quién entre animales de la zona.",
+        "Puedo explicar por qué todos los seres vivos de una cadena están conectados."
+      ]
+    },
+    {
+      "title": "Agua limpia y manos limpias",
+      "purpose": "Esta ficha trabaja la higiene y el cuidado del agua potable. Acompañen la observación en casa y conversen sobre por qué estas costumbres nos cuidan.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿De dónde viene el agua de casa?",
+          "steps": [
+            "Preguntá a un adulto de dónde viene el agua que sale de la canilla.",
+            "Averiguá si en tu casa se toma de la canilla, de bidón o si se hierve antes.",
+            "Recorré la casa y anotá en qué lugares se usa agua."
+          ],
+          "table": {
+            "cols": [
+              "Lugar de la casa",
+              "¿Para qué usamos el agua?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "El lavado de manos con harina",
+          "steps": [
+            "Poné un poquito de harina o de yerba en las manos y frotalas: imaginá que son microbios.",
+            "Lavate primero solo con agua y mirá qué queda.",
+            "Lavate otra vez con jabón, frotando palmas, dorsos, entre los dedos y uñas.",
+            "Contá despacio hasta veinte mientras frotás y compará el resultado."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Bingo de la higiene",
+          "steps": [
+            "Cada jugador dibuja en un papel una grilla de tres por tres.",
+            "En cada cuadrito escribe una acción: lavarse las manos, cepillarse los dientes, cerrar la canilla, bañarse y otras.",
+            "Un adulto dice acciones en voz alta y cada uno tapa con un poroto las que tiene.",
+            "Gana quien completa una línea y dice cuándo hace esa acción."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar de dónde viene el agua que tomamos.",
+        "Puedo lavarme las manos bien y explicar por qué.",
+        "Puedo nombrar costumbres que cuidan mi salud y el agua."
+      ]
+    }
+  ],
+  "32": [
+    {
+      "title": "El agua cambia de forma",
+      "purpose": "Vamos a observar cómo el agua pasa de líquida a sólida y de sólida a líquida, y cómo se evapora. Un adulto acompaña con el freezer y los recipientes.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Del vaso al freezer y vuelta",
+          "steps": [
+            "Con un adulto, llená una cubetera o un vasito con agua y marcá con una cinta hasta dónde llega.",
+            "Ponelo en el freezer y miralo al otro día.",
+            "Fijate si cambió la altura o la forma del agua.",
+            "Sacalo y dejalo afuera hasta que se derrita, mirando cada tanto."
+          ],
+          "draw": "Dibujá el vasito antes, congelado y derretido.",
+          "lines": 2
+        },
+        {
+          "kind": "investigo",
+          "title": "El charco que desaparece",
+          "steps": [
+            "Un día de sol, mojá con agua una piedra lisa o una baldosa.",
+            "Marcá con tiza el borde de la mancha de agua.",
+            "Volvé cada diez minutos y marcá de nuevo.",
+            "Anotá qué pasa con la mancha."
+          ],
+          "table": {
+            "cols": [
+              "Minutos",
+              "¿Cómo está la mancha?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Sólido, líquido o gaseoso",
+          "steps": [
+            "Una persona dice sólido, líquido o vapor, y todos se mueven como el agua en ese estado.",
+            "Sólido: quietos y juntos. Líquido: se mueven despacio y se deslizan. Vapor: se mueven rápido y separados.",
+            "Quien se equivoca de movimiento da la próxima orden.",
+            "Al final, charlen qué hace pasar el agua de un estado a otro."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar qué pasa con el agua cuando se congela y cuando se derrite.",
+        "Puedo explicar que el agua del charco se evapora.",
+        "Puedo nombrar los estados del agua."
+      ]
+    },
+    {
+      "title": "Separadores profesionales",
+      "purpose": "Esta ficha propone separar mezclas con herramientas de la cocina. Ayuden a conseguir los materiales y dejen que elija qué herramienta usar.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Tamizo y filtro",
+          "steps": [
+            "Mezclá en un recipiente arena, piedritas y un poco de yerba seca.",
+            "Pasala por un colador y mirá qué queda arriba y qué pasa.",
+            "Ahora mezclá arena con agua y pasala por un filtro de café o una servilleta de papel dentro de un embudo.",
+            "Anotá qué herramienta sirvió para cada mezcla."
+          ],
+          "table": {
+            "cols": [
+              "Mezcla",
+              "Herramienta",
+              "¿Qué quedó separado?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "La sal escondida",
+          "steps": [
+            "Con un adulto, disolvé una cucharada de sal en un poco de agua en un plato playo.",
+            "Dejá el plato al sol o en un lugar cálido varios días.",
+            "Miralo todos los días y anotá lo que ves.",
+            "Al final, fijate qué quedó en el plato."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "El desafío del separador",
+          "steps": [
+            "Un adulto mezcla en un plato porotos, arroz y lentejas.",
+            "Cada jugador tiene un minuto para separar lo más que pueda con los dedos o una cuchara.",
+            "Cuenten cuántos porotos separó cada uno.",
+            "Piensen juntos: ¿qué herramienta de la cocina lo haría más rápido?"
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo elegir una herramienta para separar una mezcla.",
+        "Puedo explicar cómo recuperar la sal del agua.",
+        "Puedo contar la diferencia entre colar y filtrar."
+      ]
+    }
+  ],
+  "33": [
+    {
+      "title": "El teléfono de vasos",
+      "purpose": "Proponemos descubrir que el sonido se produce cuando algo vibra y que viaja por distintos materiales. Ayuden a armar el teléfono y a hacer los agujeritos.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armo mi teléfono",
+          "steps": [
+            "Con un adulto, hacé un agujerito en el fondo de dos vasos de plástico o latas sin filo.",
+            "Pasá un hilo largo por los agujeros y hacé un nudo adentro de cada vaso.",
+            "Alejate hasta que el hilo quede tirante y hablá despacito dentro de un vaso.",
+            "Probá con el hilo flojo y después tirante, y compará."
+          ],
+          "table": {
+            "cols": [
+              "Cómo estaba el hilo",
+              "¿Se escuchaba bien?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "Sonidos que vibran",
+          "steps": [
+            "Poné la mano en tu garganta y decí aaaa: ¿qué sentís?",
+            "Estirá una bandita elástica entre los dedos y hacela sonar: mirala.",
+            "Golpeá una olla con una cuchara de madera y tocala suavemente.",
+            "Escribí qué tienen en común los tres sonidos."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Orquesta casera",
+          "steps": [
+            "Armen instrumentos con lo que haya: vasos con distinta cantidad de agua, una caja con banditas, un frasco con porotos.",
+            "Cada uno elige un instrumento y descubre cómo hacerlo sonar.",
+            "Una persona dirige: cuando levanta la mano tocan fuerte, cuando la baja tocan suave.",
+            "Después prueben sonidos agudos y graves con los vasos de agua."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar que el sonido se produce cuando algo vibra.",
+        "Puedo contar que el sonido viaja por el hilo tirante.",
+        "Puedo hacer sonidos fuertes y suaves, agudos y graves."
+      ]
+    },
+    {
+      "title": "Calor que viaja",
+      "purpose": "Esta ficha explora cómo el calor pasa de un objeto a otro y qué materiales lo conducen mejor. Un adulto prepara el agua caliente de la canilla y cuida que nadie se queme.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Cucharas en agua tibia",
+          "steps": [
+            "Un adulto pone agua caliente de la canilla en una taza.",
+            "Metan al mismo tiempo una cuchara de metal, una de madera y una de plástico.",
+            "Esperen dos minutos y toquen con cuidado la punta de arriba de cada una.",
+            "Anotá cuál se calentó más."
+          ],
+          "table": {
+            "cols": [
+              "Cuchara",
+              "¿Se calentó arriba?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Para no quemarnos",
+          "steps": [
+            "Charlá con un adulto: ¿por qué las ollas tienen mangos de madera o plástico?",
+            "¿Por qué usamos guantes, gorro y medias de lana en invierno?",
+            "Escribí dos ideas que salieron de la charla."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "Escuchá y adiviná",
+          "steps": [
+            "Una persona cierra los ojos.",
+            "Otra hace un sonido con algo de la casa: un papel que se arruga, una llave, agua que cae.",
+            "Quien tiene los ojos cerrados adivina qué fue y qué estaba vibrando.",
+            "Cada acierto vale una tapita; gana quien junta más en cinco rondas."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar materiales que conducen bien el calor.",
+        "Puedo explicar por qué algunos mangos son de madera o plástico.",
+        "Puedo reconocer sonidos y decir qué los produce."
+      ]
+    }
+  ],
+  "34": [
+    {
+      "title": "Diario del cielo",
+      "purpose": "Vamos a observar el cielo durante una semana y registrar el tiempo y la Luna. Recuerden juntos mirar a la misma hora y conversen sobre los cambios.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Una semana mirando el cielo",
+          "steps": [
+            "Todos los días, a la misma hora, salí a mirar el cielo con un adulto.",
+            "Anotá si hay sol, nubes, viento, lluvia o nieve.",
+            "Si podés, a la noche mirá la Luna y dibujá su forma en un papel aparte.",
+            "Al final de la semana contá qué tiempo hubo más veces."
+          ],
+          "table": {
+            "cols": [
+              "Día",
+              "¿Cómo estaba el cielo?",
+              "¿Había viento?"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Mi veleta de papel",
+          "steps": [
+            "Atá una tira de bolsa de nylon o de papel a una ramita.",
+            "Salí al patio y levantala alto.",
+            "Fijate hacia dónde se mueve la tira y si se mueve mucho o poco.",
+            "Usá el este que marcaste por la salida del sol para decir de dónde viene el viento."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Adivinanzas del tiempo",
+          "steps": [
+            "Por turno, cada uno describe un fenómeno sin nombrarlo: cae del cielo, es blanca y fría.",
+            "Los demás tratan de adivinar: lluvia, nieve, granizo, viento, niebla, arco iris o helada.",
+            "Quien adivina inventa la próxima adivinanza.",
+            "Escriban la adivinanza que más les gustó."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo registrar el tiempo durante varios días.",
+        "Puedo saber hacia dónde sopla el viento.",
+        "Puedo describir fenómenos como la lluvia, la nieve y la helada."
+      ]
+    },
+    {
+      "title": "Sombras y Sol",
+      "purpose": "Esta ficha propone descubrir que el Sol parece moverse en el cielo usando sombras. Acompañen las mediciones del día y ayuden con la linterna.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "La sombra del palito",
+          "steps": [
+            "Clavá un palito derecho en la tierra en un lugar con sol.",
+            "A la mañana, al mediodía y a la tarde, marcá con una piedrita dónde termina la sombra.",
+            "Medí con pasos de pie o con una regla cuánto mide la sombra cada vez.",
+            "Anotá los datos y fijate hacia dónde se movió."
+          ],
+          "table": {
+            "cols": [
+              "Hora",
+              "¿Cuánto mide la sombra?",
+              "¿Hacia dónde apunta?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Sol de linterna",
+          "steps": [
+            "En una habitación oscura, poné un muñeco parado sobre la mesa.",
+            "Con una linterna, iluminalo desde bien bajito, como el sol al amanecer.",
+            "Subí la linterna de a poco hasta que quede arriba del muñeco.",
+            "Mirá qué pasa con el largo de la sombra."
+          ],
+          "draw": "Dibujá la sombra con la linterna baja y con la linterna alta."
+        },
+        {
+          "kind": "juego",
+          "title": "Pisá mi sombra",
+          "steps": [
+            "Salgan al patio en un día de sol.",
+            "Una persona persigue a las demás y trata de pisarles la sombra.",
+            "Quien tiene la sombra pisada pasa a perseguir.",
+            "Después prueben: ¿se puede esconder la sombra? ¿Dónde?"
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar que la sombra cambia durante el día.",
+        "Puedo contar que la sombra es más larga cuando el Sol está bajo.",
+        "Puedo hacer sombras con una linterna."
+      ]
+    }
+  ],
+  "35": [
+    {
+      "title": "Animales de acá y de allá",
+      "purpose": "Proponemos comparar seres vivos de la Patagonia con los de otras regiones y pensar cómo sus cuerpos les sirven para vivir donde viven. Conversen y ayuden a recordar animales conocidos.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Primos lejanos",
+          "steps": [
+            "Charlá con un adulto: el guanaco vive acá; ¿qué animal parecido vive en el norte de Argentina?",
+            "Hablen también del choique y el ñandú, y del pingüino y otras aves.",
+            "Anotá un animal de acá y uno parecido de otra región, y en qué se diferencian."
+          ],
+          "table": {
+            "cols": [
+              "Animal de acá",
+              "Animal de otra región",
+              "Una diferencia"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Memoria de ambientes",
+          "steps": [
+            "Recorten 12 cartas de papel.",
+            "En seis cartas dibujen animales y en las otras seis el ambiente donde viven: selva, mar, meseta, montaña, río y desierto.",
+            "Pongan las cartas boca abajo y den vuelta dos por turno.",
+            "Si el animal y su ambiente coinciden, se quedan con el par.",
+            "Gana quien junta más pares."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Un animal inventado",
+          "steps": [
+            "Inventá un animal que pueda vivir en la meseta con viento y frío.",
+            "Pensá qué cubierta tendría su cuerpo, cómo se movería y qué comería.",
+            "Dibujalo y escribí por qué tiene esas partes."
+          ],
+          "draw": "Dibujá tu animal inventado en la meseta.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar animales de la Patagonia con los de otras regiones.",
+        "Puedo explicar cómo el cuerpo de un animal le sirve para su ambiente.",
+        "Puedo relacionar animales con los lugares donde viven."
+      ]
+    },
+    {
+      "title": "Plantas que resisten",
+      "purpose": "La ficha trabaja cómo las plantas de la zona se adaptan al viento, el frío y la poca agua, y las compara con plantas de otros lugares. Acompañen la salida y la charla.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Plantas del barrio y de la casa",
+          "steps": [
+            "Buscá tres plantas que crecen solas en el campo o el baldío, como el coirón, el calafate o la mata negra.",
+            "Buscá también dos plantas de maceta de tu casa o de la escuela.",
+            "Fijate el tamaño, las hojas y si tienen espinas.",
+            "Completá la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Planta",
+              "¿Dónde crece?",
+              "¿Cómo son sus hojas?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La carta más alta",
+          "steps": [
+            "Hagan cartas de papel con plantas y animales y anoten en cada una un número del 1 al 10 según qué tan bien aguanta el frío, según lo que sepan.",
+            "Repartan las cartas boca abajo.",
+            "Por turno, cada uno da vuelta una carta y gana la ronda quien tiene el número más alto.",
+            "Antes de llevarse las cartas, el ganador dice por qué ese ser vivo aguanta el frío."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Plantas de antes",
+          "steps": [
+            "Preguntá a un abuelo o a un vecino qué plantas de la zona se usaban para comer o para teñir lana.",
+            "Preguntá también si conocen la leyenda del calafate.",
+            "Anotá lo que te contaron."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar plantas de la zona.",
+        "Puedo contar cómo las plantas de la meseta aguantan el viento y el frío.",
+        "Puedo comparar plantas de acá con plantas de otros lugares."
+      ]
+    }
+  ],
+  "36": [
+    {
+      "title": "Mi primer informe científico",
+      "purpose": "Proponemos hacer un pequeño experimento y escribir un informe como hacen los científicos: pregunta, lo que creo, lo que hice y lo que pasó. Ayuden a escribir, pero las ideas son del chico o la chica.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Qué le pasa al pan?",
+          "steps": [
+            "Con un adulto, dejá una rodaja de pan al aire en un plato y otra guardada en una bolsa cerrada.",
+            "Miralas todos los días durante tres días sin tocarlas con la mano.",
+            "Fijate si se ponen duras, blandas o cambian de color.",
+            "Al terminar, un adulto tira el pan sin abrir la bolsa."
+          ],
+          "table": {
+            "cols": [
+              "Día",
+              "Pan al aire",
+              "Pan en bolsa"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Escribo el informe",
+          "steps": [
+            "Escribí la pregunta que quisiste responder.",
+            "Contá qué creías que iba a pasar.",
+            "Contá qué hiciste y qué pasó de verdad.",
+            "Terminá con lo que aprendiste."
+          ],
+          "lines": 6
+        },
+        {
+          "kind": "juego",
+          "title": "El científico dice",
+          "steps": [
+            "Por turno, un jugador dice una transformación: el hielo se derrite, el pan se pone duro, la manteca se ablanda.",
+            "Los demás levantan una mano si se puede volver atrás y dos manos si no se puede.",
+            "Si no se ponen de acuerdo, cada uno explica su idea.",
+            "Ganan una tapita quienes acertaron."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo hacer una pregunta y un experimento para responderla.",
+        "Puedo escribir un informe con lo que hice y lo que pasó.",
+        "Puedo diferenciar cambios que se pueden volver atrás y otros que no."
+      ]
+    },
+    {
+      "title": "Materiales que se transforman",
+      "purpose": "Esta ficha busca transformaciones de materiales en la casa: masa que se hornea, hielo que se derrite, papel que se moja. Un adulto ayuda en la cocina y en las preguntas.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Cazadores de transformaciones",
+          "steps": [
+            "Durante una semana, mirá qué materiales cambian en tu casa.",
+            "Pueden ser la masa del pan, el hielo, la ropa mojada, la manteca o la leche.",
+            "Anotá qué material cambió, cómo era antes y cómo quedó."
+          ],
+          "table": {
+            "cols": [
+              "Material",
+              "Antes",
+              "Después"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Entrevista en la cocina",
+          "steps": [
+            "Preguntá a quien cocina en tu casa: ¿qué le pasa a la masa cuando la horneás?",
+            "¿Se puede volver a tener masa cruda después de hornear?",
+            "¿Qué otro alimento cambia cuando se cocina?",
+            "Anotá las respuestas."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "Dominó de antes y después",
+          "steps": [
+            "Recorten 10 cartas de papel y dividan cada una en dos mitades con una raya.",
+            "En una mitad dibujen un material antes y en otra mitad de otra carta, después: masa y pan, agua y hielo, uva y pasa.",
+            "Repartan las cartas y jueguen como al dominó, uniendo cada antes con su después.",
+            "Gana quien se queda primero sin cartas."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar materiales que cambian en mi casa.",
+        "Puedo contar cómo era un material antes y después del cambio.",
+        "Puedo registrar observaciones en una tabla."
+      ]
+    }
+  ],
+  "37": [
+    {
+      "title": "Festival de experimentos",
+      "purpose": "Proponemos tres experimentos sencillos con luz, sonido y calor para hacer en familia. Un adulto acompaña siempre y ayuda a anotar.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Teatro de sombras",
+          "steps": [
+            "En una pieza oscura, apuntá una linterna a la pared.",
+            "Poné las manos entre la linterna y la pared y formá animales: un guanaco, un zorro, un pájaro.",
+            "Acercá y alejá las manos de la linterna y mirá qué pasa con la sombra.",
+            "Probá poner un vaso de vidrio, un papel y un cartón: ¿cuál deja pasar la luz?"
+          ],
+          "table": {
+            "cols": [
+              "Objeto",
+              "¿Deja pasar la luz?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "Sonido que viaja por la mesa",
+          "steps": [
+            "Apoyá la oreja sobre una mesa de madera.",
+            "Pedile a alguien que raspe suavemente el otro extremo con una uña.",
+            "Después escuchá el mismo raspado sin apoyar la oreja.",
+            "Escribí cuándo se escucha mejor."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "La carrera del hielo",
+          "steps": [
+            "Cada jugador recibe un cubito de hielo en un plato.",
+            "Sin usar fuego ni la boca, cada uno elige un lugar de la casa para que se derrita rápido.",
+            "Miren el reloj y gana el cubito que se derrite primero.",
+            "Charlen qué lugares tenían más calor."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo hacer sombras y saber qué objetos dejan pasar la luz.",
+        "Puedo contar que el sonido viaja a través de la madera.",
+        "Puedo explicar por qué algunos lugares derriten antes el hielo."
+      ]
+    },
+    {
+      "title": "Científicos en la estancia",
+      "purpose": "Esta ficha integra luz, sonido y calor con situaciones de la vida en el campo y el barrio. Acompañen las observaciones y ayuden a pensar explicaciones.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Luz, sonido y calor a mi alrededor",
+          "steps": [
+            "Recorré la casa o el campo con un adulto.",
+            "Buscá cosas que den luz, cosas que hagan sonido y cosas que den calor.",
+            "Anotalas en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Da luz",
+              "Hace sonido",
+              "Da calor"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "¿Qué abriga más?",
+          "steps": [
+            "Con un adulto, llená dos frascos iguales con agua tibia de la canilla.",
+            "Envolvé uno con un pulóver de lana o un trapo y dejá el otro sin nada.",
+            "Después de media hora, tocá el agua de los dos.",
+            "Escribí cuál se mantuvo más tibio y por qué creés que pasó."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Ronda de explicaciones",
+          "steps": [
+            "Una persona hace una pregunta: ¿por qué los corderos tienen lana? ¿Por qué el trueno se escucha después del rayo?",
+            "Cada jugador da su idea, aunque no esté seguro.",
+            "Entre todos eligen la idea más convincente y la anotan.",
+            "Después la comparan con lo que sabe un adulto o la maestra."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar fuentes de luz, sonido y calor.",
+        "Puedo explicar por qué la lana abriga.",
+        "Puedo dar mis ideas para explicar lo que pasa."
+      ]
+    }
+  ],
+  "38": [
+    {
+      "title": "Reloj de sol en el patio",
+      "purpose": "Vamos a usar el Sol para ubicarnos y para medir el paso del día. Acompañen las salidas al patio y ayuden con la hora del reloj.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armo un reloj de sol",
+          "steps": [
+            "Clavá un palo derecho en el patio, en un lugar donde dé sol todo el día.",
+            "Cada una hora, con un adulto, poné una piedra donde termina la sombra y escribí la hora en un papelito.",
+            "Al día siguiente, fijate si la sombra pasa por las mismas piedras a la misma hora.",
+            "Dibujá cómo quedó tu reloj."
+          ],
+          "draw": "Dibujá tu reloj de sol con las piedras y las horas."
+        },
+        {
+          "kind": "juego",
+          "title": "Brújula humana",
+          "steps": [
+            "Marquen con papeles en el piso los cuatro puntos cardinales, usando el este del amanecer.",
+            "Un jugador queda en el centro y otro dice: mirá al norte, girá al oeste, caminá dos pasos al sur.",
+            "Si se equivoca, cambian de rol.",
+            "Para hacerlo más difícil, agreguen: mirá hacia donde se pone el sol."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Días largos y días cortos",
+          "steps": [
+            "Preguntá a tu familia: ¿cuándo oscurece más temprano, en invierno o en verano?",
+            "Preguntá cómo cambia el trabajo en la estancia o en casa según la estación.",
+            "Anotá lo que te contaron."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo usar la sombra del Sol para seguir el paso del día.",
+        "Puedo ubicar los puntos cardinales en el patio.",
+        "Puedo explicar que en invierno los días son más cortos."
+      ]
+    },
+    {
+      "title": "Meteorólogos de la meseta",
+      "purpose": "Esta ficha propone registrar el tiempo y la Luna durante un tiempo para descubrir que hay ciclos. Recuerden juntos mirar el cielo y anotar.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "La Luna cambia",
+          "steps": [
+            "Durante dos semanas, mirá la Luna a la noche o a la tarde cuando se vea.",
+            "Cada tres o cuatro días, dibujá su forma en la tabla.",
+            "Si hay nubes, escribí que no se vio.",
+            "Al final contá si se fue agrandando o achicando."
+          ],
+          "table": {
+            "cols": [
+              "Fecha",
+              "Forma de la Luna"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Medidor de lluvia y nieve",
+          "steps": [
+            "Con un adulto, cortá una botella de plástico por la mitad sin filo y poné la parte de arriba dada vuelta como embudo.",
+            "Pegale una tira de papel con rayitas hechas con regla.",
+            "Dejala en el patio, lejos de techos y árboles.",
+            "Después de llover o nevar, mirá hasta qué rayita llegó el agua."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "El pronóstico",
+          "steps": [
+            "Cada noche, cada integrante de la familia anota qué tiempo cree que hará mañana: sol, nubes, viento, lluvia o nieve.",
+            "Al otro día, miren el cielo y comparen.",
+            "Quien acierta suma un poroto.",
+            "Después de una semana, gana quien tenga más porotos."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo dibujar cómo cambia la forma de la Luna.",
+        "Puedo medir la lluvia o la nieve con mi medidor.",
+        "Puedo anticipar el tiempo mirando el cielo."
+      ]
+    }
+  ]
+}

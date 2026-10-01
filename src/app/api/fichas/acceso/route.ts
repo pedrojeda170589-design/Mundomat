@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   const student = await studentForFichas(code?.trim());
   if (!student) {
     return Response.json(
-      { error: "Ese código no es válido o la prueba ya terminó." },
+      { error: "Ese código no es válido. Las fichas son para los alumnos de las aulas de MundoTest26 (no están incluidas en la prueba)." },
       { status: 403 }
     );
   }

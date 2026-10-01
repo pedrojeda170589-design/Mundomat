@@ -1,0 +1,1237 @@
+{
+  "15": [
+    {
+      "title": "Cazadores de rimas en la cocina",
+      "purpose": "Esta ficha refuerza las rimas, las adivinanzas y los trabalenguas jugando en voz alta. Acompañen escuchando y animando; no importa equivocarse, importa jugar con los sonidos.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Cadena de rimas",
+          "steps": [
+            "Siéntense en ronda con la familia.",
+            "Uno dice una palabra, por ejemplo \"mate\".",
+            "El siguiente dice otra que termine igual, como \"chocolate\".",
+            "Quien no encuentra rima en cinco segundos inventa una palabra divertida y sigue el juego.",
+            "Anoten las mejores cadenas en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Palabra inicial",
+              "Rimas que encontramos"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "Coplas y adivinanzas de la familia",
+          "steps": [
+            "Preguntale a un abuelo, abuela o adulto si sabe una copla, adivinanza o trabalenguas de cuando era chico.",
+            "Pedile que te la diga despacio y repetila hasta aprenderla.",
+            "Escribila con su ayuda en los renglones.",
+            "Preguntale dónde y de quién la aprendió."
+          ],
+          "lines": 5
+        },
+        {
+          "kind": "creo",
+          "title": "Mi adivinanza patagónica",
+          "steps": [
+            "Elegí un animal o una cosa de tu lugar: guanaco, choique, oveja, viento o nieve.",
+            "Pensá tres pistas sin decir su nombre.",
+            "Hacé que la última palabra de dos pistas rime.",
+            "Decísela a alguien de tu casa y fijate si la adivina."
+          ],
+          "draw": "Dibujá la respuesta de tu adivinanza tapada con una solapa de papel.",
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar palabras que riman con otra.",
+        "Puedo aprender y decir una copla o adivinanza de mi familia.",
+        "Puedo inventar pistas para una adivinanza."
+      ]
+    },
+    {
+      "title": "Trabalenguas a toda velocidad",
+      "purpose": "Esta ficha trabaja la conciencia de los sonidos con trabalenguas, rimas y juegos orales. Ayuden a leer las consignas y jueguen juntos sin apurar.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Carrera de trabalenguas",
+          "steps": [
+            "Lean juntos este trabalenguas inventado: \"El guanaco Paco come pasto parco en el campo blanco\".",
+            "Cada jugador lo dice primero despacio y después rápido.",
+            "Otro jugador cuenta con los dedos cuántas veces se trabó.",
+            "Gana quien lo dice tres veces seguidas sin trabarse."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Fichero de palabras que suenan parecido",
+          "steps": [
+            "Cortá tiras de papel o cartón.",
+            "En cada tira escribí dos palabras que rimen, por ejemplo \"viento\" y \"cuento\".",
+            "Guardalas en un sobre o una caja.",
+            "Sumá una tira nueva cada día de la semana."
+          ],
+          "table": {
+            "cols": [
+              "Día",
+              "Palabra 1",
+              "Palabra 2 que rima"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "¿Qué juegos de palabras conocen en casa?",
+          "steps": [
+            "Preguntá en tu casa qué rondas, canciones de cuna o trabalenguas conocen.",
+            "Escuchá uno y pensá qué palabras riman en él.",
+            "Contá cuál te gustó más y por qué."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "creo",
+          "title": "Mi propio trabalenguas",
+          "steps": [
+            "Elegí un sonido que se repita, por ejemplo la \"r\" o la \"ch\".",
+            "Juntá palabras que lo tengan: choique, chico, charco, chancho.",
+            "Armá una frase corta usando muchas de esas palabras.",
+            "Probá decirla rápido y pedile a alguien que también lo intente."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo decir un trabalenguas cada vez más rápido.",
+        "Puedo juntar palabras que tienen el mismo sonido.",
+        "Puedo inventar una frase divertida para jugar con los sonidos."
+      ]
+    }
+  ],
+  "16": [
+    {
+      "title": "Lectores en familia",
+      "purpose": "Esta ficha invita a leer cuentos, fábulas o poesías en casa y conversar sobre ellos. Lean en voz alta con el chico o la chica y hagan preguntas abiertas, sin corregir cada palabra.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Leemos y charlamos",
+          "steps": [
+            "Elijan un cuento, una fábula o una poesía que tengan en casa o de la biblioteca de la escuela.",
+            "Léanlo en voz alta, turnándose un párrafo cada uno.",
+            "Conversen: ¿quién era el personaje que más les gustó y por qué?",
+            "Pregunten: ¿qué hubiera pasado si el final era distinto?"
+          ],
+          "table": {
+            "cols": [
+              "Título",
+              "Personaje favorito",
+              "Lo que más me gustó"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "¿Quién soy?",
+          "steps": [
+            "Cada jugador piensa en un personaje de un cuento que conozcan.",
+            "Los demás hacen preguntas que se contestan con sí o no.",
+            "Cada uno puede hacer hasta diez preguntas.",
+            "Quien adivina elige el próximo personaje."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Cambiamos el final",
+          "steps": [
+            "Pensá en el cuento que leyeron.",
+            "Imaginá un final nuevo, por ejemplo que pase en la meseta con nieve.",
+            "Dibujalo y escribí dos o tres oraciones."
+          ],
+          "draw": "Dibujá el nuevo final del cuento.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer un cuento junto a alguien de mi familia.",
+        "Puedo contar por qué me gusta un personaje.",
+        "Puedo imaginar otro final para una historia."
+      ]
+    },
+    {
+      "title": "La fábula del viento y el guanaco",
+      "purpose": "Esta ficha trabaja la lectura de fábulas y poesías y la idea de enseñanza o moraleja. Lean juntos el texto breve y conversen; dejen que el chico o la chica dé su opinión.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Leemos una fábula corta",
+          "steps": [
+            "Leé con un adulto: \"El viento se burlaba del guanaco porque era lento al subir la meseta. El guanaco no se enojó y siguió paso a paso. Cuando el viento se cansó y se calmó, el guanaco ya estaba arriba, mirando el río.\"",
+            "Volvé a leerla vos solo o sola en voz alta.",
+            "Marcá con el dedo las palabras que dicen qué hacía cada personaje.",
+            "Escribí con tus palabras qué enseña esta fábula."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "investigo",
+          "title": "Refranes y enseñanzas de la familia",
+          "steps": [
+            "Preguntale a un adulto de tu casa si conoce un refrán o un dicho con enseñanza.",
+            "Pedile que te explique qué quiere decir.",
+            "Anotalo en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Quién me lo contó",
+              "Refrán o dicho",
+              "Qué enseña"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Poesía con mímica",
+          "steps": [
+            "Busquen una poesía corta en un libro de la casa o de la escuela.",
+            "Uno la lee despacio y el otro hace los gestos con el cuerpo.",
+            "Después cambian de lugar.",
+            "Elijan juntos el gesto más divertido y repítanlo."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer una fábula y decir qué enseña.",
+        "Puedo preguntar a mi familia por refranes y entenderlos.",
+        "Puedo leer una poesía en voz alta con ganas."
+      ]
+    }
+  ],
+  "17": [
+    {
+      "title": "El cartel de mi casa",
+      "purpose": "Esta ficha refuerza la escritura de textos cortos con mayúscula al comenzar y punto al terminar. Ayuden a revisar, preguntando \"¿dónde empieza y dónde termina la oración?\" en lugar de corregir directamente.",
+      "blocks": [
+        {
+          "kind": "creo",
+          "title": "Un cartel de verdad",
+          "steps": [
+            "Pensá un cartel útil para tu casa, por ejemplo \"Cerrá la puerta, que entra el viento.\"",
+            "Escribilo primero en borrador.",
+            "Revisá que empiece con mayúscula y termine con punto.",
+            "Pasalo en limpio en una hoja y pegalo donde haga falta."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Caza de mayúsculas",
+          "steps": [
+            "Busquen un diario, una revista, un envase o un calendario.",
+            "Cada jugador tiene un minuto para encontrar palabras con mayúscula.",
+            "Por cada una explican por qué lleva mayúscula: nombre, comienzo de oración o lugar.",
+            "Gana quien encuentra más con buena explicación."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con mayúscula",
+              "¿Por qué la lleva?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "Escritura en la calle",
+          "steps": [
+            "Al salir con un adulto, mirá carteles del pueblo: almacén, escuela, ruta.",
+            "Elegí uno y copialo en tu cuaderno.",
+            "Fijate si tiene puntos o comas y contá cuántos."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo escribir una oración que empieza con mayúscula y termina con punto.",
+        "Puedo explicar por qué una palabra lleva mayúscula.",
+        "Puedo escribir un cartel útil para mi casa."
+      ]
+    },
+    {
+      "title": "La lista y el mensaje",
+      "purpose": "Esta ficha practica escribir listas y mensajes cortos usando comas y puntos. Acompañen leyendo en voz alta lo que el chico o la chica escribió, haciendo una pausa en cada coma y en cada punto.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Lista de las compras con comas",
+          "steps": [
+            "Preguntá en tu casa qué hace falta comprar o traer de la despensa.",
+            "Escribí una oración con la lista separada por comas, por ejemplo \"Necesitamos yerba, pan, leche y fideos.\"",
+            "Fijate que antes de la última cosa va \"y\" sin coma.",
+            "Leela en voz alta haciendo una pausa en cada coma."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Telegrama loco",
+          "steps": [
+            "Un jugador dice tres palabras sueltas, por ejemplo \"oveja, nieve, mate\".",
+            "El otro arma una oración corta que las use todas.",
+            "La escribe con mayúscula y punto.",
+            "Cambian de turno y gana la oración más graciosa."
+          ],
+          "table": {
+            "cols": [
+              "Palabras",
+              "Mi oración"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Mensajes que se escriben en casa",
+          "steps": [
+            "Preguntá a un adulto qué mensajes cortos escribe: notas, listas, avisos.",
+            "Pedile que te muestre uno.",
+            "Conversen para qué sirve cada signo: punto, coma, mayúscula."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Nota para alguien",
+          "steps": [
+            "Escribí una nota corta para alguien de tu familia, de dos o tres oraciones.",
+            "Dejala en un lugar donde la encuentre.",
+            "Esperá a que te conteste."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo separar con comas las cosas de una lista.",
+        "Puedo escribir una nota corta con mayúsculas y puntos.",
+        "Puedo leer haciendo pausas en las comas y los puntos."
+      ]
+    }
+  ],
+  "18": [
+    {
+      "title": "Tutti frutti de palabras",
+      "purpose": "Esta ficha refuerza sustantivos, adjetivos y verbos jugando y observando la casa. Jueguen juntos; si hay dudas, pregunten \"¿es una cosa, cómo es o qué hace?\".",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Tutti frutti gramatical",
+          "steps": [
+            "Cada jugador hace en una hoja la tabla de abajo.",
+            "Alguien dice una letra en voz alta.",
+            "Todos escriben un sustantivo, un adjetivo y un verbo que empiecen con esa letra.",
+            "El primero que completa grita \"¡Basta!\" y se cuentan los puntos: 10 por palabra correcta."
+          ],
+          "table": {
+            "cols": [
+              "Letra",
+              "Sustantivo",
+              "Adjetivo",
+              "Verbo"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Etiquetas en casa",
+          "steps": [
+            "Elegí cinco objetos de tu casa: mesa, pava, campera, ventana, gorro.",
+            "Escribí en un papelito el sustantivo y un adjetivo que lo describa.",
+            "Pegalos con cuidado en cada objeto por un día.",
+            "Pedile a alguien que agregue otro adjetivo distinto."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Qué hacemos en invierno?",
+          "steps": [
+            "Conversá con tu familia sobre lo que hacen en los días de frío y nieve.",
+            "Anotá los verbos que aparezcan: abrigarse, palear, tomar, calentar.",
+            "Elegí uno y escribí una oración con él."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer sustantivos, adjetivos y verbos.",
+        "Puedo describir objetos de mi casa con adjetivos.",
+        "Puedo encontrar verbos en una conversación."
+      ]
+    },
+    {
+      "title": "Palabras gemelas y palabras opuestas",
+      "purpose": "Esta ficha trabaja sinónimos y antónimos y repasa las clases de palabras. Ayuden a pensar con ejemplos de la vida diaria; varias respuestas pueden estar bien.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Memotest de opuestos",
+          "steps": [
+            "Cortá 12 cartas de papel del mismo tamaño.",
+            "Escribí 6 pares de opuestos, uno en cada carta: frío y caliente, alto y bajo, etc.",
+            "Mezclalas boca abajo y jueguen a dar vuelta dos por turno.",
+            "Si forman un par de opuestos, se las llevan; gana quien junta más."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "Palabras de la familia que dicen lo mismo",
+          "steps": [
+            "Preguntá a adultos de tu casa cómo dicen ciertas cosas: \"lindo\", \"enojado\", \"mucho frío\".",
+            "Anotá las palabras distintas que usan para decir lo mismo.",
+            "Esas palabras son sinónimos."
+          ],
+          "table": {
+            "cols": [
+              "Palabra",
+              "Sinónimo que usan en casa",
+              "Quién lo dijo"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El animal al revés",
+          "steps": [
+            "Elegí un animal de la Patagonia y escribí tres adjetivos que lo describan.",
+            "Ahora cambiá cada adjetivo por su opuesto.",
+            "Dibujá cómo sería ese animal al revés."
+          ],
+          "draw": "Dibujá el animal al revés.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar el opuesto de una palabra.",
+        "Puedo decir lo mismo con otra palabra parecida.",
+        "Puedo describir un animal con adjetivos."
+      ]
+    }
+  ],
+  "19": [
+    {
+      "title": "Leyendas que cuentan los abuelos",
+      "purpose": "Esta ficha refuerza las leyendas y la estructura inicio, nudo y desenlace. Ayuden a buscar a alguien que sepa una historia de la zona; si no conocen ninguna, sirve una historia familiar contada como leyenda.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Entrevista a un narrador",
+          "steps": [
+            "Preguntale a un abuelo, abuela o vecino si conoce una leyenda o historia antigua del lugar.",
+            "Pedile que te la cuente despacio.",
+            "Preguntale de quién la escuchó y hace cuánto tiempo.",
+            "Anotá las partes de la historia en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Parte",
+              "Qué pasa"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "¿Por qué se cuenta esta historia?",
+          "steps": [
+            "Conversen: ¿qué quiere explicar la leyenda: un lugar, un animal, una planta?",
+            "Pregunten si la historia cambió de una persona a otra.",
+            "Escribí con tus palabras qué explica."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Leyenda en tres manos",
+          "steps": [
+            "Un jugador inventa el inicio de una leyenda sobre algo del lugar, como el viento o el calafate.",
+            "El segundo cuenta el problema o nudo.",
+            "El tercero cuenta cómo se resuelve.",
+            "Al final, le ponen un título entre todos."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Historieta de la leyenda",
+          "steps": [
+            "Dividí el recuadro en tres viñetas.",
+            "Dibujá el inicio, el nudo y el desenlace de la leyenda que escuchaste.",
+            "Agregá globos de diálogo cortos."
+          ],
+          "draw": "Tres viñetas: inicio, nudo y desenlace."
+        }
+      ],
+      "selfCheck": [
+        "Puedo escuchar y registrar una leyenda que cuenta un adulto.",
+        "Puedo reconocer el inicio, el nudo y el desenlace de una historia.",
+        "Puedo contar una historia en viñetas de historieta."
+      ]
+    },
+    {
+      "title": "Historietas y desarmado de historias",
+      "purpose": "Esta ficha trabaja historietas y el orden de los hechos en una narración. Lean juntos alguna historieta o cuento que tengan, y dejen que el chico o la chica explique qué pasa en cada parte.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Mirada de historietista",
+          "steps": [
+            "Busquen una historieta en un diario, revista o libro de la casa o de la escuela.",
+            "Observá los globos: ¿cómo son cuando alguien habla, piensa o grita?",
+            "Contá cuántas viñetas tiene.",
+            "Registrá lo que descubriste."
+          ],
+          "table": {
+            "cols": [
+              "Tipo de globo",
+              "Cómo es",
+              "Para qué se usa"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Viñetas mezcladas",
+          "steps": [
+            "Dibujá en cuatro papelitos una historia muy simple, por ejemplo una oveja que se escapa y vuelve.",
+            "Mezclalos y dáselos a alguien de tu familia.",
+            "Esa persona los ordena y cuenta la historia.",
+            "Después cambian: la otra persona dibuja y vos ordenás."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La leyenda inventada del choique",
+          "steps": [
+            "Imaginá por qué el choique corre tan rápido.",
+            "Escribí un inicio, un problema y un final.",
+            "Contásela a alguien en voz alta."
+          ],
+          "lines": 6
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer los globos y viñetas de una historieta.",
+        "Puedo ordenar los hechos de una historia.",
+        "Puedo inventar una leyenda con inicio, nudo y desenlace."
+      ]
+    }
+  ],
+  "20": [
+    {
+      "title": "Detectives de libros",
+      "purpose": "Esta ficha refuerza las partes de un libro informativo: tapa, índice y contratapa. Busquen juntos libros, manuales o revistas en casa o en la biblioteca escolar.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Revisamos libros de verdad",
+          "steps": [
+            "Buscá dos libros o revistas informativas en tu casa o en la escuela.",
+            "Mirá la tapa: título, autor y editorial.",
+            "Buscá si tienen índice y en qué página está.",
+            "Leé la contratapa y contá de qué trata."
+          ],
+          "table": {
+            "cols": [
+              "Título",
+              "¿Tiene índice?",
+              "¿De qué trata según la contratapa?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Carrera del índice",
+          "steps": [
+            "Un adulto elige un tema que aparezca en el índice de un libro.",
+            "Lo dice en voz alta.",
+            "El chico o la chica busca la página usando el índice lo más rápido posible.",
+            "Repitan cinco veces y anoten cuántos segundos tardó cada vez."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi libro informativo de un animal",
+          "steps": [
+            "Doblá dos hojas por la mitad para armar un librito.",
+            "En la tapa escribí el título, por ejemplo \"El guanaco\", y tu nombre.",
+            "En la segunda hoja hacé un índice con dos o tres temas.",
+            "En la contratapa escribí una frase que invite a leerlo."
+          ],
+          "draw": "Diseñá aquí la tapa de tu librito."
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar la tapa, el índice y la contratapa de un libro.",
+        "Puedo usar el índice para buscar un tema.",
+        "Puedo armar un librito informativo con sus partes."
+      ]
+    },
+    {
+      "title": "Expertos en un tema del lugar",
+      "purpose": "Esta ficha trabaja la lectura y escritura de textos informativos sobre temas reales. Ayuden a buscar información en libros o preguntando a quien sepa; no hace falta internet.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Preguntamos a un experto de casa",
+          "steps": [
+            "Elegí un tema que alguien de tu familia conozca bien: la esquila, la lenga, el río Chico, la huerta.",
+            "Hacele tres preguntas: qué es, cómo es y para qué sirve.",
+            "Anotá las respuestas importantes."
+          ],
+          "table": {
+            "cols": [
+              "Pregunta",
+              "Respuesta"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Texto informativo de una cara",
+          "steps": [
+            "Con lo que averiguaste, escribí un título claro.",
+            "Escribí tres oraciones con datos, sin opiniones ni cuento.",
+            "Agregá un dibujo con una etiqueta que diga qué muestra."
+          ],
+          "draw": "Dibujo con etiquetas sobre tu tema.",
+          "lines": 4
+        },
+        {
+          "kind": "juego",
+          "title": "¿Dato o cuento?",
+          "steps": [
+            "Un jugador dice una oración sobre un animal o un lugar.",
+            "Puede ser un dato real o una oración de cuento, como \"El choique habla con la luna\".",
+            "Los demás dicen \"dato\" o \"cuento\" y explican por qué.",
+            "Suma un punto quien acierta."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo hacer preguntas para averiguar sobre un tema.",
+        "Puedo escribir un texto con información y no con cuento.",
+        "Puedo distinguir un dato de una parte de un cuento."
+      ]
+    }
+  ],
+  "21": [
+    {
+      "title": "Una carta de verdad",
+      "purpose": "Esta ficha refuerza la escritura de cartas y el uso de conectores (primero, después, entonces, finalmente). Si es posible, ayuden a entregar o enviar la carta a alguien real.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Cartas que hay en casa",
+          "steps": [
+            "Preguntá a un adulto si alguna vez escribió o recibió una carta.",
+            "Pedile que te cuente a quién y para qué.",
+            "Si tiene alguna guardada, mirá sus partes: lugar y fecha, saludo, cuerpo, despedida y firma."
+          ],
+          "lines": 2
+        },
+        {
+          "kind": "creo",
+          "title": "Escribo mi carta",
+          "steps": [
+            "Elegí a quién escribirle: un abuelo que vive lejos, un amigo o tu maestro.",
+            "Escribí arriba el lugar y la fecha, por ejemplo \"Gobernador Gregores, ...\".",
+            "Contale algo que te pasó usando \"primero\", \"después\" y \"finalmente\".",
+            "Cerrá con una despedida y tu firma.",
+            "Entregala en mano o mandala con alguien de tu familia."
+          ],
+          "lines": 6
+        },
+        {
+          "kind": "juego",
+          "title": "Cadena de conectores",
+          "steps": [
+            "En ronda, uno empieza una historia con \"Un día...\".",
+            "El siguiente sigue con \"Entonces...\", el otro con \"Después...\", y así.",
+            "Cada jugador agrega una sola oración.",
+            "Quien cierra dice \"Finalmente...\" y le pone fin."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer las partes de una carta.",
+        "Puedo escribir una carta para alguien real.",
+        "Puedo usar conectores para ordenar lo que cuento."
+      ]
+    },
+    {
+      "title": "La historieta de mi día",
+      "purpose": "Esta ficha trabaja la escritura de historietas propias y el orden de una narración con conectores. Conversen sobre algo que pasó en familia y ayuden a ordenarlo, sin escribir por el chico o la chica.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Recordamos un día especial",
+          "steps": [
+            "Conversá con tu familia sobre un día especial: una nevada, una salida al campo, una visita.",
+            "Ordenen juntos lo que pasó primero, después y al final.",
+            "Anotalo en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Conector",
+              "Lo que pasó"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi historieta",
+          "steps": [
+            "Dibujá cuatro viñetas con lo que pasó ese día.",
+            "Agregá globos de diálogo con lo que decía cada uno.",
+            "Abajo de cada viñeta escribí un cartel corto con un conector."
+          ],
+          "draw": "Cuatro viñetas de tu historieta."
+        },
+        {
+          "kind": "juego",
+          "title": "Correo de casa",
+          "steps": [
+            "Armá un buzón con una caja o un sobre grande.",
+            "Durante una semana, cada integrante de la familia deja un mensaje para otro.",
+            "Todos los mensajes llevan saludo, texto y firma.",
+            "El domingo abren el buzón y leen las cartas en voz alta."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo ordenar lo que pasó usando conectores.",
+        "Puedo contar una historia en viñetas con globos de diálogo.",
+        "Puedo escribir mensajes con saludo y firma."
+      ]
+    }
+  ],
+  "22": [
+    {
+      "title": "Laboratorio de prefijos",
+      "purpose": "Esta ficha refuerza los prefijos, la sílaba tónica y la concordancia jugando con palabras. Acompañen diciendo las palabras en voz alta para escuchar dónde suena más fuerte.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Fábrica de palabras",
+          "steps": [
+            "Escriban en papelitos los prefijos \"des\", \"re\" e \"in\".",
+            "En otros papelitos escriban palabras: hacer, abrigar, cómodo, armar, leer, feliz.",
+            "Cada jugador saca un prefijo y una palabra y prueba si forman una palabra que existe.",
+            "Si existe y explica qué significa, gana un punto."
+          ],
+          "table": {
+            "cols": [
+              "Prefijo",
+              "Palabra",
+              "Palabra nueva",
+              "Qué significa"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Palmas en la sílaba fuerte",
+          "steps": [
+            "Elegí nombres de personas de tu familia y de tus mascotas.",
+            "Decí cada nombre separándolo en sílabas con palmas.",
+            "En la sílaba que suena más fuerte, da una palmada más fuerte.",
+            "Subrayá esa sílaba al escribirlo."
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "investigo",
+          "title": "Concordancia en los envases",
+          "steps": [
+            "Buscá frases en envases o carteles: \"galletitas dulces\", \"leche entera\".",
+            "Fijate si el sustantivo y el adjetivo están los dos en singular o en plural.",
+            "Probá cambiar uno y escuchá cómo suena raro."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo formar palabras nuevas con prefijos.",
+        "Puedo encontrar la sílaba que suena más fuerte.",
+        "Puedo hacer coincidir sustantivo y adjetivo en número y género."
+      ]
+    },
+    {
+      "title": "El fichero ortográfico",
+      "purpose": "Esta ficha trabaja ortografía, sílaba tónica y concordancia con un fichero de palabras propio. Ayuden a revisar con el diccionario o el libro de lectura, sin dictar la respuesta.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armo mi fichero",
+          "steps": [
+            "Cortá tarjetas de cartón del mismo tamaño.",
+            "En cada una escribí una palabra que te cueste escribir.",
+            "Marcá con color la letra difícil y la sílaba tónica.",
+            "Ordenalas por orden alfabético en una caja."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Veo veo de sílabas",
+          "steps": [
+            "Un jugador mira algo de la casa y dice: \"Veo veo una cosa que tiene tres sílabas y la fuerte es la última\".",
+            "Los demás buscan qué puede ser, por ejemplo \"sillón\" o \"colchón\".",
+            "Quien acierta elige la próxima cosa.",
+            "Anoten las palabras que salieron."
+          ],
+          "table": {
+            "cols": [
+              "Palabra",
+              "Cantidad de sílabas",
+              "Sílaba tónica"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Palabras que cambian",
+          "steps": [
+            "Preguntale a un adulto por palabras que cambian si se les agrega algo: hacer y deshacer, leer y releer.",
+            "Conversen qué cambia en el significado.",
+            "Escribí dos ejemplos."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar un fichero con palabras difíciles.",
+        "Puedo contar las sílabas y encontrar la tónica.",
+        "Puedo explicar cómo cambia una palabra con un prefijo."
+      ]
+    }
+  ],
+  "23": [
+    {
+      "title": "Debate en la mesa",
+      "purpose": "Esta ficha refuerza opinar, dar razones y escuchar con respeto. Elijan un tema sencillo de la vida diaria y respeten los turnos: cada uno habla y los demás escuchan sin interrumpir.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Debate familiar",
+          "steps": [
+            "Elijan un tema: \"¿Es mejor el verano o el invierno en Gregores?\".",
+            "Cada integrante da su opinión con un \"porque\".",
+            "Usen un objeto, como una cuchara, para marcar quién tiene la palabra.",
+            "Al final, cada uno dice una razón del otro que le pareció buena."
+          ],
+          "table": {
+            "cols": [
+              "Quién",
+              "Opinión",
+              "Su razón"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Abogado del lado contrario",
+          "steps": [
+            "Un jugador dice una opinión, por ejemplo \"El mate es mejor que el té\".",
+            "El otro tiene que defender la opinión contraria con dos razones.",
+            "Después cambian de tema y de papel.",
+            "Gana un aplauso quien da la razón más convincente."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi opinión por escrito",
+          "steps": [
+            "Elegí uno de los temas que debatieron.",
+            "Escribí tu opinión empezando con \"Yo pienso que...\".",
+            "Agregá dos razones con \"porque\" y \"además\"."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo dar mi opinión con razones.",
+        "Puedo escuchar a otro sin interrumpir.",
+        "Puedo encontrar razones para una opinión distinta a la mía."
+      ]
+    },
+    {
+      "title": "La asamblea del barrio",
+      "purpose": "Esta ficha trabaja la argumentación oral y la escucha respetuosa con temas cercanos. Ayuden a pensar razones, y valoren que el chico o la chica escuche y responda con respeto.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Encuesta en casa",
+          "steps": [
+            "Pensá una pregunta, por ejemplo \"¿Qué le hace falta a la plaza del pueblo?\".",
+            "Hacésela a tres personas distintas.",
+            "Anotá su respuesta y la razón que dan."
+          ],
+          "table": {
+            "cols": [
+              "Persona",
+              "Respuesta",
+              "Razón"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Semáforo de la escucha",
+          "steps": [
+            "Hagan tres círculos de papel: verde, amarillo y rojo.",
+            "Mientras alguien da una opinión, quien escucha levanta verde si está de acuerdo, amarillo si duda y rojo si no.",
+            "Después de levantarlo, tiene que explicar por qué con respeto.",
+            "Cambien de turno hasta que todos opinen."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Cartel de propuesta",
+          "steps": [
+            "Con las respuestas de la encuesta, elegí la propuesta que más te convenció.",
+            "Escribí un cartel con la propuesta y una razón.",
+            "Mostralo en casa y escuchá qué opinan."
+          ],
+          "draw": "Diseñá tu cartel de propuesta.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo preguntar la opinión de otros y anotar sus razones.",
+        "Puedo explicar con respeto si estoy de acuerdo o no.",
+        "Puedo defender una propuesta con una razón."
+      ]
+    }
+  ],
+  "24": [
+    {
+      "title": "Lectores detectives",
+      "purpose": "Esta ficha refuerza encontrar información que está escrita, deducir lo que no se dice y resumir. Lean el texto breve junto al chico o la chica y dejen que explique cómo se dio cuenta de cada cosa.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Leemos y buscamos pistas",
+          "steps": [
+            "Leé este texto: \"Martina se puso dos pares de medias, el gorro y la bufanda. Antes de salir, miró por la ventana: los techos estaban blancos y no se veía la ruta.\"",
+            "Escribí algo que el texto dice con palabras.",
+            "Escribí algo que no dice pero que se puede adivinar con pistas.",
+            "Marcá las palabras que te sirvieron de pista."
+          ],
+          "table": {
+            "cols": [
+              "Lo que dice el texto",
+              "Lo que adivino",
+              "Pista que usé"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Adivino qué pasó",
+          "steps": [
+            "Un jugador describe una escena sin decir lo que pasó, por ejemplo \"Hay barro en las botas y la puerta está abierta\".",
+            "Los demás deducen qué pasó.",
+            "Gana quien da la explicación con mejores pistas.",
+            "Después cambian de turno."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Resumimos lo que leímos",
+          "steps": [
+            "Elijan un texto corto de un libro, una revista o la escuela.",
+            "Después de leerlo, el chico o la chica lo cuenta en tres oraciones.",
+            "Conversen qué partes son importantes y cuáles se pueden dejar afuera."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar información escrita en un texto.",
+        "Puedo deducir lo que el texto no dice usando pistas.",
+        "Puedo contar un texto en pocas oraciones."
+      ]
+    },
+    {
+      "title": "La noticia del pueblo",
+      "purpose": "Esta ficha trabaja la lectura autónoma, la información implícita y la síntesis con textos de la vida diaria. Busquen juntos un diario, un folleto o un cuaderno de comunicaciones.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Leo un texto de la vida diaria",
+          "steps": [
+            "Buscá en casa un diario, un folleto, una boleta o una nota de la escuela.",
+            "Leelo solo o sola, y después con un adulto.",
+            "Respondé: ¿quién lo escribió, para quién y para qué?"
+          ],
+          "table": {
+            "cols": [
+              "Pregunta",
+              "Respuesta"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "El resumen más corto",
+          "steps": [
+            "Un adulto cuenta algo que pasó en el día con muchos detalles.",
+            "El chico o la chica lo resume en una sola oración.",
+            "Otro jugador intenta hacerlo con menos palabras sin perder lo importante.",
+            "Cuenten las palabras y gana el resumen más corto que sigue siendo claro."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Titular y copete",
+          "steps": [
+            "Pensá en algo que pasó en tu casa o tu escuela esta semana.",
+            "Escribí un título corto que llame la atención.",
+            "Debajo escribí dos oraciones que resuman lo más importante."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "converso",
+          "title": "Lo que no se dice",
+          "steps": [
+            "Conversen sobre algún cartel o aviso del pueblo, como \"Se suspenden las clases por nevada\".",
+            "Pregunten qué cosas se entienden aunque no estén escritas.",
+            "Anotá una."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer un texto de la vida diaria y saber para qué sirve.",
+        "Puedo resumir algo en una oración.",
+        "Puedo entender cosas que un texto no dice directamente."
+      ]
+    }
+  ],
+  "25": [
+    {
+      "title": "Receta de mi familia",
+      "purpose": "Esta ficha refuerza la escritura de instructivos con pasos ordenados. Elijan una receta sencilla que se pueda preparar sin cuchillos ni fuego para el chico o la chica, o solo con un adulto a cargo.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Receta de la abuela o del abuelo",
+          "steps": [
+            "Preguntale a un adulto de tu familia por una receta que le guste, como un licuado, una chocolatada o un postre frío.",
+            "Anotá los ingredientes y las cantidades.",
+            "Preguntale de quién la aprendió."
+          ],
+          "table": {
+            "cols": [
+              "Ingrediente",
+              "Cantidad"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Escribo el instructivo",
+          "steps": [
+            "Escribí el título de la receta.",
+            "Escribí los pasos numerados, empezando cada uno con un verbo: mezclar, agregar, esperar.",
+            "Revisá que el orden sea el correcto.",
+            "Dibujá cómo queda terminada."
+          ],
+          "draw": "Dibujá la receta terminada.",
+          "lines": 6
+        },
+        {
+          "kind": "juego",
+          "title": "Robot obediente",
+          "steps": [
+            "Un jugador es el robot y solo hace exactamente lo que le dicen.",
+            "El otro le da instrucciones para hacer algo simple, como poner la pava en la mesa.",
+            "Si falta un paso, el robot se queda quieto.",
+            "Conversen después qué pasos se habían olvidado."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo escribir un instructivo con pasos ordenados.",
+        "Puedo empezar cada paso con un verbo.",
+        "Puedo explicar instrucciones claras a otra persona."
+      ]
+    },
+    {
+      "title": "Cuentos con dados",
+      "purpose": "Esta ficha trabaja la escritura de cuentos propios, planificando, escribiendo y revisando. Ayuden a jugar con los dados y lean el borrador en voz alta para revisarlo juntos.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Dado de cuentos",
+          "steps": [
+            "Tiren un dado tres veces para elegir personaje, lugar y problema de la tabla.",
+            "Ejemplo de opciones del 1 al 6: guanaco, nena, oveja, zorro, abuelo, choique.",
+            "Lugares: estancia, meseta, río Chico, escuela, bosque de lenga, pueblo nevado.",
+            "Problemas: se perdió, viene una tormenta de viento, encontró un mapa, se rompió algo, perdió la voz, hay una nevada enorme."
+          ],
+          "table": {
+            "cols": [
+              "Tirada",
+              "Número del dado",
+              "Lo que salió"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Escribo mi cuento",
+          "steps": [
+            "Planificá: cómo empieza, qué problema hay y cómo se resuelve.",
+            "Escribí el borrador.",
+            "Leelo en voz alta a alguien y escuchá sus sugerencias.",
+            "Corregí y ponele un título."
+          ],
+          "lines": 6
+        },
+        {
+          "kind": "converso",
+          "title": "Contadores de cuentos",
+          "steps": [
+            "Preguntá a un adulto qué cuentos le contaban de chico.",
+            "Conversen cómo empezaban: \"Había una vez\", \"Hace mucho tiempo\".",
+            "Anotá dos formas de empezar y dos de terminar un cuento."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo planificar un cuento antes de escribirlo.",
+        "Puedo revisar mi borrador después de leerlo en voz alta.",
+        "Puedo usar distintas formas de empezar y terminar un cuento."
+      ]
+    }
+  ],
+  "26": [
+    {
+      "title": "Dichos que no son lo que parecen",
+      "purpose": "Esta ficha refuerza el sentido literal y figurado de las expresiones. Usen dichos que se escuchan en casa y diviértanse dibujando lo que dirían si se entendieran al pie de la letra.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Colección de dichos",
+          "steps": [
+            "Preguntá a tu familia qué dichos usan, como \"estar en las nubes\" o \"tener la cabeza en otro lado\".",
+            "Pedí que te expliquen qué quieren decir.",
+            "Anotá tres en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Dicho",
+              "Qué quiere decir de verdad"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Dibujo al pie de la letra",
+          "steps": [
+            "Elegí uno de los dichos.",
+            "Dibujá lo que pasaría si fuera literal.",
+            "Escribí debajo su sentido figurado."
+          ],
+          "draw": "Dibujá el dicho como si fuera literal.",
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Mímica de expresiones",
+          "steps": [
+            "Escriban dichos en papelitos y dóblenlos.",
+            "Un jugador saca uno y lo actúa sin hablar, como si fuera literal.",
+            "Los demás adivinan el dicho.",
+            "Quien adivina explica qué significa en serio."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo distinguir el sentido literal y el figurado.",
+        "Puedo explicar un dicho de mi familia.",
+        "Puedo usar una expresión figurada en una oración."
+      ]
+    },
+    {
+      "title": "Comparaciones de la Patagonia",
+      "purpose": "Esta ficha trabaja el lenguaje figurado y repasa ortografía con palabras del lugar. Ayuden a inventar comparaciones y revisen la escritura con el fichero o el diccionario.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Comparaciones con \"como\"",
+          "steps": [
+            "Mirá por la ventana o salí con un adulto a observar.",
+            "Inventá comparaciones: \"El viento sopla como...\", \"La nieve es blanca como...\".",
+            "Escribí tres y leelas en voz alta."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Ortografía con tapitas",
+          "steps": [
+            "Escriban en papelitos palabras del lugar que tengan b, v, c, s, z o ll: viento, nieve, llama, calafate, zorro, bosque.",
+            "Un jugador lee una en voz alta sin mostrarla.",
+            "El otro la escribe en un papel.",
+            "Comparan y, si está bien escrita, gana una tapita; gana quien junta más."
+          ],
+          "table": {
+            "cols": [
+              "Palabra",
+              "Letra difícil",
+              "¿La escribí bien?"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "¿En serio o en sentido figurado?",
+          "steps": [
+            "Escuchen la radio o una conversación de la casa durante un rato.",
+            "Levanten la mano cuando alguien diga algo que no es literal, como \"me muero de frío\".",
+            "Conversen qué quiso decir.",
+            "Anotá la frase y su significado."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo inventar comparaciones con \"como\".",
+        "Puedo escribir bien palabras con letras difíciles.",
+        "Puedo darme cuenta cuando alguien habla en sentido figurado."
+      ]
+    }
+  ]
+}

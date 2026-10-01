@@ -1,0 +1,1362 @@
+{
+  "1": [
+    {
+      "title": "Detectives de números en casa",
+      "purpose": "Reforzamos la lectura, escritura y orden de números hasta 1.500 usando números reales de la casa y el pueblo. Acompañe leyendo en voz alta con su hijo o hija, sin corregir enseguida: pregunte cómo se dio cuenta.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Números escondidos",
+          "steps": [
+            "Buscá en tu casa números de 3 o 4 cifras: en boletas, envases, calendarios o el medidor de luz.",
+            "Anotá cada número en la tabla y escribilo también con palabras.",
+            "Pedile a un adulto que te diga para qué sirve ese número."
+          ],
+          "table": {
+            "cols": [
+              "Dónde lo encontré",
+              "Número",
+              "Cómo se lee"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La carrera de las tarjetas",
+          "steps": [
+            "Cortá 10 papelitos y escribí en cada uno un número entre 100 y 1.500.",
+            "Mezclá los papelitos y repartí 5 para vos y 5 para otra persona de tu casa.",
+            "Cada uno da vuelta un papelito al mismo tiempo: gana el que tiene el número mayor y se lleva los dos.",
+            "Si los dos dicen bien cuál es mayor y por qué, se suma un punto extra.",
+            "Al final, ordenen todos los papelitos de menor a mayor sobre la mesa."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi número favorito",
+          "steps": [
+            "Elegí un número entre 100 y 1.500 que te guste.",
+            "Escribí cuántos cienes, dieces y unos tiene.",
+            "Escribí el número que viene antes y el que viene después."
+          ],
+          "draw": "Dibujá tu número armado con billetes de 100, monedas de 10 y monedas de 1.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer en voz alta números que encuentro en mi casa.",
+        "Puedo decir cuál de dos números es mayor y explicar por qué.",
+        "Puedo escribir un número con cifras y con palabras."
+      ]
+    },
+    {
+      "title": "La estancia de los números",
+      "purpose": "Trabajamos el valor de cada cifra (cienes, dieces y unos) con materiales caseros y juegos. Deje que su hijo o hija cuente y arme los números; si se equivoca, pídale que lo vuelva a contar.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armamos números con porotos",
+          "steps": [
+            "Juntá porotos, tapitas o fósforos usados sin cabeza y unas bolsitas o vasitos.",
+            "Armá grupos de 10 porotos y poné cada grupo en un vasito.",
+            "Con 10 vasitos de 10 formás un cien: anotalo con una marca grande en un papel.",
+            "Armá el número 235 con marcas de cien, vasitos de diez y porotos sueltos."
+          ],
+          "draw": "Dibujá cómo armaste el número 235."
+        },
+        {
+          "kind": "juego",
+          "title": "Ovejas al corral",
+          "steps": [
+            "Juegan dos personas con un dado y un papel cada una.",
+            "En cada turno tirás el dado tres veces: el primer tiro son los cienes, el segundo los dieces y el tercero los unos.",
+            "Escribí el número que formaste: esas son las ovejas que entraron a tu corral.",
+            "Después de tres turnos, cada uno lee su número más grande.",
+            "Gana quien tenga el número mayor y lo lea bien en voz alta."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Preguntamos en casa",
+          "steps": [
+            "Preguntale a un adulto qué números grandes usa en su trabajo o en la casa.",
+            "Pregúntenle juntos a alguien cuántos años tiene y en qué año nació.",
+            "Anotá los números que te dijeron y leelos en voz alta."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar un número con cienes, dieces y unos.",
+        "Puedo leer números de tres y cuatro cifras.",
+        "Puedo comparar números y decir cuál es mayor."
+      ]
+    }
+  ],
+  "2": [
+    {
+      "title": "Ganar y perder en la meseta",
+      "purpose": "Reforzamos la suma y la resta como agregar, quitar, ganar o perder. Acompañe preguntando qué pasó en cada jugada: si se agregó o se quitó, y cómo lo calculó.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "La carrera de los guanacos",
+          "steps": [
+            "Cada jugador empieza con 20 porotos que son sus guanacos.",
+            "Tirá dos dados: si sale número par, sumás esos puntos a tus guanacos; si sale impar, los restás.",
+            "Antes de mover los porotos, decí en voz alta la cuenta que vas a hacer.",
+            "Después de 6 vueltas, gana quien tenga más guanacos."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Registro del juego",
+          "steps": [
+            "Anotá en la tabla lo que pasó en cada vuelta.",
+            "Escribí si ganaste o perdiste y la cuenta que hiciste."
+          ],
+          "table": {
+            "cols": [
+              "Vuelta",
+              "Gané o perdí",
+              "Cuenta",
+              "Me quedan"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Sumas y restas de todos los días",
+          "steps": [
+            "Preguntale a un adulto cuándo suma o resta en su día: al comprar, cocinar o contar animales.",
+            "Escribí dos ejemplos que te cuente.",
+            "Explicale vos cómo resolverías uno de esos ejemplos."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo darme cuenta si en una situación se agrega o se quita.",
+        "Puedo explicar la cuenta que hago.",
+        "Puedo llevar la cuenta de lo que gano y lo que pierdo."
+      ]
+    },
+    {
+      "title": "El almacén de Gregores",
+      "purpose": "Practicamos sumar y restar con un almacén de juguete hecho en casa. Juegue con su hijo o hija como cliente o almacenero y pídale que explique cómo hace las cuentas.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armamos el almacén",
+          "steps": [
+            "Juntá 5 envases vacíos: una caja de té, un paquete de yerba, una botella, una lata y otro que elijas.",
+            "Ponele un precio a cada uno entre 10 y 90 pesos y anotalo en la tabla.",
+            "Hacé billetes de papel de 10, 20 y 50 y monedas de 1, 2 y 5."
+          ],
+          "table": {
+            "cols": [
+              "Producto",
+              "Precio"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Compro y vendo",
+          "steps": [
+            "Una persona es el almacenero y otra el cliente, que empieza con 100 pesos de papel.",
+            "El cliente elige dos productos y dice cuánto suma la compra.",
+            "El almacenero cobra y los dos calculan cuánto le queda al cliente.",
+            "Cambien de lugar y jueguen otra vez."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Cómo controlás el vuelto?",
+          "steps": [
+            "Preguntale a un adulto cómo se da cuenta si le dieron bien el vuelto al comprar.",
+            "Contale vos cómo calculaste lo que te quedaba en el juego.",
+            "Inventen juntos un problema del almacén y escribilo."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo sumar los precios de una compra.",
+        "Puedo calcular cuánto me queda después de pagar.",
+        "Puedo explicar cómo controlo un vuelto."
+      ]
+    }
+  ],
+  "3": [
+    {
+      "title": "Calculo en la cabeza",
+      "purpose": "Reforzamos el cálculo mental, las sumas repetidas y la estimación. Pida a su hijo o hija que cuente cómo pensó cada cálculo; hay muchas formas correctas de llegar.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Ping pong de dieces",
+          "steps": [
+            "Un adulto dice un número, por ejemplo 40, y vos respondés rápido el número que tiene 10 más.",
+            "Después jueguen con 10 menos, 100 más y 100 menos.",
+            "Cambien de lugar: vos decís el número y el adulto responde.",
+            "Cuenten cuántas respuestas seguidas hacen bien."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Sumas repetidas en la cocina",
+          "steps": [
+            "Buscá cosas que vengan en grupos iguales: huevos en la maple, galletitas en un paquete, pares de medias.",
+            "Contá cuántos grupos hay y cuántos tiene cada grupo.",
+            "Escribí la suma repetida, por ejemplo 2 + 2 + 2 + 2."
+          ],
+          "table": {
+            "cols": [
+              "Qué conté",
+              "Grupos",
+              "Suma repetida",
+              "Total"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "investigo",
+          "title": "¿Cuántos habrá?",
+          "steps": [
+            "Poné un puñado de porotos en un plato.",
+            "Mirá sin contar y escribí cuántos creés que hay.",
+            "Contalos de a 2 o de a 5 y anotá cuántos son.",
+            "Repetí tres veces y fijate si tu estimación se va acercando."
+          ],
+          "table": {
+            "cols": [
+              "Vez",
+              "Yo creo que hay",
+              "Hay"
+            ],
+            "rows": 3
+          }
+        }
+      ],
+      "selfCheck": [
+        "Puedo sumar y restar 10 o 100 en la cabeza.",
+        "Puedo escribir una suma repetida cuando veo grupos iguales.",
+        "Puedo estimar una cantidad antes de contarla."
+      ]
+    },
+    {
+      "title": "Atajos para calcular",
+      "purpose": "Trabajamos estrategias de cálculo mental, como usar dobles y números redondos. Escuche la estrategia de su hijo o hija y comparta la suya, sin decirle cuál es la mejor.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Dobles con dados",
+          "steps": [
+            "Tirá un dado y decí el doble del número que salió.",
+            "Si acertás, te quedás con una tapita.",
+            "Después tiren dos dados, sumen los números y digan el doble del resultado.",
+            "Gana quien junte 10 tapitas primero."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Cómo lo pensaste?",
+          "steps": [
+            "Pedile a un adulto que resuelva en la cabeza 25 + 25 + 25 y que te cuente cómo lo pensó.",
+            "Resolvelo vos también y contá tu forma.",
+            "Comparen: ¿pensaron igual o distinto?"
+          ],
+          "lines": 4
+        },
+        {
+          "kind": "creo",
+          "title": "Mi cartel de atajos",
+          "steps": [
+            "Escribí tres cálculos que te salen rápido, como 5 + 5 o 50 + 50.",
+            "Usalos para inventar un cálculo más difícil, por ejemplo 50 + 50 + 3."
+          ],
+          "draw": "Hacé un cartel con tus atajos favoritos para calcular.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo usar los dobles para calcular más rápido.",
+        "Puedo explicar cómo pensé un cálculo.",
+        "Puedo escuchar otra forma de calcular y probarla."
+      ]
+    }
+  ],
+  "4": [
+    {
+      "title": "El croquis de mi casa",
+      "purpose": "Reforzamos la ubicación en el espacio, el uso de referencias y los primeros croquis. Recorra la casa con su hijo o hija y pídale que use palabras como adelante, atrás, izquierda, derecha, entre y al lado.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Dibujo mi casa desde arriba",
+          "steps": [
+            "Imaginá que sos un choique que mira tu casa desde arriba.",
+            "Dibujá las habitaciones como rectángulos y marcá puertas y ventanas.",
+            "Poné algunos muebles con su forma vista desde arriba."
+          ],
+          "draw": "Dibujá el croquis de tu casa vista desde arriba."
+        },
+        {
+          "kind": "juego",
+          "title": "El tesoro escondido",
+          "steps": [
+            "Un adulto esconde una tapita en la casa.",
+            "Te da pistas con referencias: está a la derecha de la heladera, debajo de una silla.",
+            "Buscá el tesoro siguiendo las pistas.",
+            "Después escondés vos y das las pistas, sin señalar con el dedo."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "Medimos con pasos",
+          "steps": [
+            "Medí con tus pasos el largo de tres lugares de tu casa.",
+            "Pedile a un adulto que mida los mismos lugares con sus pasos.",
+            "Anotá los resultados y conversen por qué dan distinto."
+          ],
+          "table": {
+            "cols": [
+              "Lugar",
+              "Mis pasos",
+              "Pasos del adulto"
+            ],
+            "rows": 3
+          }
+        }
+      ],
+      "selfCheck": [
+        "Puedo dibujar un croquis de un lugar que conozco.",
+        "Puedo dar pistas usando referencias como a la derecha o debajo.",
+        "Puedo medir con pasos y comparar resultados."
+      ]
+    },
+    {
+      "title": "El camino a la escuela",
+      "purpose": "Trabajamos recorridos, referencias y medidas de longitud con regla y metro. Acompañe a su hijo o hija a describir caminos y a usar la regla empezando desde el cero.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Cuento mi recorrido",
+          "steps": [
+            "Contale a un adulto qué camino hacés de tu casa a la escuela.",
+            "Nombrá referencias que ves: una esquina, un árbol, un negocio, la plaza.",
+            "El adulto te cuenta un camino que él hace seguido."
+          ],
+          "draw": "Dibujá el croquis de tu camino a la escuela con tres referencias.",
+          "lines": 2
+        },
+        {
+          "kind": "hacer",
+          "title": "Medimos con regla",
+          "steps": [
+            "Usá una regla y empezá a medir siempre desde el cero.",
+            "Medí en centímetros un lápiz, un cuaderno y una cuchara.",
+            "Anotá primero cuánto creés que mide y después cuánto mide."
+          ],
+          "table": {
+            "cols": [
+              "Objeto",
+              "Creo que mide",
+              "Mide"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Robot obediente",
+          "steps": [
+            "Una persona es el robot y otra da las órdenes.",
+            "Las órdenes son: avanzá 3 pasos, girá a la derecha, girá a la izquierda.",
+            "El que da las órdenes elige un lugar de llegada sin decirlo.",
+            "Si el robot llega al lugar elegido, cambian de papel."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo describir un camino con referencias.",
+        "Puedo medir con regla empezando desde el cero.",
+        "Puedo dar y seguir órdenes con derecha e izquierda."
+      ]
+    }
+  ],
+  "5": [
+    {
+      "title": "De 2 en 2, de 5 en 5 y de 10 en 10",
+      "purpose": "Reforzamos las tablas del 2, del 5 y del 10 con objetos que vienen en grupos. Pida a su hijo o hija que cuente los grupos en voz alta y que diga qué multiplicación representa.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Grupos en casa",
+          "steps": [
+            "Buscá cosas que vienen de a 2: medias, zapatos, ojos, guantes.",
+            "Buscá cosas de a 5 y de a 10: dedos de una mano, dedos de las dos manos.",
+            "Elegí un grupo, contá cuántos hay y escribí la multiplicación."
+          ],
+          "table": {
+            "cols": [
+              "Qué conté",
+              "Grupos de",
+              "Cuántos grupos",
+              "Multiplicación"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Manos y monedas",
+          "steps": [
+            "Juntá monedas o papelitos de 2, 5 y 10.",
+            "Una persona elige una cantidad de monedas iguales, por ejemplo 4 de 5.",
+            "La otra dice cuánto dinero hay en total.",
+            "Si acierta, gana una tapita; gana quien junte 8 tapitas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi tabla del 5 con manos",
+          "steps": [
+            "Dibujá manos abiertas en fila: 1 mano, 2 manos, 3 manos.",
+            "Debajo de cada fila escribí cuántos dedos hay en total."
+          ],
+          "draw": "Dibujá hasta 6 manos y escribí la cantidad de dedos debajo."
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar de 2 en 2, de 5 en 5 y de 10 en 10.",
+        "Puedo escribir una multiplicación cuando veo grupos iguales.",
+        "Puedo usar las tablas del 2, del 5 y del 10 para contar dinero."
+      ]
+    },
+    {
+      "title": "La estancia de las patas",
+      "purpose": "Trabajamos las tablas del 2, del 5 y del 10 contando patas, dedos y pesos. Acompañe preguntando cuántos grupos hay y cuántos tiene cada grupo antes de calcular.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Contamos patas de choique",
+          "steps": [
+            "El choique tiene 2 patas: dibujá choiques de a uno.",
+            "Anotá cuántas patas hay con 1, 2, 3 y 4 choiques.",
+            "Seguí hasta 6 choiques y mirá qué patrón aparece."
+          ],
+          "table": {
+            "cols": [
+              "Choiques",
+              "Patas"
+            ],
+            "rows": 6
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Memotest del 10",
+          "steps": [
+            "Hagan 20 tarjetas: 10 con multiplicaciones (como 3 x 10) y 10 con sus resultados.",
+            "Pongan todas boca abajo sobre la mesa.",
+            "Por turno, den vuelta dos tarjetas: si la multiplicación y el resultado coinciden, te las quedás.",
+            "Gana quien junte más pares; después prueben con la tabla del 5."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Dónde se cuenta así?",
+          "steps": [
+            "Preguntale a un adulto si alguna vez contó de 5 en 5 o de 10 en 10, y para qué.",
+            "Pensá juntos por qué contar así es más rápido que de a uno."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar el patrón de la tabla del 2.",
+        "Puedo relacionar una multiplicación con su resultado.",
+        "Puedo explicar por qué contar de 10 en 10 es más rápido."
+      ]
+    }
+  ],
+  "6": [
+    {
+      "title": "Tapitas en filas",
+      "purpose": "Reforzamos las tablas del 3, del 4 y del 6 armando filas y columnas con objetos. Deje que su hijo o hija arme y cuente; pregúntele si hay una forma más rápida que contar de a uno.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Armamos rectángulos",
+          "steps": [
+            "Juntá 24 tapitas o porotos.",
+            "Armá filas de 3, de 4 y de 6 hasta usar todas.",
+            "Anotá cuántas filas armaste en cada caso y escribí la multiplicación."
+          ],
+          "table": {
+            "cols": [
+              "Tapitas por fila",
+              "Cantidad de filas",
+              "Multiplicación"
+            ],
+            "rows": 3
+          },
+          "draw": "Dibujá uno de los rectángulos que armaste."
+        },
+        {
+          "kind": "juego",
+          "title": "Dado por 4",
+          "steps": [
+            "Tirá un dado y multiplicá el número que salió por 4.",
+            "Si acertás, sumás ese resultado a tus puntos.",
+            "Después de 5 turnos, gana quien tenga más puntos.",
+            "En la próxima partida jueguen con el 3 y después con el 6."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "El doble de la tabla del 3",
+          "steps": [
+            "Escribí los resultados de la tabla del 3 hasta 3 x 6.",
+            "Al lado escribí los resultados de la tabla del 6.",
+            "Compará: ¿qué relación encontrás entre los dos números de cada renglón?"
+          ],
+          "table": {
+            "cols": [
+              "Por",
+              "Tabla del 3",
+              "Tabla del 6"
+            ],
+            "rows": 6
+          },
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar una multiplicación con filas de objetos.",
+        "Puedo usar la tabla del 4 en un juego.",
+        "Puedo descubrir que la tabla del 6 es el doble de la del 3."
+      ]
+    },
+    {
+      "title": "Patas, ruedas y triciclos",
+      "purpose": "Practicamos las tablas del 3, del 4 y del 6 con situaciones de la vida diaria. Pida a su hijo o hija que explique qué cuenta en cada caso antes de hacer la multiplicación.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Contamos patas y ruedas",
+          "steps": [
+            "Pensá en ovejas, guanacos y sillas: tienen 4 patas.",
+            "Pensá en triciclos: tienen 3 ruedas.",
+            "Pensá en insectos: tienen 6 patas.",
+            "Completá la tabla con la cantidad total para 5 de cada uno."
+          ],
+          "table": {
+            "cols": [
+              "Qué conté",
+              "Cada uno tiene",
+              "Cuántos hay",
+              "Total"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Bingo de las tablas",
+          "steps": [
+            "Cada jugador dibuja una grilla de 3 por 3 y escribe 9 resultados de las tablas del 3, 4 y 6.",
+            "Un adulto dice multiplicaciones, como 4 x 6 o 3 x 7.",
+            "Si tenés el resultado, lo tachás.",
+            "Gana quien tache una fila completa y la lea en voz alta."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Cuántos cubiertos?",
+          "steps": [
+            "Contá cuántas personas comen en tu casa.",
+            "Con un adulto calculá cuántos cubiertos hacen falta si cada uno usa 3.",
+            "Calculen también para 4 y 6 invitados."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo usar las tablas del 3, del 4 y del 6 para contar.",
+        "Puedo encontrar resultados de las tablas en un bingo.",
+        "Puedo resolver situaciones de mi casa con multiplicaciones."
+      ]
+    }
+  ],
+  "7": [
+    {
+      "title": "Los secretos del 9",
+      "purpose": "Reforzamos las tablas del 7, del 8 y del 9 buscando patrones y trucos. Acompañe con paciencia: son las tablas más difíciles y está bien usar estrategias como partir en partes.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "El truco de las cifras",
+          "steps": [
+            "Escribí los resultados de la tabla del 9 hasta 9 x 6.",
+            "Sumá las dos cifras de cada resultado, por ejemplo 2 + 7 en el 27.",
+            "Mirá las decenas: ¿cómo van cambiando de un renglón al otro?",
+            "Contale a un adulto lo que descubriste."
+          ],
+          "table": {
+            "cols": [
+              "Multiplicación",
+              "Resultado",
+              "Suma de las cifras"
+            ],
+            "rows": 6
+          },
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Carrera al 100",
+          "steps": [
+            "Juegan dos, con un dado y papel.",
+            "En tu turno elegís una tabla: la del 7, la del 8 o la del 9.",
+            "Tirá el dado y multiplicá el número que salió por la tabla que elegiste.",
+            "Sumá ese resultado a tus puntos y decí la cuenta en voz alta.",
+            "Gana el primero que llega a 100 o lo pasa, diciendo bien cada cuenta."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Parto para multiplicar",
+          "steps": [
+            "Para calcular 7 x 6 podés pensar 5 x 6 más 2 x 6.",
+            "Usá porotos: armá 6 filas de 7 y separá cada fila en 5 y 2.",
+            "Probá lo mismo con 8 x 4, separando 8 en 5 y 3."
+          ],
+          "draw": "Dibujá cómo separaste las filas."
+        }
+      ],
+      "selfCheck": [
+        "Puedo encontrar patrones en la tabla del 9.",
+        "Puedo partir una multiplicación difícil en dos más fáciles.",
+        "Puedo usar las tablas del 7, 8 y 9 en un juego."
+      ]
+    },
+    {
+      "title": "Semanas, arañas y pulpos",
+      "purpose": "Practicamos las tablas del 7, del 8 y del 9 con calendarios y animales. Deje que su hijo o hija use el calendario o dibujos para ayudarse.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Semanas en el calendario",
+          "steps": [
+            "Buscá un calendario: cada semana tiene 7 días.",
+            "Contá los días de 2, 3, 4 y 5 semanas siguiendo las filas.",
+            "Anotá cada resultado como una multiplicación por 7."
+          ],
+          "table": {
+            "cols": [
+              "Semanas",
+              "Multiplicación",
+              "Días"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Memotest de patas",
+          "steps": [
+            "Las arañas tienen 8 patas y los pulpos tienen 8 brazos.",
+            "Hagan tarjetas: en unas dibujen grupos de arañas y en otras escriban el total de patas.",
+            "Den vuelta dos tarjetas por turno y busquen pares que coincidan.",
+            "Gana quien junte más pares."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "La tabla que más me cuesta",
+          "steps": [
+            "Contale a un adulto cuál de las tablas del 7, 8 o 9 te cuesta más.",
+            "Pidan juntos ayuda a una tabla fácil: 8 x 6 es el doble de 4 x 6.",
+            "Escribí un truco que te sirva para recordarla."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo usar el calendario para la tabla del 7.",
+        "Puedo calcular patas usando la tabla del 8.",
+        "Puedo usar una tabla fácil para ayudarme con una difícil."
+      ]
+    }
+  ],
+  "8": [
+    {
+      "title": "Repartimos en partes iguales",
+      "purpose": "Reforzamos el reparto en partes iguales y la idea de lo que sobra. Pida a su hijo o hija que reparta con objetos reales y que verifique si a todos les tocó lo mismo.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Galletitas para todos",
+          "steps": [
+            "Juntá 12 porotos que serán galletitas.",
+            "Repartilas entre 2, 3, 4 y 6 platos, dando de a una por vez.",
+            "Anotá cuántas le tocan a cada plato y si sobra alguna."
+          ],
+          "table": {
+            "cols": [
+              "Platos",
+              "Le toca a cada uno",
+              "Sobran"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Reparto con dado",
+          "steps": [
+            "Cada jugador empieza con 20 tapitas.",
+            "Tirá el dado: el número que sale es la cantidad de amigos.",
+            "Repartí tus tapitas en partes iguales entre esos amigos.",
+            "Las que sobran son tus puntos; gana quien junte más puntos en 5 vueltas."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Qué hacemos con lo que sobra?",
+          "steps": [
+            "Preguntale a un adulto qué hace en casa cuando algo no alcanza para repartir igual.",
+            "Piensen juntos qué se puede hacer con lo que sobra."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo repartir objetos en partes iguales.",
+        "Puedo darme cuenta cuándo sobra algo en un reparto.",
+        "Puedo verificar que a todos les tocó lo mismo."
+      ]
+    },
+    {
+      "title": "El reparto de la estancia",
+      "purpose": "Trabajamos situaciones de reparto en grupos iguales con contexto de campo. Acompañe dejando que su hijo o hija dibuje o use objetos para resolver, sin apurar la cuenta.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Ovejas en corrales",
+          "steps": [
+            "Un puestero tiene 18 ovejas y quiere ponerlas en 3 corrales iguales.",
+            "Usá porotos como ovejas y círculos de hilo como corrales.",
+            "Repartí y contá cuántas quedan en cada corral.",
+            "Probá con 2 corrales y con 6 corrales, y anotá qué cambia cuando hay más corrales."
+          ],
+          "draw": "Dibujá cómo quedaron las ovejas en los 3 corrales."
+        },
+        {
+          "kind": "juego",
+          "title": "Mate para la ronda",
+          "steps": [
+            "Pongan 24 porotos en el centro: son galletitas para la ronda de mate.",
+            "Tiren el dado para saber cuántas personas hay en la ronda.",
+            "Cada jugador dice cuántas galletitas le tocan a cada uno y si sobran.",
+            "Repartan con los porotos para comprobar: si acertaste, sumás un punto."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi problema de reparto",
+          "steps": [
+            "Inventá un problema donde haya que repartir en partes iguales.",
+            "Escribilo y dibujá cómo se resuelve.",
+            "Pedile a alguien de tu casa que lo resuelva y comparen."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo resolver un reparto usando objetos o dibujos.",
+        "Puedo decir cuánto le toca a cada uno.",
+        "Puedo inventar un problema de reparto."
+      ]
+    }
+  ],
+  "9": [
+    {
+      "title": "Cazadores de figuras",
+      "purpose": "Reforzamos el reconocimiento de círculos, cuadrados, rectángulos y triángulos en objetos reales. Pregunte a su hijo o hija cómo sabe qué figura es: cuántos lados tiene y cómo son.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Figuras en mi casa",
+          "steps": [
+            "Buscá en tu casa objetos con forma de círculo, cuadrado, rectángulo y triángulo.",
+            "Mirá, por ejemplo, ventanas, platos, puertas y baldosas.",
+            "Anotá dónde la encontraste y cuántos lados tiene."
+          ],
+          "table": {
+            "cols": [
+              "Figura",
+              "Dónde la encontré",
+              "Cantidad de lados"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná mi figura",
+          "steps": [
+            "Una persona piensa una figura sin decirla.",
+            "La otra hace preguntas que se responden con sí o no, como: ¿tiene 4 lados?",
+            "Si adivina con 4 preguntas o menos, gana un punto.",
+            "Cambien de papel y jueguen 5 veces."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Calcamos figuras",
+          "steps": [
+            "Apoyá sobre una hoja la base de un vaso, una caja y una tapita.",
+            "Pasá el lápiz alrededor y mirá qué figura queda dibujada."
+          ],
+          "draw": "Calcá tres objetos distintos y escribí el nombre de cada figura."
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer figuras en objetos de mi casa.",
+        "Puedo decir cuántos lados tiene una figura.",
+        "Puedo describir una figura para que otro la adivine."
+      ]
+    },
+    {
+      "title": "El taller de las figuras",
+      "purpose": "Trabajamos las características de las figuras armándolas y transformándolas. Deje que su hijo o hija pruebe, se equivoque y vuelva a intentar.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Figuras con palitos",
+          "steps": [
+            "Juntá palitos de helado, escarbadientes sin punta o tiras de papel.",
+            "Armá un triángulo, un cuadrado y un rectángulo.",
+            "Contá cuántos palitos usaste en cada figura.",
+            "Probá si podés armar un círculo con palitos rectos."
+          ],
+          "table": {
+            "cols": [
+              "Figura",
+              "Palitos que usé",
+              "Lados"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Doblar y cortar",
+          "steps": [
+            "Cortá con tijera escolar un cuadrado de papel, con un adulto cerca.",
+            "Doblalo por la mitad de distintas formas.",
+            "Cada jugador dice qué figuras aparecen al doblar.",
+            "Gana un punto quien encuentre una figura nueva que nadie dijo."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi paisaje de figuras",
+          "steps": [
+            "Dibujá un paisaje de la meseta usando solo figuras.",
+            "Usá triángulos para cerros, rectángulos para casas y círculos para el sol."
+          ],
+          "draw": "Dibujá tu paisaje hecho con figuras.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo armar figuras y contar sus lados.",
+        "Puedo encontrar figuras nuevas al doblar papel.",
+        "Puedo usar figuras para hacer un dibujo."
+      ]
+    }
+  ],
+  "10": [
+    {
+      "title": "Litros y medios en la cocina",
+      "purpose": "Reforzamos la capacidad con litros, medios litros y cuartos usando envases de la cocina. Acompañe a su hijo o hija a trasvasar agua y pídale que anticipe antes de probar.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Leemos envases",
+          "steps": [
+            "Buscá envases vacíos de leche, jugo, agua o aceite.",
+            "Leé en la etiqueta cuánto tiene: 1 litro, medio litro u otra cantidad.",
+            "Anotá cada envase en la tabla."
+          ],
+          "table": {
+            "cols": [
+              "Envase",
+              "Cuánto tiene",
+              "¿Más o menos de 1 litro?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "hacer",
+          "title": "Llenamos con agua",
+          "steps": [
+            "Con un adulto, buscá una botella de 1 litro y otra de medio litro.",
+            "Antes de probar, pensá cuántas botellas de medio litro llenan la de 1 litro.",
+            "Probá trasvasando agua y anotá lo que pasó."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "¿Qué entra más?",
+          "steps": [
+            "Pongan en la mesa 4 recipientes distintos: una taza, un vaso, un jarro y un tupper.",
+            "Cada jugador los ordena del que entra menos al que entra más.",
+            "Comprueben llenando con agua usando la misma taza.",
+            "Gana un punto quien haya acertado el orden."
+          ]
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer cuánto tiene un envase.",
+        "Puedo explicar que dos medios litros forman un litro.",
+        "Puedo comparar cuánto entra en distintos recipientes."
+      ]
+    },
+    {
+      "title": "La balanza de la cocina",
+      "purpose": "Trabajamos el peso con kilos, medios kilos y cuartos. Si en casa hay una balanza, úsenla juntos; si no, comparen sosteniendo objetos en cada mano.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "¿Cuánto pesa?",
+          "steps": [
+            "Buscá paquetes de yerba, harina, azúcar o arroz y leé cuánto pesan.",
+            "Anotá si pesan 1 kilo, medio kilo o un cuarto kilo.",
+            "Si hay balanza, pesá una fruta y anotá el resultado."
+          ],
+          "table": {
+            "cols": [
+              "Producto",
+              "Peso",
+              "¿Más o menos de 1 kilo?"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Balanza de manos",
+          "steps": [
+            "Elijan 5 objetos de la casa.",
+            "Cada jugador agarra dos objetos, uno en cada mano, y dice cuál pesa más.",
+            "Con la balanza o con otra persona, comprueben.",
+            "Al final ordenen los 5 objetos del más liviano al más pesado."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Medidas del almacén",
+          "steps": [
+            "Preguntale a un adulto qué cosas compra por kilo y cuáles por litro.",
+            "Pregúntenle también si alguna vez pidió medio kilo o un cuarto kilo de algo.",
+            "Escribí lo que te contó."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer el peso en un paquete.",
+        "Puedo saber que dos medios kilos forman un kilo.",
+        "Puedo distinguir qué se mide en litros y qué en kilos."
+      ]
+    }
+  ],
+  "11": [
+    {
+      "title": "Problemas de la vida real",
+      "purpose": "Reforzamos la resolución de problemas con sumas, restas, multiplicaciones y repartos. Acompañe preguntando qué se quiere saber y qué datos hay; no importa tanto la cuenta como el razonamiento.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Problemas de mi familia",
+          "steps": [
+            "Preguntale a un adulto por un problema con números que tuvo esta semana.",
+            "Puede ser de compras, de tiempo, de distancias o de animales.",
+            "Escribí el problema con tus palabras y resolvelo juntos."
+          ],
+          "lines": 5
+        },
+        {
+          "kind": "juego",
+          "title": "La pregunta escondida",
+          "steps": [
+            "Un adulto cuenta una situación con números, por ejemplo: en el corral hay 4 filas de 6 ovejas.",
+            "Cada jugador inventa una pregunta que se pueda responder con esos datos.",
+            "Resuelvan todas las preguntas.",
+            "Gana un punto cada pregunta distinta que se pueda contestar."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "¿Qué cuenta hago?",
+          "steps": [
+            "Leé cada situación y anotá qué cuenta usarías y por qué.",
+            "Situación 1: llegaron 35 chicos y se fueron 12.",
+            "Situación 2: hay 5 cajas con 8 alfajores cada una.",
+            "Situación 3: hay 20 lápices para 4 mesas iguales."
+          ],
+          "table": {
+            "cols": [
+              "Situación",
+              "Cuenta que uso",
+              "Por qué"
+            ],
+            "rows": 3
+          }
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer qué pregunta tiene un problema.",
+        "Puedo elegir la cuenta que sirve para resolverlo.",
+        "Puedo inventar preguntas con datos que tengo."
+      ]
+    },
+    {
+      "title": "El viaje al río Chico",
+      "purpose": "Practicamos problemas con las cuatro operaciones en una situación de paseo imaginario. Pida a su hijo o hija que explique cómo resolvió cada parte, con dibujos o cuentas.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Preparamos la vianda",
+          "steps": [
+            "Van de paseo al río Chico 6 personas y cada una lleva 2 sándwiches.",
+            "Calculá cuántos sándwiches hay que preparar en total.",
+            "Si hay 3 termos con 4 mates cada uno, calculá cuántos mates hay."
+          ],
+          "draw": "Dibujá cómo resolviste uno de los problemas.",
+          "lines": 3
+        },
+        {
+          "kind": "juego",
+          "title": "Tarjetas de problemas",
+          "steps": [
+            "Escriban en papelitos cuatro números y cuatro palabras: agrego, saco, grupos iguales, reparto.",
+            "Cada jugador saca un número, otro número y una palabra.",
+            "Con eso inventa un problema corto y lo dice en voz alta.",
+            "El otro jugador lo resuelve; si lo hace bien, gana un punto."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Planeamos un paseo",
+          "steps": [
+            "Preguntale a un adulto qué cuentas hace antes de salir de paseo: comida, distancia, horarios.",
+            "Con esos datos, inventen juntos un problema sobre un paseo por Gobernador Gregores.",
+            "Escribilo con su pregunta y resolvelo."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo resolver problemas con distintas cuentas.",
+        "Puedo inventar un problema a partir de datos.",
+        "Puedo explicar cómo resolví un problema."
+      ]
+    }
+  ],
+  "12": [
+    {
+      "title": "Mitades y cuartos en la mesa",
+      "purpose": "Reforzamos las fracciones medios y cuartos en situaciones de reparto. Acompañe a su hijo o hija a doblar y cortar, y pregúntele si las partes quedaron iguales.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Doblamos papel",
+          "steps": [
+            "Cortá con tijera escolar un cuadrado y un círculo de papel, con un adulto cerca.",
+            "Doblá el cuadrado por la mitad: cada parte es un medio.",
+            "Doblá otra vez por la mitad: ahora cada parte es un cuarto.",
+            "Hacé lo mismo con el círculo y pintá un cuarto."
+          ],
+          "draw": "Pegá o dibujá tus figuras dobladas y marcá un medio y un cuarto."
+        },
+        {
+          "kind": "juego",
+          "title": "Pizza de cuartos",
+          "steps": [
+            "Cada jugador dibuja 2 pizzas redondas divididas en 4 partes iguales.",
+            "Tiren una moneda: cara pinta un cuarto y ceca pinta dos cuartos.",
+            "Gana quien complete primero sus 2 pizzas sin pasarse.",
+            "Al terminar, digan cuántos cuartos forman una pizza entera."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Dónde usamos medios y cuartos?",
+          "steps": [
+            "Preguntale a un adulto cuándo usa medio o un cuarto: medio kilo, cuarto de hora, media docena.",
+            "Anotá los ejemplos que te cuente."
+          ],
+          "lines": 4
+        }
+      ],
+      "selfCheck": [
+        "Puedo partir algo en mitades y en cuartos.",
+        "Puedo saber que 4 cuartos forman un entero.",
+        "Puedo encontrar medios y cuartos en la vida diaria."
+      ]
+    },
+    {
+      "title": "Repartimos tortas fritas",
+      "purpose": "Trabajamos medios y cuartos repartiendo cosas entre personas. Deje que su hijo o hija dibuje el reparto y explique si a todos les toca lo mismo.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Repartos dibujados",
+          "steps": [
+            "Dibujá 1 torta frita para 2 personas y mostrá cuánto le toca a cada una.",
+            "Dibujá 1 torta frita para 4 personas.",
+            "Dibujá 3 tortas fritas para 2 personas."
+          ],
+          "draw": "Dibujá los tres repartos.",
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Medio o cuarto",
+          "steps": [
+            "Hagan tarjetas con dibujos de figuras partidas en partes iguales y una parte pintada.",
+            "Mezclen y den vuelta una tarjeta por turno.",
+            "El jugador dice si la parte pintada es un medio o un cuarto.",
+            "Si acierta, se queda con la tarjeta; gana quien junte más."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "¿Es un medio o no?",
+          "steps": [
+            "Doblá una hoja en dos partes que no sean iguales.",
+            "Pedile a un adulto que diga si cada parte es un medio.",
+            "Después doblá en dos partes iguales y comparen.",
+            "Escribí qué tiene que pasar para que sea un medio."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo dibujar un reparto en medios y en cuartos.",
+        "Puedo reconocer si una parte es un medio o un cuarto.",
+        "Puedo explicar que las partes tienen que ser iguales."
+      ]
+    }
+  ],
+  "13": [
+    {
+      "title": "Sumas y restas grandes",
+      "purpose": "Reforzamos sumas y restas con números de 2 y 3 cifras. Acompañe pidiendo que estime el resultado antes de calcular y que después compruebe.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Kilómetros de Santa Cruz",
+          "steps": [
+            "Pedile a un adulto que te diga cuántos kilómetros hay de Gregores a dos lugares que conozca.",
+            "Anotá los números en la tabla.",
+            "Calculá cuántos kilómetros son ida y vuelta para cada lugar."
+          ],
+          "table": {
+            "cols": [
+              "Lugar",
+              "Kilómetros de ida",
+              "Ida y vuelta"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "El más cerca de 500",
+          "steps": [
+            "Juegan dos, con un dado y papel.",
+            "Tirá el dado 3 veces y armá un número de 3 cifras con los números que salieron.",
+            "Sumá tus dos números de dos turnos.",
+            "Gana quien quede más cerca de 500, por arriba o por abajo."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Estimo y calculo",
+          "steps": [
+            "Escribí dos números de 3 cifras, por ejemplo 248 y 135.",
+            "Antes de calcular, redondeá a los cienes y estimá el resultado.",
+            "Hacé la cuenta y compará con tu estimación."
+          ],
+          "table": {
+            "cols": [
+              "Cuenta",
+              "Estimé",
+              "Resultado"
+            ],
+            "rows": 4
+          }
+        }
+      ],
+      "selfCheck": [
+        "Puedo sumar y restar números de 3 cifras.",
+        "Puedo estimar antes de hacer la cuenta.",
+        "Puedo usar números grandes de mi provincia."
+      ]
+    },
+    {
+      "title": "Las ovejas de la estancia",
+      "purpose": "Practicamos sumas y restas con números de 2 y 3 cifras en un contexto de campo. Pida a su hijo o hija que explique cómo arma la cuenta y que revise el resultado.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El conteo de la esquila",
+          "steps": [
+            "Una estancia tiene 245 ovejas en un potrero y 138 en otro.",
+            "Calculá cuántas ovejas tiene en total.",
+            "Si se esquilaron 200, calculá cuántas faltan esquilar."
+          ],
+          "draw": "Mostrá cómo resolviste con dibujos o cuentas.",
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Billetes de cien",
+          "steps": [
+            "Hagan billetes de papel de 100, 10 y 1.",
+            "Cada jugador empieza con 500 pesos de papel.",
+            "Por turno, tiren dos dados y formen un número de 2 cifras: eso gastan.",
+            "Antes de pagar digan cuánto les va a quedar; gana quien conserve más dinero después de 4 turnos."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "¿Cómo hacés la cuenta?",
+          "steps": [
+            "Pedile a un adulto que te muestre cómo hace una suma de 3 cifras.",
+            "Mostrale vos cómo la hacés en la escuela.",
+            "Comparen: ¿se parecen las dos formas?"
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo resolver problemas con números de 3 cifras.",
+        "Puedo calcular cuánto me queda después de gastar.",
+        "Puedo explicar cómo armo una suma o una resta."
+      ]
+    }
+  ],
+  "14": [
+    {
+      "title": "Cuerpos geométricos en casa",
+      "purpose": "Reforzamos el reconocimiento de cuerpos geométricos como cubo, prisma, cilindro, esfera, cono y pirámide. Pregunte a su hijo o hija si el objeto rueda o no, y cuántas caras tiene.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Buscamos cuerpos",
+          "steps": [
+            "Buscá en tu casa una caja, una lata, una pelota y un cono o embudo.",
+            "Anotá qué cuerpo geométrico es cada uno.",
+            "Probá si rueda o no rueda."
+          ],
+          "table": {
+            "cols": [
+              "Objeto",
+              "Cuerpo",
+              "¿Rueda?",
+              "Caras planas"
+            ],
+            "rows": 5
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "La bolsa misteriosa",
+          "steps": [
+            "Pongan varios objetos en una bolsa: caja, lata, pelota, dado.",
+            "Con los ojos cerrados, un jugador toca un objeto y dice qué cuerpo es.",
+            "Si acierta, se lo queda.",
+            "Gana quien junte más objetos."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Sellos de caras",
+          "steps": [
+            "Apoyá una caja y una lata sobre una hoja y calcá sus caras.",
+            "Mirá qué figura deja cada cara: rectángulo, cuadrado o círculo."
+          ],
+          "draw": "Dibujá las caras que calcaste y escribí su nombre."
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer cuerpos geométricos en objetos de casa.",
+        "Puedo decir si un cuerpo rueda o no.",
+        "Puedo relacionar las caras de un cuerpo con figuras."
+      ]
+    },
+    {
+      "title": "El reloj y el calendario",
+      "purpose": "Trabajamos equivalencias de tiempo: 1 hora tiene 60 minutos, 1 día tiene 24 horas, 1 semana tiene 7 días y 1 año tiene 12 meses. Acompañe usando un reloj y un calendario de la casa.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Mi día en horas",
+          "steps": [
+            "Anotá a qué hora hacés cinco cosas durante un día: despertarte, almorzar, ir a la escuela, cenar, dormir.",
+            "Pedile ayuda a un adulto para leer el reloj.",
+            "Calculá cuántas horas pasan entre dos de esas actividades."
+          ],
+          "table": {
+            "cols": [
+              "Actividad",
+              "Hora"
+            ],
+            "rows": 5
+          },
+          "lines": 2
+        },
+        {
+          "kind": "juego",
+          "title": "Carrera del calendario",
+          "steps": [
+            "Usen un calendario y una tapita para cada jugador, que empiezan en el día 1.",
+            "Tiren el dado y avancen esa cantidad de días.",
+            "Cada vez que completen una semana de 7 días, ganan un punto.",
+            "Gana quien llegue primero al final del mes."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Tiempos en casa",
+          "steps": [
+            "Preguntale a un adulto cuánto tarda en hacer el mate, en llegar al trabajo o en cocinar algo.",
+            "Pregunten si eso es más o menos de una hora.",
+            "Escribí lo que averiguaste."
+          ],
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer la hora con ayuda.",
+        "Puedo decir cuántos días tiene una semana y cuántos meses tiene un año.",
+        "Puedo calcular cuánto tiempo pasa entre dos actividades."
+      ]
+    }
+  ]
+}
