@@ -5,7 +5,7 @@ import { addNews, displayName } from "@/lib/news";
 import { getMessages, getPresenceMap, isOnline, saveMessages } from "@/lib/messages";
 import { CHALLENGE_MESSAGES, ClassMessage, sameArgDay } from "@/lib/messagesShared";
 import { Student, StudentProgress } from "@/types";
-import { isTrialExpired } from "@/lib/openClassroomShared";
+import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
 import {
   DUEL_COINS,
   Duel,
@@ -126,7 +126,8 @@ export async function GET(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
-  const config = await getCompetitionConfig();
+  // En el aula abierta de prueba no hay duelos entre desconocidos.
+  const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
   const canPlayToday = config.enabled && (config.anyDay || isWeekendNow());
 
   // Consulta liviana (desde el mapa, cada pocos segundos): ¿alguien me
@@ -240,7 +241,7 @@ export async function POST(request: NextRequest) {
   const me = await findStudentByCode(code);
   if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
-  const config = await getCompetitionConfig();
+  const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
   if (!config.enabled) return Response.json({ error: "La competencia está apagada por el docente." }, { status: 403 });
   const canPlayToday = config.anyDay || isWeekendNow();
   const notEligible = () =>

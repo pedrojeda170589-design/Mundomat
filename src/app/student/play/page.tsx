@@ -22,7 +22,7 @@ import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 import Link from "next/link";
-import { getTrialDaysLeft } from "@/lib/openClassroomShared";
+import { getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 
 export default function StudentPlayPage() {
@@ -41,6 +41,7 @@ export default function StudentPlayPage() {
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
   const [isTrialStudent, setIsTrialStudent] = useState(false);
   const [trialEndsAt, setTrialEndsAt] = useState<string | undefined>(undefined);
+  const [trialLength, setTrialLength] = useState(30);
   const [trialExpired, setTrialExpired] = useState(false);
   const [showEarlyRating, setShowEarlyRating] = useState(false);
 
@@ -55,6 +56,7 @@ export default function StudentPlayPage() {
     if (progressRes.status === 403 && progressData.trialExpired) {
       setTrialExpired(true);
       if (progressData.student?.name) setName(progressData.student.name);
+      setTrialLength(getTrialLengthDays(progressData.student));
       setLoading(false);
       return;
     }
@@ -124,7 +126,7 @@ export default function StudentPlayPage() {
               ¡Gracias por probar MundoTest26!
             </h2>
             <p className="text-sm text-amber-900 leading-relaxed">
-              Hola, <strong>{name}</strong>. Tu período de prueba de 30 días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
+              Hola, <strong>{name}</strong>. Tu período de prueba de {trialLength} días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
             </p>
 
             <TrialRatingCard studentCode={code || ""} />
@@ -191,7 +193,8 @@ export default function StudentPlayPage() {
       <Mountains isDay />
 
       {isTrialStudent && trialEndsAt && (
-        <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-2 flex items-center justify-between bg-amber-950/70 border border-amber-500/40 text-amber-100 rounded-xl px-3.5 py-1.5 text-xs font-semibold backdrop-blur-sm">
+        <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-2">
+        <div className="flex items-center justify-between bg-amber-950/70 border border-amber-500/40 text-amber-100 rounded-xl px-3.5 py-1.5 text-xs font-semibold backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <span>⏳</span>
             <span>
@@ -206,6 +209,7 @@ export default function StudentPlayPage() {
               ⭐ Dejar opinión
             </button>
           )}
+        </div>
         </div>
       )}
 
@@ -353,7 +357,7 @@ export default function StudentPlayPage() {
 
       <NewsBoard code={code} />
 
-      <CompetitionBanner code={code} />
+      {!isTrialStudent && <CompetitionBanner code={code} />}
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {

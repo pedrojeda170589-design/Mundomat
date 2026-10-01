@@ -1,0 +1,2 @@
+Acá van los audios grabados de las letras de 1.º grado.
+Lista de archivos y cómo grabarlos: docs/primer-grado/AUDIOS.md

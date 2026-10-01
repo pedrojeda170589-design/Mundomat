@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 import { findStudentByCode, updateStudentProfile, liteProgress } from "@/lib/data";
 import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 
@@ -38,6 +39,9 @@ export async function POST(request: NextRequest) {
   const student = await findStudentByCode(code);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
   const updated = await updateStudentProfile(student.code, {

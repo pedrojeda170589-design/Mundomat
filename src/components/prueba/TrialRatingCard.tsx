@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RATING_LIKED_OPTIONS, RatingLikedOption } from "@/lib/openClassroomShared";
 
 interface TrialRatingCardProps {
@@ -12,13 +12,34 @@ export default function TrialRatingCard({
   studentCode,
   onSubmitted,
 }: TrialRatingCardProps) {
-  const [stars, setStars] = useState<number>(5);
+  // Sin estrellas marcadas al empezar: la persona tiene que elegir.
+  const [stars, setStars] = useState<number>(0);
+  // Estado de la valoración de este alumno (si ya valoró, no se vuelve a pedir).
+  const [status, setStatus] = useState<"loading" | "can" | "rated" | "not-yet">("loading");
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
   const [liked, setLiked] = useState<RatingLikedOption[]>([]);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/prueba/valoracion?code=${encodeURIComponent(studentCode)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((d: { canRate?: boolean; hasRated?: boolean } | null) => {
+        if (cancelled) return;
+        if (d?.hasRated) setStatus("rated");
+        else if (d?.canRate) setStatus("can");
+        else setStatus(d ? "not-yet" : "can");
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("can");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [studentCode]);
 
   function toggleLiked(option: RatingLikedOption) {
     setLiked((prev) =>
@@ -31,6 +52,10 @@ export default function TrialRatingCard({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (stars < 1) {
+      setError("Elegí de 1 a 5 estrellas.");
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch("/api/prueba/valoracion", {
@@ -50,11 +75,34 @@ export default function TrialRatingCard({
         return;
       }
       setSubmitted(true);
-      onSubmitted?.();
+      // Se deja ver el «¡Gracias!» un momento antes de cerrar.
+      if (onSubmitted) setTimeout(onSubmitted, 1800);
     } catch {
       setError("Ocurrió un error. Probá nuevamente.");
       setSubmitting(false);
     }
+  }
+
+  if (status === "loading") {
+    return <p className="text-sm text-amber-900/70 text-center py-4">Cargando…</p>;
+  }
+
+  if (status === "rated" && !submitted) {
+    return (
+      <div className="parchment-panel rounded-2xl p-6 text-center shadow-lg border-2 border-amber-600/40">
+        <span className="text-4xl block mb-2">💛</span>
+        <h3 className="text-lg font-black text-amber-950 mb-1">Ya nos dejaste tu opinión</h3>
+        <p className="text-sm text-amber-900/80">¡Gracias por ayudarnos a mejorar MundoTest26!</p>
+      </div>
+    );
+  }
+
+  if (status === "not-yet") {
+    return (
+      <p className="text-sm text-amber-900/80 text-center py-2">
+        La valoración se habilita en los últimos días de la prueba.
+      </p>
+    );
   }
 
   if (submitted) {
@@ -155,7 +203,7 @@ export default function TrialRatingCard({
 
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || stars < 1}
           className="rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-extrabold text-base py-3 border-2 border-amber-700/50 hover:brightness-105 active:scale-95 transition disabled:opacity-60"
         >
           {submitting ? "Enviando..." : "Enviar valoración ✨"}

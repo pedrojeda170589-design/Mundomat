@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import SkyScene from "@/components/SkyScene";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
+import { getTrialLengthDays } from "@/lib/openClassroomShared";
 
 export default function StudentLoginPage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function StudentLoginPage() {
   const [expiredStudent, setExpiredStudent] = useState<{
     code: string;
     name: string;
+    days: number;
   } | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -31,6 +33,7 @@ export default function StudentLoginPage() {
           setExpiredStudent({
             code: data.student?.code || code.trim(),
             name: data.student?.name || "Estudiante",
+            days: getTrialLengthDays(data.student),
           });
           setLoading(false);
           return;
@@ -59,7 +62,7 @@ export default function StudentLoginPage() {
               ¡Gracias por probar MundoTest26!
             </h2>
             <p className="text-sm text-amber-900 leading-relaxed">
-              Hola, <strong>{expiredStudent.name}</strong>. Tu período de prueba de 30 días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
+              Hola, <strong>{expiredStudent.name}</strong>. Tu período de prueba de {expiredStudent.days} días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
             </p>
 
             <TrialRatingCard studentCode={expiredStudent.code} />

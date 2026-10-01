@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { isTrialExpired } from "@/lib/openClassroomShared";
 import { findStudentByCode, getProgress, saveProgress } from "@/lib/data";
 
 // Descuenta monedas cuando el alumno pide una pista o la lectura en voz
@@ -17,6 +18,9 @@ export async function POST(request: NextRequest) {
   const student = await findStudentByCode(code);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+  if (isTrialExpired(student)) {
+    return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
   const progress = await getProgress(student.code);

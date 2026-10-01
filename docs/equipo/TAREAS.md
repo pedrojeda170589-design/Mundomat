@@ -4,9 +4,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 
 | Id | Tarea | Asignada a | Estado |
 |---|---|---|---|
-| AG-01 | [Aula abierta de prueba para 3.º grado](./tareas/AG-01-aula-abierta.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-01 | [Aula abierta de prueba para 3.º grado](./tareas/AG-01-aula-abierta.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
-| CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | ⏳ PENDIENTE |
+| CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🔨 EN CURSO |
 | AG-02 | 1.º grado: contenidos de Matemática, Ciencias Sociales y Ciencias Naturales (sobre la estructura de CL-02) | Antigravity | ⏳ ESPERA A CL-02 |
 
 ## Resúmenes de tareas terminadas
@@ -24,3 +24,13 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - **Panel docente:** Componente `src/components/admin/OpenClassroomAdmin.tsx` agregado en `src/app/admin/dashboard/page.tsx` debajo de `CompetitionAdmin`, con estadísticas de inscriptos/activos/vencidos, control de cupo y apertura, enlace para compartir y resumen detallado de valoraciones recibidas.
 - **Acceso:** Se incorporó el botón «✨ Probar MundoTest26» en `src/app/page.tsx`.
 - **Verificación:** Superadas exitosamente las pruebas de compilación (`next build`), chequeo de tipos (`tsc --noEmit`), linter (`eslint src`) y la suite completa de verificación de flujo y persistencia.
+
+#### Revisión de Claude (AG-01) y arreglos al unir
+- Probado con servidor y navegador: inscripción, cupo, cierre, límite por IP, vencimiento (403 en todas las rutas pedidas), valoración única, panel docente y separación del aula piloto. Todo OK.
+- Arreglos hechos al unir:
+  - La tarjeta de valoración consulta si el alumno ya valoró: si ya lo hizo muestra «Ya nos dejaste tu opinión» en lugar del formulario.
+  - Las estrellas arrancan sin marcar (antes venían en 5) y hay que elegir para enviar; el «¡Gracias!» se ve un momento antes de cerrar.
+  - `/api/profile` y `/api/spend-coins` también rechazan a un alumno con la prueba vencida.
+  - El texto de despedida usa la duración real de la prueba de cada alumno (`getTrialLengthDays`), no «30 días» fijo.
+  - Cartel «Prueba: te quedan N días» con margen en el celular.
+  - Decisión de Pedro: en el aula abierta **no hay buzón ni duelos** (son chicos de distintas familias que no se conocen). `isOpenClassroomStudent()` apaga el buzón (GET vacío, POST 403) y la competencia (config `enabled: false`), y el mapa no muestra la entrada a la competencia.

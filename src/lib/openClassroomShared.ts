@@ -34,6 +34,20 @@ export interface OpenClassroomRating {
   comment?: string;
 }
 
+// Los alumnos del aula abierta vienen de distintas familias y escuelas y no
+// se conocen: en esa aula no hay buzón ni duelos entre compañeros.
+export function isOpenClassroomStudent(student: { classroomId?: string } | null | undefined): boolean {
+  return student?.classroomId === OPEN_CLASSROOM_ID;
+}
+
+// Duración de la prueba de un alumno, en días (para los textos).
+export function getTrialLengthDays(student: { trialStartedAt?: string; trialEndsAt?: string } | null | undefined): number {
+  const a = new Date(student?.trialStartedAt ?? "").getTime();
+  const b = new Date(student?.trialEndsAt ?? "").getTime();
+  if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return DEFAULT_OPEN_CLASSROOM_CONFIG.trialDays;
+  return Math.round((b - a) / (24 * 60 * 60 * 1000));
+}
+
 // Devuelve true si el período de prueba del alumno ya venció.
 export function isTrialExpired(
   student: { trialEndsAt?: string } | null | undefined,
