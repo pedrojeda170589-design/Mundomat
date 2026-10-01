@@ -1,4 +1,5 @@
 import { WorldDef } from "@/types";
+import { buildGrade1Activities } from "@/lib/grade1/content";
 
 export type ShapeKind = "circulo" | "cuadrado" | "rectangulo" | "triangulo";
 
@@ -9,7 +10,76 @@ export const SHAPES: { kind: ShapeKind; label: string; sides: number }[] = [
   { kind: "triangulo", label: "Triángulo", sides: 3 },
 ];
 
-export type ActivitySpec =
+// Tarjeta para las actividades de 1.º (elegir, escuchar…): puede mostrar un
+// dibujo (emoji o imagen), una letra/sílaba/palabra grande y/o un texto, y
+// tener su propio audio.
+export interface ActivityCard {
+  id: string;
+  label?: string; // texto chico debajo
+  big?: string; // letra, sílaba, palabra o número grande
+  emoji?: string; // dibujo
+  image?: string; // imagen (ruta en /public)
+  say?: string; // texto que se lee al tocar 🔊
+  audio?: string; // audio grabado (si existe, se usa en lugar del sintetizador)
+}
+
+// Campos comunes a todas las actividades (opcionales).
+export interface ActivityCommon {
+  skills?: string[]; // habilidades que trabaja (seguimiento por habilidad)
+  say?: string; // consigna para escuchar (si difiere del texto)
+  audio?: string; // consigna grabada
+  exploratory?: boolean; // actividad exploratoria (puede usar letras no enseñadas)
+}
+
+export type ActivitySpec = (
+  | {
+      // Elegir una (o varias) tarjetas. Sirve para escuchar y elegir,
+      // sonido inicial, rimas, comprensión de cuentos (con `story`), etc.
+      type: "pick";
+      id: string;
+      title: string;
+      prompt: string;
+      cards: ActivityCard[];
+      answerIds: string[]; // si hay más de una, hay que elegir todas
+      promptBig?: string; // letra/sílaba/palabra/oración grande en la consigna
+      promptEmoji?: string; // dibujo grande en la consigna
+      story?: { title: string; text: string; scenes?: string[] }; // texto para escuchar/leer antes
+      storyFirst?: boolean; // false: el cuento ya se mostró antes (se puede volver a ver)
+      hint: string;
+    }
+  | {
+      // Contar objetos dibujados y elegir cuántos hay.
+      type: "count";
+      id: string;
+      title: string;
+      prompt: string;
+      emoji: string;
+      groups: number[]; // grupos de objetos (uno solo = contar; dos = juntar)
+      crossed?: number; // cuántos aparecen tachados (para quitar)
+      answer: number;
+      choices: number[];
+      hint: string;
+    }
+  | {
+      // Armar con fichas (sílabas o letras móviles) una palabra o un número.
+      type: "build";
+      id: string;
+      title: string;
+      prompt: string;
+      target: string[]; // fichas en el orden correcto
+      tiles: string[]; // fichas disponibles (incluye distractores)
+      emoji?: string;
+      hint: string;
+    }
+  | {
+      // Repasar con el dedo una letra o número punteado.
+      type: "trace";
+      id: string;
+      title: string;
+      prompt: string;
+      glyph: string;
+      hint: string;
+    }
   | {
       type: "mc";
       id: string;
@@ -98,7 +168,7 @@ export type ActivitySpec =
       answerIndex: number;
       correctAnswer?: string;
       hint: string;
-    };
+    }) & ActivityCommon;
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -6752,6 +6822,7 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
 // ---------------------------------------------------------------------------
 
 export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
+  if (world.grade === 1) return buildGrade1Activities(world);
   switch (world.category) {
     case "numeros":
       return buildNumerosActivities();

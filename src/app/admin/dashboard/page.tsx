@@ -8,6 +8,9 @@ import { WORLDS, getWorld } from "@/lib/worlds";
 import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
+import SkillReport from "@/components/admin/SkillReport";
+import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
+import { grade1HasContent } from "@/lib/grade1/content";
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
@@ -22,6 +25,10 @@ export default function AdminDashboardPage() {
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
+  const [newGrade, setNewGrade] = useState(3);
+  // Pestaña de mundos: grado que se está configurando y sus mundos habilitados.
+  const [worldsGrade, setWorldsGrade] = useState(3);
+  const [g1Enabled, setG1Enabled] = useState<number[]>([]);
   const [adding, setAdding] = useState(false);
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedProgress, setSelectedProgress] =
@@ -38,6 +45,10 @@ export default function AdminDashboardPage() {
     ]);
     const studentsData = await studentsRes.json();
     const worldsData = await worldsRes.json();
+    fetch("/api/worlds?grade=1")
+      .then((r) => r.json())
+      .then((d) => setG1Enabled(d.config?.enabledWorldIds ?? []))
+      .catch(() => {});
     setStudents(studentsData.students ?? []);
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
     setLoading(false);
@@ -56,13 +67,14 @@ export default function AdminDashboardPage() {
   }, [router, loadAll]);
 
   const aula = useMemo(
-    () => students.filter((s) => s.type === "aula"),
+    () => students.filter((s) => s.type === "aula" && (s.grade ?? 3) === 3),
     [students]
   );
   const agregados = useMemo(
-    () => students.filter((s) => s.type === "agregado"),
+    () => students.filter((s) => s.type === "agregado" && (s.grade ?? 3) === 3),
     [students]
   );
+  const primero = useMemo(() => students.filter((s) => s.grade === 1), [students]);
 
   async function handleAddStudent(e: React.FormEvent) {
     e.preventDefault();
@@ -72,7 +84,7 @@ export default function AdminDashboardPage() {
       const res = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName.trim(), adminPassword }),
+        body: JSON.stringify({ name: newName.trim(), adminPassword, grade: newGrade }),
       });
       const data = await res.json();
       if (data.student) {
@@ -103,6 +115,32 @@ export default function AdminDashboardPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ enabledWorldIds: next, adminPassword }),
     });
+  }
+
+  async function toggleG1World(ids: number[], on: boolean) {
+    if (!adminPassword) return;
+    const set = new Set(g1Enabled);
+    for (const id of ids) {
+      if (on) set.add(id);
+      else set.delete(id);
+    }
+    const next = [...set].sort((a, b) => a - b);
+    setG1Enabled(next);
+    await fetch("/api/worlds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabledWorldIds: next, adminPassword, grade: 1 }),
+    });
+  }
+
+  async function changeGrade(code: string, grade: number) {
+    if (!adminPassword) return;
+    const res = await fetch("/api/students", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, grade, adminPassword }),
+    });
+    if (res.ok) setStudents((prev) => prev.map((s) => (s.code === code ? { ...s, grade: grade === 3 ? undefined : grade } : s)));
   }
 
   async function handleViewStats(code: string) {
@@ -181,8 +219,17 @@ export default function AdminDashboardPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Nombre del nuevo estudiante"
-                className="flex-1 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-2 text-amber-950 outline-none focus:border-amber-500 placeholder:text-amber-800/40"
+                className="flex-1 min-w-0 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-2 text-amber-950 outline-none focus:border-amber-500 placeholder:text-amber-800/40"
               />
+              <select
+                value={newGrade}
+                onChange={(e) => setNewGrade(Number(e.target.value))}
+                className="rounded-xl bg-white/70 border-2 border-amber-700/30 px-2 py-2 text-amber-950 font-bold"
+                aria-label="Grado"
+              >
+                <option value={3}>3.º</option>
+                <option value={1}>1.º</option>
+              </select>
               <button
                 type="submit"
                 disabled={adding}
@@ -210,6 +257,17 @@ export default function AdminDashboardPage() {
               onViewStats={handleViewStats}
               selectedCode={selectedCode}
             />
+            {primero.length > 0 && (
+              <StudentBlock
+                title="Alumnos de 1.º grado"
+                emoji="🌱"
+                students={primero}
+                adminPassword={adminPassword}
+                onDeleted={handleDeleted}
+                onViewStats={handleViewStats}
+                selectedCode={selectedCode}
+              />
+            )}
             <NewsAdmin adminPassword={adminPassword} />
             <MailboxAdmin adminPassword={adminPassword} />
             <CompetitionAdmin adminPassword={adminPassword} />
@@ -218,6 +276,72 @@ export default function AdminDashboardPage() {
         )}
 
         {tab === "mundos" && (
+          <div className="flex gap-2 mb-4">
+            {[3, 1].map((g) => (
+              <button
+                key={g}
+                onClick={() => setWorldsGrade(g)}
+                className={`rounded-full px-4 py-1.5 text-sm font-bold border-2 ${
+                  worldsGrade === g ? "bg-emerald-500 text-white border-emerald-700/50" : "bg-white/70 text-amber-900 border-white/50"
+                }`}
+              >
+                {g}.º grado
+              </button>
+            ))}
+          </div>
+        )}
+
+        {tab === "mundos" && worldsGrade === 1 && (
+          <div className="flex flex-col gap-8">
+            <p className="text-amber-950/80 text-sm parchment-panel rounded-xl p-3">
+              En 1.º los mundos se abren de a poco: cada uno se habilita cuando el anterior está logrado o tuvo una vuelta con 60% o
+              más. Acá elegís cuáles están disponibles para tus alumnos de 1.º (por defecto, todos).
+            </p>
+            {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
+              const ws = GRADE1_WORLDS.filter((w) => w.subject === subject && grade1HasContent(w));
+              const allOn = ws.every((w) => g1Enabled.includes(w.id));
+              return (
+                <div key={subject}>
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2 flex-wrap">
+                    <SubjectBadge subject={subject} size={30} />
+                    {SUBJECT_INFO[subject].label} · 1.º
+                    <button
+                      onClick={() => toggleG1World(ws.map((w) => w.id), !allOn)}
+                      className="ml-auto text-xs font-bold rounded-full bg-white/80 border border-amber-700/30 px-3 py-1"
+                    >
+                      {allOn ? "Bloquear todos" : "Habilitar todos"}
+                    </button>
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {ws.map((w) => {
+                      const enabled = g1Enabled.includes(w.id);
+                      return (
+                        <button
+                          key={w.id}
+                          onClick={() => toggleG1World([w.id], !enabled)}
+                          title={w.objective}
+                          className={`rounded-2xl p-3 text-left border-2 transition ${
+                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">{w.emoji}</div>
+                          <p className="text-amber-950 text-sm font-bold leading-tight">
+                            {w.worldNumber}. {w.name}
+                          </p>
+                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
+                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {tab === "mundos" && worldsGrade === 3 && (
           <div className="flex flex-col gap-8">
             {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
               const info = SUBJECT_INFO[subject];
@@ -298,6 +422,19 @@ export default function AdminDashboardPage() {
                     <p className="text-amber-800/60 text-xs font-mono">
                       Código: {selectedStudent.code}
                     </p>
+                    {!selectedStudent.classroomId && (
+                      <label className="text-xs text-amber-900 font-semibold flex items-center gap-1 mt-1">
+                        Grado:
+                        <select
+                          value={selectedStudent.grade ?? 3}
+                          onChange={(e) => void changeGrade(selectedStudent.code, Number(e.target.value))}
+                          className="rounded-lg bg-white/70 border border-amber-700/30 px-1 py-0.5"
+                        >
+                          <option value={3}>3.º</option>
+                          <option value={1}>1.º</option>
+                        </select>
+                      </label>
+                    )}
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-amber-700 font-bold text-sm">
@@ -331,7 +468,7 @@ export default function AdminDashboardPage() {
                 {!!selectedProgress.worldsNeedingTeacherReview?.length && (
                   <div>
                     <p className="text-orange-700 font-semibold text-sm mb-1">
-                      🌱 Mundos a tratar (no llegaron al 90%)
+                      🌱 Mundos a tratar (no llegaron al {selectedStudent.grade === 1 ? 80 : 90}%)
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsNeedingTeacherReview
@@ -358,6 +495,13 @@ export default function AdminDashboardPage() {
                         .map((id) => getWorld(id)?.name ?? "?")
                         .join(", ")}
                     </p>
+                  </div>
+                )}
+
+                {selectedStudent.grade === 1 && (
+                  <div>
+                    <p className="text-amber-950 font-black mb-2">📚 Habilidades de 1.º grado</p>
+                    <SkillReport progress={selectedProgress} />
                   </div>
                 )}
 

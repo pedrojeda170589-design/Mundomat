@@ -14,6 +14,10 @@ import MatchActivity from "@/components/activities/MatchActivity";
 import ClassifyActivity from "@/components/activities/ClassifyActivity";
 import TrueFalseActivity from "@/components/activities/TrueFalseActivity";
 import FindErrorActivity from "@/components/activities/FindErrorActivity";
+import PickActivity from "@/components/activities/PickActivity";
+import CountActivity from "@/components/activities/CountActivity";
+import BuildActivity from "@/components/activities/BuildActivity";
+import TraceActivity from "@/components/activities/TraceActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
@@ -47,6 +51,11 @@ function speakTextFor(activity: ActivitySpec): string {
       return activity.statement;
     case "find-error":
       return `${activity.prompt} ${activity.resolution}`;
+    case "pick":
+    case "count":
+    case "build":
+    case "trace":
+      return activity.say ?? activity.prompt;
   }
 }
 
@@ -95,6 +104,7 @@ export default function ActivityRunner({
       correct: correct ? 1 : 0,
       incorrect: correct ? 0 : 1,
       timeSpentSeconds,
+      ...(activity.skills?.length ? { skills: activity.skills } : {}),
     });
     saveQueue.current = saveQueue.current.then(async () => {
       for (let attempt = 0; attempt < 2; attempt++) {
@@ -117,6 +127,13 @@ export default function ActivityRunner({
 
   async function finishWorldAttempt(finalCorrectCount: number) {
     setPhase("finishing");
+    // Zona de práctica: no es un mundo, no cambia el avance.
+    if (world.kind === "refuerzo") {
+      await saveQueue.current;
+      setAttemptOutcome({ kind: "practice", scorePct: Math.round((finalCorrectCount / Math.max(1, activities.length)) * 100) });
+      setPhase("world-done");
+      return;
+    }
     try {
       // Primero terminan de guardarse las respuestas pendientes.
       await saveQueue.current;
@@ -190,7 +207,7 @@ export default function ActivityRunner({
       </div>
       <div className="relative z-10 max-w-md w-full mx-auto mb-3 flex items-center gap-3">
         <span className="relative w-16 h-16 shrink-0 wk-float">
-          <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="64px" className="object-contain drop-shadow-lg" />
+          <WorldIcon world={world} sizes="64px" />
         </span>
         <span className="flex-1 flex gap-1" aria-label={`Actividad ${index + 1} de ${activities.length}`}>
           {activities.map((_, i) => (
@@ -206,7 +223,48 @@ export default function ActivityRunner({
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
-            <VisualAid key={`aid-${index}`} activity={activity} world={world} />
+            {world.grade !== 1 && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
+            {activity.type === "pick" && (
+              <PickActivity
+                key={`pick-${index}`}
+                prompt={activity.prompt}
+                say={activity.say}
+                audio={activity.audio}
+                promptBig={activity.promptBig}
+                promptEmoji={activity.promptEmoji}
+                story={activity.story}
+                storyFirst={activity.storyFirst}
+                cards={activity.cards}
+                answerIds={activity.answerIds}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "count" && (
+              <CountActivity
+                key={`count-${index}`}
+                prompt={activity.prompt}
+                emoji={activity.emoji}
+                groups={activity.groups}
+                crossed={activity.crossed}
+                answer={activity.answer}
+                choices={activity.choices}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "build" && (
+              <BuildActivity
+                key={`build-${index}`}
+                prompt={activity.prompt}
+                say={activity.say}
+                target={activity.target}
+                tiles={activity.tiles}
+                emoji={activity.emoji}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "trace" && (
+              <TraceActivity key={`trace-${index}`} prompt={activity.prompt} say={activity.say} glyph={activity.glyph} onDone={submitResult} />
+            )}
             {activity.type === "mc" && (
               <McActivity
                 prompt={activity.prompt}
@@ -303,7 +361,7 @@ export default function ActivityRunner({
           <div className="parchment-panel relative w-full max-w-md rounded-3xl p-8 text-center">
             {lastCorrect && <Burst />}
             <span className="relative block w-28 h-28 mx-auto mb-2 wk-float">
-              <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="112px" className="object-contain drop-shadow-lg" />
+              <WorldIcon world={world} sizes="112px" />
             </span>
             <p className="text-4xl mb-2">{lastCorrect ? "🎉" : "💪"}</p>
             <p className="text-xl font-bold text-amber-950 mb-1">
@@ -345,7 +403,11 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
   let message = "Muy buen trabajo, seguí así.";
   let coinsNote: string | null = null;
 
-  if (outcome?.kind === "completed") {
+  if (outcome?.kind === "practice") {
+    emoji = "🎯";
+    title = "¡Buena práctica!";
+    message = `Acertaste ${outcome.scorePct}%. Cada práctica te hace más fuerte.`;
+  } else if (outcome?.kind === "completed") {
     if (outcome.alreadyCompleted) {
       emoji = "🔁";
       title = `¡Repasaste ${world.name}!`;
@@ -373,7 +435,7 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
       <div className="parchment-panel relative z-10 rounded-3xl px-8 py-10 max-w-sm w-full mx-4">
         {outcome?.kind === "completed" && <Burst big count={20} />}
         <span className="relative block w-36 h-36 mx-auto mb-2 wk-float">
-          <Image src={`/theme/islands/mundo-${world.id}.png`} alt="" fill sizes="144px" className="object-contain drop-shadow-lg" />
+          <WorldIcon world={world} sizes="144px" />
         </span>
         <p className="text-5xl mb-3">{emoji}</p>
         <h2 className="text-2xl font-black text-amber-800 mb-2">{title}</h2>
@@ -397,4 +459,21 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
 function newClientId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
+// Imagen del mundo (isla). Los mundos de 1.º todavía no tienen isla
+// dibujada: se muestra su emoji.
+function WorldIcon({ world, sizes }: { world: WorldDef; sizes: string }) {
+  if (world.grade === 1 || world.image === "") {
+    return (
+      <span
+        className="absolute inset-0 flex items-center justify-center rounded-full shadow-lg"
+        style={{ background: `radial-gradient(circle at 35% 30%, ${world.colorFrom}, ${world.colorTo})`, fontSize: `calc(${sizes} * 0.5)` }}
+        aria-hidden
+      >
+        {world.emoji}
+      </span>
+    );
+  }
+  return <Image src={world.image ?? `/theme/islands/mundo-${world.id}.png`} alt="" fill sizes={sizes} className="object-contain drop-shadow-lg" />;
 }

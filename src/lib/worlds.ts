@@ -1,4 +1,5 @@
 import { WorldDef } from "@/types";
+import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 
 // 14 mundos organizados según la Planificación Anual de Matemática de 3º
 // grado, en progresión real por trimestre:
@@ -573,19 +574,20 @@ export const WORLDS: WorldDef[] = [
   },
 ];
 
+// Busca en todos los grados (3.º y 1.º).
 export function getWorld(id: number): WorldDef | undefined {
-  return WORLDS.find((w) => w.id === id);
+  return WORLDS.find((w) => w.id === id) ?? GRADE1_WORLDS.find((w) => w.id === id);
 }
 
 // Etapa del paisaje del Mapa de Mundos (1 a 4). Crece con el avance
 // promedio en las 4 áreas: para llegar a la última hay que avanzar en todas
 // (una sola área completa suma como mucho un 25%).
-export function getMapStage(completedWorlds: number[]): { stage: number; percent: number } {
+export function getMapStage(completedWorlds: number[], worlds: WorldDef[] = WORLDS): { stage: number; percent: number } {
   const subjects = ["matematica", "lengua", "naturales", "sociales"] as const;
   const done = new Set(completedWorlds);
   const avg =
     subjects.reduce((sum, subj) => {
-      const ws = WORLDS.filter((w) => w.subject === subj);
+      const ws = worlds.filter((w) => w.subject === subj);
       return sum + (ws.length ? ws.filter((w) => done.has(w.id)).length / ws.length : 0);
     }, 0) / subjects.length;
   const percent = Math.round(avg * 100);

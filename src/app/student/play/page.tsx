@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
+import { DEFAULT_GRADE, getGrade, missingPrerequisite } from "@/lib/grades";
+import { grade1HasContent } from "@/lib/grade1/content";
+import { practiceZonesFor } from "@/lib/grade1/practice";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import WorldMap from "@/components/WorldMap";
@@ -32,6 +35,7 @@ export default function StudentPlayPage() {
   const [name, setName] = useState<string>("");
   const [progress, setProgress] = useState<StudentProgress | null>(null);
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
+  const [grade, setGrade] = useState<number>(DEFAULT_GRADE);
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
@@ -71,6 +75,7 @@ export default function StudentPlayPage() {
       setTrialEndsAt(progressData.student.trialEndsAt);
     }
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
+    setGrade(typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE);
     if (challengeRes.ok) {
       setWeekend(await challengeRes.json());
     }
@@ -193,7 +198,24 @@ export default function StudentPlayPage() {
   }
 
   const isBirthday = isBirthdayToday(birthday);
-  const mapStage = getMapStage(progress.completedWorlds);
+  // Mundos del grado del alumno (3.º: los de siempre; 1.º: su catálogo,
+  // con prerrequisitos y zonas de práctica automáticas).
+  const gradeWorlds = grade === DEFAULT_GRADE ? WORLDS : getGrade(grade).worlds.filter((w) => grade !== 1 || grade1HasContent(w));
+  const mapStage = getMapStage(progress.completedWorlds, gradeWorlds);
+  const lockedReasons: Record<number, string> = {};
+  let mapWorlds = gradeWorlds.filter((w) => w.subject === subject);
+  let playableIds = enabledWorldIds;
+  if (grade !== DEFAULT_GRADE) {
+    const zones = practiceZonesFor(progress, subject);
+    playableIds = enabledWorldIds.filter((id) => {
+      const w = gradeWorlds.find((x) => x.id === id);
+      const missing = w ? missingPrerequisite(w, progress, enabledWorldIds) : null;
+      if (missing) lockedReasons[id] = missing;
+      return !missing;
+    });
+    playableIds = [...playableIds, ...zones.map((z) => z.id)];
+    mapWorlds = [...zones, ...mapWorlds];
+  }
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
 
@@ -365,13 +387,13 @@ export default function StudentPlayPage() {
         onOpenProfile={() => setEditingProfile(true)}
       />
 
-      {weekend?.available && (
+      {weekend?.available && grade === DEFAULT_GRADE && (
         <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
       )}
 
       <NewsBoard code={code} />
 
-      {!isTrialStudent && <CompetitionBanner code={code} />}
+      {!isTrialStudent && grade === DEFAULT_GRADE && <CompetitionBanner code={code} />}
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {
@@ -416,14 +438,15 @@ export default function StudentPlayPage() {
 
       <div className="relative z-10">
         <WorldMap
-          worlds={WORLDS.filter((w) => w.subject === subject)}
-          enabledWorldIds={enabledWorldIds}
+          worlds={mapWorlds}
+          enabledWorldIds={playableIds}
+          lockedReasons={lockedReasons}
           completedWorlds={progress.completedWorlds}
           worldsPendingRetry={progress.worldsPendingReinforcementRetry}
           worldsNeedingReview={progress.worldsNeedingTeacherReview}
           classmateCounts={classmateCounts}
           mapStage={mapStage.stage}
-          showFichas={!isTrialStudent}
+          showFichas={!isTrialStudent && grade === DEFAULT_GRADE}
           lockedLabel={isTrialStudent ? "Fuera de la prueba" : undefined}
           onSelectWorld={setSelectedWorld}
         />

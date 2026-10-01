@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
       correct?: number;
       incorrect?: number;
       timeSpentSeconds?: number;
+      skills?: string[];
     };
 
   if (!code || worldId === undefined || activityIndex === undefined) {
@@ -74,7 +75,8 @@ export async function POST(request: NextRequest) {
 
   const { progress: afterActivity, coinsEarned } = applyActivityResult(
     progress,
-    result
+    result,
+    Array.isArray(body.skills) ? body.skills.filter((x: unknown): x is string => typeof x === "string") : []
   );
   // Jugar durante una estación o festividad entrega sus premios de
   // temporada (accesorios y fondo), que quedan para siempre.

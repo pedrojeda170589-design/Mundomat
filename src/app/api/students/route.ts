@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { addStudent, deleteStudent, getStudents, setStudentBirthday } from "@/lib/data";
+import { addStudent, deleteStudent, getStudents, setStudentBirthday, setStudentGrade } from "@/lib/data";
+import { GRADES } from "@/lib/grades";
 import { checkAdminPassword } from "@/lib/auth";
 
 // Lista del aula piloto para el panel de siempre (con la contraseña del
@@ -16,9 +17,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { name, adminPassword } = body as {
+  const { name, adminPassword, grade } = body as {
     name?: string;
     adminPassword?: string;
+    grade?: number;
   };
 
   if (!adminPassword || !checkAdminPassword(adminPassword)) {
@@ -28,7 +30,8 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Falta el nombre." }, { status: 400 });
   }
 
-  const student = await addStudent(name.trim(), "agregado");
+  const g = GRADES.some((x) => x.grade === grade) ? grade : undefined;
+  const student = await addStudent(name.trim(), "agregado", g);
   return Response.json({ student });
 }
 
@@ -51,13 +54,20 @@ export async function DELETE(request: NextRequest) {
 // PATCH: el docente carga (o borra) el cumpleaños de un alumno, "MM-DD".
 export async function PATCH(request: NextRequest) {
   const body = await request.json();
-  const { code, birthday, adminPassword } = body as {
+  const { code, birthday, adminPassword, grade } = body as {
     code?: string;
     birthday?: string;
     adminPassword?: string;
+    grade?: number;
   };
   if (!adminPassword || !checkAdminPassword(adminPassword)) {
     return Response.json({ error: "No autorizado." }, { status: 401 });
+  }
+  // Cambio de grado (1.º / 3.º) de un alumno del aula piloto.
+  if (code && typeof grade === "number") {
+    if (!GRADES.some((x) => x.grade === grade)) return Response.json({ error: "Grado inválido." }, { status: 400 });
+    await setStudentGrade(code, grade);
+    return Response.json({ ok: true });
   }
   if (!code) {
     return Response.json({ error: "Falta el código." }, { status: 400 });

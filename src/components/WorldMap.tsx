@@ -30,6 +30,8 @@ interface Props {
   showFichas?: boolean;
   // Cartel de los mundos bloqueados (por defecto, "Esperando al Docente").
   lockedLabel?: string;
+  // Mundos que esperan a otro (1.º grado): id → nombre del mundo previo.
+  lockedReasons?: Record<number, string>;
   onSelectWorld: (world: WorldDef) => void;
 }
 
@@ -44,6 +46,7 @@ export default function WorldMap({
   onSelectWorld,
   showFichas = true,
   lockedLabel = "Esperando al Docente",
+  lockedReasons = {},
 }: Props) {
   const points = worlds.map((_, i) => ({
     xPct: ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length],
@@ -65,10 +68,12 @@ export default function WorldMap({
       {points.length > 1 && (
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox={`0 0 100 ${containerHeight}`}
           preserveAspectRatio="none"
         >
           <polyline
-            points={points.map((p) => `${p.xPct}%,${p.yPx}`).join(" ")}
+            points={points.map((p) => `${p.xPct},${p.yPx}`).join(" ")}
+            vectorEffect="non-scaling-stroke"
             fill="none"
             stroke="#a86a35"
             strokeWidth={5}
@@ -105,15 +110,26 @@ export default function WorldMap({
               aria-label={`${world.name}${enabled ? "" : " (bloqueado)"}`}
             >
               <span className="relative block" style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}>
-                <Image
-                  src={islandSrc(world.id)}
-                  alt=""
-                  fill
-                  sizes="124px"
-                  className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
-                    enabled ? "" : "grayscale opacity-70"
-                  }`}
-                />
+                {world.grade === 1 ? (
+                  <span
+                    className={`absolute inset-2 flex items-center justify-center rounded-full border-4 border-white/80 shadow-[0_6px_10px_rgba(0,0,0,0.3)] text-5xl ${
+                      enabled ? "" : "grayscale opacity-70"
+                    } ${world.kind === "refuerzo" ? "animate-pulse" : ""}`}
+                    style={{ background: `radial-gradient(circle at 35% 30%, ${world.colorFrom}, ${world.colorTo})` }}
+                  >
+                    {world.emoji}
+                  </span>
+                ) : (
+                  <Image
+                    src={islandSrc(world.id)}
+                    alt=""
+                    fill
+                    sizes="124px"
+                    className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
+                      enabled ? "" : "grayscale opacity-70"
+                    }`}
+                  />
+                )}
                 {!enabled && (
                   <span className="absolute inset-0 flex items-center justify-center text-3xl drop-shadow">
                     🔒
@@ -163,7 +179,7 @@ export default function WorldMap({
               )}
               {!enabled && (
                 <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
-                  {lockedLabel}
+                  {lockedReasons[world.id] ? `Primero: ${lockedReasons[world.id]}` : lockedLabel}
                 </span>
               )}
             </button>

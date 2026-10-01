@@ -6,8 +6,8 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 |---|---|---|---|
 | AG-01 | [Aula abierta de prueba para 3.º grado](./tareas/AG-01-aula-abierta.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
-| CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🔨 EN CURSO |
-| AG-02 | 1.º grado: contenidos de Matemática, Ciencias Sociales y Ciencias Naturales (sobre la estructura de CL-02) | Antigravity | ⏳ ESPERA A CL-02 |
+| CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🟢 UNIDA A MAIN |
+| AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | ⏳ PENDIENTE |
 
 ## Resúmenes de tareas terminadas
 
@@ -40,3 +40,10 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - **Informe final y borrado:** al vencer, se guarda un informe (`trialReport:<código>`: mundos superados, % de aciertos por materia, fortalezas, qué reforzar con sugerencias) y se **borra el historial** (`progress:<código>`). Se hace la primera vez que el alumno vuelve a entrar o cuando el docente abre el panel (`closeExpiredTrials`). El informe se ve e imprime en la pantalla de despedida (`TrialReportCard`).
 - **Fichas en PDF solo con código:** los PDF pasaron de `public/fichas` a `private/fichas` y se descargan por `/api/fichas/<archivo>` con una cookie que se obtiene con un código de alumno válido (`/api/fichas/acceso`). `/familias` pide el código (o usa el del alumno que ya entró). Un alumno de prueba vencido ya no descarga.
 - **Fichas nuevas (complementarias):** las fichas ya no son la app en papel. Cada mundo tiene 2 fichas con propuestas para hacer con objetos de la casa, jugar en familia, investigar, conversar y crear, más una autoevaluación con caritas. Contenido en `scripts/fichas/<materia>.json`, se generan con `python3 scripts/fichas/generar_fichas.py` (formato en `scripts/fichas/FORMATO.md`). Los alumnos del aula de prueba no pueden descargarlas (ni ven el botón 📄 en el mapa).
+
+### CL-02 · 1.º grado (Claude)
+- Grados como configuración (`src/lib/grades.ts`): 1.º con 96 mundos propios (ids 11001+ Lengua, 12001+ Matemática, 13001+ Sociales, 14001+ Naturales), dominio 80% + repaso, y apertura por prerrequisitos (logrado o una vuelta con 60%). 3.º sigue igual (90%, ids 1–47).
+- Alumno con `grade` (por defecto 3): se elige al agregarlo en `/admin` o se cambia desde Registro; en la plataforma lo da el aula.
+- Actividades nuevas reutilizables: elegir (con audio y cuento), contar, armar con fichas y trazar; Lengua con palabras decodificables según las letras trabajadas; letra: nombre y sonido separados con audios grabables (`docs/primer-grado/AUDIOS.md`).
+- Seguimiento por habilidad (`skillStats`), niveles sin iniciar → dominado, zonas de práctica automáticas en el mapa e informe docente «¿Qué sabe? / ¿Qué está aprendiendo? / ¿Dónde tiene dificultades? / ¿Qué debería practicar?».
+- Para 1.º no se muestran todavía la aventura del finde, la competencia ni las fichas (son de 3.º).

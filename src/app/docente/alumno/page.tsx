@@ -16,6 +16,7 @@ import {
   subjectLabel,
 } from "@/lib/platform/shared";
 import { getWorld } from "@/lib/worlds";
+import SkillReportByCode from "@/components/admin/SkillReportByCode";
 import { AvatarAccessories } from "@/types";
 
 interface Student {
@@ -236,6 +237,13 @@ export default function StudentRecordPage() {
               </div>
             )}
           </Panel>
+
+          {student && steps.some((st) => st.status === "active" && st.grade === 1) && (
+            <Panel>
+              <p className="font-black mb-2">📚 Habilidades de 1.º grado</p>
+              <SkillReportByCode code={student.access_code} />
+            </Panel>
+          )}
 
           <Panel>
             <p className="font-black mb-1">🎯 Fortalezas y aspectos a reforzar {skills.year ? `(${skills.year})` : ""}</p>

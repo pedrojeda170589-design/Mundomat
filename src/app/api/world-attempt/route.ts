@@ -3,6 +3,7 @@ import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
 import { getMedalTier } from "@/lib/medals";
 import { findStudentByCode, getProgress, saveProgress, liteProgress } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
+import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
@@ -44,7 +45,8 @@ export async function POST(request: NextRequest) {
     progress,
     worldId,
     correctCount,
-    totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD
+    totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD,
+    masteryPctForWorld(worldId)
   );
   await saveProgress(updated);
   // Aula de prueba: si ya superó los mundos de todas las materias, la prueba

@@ -12,6 +12,8 @@ export interface Student {
   // avatar del alumno aparece festejando (corona, fondo y torta) y se gana
   // la corona y el fondo de cumpleaños para siempre.
   birthday?: string;
+  // Grado del alumno (1.º, 3.º…). Sin valor = 3.º (el aula piloto).
+  grade?: number;
   // Aula actual en la plataforma (Supabase). Sin valor = aula piloto de
   // siempre. Sirve para separar compañeros, mundos y novedades por aula.
   classroomId?: string;
@@ -63,6 +65,9 @@ export interface StudentProgress {
   // Lo comprado en la tienda con monedas (avatares y objetos): queda para
   // siempre.
   shopCollection?: string[];
+  // Seguimiento por habilidad (1.º grado en adelante): aciertos, errores y
+  // las últimas respuestas (1 = bien, 0 = mal), para el nivel de dominio.
+  skillStats?: Record<string, { c: number; i: number; recent: number[] }>;
   nickname?: string; // apodo elegido por el alumno para verse en el juego
   // Desafío Especial de fin de semana (memorama con recompensa extra): fecha
   // "YYYY-MM-DD" de la última vez que lo jugó, para permitir uno por día.
@@ -560,6 +565,42 @@ export interface WorldDef {
   // "basico": lectura en voz alta gratis (pensado para grados más chicos).
   // "avanzado": la lectura en voz alta y las pistas cuestan monedas.
   difficulty: WorldDifficulty;
+
+  // ---- Campos opcionales (multi-grado; 3.º no los necesita) ----
+  // Grado al que pertenece (por defecto 3).
+  grade?: number;
+  // Número de mundo dentro de su materia (para mostrar "Mundo 4").
+  worldNumber?: number;
+  // Objetivo, contenidos curriculares y habilidades que trabaja.
+  objective?: string;
+  contents?: string[];
+  skills?: string[];
+  // Mundos que conviene hacer antes (se abre cuando están logrados o con
+  // una vuelta de 60% o más: un error no lo bloquea).
+  prerequisites?: number[];
+  // Variables pedagógicas de dificultad (ver WorldDifficultyVars).
+  difficultyVars?: WorldDifficultyVars;
+  // Tipo de mundo: normal, de refuerzo (zona de práctica) o de integración.
+  kind?: "normal" | "refuerzo" | "integracion";
+  // Cómo se evalúa / criterio de dominio, en palabras para el docente.
+  assessment?: string;
+  // Cantidad de actividades por vuelta (por defecto 10).
+  activityCount?: number;
+  // Imagen del mundo (si no hay, el mapa dibuja el emoji).
+  image?: string;
+}
+
+// Variables que definen la dificultad de un mundo (no solo fácil/difícil).
+export interface WorldDifficultyVars {
+  elements?: number; // cantidad de elementos en juego
+  options?: number; // cantidad de opciones para elegir
+  imageSupport?: boolean; // hay dibujos de apoyo
+  audioSupport?: boolean; // se puede escuchar
+  language?: "imagen" | "sonido" | "letra" | "silaba" | "palabra" | "oracion" | "texto";
+  numberRange?: number; // hasta qué número
+  steps?: number; // pasos para resolver
+  memory?: boolean; // requiere recordar
+  autonomy?: "acompañado" | "guiado" | "autonomo";
 }
 
 export const SUBJECT_INFO: Record<WorldSubject, { label: string; emoji: string }> = {

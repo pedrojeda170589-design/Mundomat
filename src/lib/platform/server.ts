@@ -40,6 +40,7 @@ export interface DirectoryEntry {
   birthdayMmdd: string | null;
   classroomId: string | null;
   isLegacyPilot: boolean;
+  grade: number | null; // grado del aula actual
 }
 
 // Cache corto en memoria: el código → datos del alumno y su aula actual.
@@ -62,11 +63,11 @@ export async function lookupStudent(code: string): Promise<DirectoryEntry | null
     if (s && s.active) {
       const { data: e } = await db()
         .from("student_enrollments")
-        .select("classroom_id, classrooms(is_legacy_pilot)")
+        .select("classroom_id, classrooms(is_legacy_pilot, grade)")
         .eq("student_id", s.id)
         .eq("status", "active")
         .maybeSingle();
-      const classroom = (e?.classrooms ?? null) as { is_legacy_pilot?: boolean } | null;
+      const classroom = (e?.classrooms ?? null) as { is_legacy_pilot?: boolean; grade?: number } | null;
       value = {
         studentId: s.id,
         accessCode: s.access_code,
@@ -75,6 +76,7 @@ export async function lookupStudent(code: string): Promise<DirectoryEntry | null
         birthdayMmdd: s.birthday_mmdd,
         classroomId: e?.classroom_id ?? null,
         isLegacyPilot: !!classroom?.is_legacy_pilot,
+        grade: typeof classroom?.grade === "number" ? classroom.grade : null,
       };
     }
     directoryCache.set(key, { at: Date.now(), value });
@@ -113,7 +115,9 @@ export function forgetClassroomWorlds(classroomId: string) {
 
 function subjectOf(worldId: number): { subject: string; category: string | null } {
   const w = getWorld(worldId);
-  return { subject: w?.subject ?? "otra", category: w?.category ?? null };
+  // 1.º grado: la "categoría" es grado y número de mundo (p. ej. "1.º-L13").
+  const category = w?.grade === 1 ? `1.º-${w.subject[0].toUpperCase()}${w.worldNumber}` : w?.category ?? null;
+  return { subject: w?.subject ?? "otra", category };
 }
 
 // Guarda una respuesta en el historial. `clientId` evita duplicados si la

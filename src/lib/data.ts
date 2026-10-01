@@ -22,6 +22,8 @@ import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
+import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
+import { grade1HasContent } from "@/lib/grade1/content";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -90,7 +92,8 @@ function seedRoster(): Student[] {
 
 export async function addStudent(
   name: string,
-  type: StudentType = "agregado"
+  type: StudentType = "agregado",
+  grade?: number
 ): Promise<Student> {
   const students = await getStudents();
   const existingCodes = new Set(students.map((s) => s.code));
@@ -100,6 +103,7 @@ export async function addStudent(
     name,
     type,
     createdAt: new Date().toISOString(),
+    ...(grade && grade !== DEFAULT_GRADE ? { grade } : {}),
   };
   const updated = [...students, student];
   await setJSON(STUDENTS_KEY, updated);
@@ -151,6 +155,8 @@ export async function syncStudentWithPlatform(code: string): Promise<Student | u
   const entry = await lookupStudent(code);
   if (!entry) return current;
   const classroomId = entry.isLegacyPilot ? undefined : entry.classroomId ?? undefined;
+  // El grado lo da el aula de la plataforma (1.º, 3.º…); el aula piloto es 3.º.
+  const grade = !entry.isLegacyPilot && entry.grade && entry.grade !== 3 ? entry.grade : undefined;
   const birthday = entry.birthDate ?? entry.birthdayMmdd ?? current?.birthday;
   if (!current) {
     const student: Student = {
@@ -160,15 +166,17 @@ export async function syncStudentWithPlatform(code: string): Promise<Student | u
       createdAt: new Date().toISOString(),
       ...(birthday ? { birthday } : {}),
       ...(classroomId ? { classroomId } : {}),
+      ...(grade ? { grade } : {}),
     };
     await setJSON(STUDENTS_KEY, [...students, student]);
     classSnapshotCache = null;
     return student;
   }
-  if (current.classroomId === classroomId && current.birthday === birthday) return current;
-  const updated: Student = { ...current, classroomId, birthday };
+  if (current.classroomId === classroomId && current.birthday === birthday && current.grade === grade) return current;
+  const updated: Student = { ...current, classroomId, birthday, grade };
   if (!classroomId) delete updated.classroomId;
   if (!birthday) delete updated.birthday;
+  if (!grade) delete updated.grade;
   const list = [...students];
   list[idx] = updated;
   await setJSON(STUDENTS_KEY, list);
@@ -467,6 +475,18 @@ export async function getWorldsConfig(): Promise<WorldsConfig> {
 // Mundos habilitados para un alumno: los de su aula en la plataforma, o
 // los del aula abierta de prueba, o los del aula piloto (configuración de siempre).
 export async function getEnabledWorldIdsFor(student: Student | undefined): Promise<number[]> {
+  const grade = gradeOf(student);
+  if (grade !== DEFAULT_GRADE) {
+    // Otros grados (1.º…): sus propios mundos. Por defecto, todos los que
+    // tienen contenido (se abren de a poco por prerrequisitos).
+    const all = gradeWorldIds(grade);
+    if (student?.classroomId) {
+      const ids = await getClassroomWorlds(student.classroomId);
+      const own = ids?.filter((id) => all.includes(id));
+      if (own && own.length) return own;
+    }
+    return (await getGradeWorldsConfig(grade)).enabledWorldIds;
+  }
   if (student?.classroomId === OPEN_CLASSROOM_ID) {
     const openWorlds = await getJSON<WorldsConfig | null>(`worldsConfig:${OPEN_CLASSROOM_ID}`, null);
     if (openWorlds?.enabledWorldIds && openWorlds.enabledWorldIds.length > 0) {
@@ -484,6 +504,39 @@ export async function getEnabledWorldIdsFor(student: Student | undefined): Promi
 
 export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {
   await setJSON(WORLDS_CONFIG_KEY, config);
+}
+
+// Mundos con contenido de un grado (no 3.º).
+export function gradeWorldIds(grade: number): number[] {
+  return getGrade(grade)
+    .worlds.filter((w) => grade !== 1 || grade1HasContent(w))
+    .map((w) => w.id);
+}
+
+// Mundos habilitados del aula piloto para otro grado (clave
+// worldsConfig:g<grado>). Por defecto, todos.
+export async function getGradeWorldsConfig(grade: number): Promise<WorldsConfig> {
+  const all = gradeWorldIds(grade);
+  const cfg = await getJSON<WorldsConfig | null>(`${WORLDS_CONFIG_KEY}:g${grade}`, null);
+  const ids = cfg?.enabledWorldIds?.filter((id) => all.includes(id));
+  return { enabledWorldIds: cfg ? ids ?? [] : all };
+}
+
+export async function saveGradeWorldsConfig(grade: number, config: WorldsConfig): Promise<void> {
+  await setJSON(`${WORLDS_CONFIG_KEY}:g${grade}`, config);
+}
+
+// El docente cambia el grado de un alumno del aula piloto.
+export async function setStudentGrade(code: string, grade: number): Promise<void> {
+  const students = await getStudents();
+  const updated = students.map((s) => {
+    if (s.code !== code) return s;
+    const next: Student = { ...s, grade };
+    if (grade === DEFAULT_GRADE) delete next.grade;
+    return next;
+  });
+  await setJSON(STUDENTS_KEY, updated);
+  classSnapshotCache = null;
 }
 
 // ---------- Tienda ----------
