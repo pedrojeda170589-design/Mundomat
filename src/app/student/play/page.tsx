@@ -22,7 +22,8 @@ import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 import Link from "next/link";
-import { getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
+import { TRIAL_WORLDS_PER_SUBJECT, TrialReport, getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
+import TrialReportCard from "@/components/prueba/TrialReportCard";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 
 export default function StudentPlayPage() {
@@ -42,6 +43,7 @@ export default function StudentPlayPage() {
   const [isTrialStudent, setIsTrialStudent] = useState(false);
   const [trialEndsAt, setTrialEndsAt] = useState<string | undefined>(undefined);
   const [trialLength, setTrialLength] = useState(30);
+  const [trialReport, setTrialReport] = useState<TrialReport | null>(null);
   const [trialExpired, setTrialExpired] = useState(false);
   const [showEarlyRating, setShowEarlyRating] = useState(false);
 
@@ -57,6 +59,7 @@ export default function StudentPlayPage() {
       setTrialExpired(true);
       if (progressData.student?.name) setName(progressData.student.name);
       setTrialLength(getTrialLengthDays(progressData.student));
+      setTrialReport(progressData.report ?? null);
       setLoading(false);
       return;
     }
@@ -126,10 +129,17 @@ export default function StudentPlayPage() {
               ¡Gracias por probar MundoTest26!
             </h2>
             <p className="text-sm text-amber-900 leading-relaxed">
-              Hola, <strong>{name}</strong>. Tu período de prueba de {trialLength} días terminó. Esperamos que te haya gustado explorar los mundos y jugar.
+              Hola, <strong>{name}</strong>. {trialReport?.endedReason === "mundos"
+                ? "¡Completaste todos los mundos de la prueba!"
+                : `Tu período de prueba de ${trialLength} días terminó.`}{" "}
+              Esperamos que te haya gustado explorar los mundos y jugar.
             </p>
 
-            <TrialRatingCard studentCode={code || ""} />
+            {trialReport && <TrialReportCard report={trialReport} />}
+
+            <div className="print:hidden">
+              <TrialRatingCard studentCode={code || ""} />
+            </div>
 
             <div className="pt-2">
               <button
@@ -199,6 +209,10 @@ export default function StudentPlayPage() {
             <span>⏳</span>
             <span>
               Prueba: {getTrialDaysLeft(trialEndsAt) <= 1 ? "último día" : `te quedan ${getTrialDaysLeft(trialEndsAt)} días`}
+              {" · "}
+              {SUBJECT_INFO[subject].label}:{" "}
+              {progress.completedWorlds.filter((id) => WORLDS.find((w) => w.id === id)?.subject === subject).length}/
+              {TRIAL_WORLDS_PER_SUBJECT} mundos
             </span>
           </div>
           {getTrialDaysLeft(trialEndsAt) <= 3 && (

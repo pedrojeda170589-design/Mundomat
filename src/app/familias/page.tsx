@@ -3,12 +3,13 @@ import Link from "next/link";
 import { WORLDS } from "@/lib/worlds";
 import { SUBJECT_INFO, WorldSubject } from "@/types";
 import { fichaHref, fichaVersions } from "@/lib/fichas";
+import FichasGate from "@/components/FichasGate";
 
 export const metadata = {
   title: "Fichas para imprimir · MundoTest26",
 };
 
-// Página para las familias (no hace falta código de alumno): fichas de
+// Página para las familias (con el código del alumno): fichas de
 // refuerzo en PDF de cada mundo, para descargar, imprimir y trabajar en
 // papel (repasar trazos, escribir, dibujar y resolver).
 export default function FamiliasPage() {
@@ -30,6 +31,8 @@ export default function FamiliasPage() {
           </Link>
         </div>
 
+        <FichasGate>
+        <div className="flex flex-col gap-6">
         {subjects.map((subject) => {
           const info = SUBJECT_INFO[subject];
           const worlds = WORLDS.filter((w) => w.subject === subject);
@@ -70,6 +73,8 @@ export default function FamiliasPage() {
             </section>
           );
         })}
+        </div>
+        </FichasGate>
       </div>
     </main>
   );

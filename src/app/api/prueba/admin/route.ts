@@ -3,6 +3,7 @@ import { checkAdminPassword } from "@/lib/auth";
 import {
   getOpenClassroomConfig,
   getOpenClassroomRatings,
+  closeExpiredTrials,
   getOpenClassroomStats,
   saveOpenClassroomConfig,
 } from "@/lib/openClassroom";
@@ -13,6 +14,9 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "No autorizado." }, { status: 401 });
   }
 
+  // Las pruebas vencidas se cierran (informe guardado, historial borrado)
+  // aunque el chico no vuelva a entrar.
+  await closeExpiredTrials();
   const [config, stats, ratings] = await Promise.all([
     getOpenClassroomConfig(),
     getOpenClassroomStats(),

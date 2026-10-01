@@ -5,7 +5,9 @@ import { findStudentByCode, getProgress, saveProgress, liteProgress } from "@/li
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
-import { isTrialExpired } from "@/lib/openClassroomShared";
+import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
+import { endTrialNow, isTrialWorldBlocked, trialAllSubjectsDone } from "@/lib/openClassroom";
+import { getEnabledWorldIdsFor } from "@/lib/data";
 
 // POST: el alumno terminó una vuelta completa de un mundo (las 10
 // actividades respondidas). Acá se decide, según el sistema de refuerzo del
@@ -34,6 +36,10 @@ export async function POST(request: NextRequest) {
   }
 
   const progress = await getProgress(student.code);
+  const isTrial = isOpenClassroomStudent(student);
+  if (isTrial && isTrialWorldBlocked(progress, worldId)) {
+    return Response.json({ error: "En la prueba se pueden superar hasta 5 mundos por materia.", trialLimit: true }, { status: 403 });
+  }
   const { progress: updated, outcome, coinsEarned } = applyWorldAttempt(
     progress,
     worldId,
@@ -41,6 +47,13 @@ export async function POST(request: NextRequest) {
     totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD
   );
   await saveProgress(updated);
+  // Aula de prueba: si ya superó los mundos de todas las materias, la prueba
+  // termina (al volver al mapa ve su informe final).
+  let trialFinished = false;
+  if (isTrial && trialAllSubjectsDone(updated, await getEnabledWorldIdsFor(student))) {
+    await endTrialNow(student);
+    trialFinished = true;
+  }
   // Pizarrón de novedades: mundo completado / medalla nueva.
   await addNews(newsForWorldProgress(student, progress, updated), student.classroomId);
 
@@ -73,5 +86,5 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  return Response.json({ progress: liteProgress(updated), outcome, coinsEarned });
+  return Response.json({ progress: liteProgress(updated), outcome, coinsEarned, trialFinished });
 }

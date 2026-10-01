@@ -3,7 +3,8 @@ import { recordActivityResult } from "@/lib/platform/server";
 import { findStudentByCode, getProgress, liteProgress, saveProgress, syncStudentWithPlatform } from "@/lib/data";
 import { applyActivityResult } from "@/lib/progressLogic";
 import { collectActiveSeasonalRewards } from "@/lib/seasons";
-import { isTrialExpired } from "@/lib/openClassroomShared";
+import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
+import { closeTrialIfExpired, isTrialWorldBlocked } from "@/lib/openClassroom";
 import { ActivityResult } from "@/types";
 
 export async function GET(request: NextRequest) {
@@ -19,7 +20,10 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(student)) {
-    return Response.json({ trialExpired: true, student, error: "Tu período de prueba terminó." }, { status: 403 });
+    // Primera vez después del vencimiento: se guarda el informe final y se
+    // borra el historial de juego.
+    const report = await closeTrialIfExpired(student);
+    return Response.json({ trialExpired: true, student, report, error: "Tu período de prueba terminó." }, { status: 403 });
   }
   const progress = await getProgress(student.code);
   // ?lite=1 (pantallas del alumno): sin el registro detallado de
@@ -56,6 +60,9 @@ export async function POST(request: NextRequest) {
   }
 
   const progress = await getProgress(student.code);
+  if (isOpenClassroomStudent(student) && typeof worldId === "number" && isTrialWorldBlocked(progress, worldId)) {
+    return Response.json({ error: "En la prueba se pueden superar hasta 5 mundos por materia.", trialLimit: true }, { status: 403 });
+  }
   const result: ActivityResult = {
     worldId,
     activityIndex,

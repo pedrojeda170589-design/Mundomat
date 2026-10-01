@@ -1,6 +1,6 @@
 import { WorldDef } from "@/types";
 
-// Fichas para imprimir (public/fichas/mundo-<id>-<n>.pdf). Cada versión trae
+// Fichas para imprimir (private/fichas/mundo-<id>-<n>.pdf, se descargan por /api/fichas con código de alumno). Cada versión trae
 // actividades distintas (en Matemática, con números nuevos): repasar y
 // dibujar, actividades de repaso con soluciones, y cartas para recortar y
 // jugar Memoria Numérica y memorama en familia.
@@ -9,5 +9,5 @@ export function fichaVersions(world: WorldDef): number {
 }
 
 export function fichaHref(worldId: number, version: number): string {
-  return `/fichas/mundo-${worldId}-${version}.pdf`;
+  return `/api/fichas/mundo-${worldId}-${version}.pdf`;
 }

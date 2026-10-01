@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { findStudentByCode, getEnabledWorldIdsFor, getWorldsConfig, saveWorldsConfig } from "@/lib/data";
+import { findStudentByCode, getEnabledWorldIdsFor, getProgress, getWorldsConfig, saveWorldsConfig } from "@/lib/data";
+import { filterTrialWorlds } from "@/lib/openClassroom";
+import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { checkAdminPassword } from "@/lib/auth";
 
 // GET → configuración del aula piloto (panel de siempre).
@@ -8,7 +10,13 @@ export async function GET(request: NextRequest) {
   const code = new URL(request.url).searchParams.get("code");
   if (code) {
     const student = await findStudentByCode(code);
-    return Response.json({ config: { enabledWorldIds: await getEnabledWorldIdsFor(student) } });
+    const enabled = await getEnabledWorldIdsFor(student);
+    if (student && isOpenClassroomStudent(student)) {
+      // Aula de prueba: hasta 5 mundos superados por materia.
+      const progress = await getProgress(student.code);
+      return Response.json({ config: { enabledWorldIds: filterTrialWorlds(enabled, progress), trialAllEnabledIds: enabled } });
+    }
+    return Response.json({ config: { enabledWorldIds: enabled } });
   }
   const config = await getWorldsConfig();
   return Response.json({ config });

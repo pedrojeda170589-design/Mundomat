@@ -3,6 +3,10 @@
 
 export const OPEN_CLASSROOM_ID = "abierta-3";
 
+// En la prueba se pueden superar hasta 5 mundos de cada materia. La prueba
+// termina a los 30 días o cuando se completan los 5 mundos de cada materia.
+export const TRIAL_WORLDS_PER_SUBJECT = 5;
+
 export interface OpenClassroomConfig {
   open: boolean;
   capacity: number;
@@ -80,4 +84,45 @@ export function canRateTrial(
   if (!student?.trialEndsAt) return false;
   if (isTrialExpired(student, nowMs)) return true;
   return getTrialDaysLeft(student.trialEndsAt, nowMs) <= 3;
+}
+
+// --- Informe final de la prueba --------------------------------------------
+
+export interface TrialReportSubject {
+  subject: string;
+  label: string;
+  emoji: string;
+  completedWorlds: string[]; // nombres de los mundos superados
+  answered: number; // respuestas dadas
+  correct: number;
+  pct: number | null; // % de aciertos (null si no jugó)
+}
+
+export interface TrialReport {
+  code: string;
+  name: string;
+  createdAt: string;
+  startedAt?: string;
+  endedReason: "dias" | "mundos";
+  daysPlayed: number; // días distintos en los que jugó
+  totalCompleted: number;
+  totalAnswered: number;
+  totalCorrect: number;
+  bySubject: TrialReportSubject[];
+  strengths: string[]; // mundos con muy buen resultado
+  toReinforce: { world: string; subject: string; pct: number; tip: string }[];
+  notExplored: string[]; // materias que no llegó a jugar
+}
+
+// Mundos de una materia que todavía cuentan para el límite de la prueba.
+export function trialSubjectCounts(
+  completedWorlds: number[],
+  subjectOf: (worldId: number) => string | undefined
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const id of completedWorlds) {
+    const s = subjectOf(id);
+    if (s) counts[s] = (counts[s] ?? 0) + 1;
+  }
+  return counts;
 }

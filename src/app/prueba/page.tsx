@@ -158,25 +158,21 @@ export default function PruebaInscripcionPage() {
               El aula de prueba está completa por ahora
             </h2>
             <p className="text-sm text-amber-900/80 leading-relaxed">
-              Alcanzamos el cupo de alumnos para esta etapa de prueba. Podés volver a consultar más adelante o recorrer las fichas de actividades imprimibles para familias.
+              Alcanzamos el cupo de alumnos para esta etapa de prueba. Podés volver a consultar más adelante.
             </p>
-            <div className="pt-2 flex flex-col gap-2">
-              <Link
-                href="/familias"
-                className="rounded-xl bg-amber-500 text-amber-950 font-bold py-2.5 px-4 text-sm hover:brightness-105 transition"
-              >
-                👨‍👩‍👧 Ver fichas para familias
-              </Link>
-            </div>
           </div>
         ) : (
           /* Formulario de inscripción */
           <div className="parchment-panel rounded-2xl p-6 sm:p-8 shadow-xl border-2 border-amber-600/40 flex flex-col gap-5">
             <div className="text-xs text-amber-900/90 leading-relaxed bg-amber-100/60 p-3.5 rounded-xl border border-amber-700/20">
               <p className="font-semibold mb-1">
-                📖 Prueba gratuita de 30 días
+                📖 Prueba gratuita de {openStatus?.trialDays ?? 30} días
               </p>
               MundoTest26 es un entorno educativo seguro para chicos de 3.º grado. No solicitamos correos, números de teléfono ni datos sensibles.
+              <span className="block mt-1.5">
+                En la prueba se pueden superar hasta 5 mundos de cada materia. Al terminar, la familia recibe un
+                informe con lo logrado y lo que conviene seguir reforzando, y el historial de juego se borra.
+              </span>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -216,7 +212,7 @@ export default function PruebaInscripcionPage() {
                   required
                 />
                 <span className="text-xs text-amber-950 font-semibold leading-snug">
-                  Soy la persona adulta responsable y acepto que use MundoTest26 durante 30 días de prueba.
+                  Soy la persona adulta responsable y acepto que use MundoTest26 durante {openStatus?.trialDays ?? 30} días de prueba.
                 </span>
               </label>
 

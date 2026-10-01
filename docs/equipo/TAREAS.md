@@ -34,3 +34,8 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
   - El texto de despedida usa la duración real de la prueba de cada alumno (`getTrialLengthDays`), no «30 días» fijo.
   - Cartel «Prueba: te quedan N días» con margen en el celular.
   - Decisión de Pedro: en el aula abierta **no hay buzón ni duelos** (son chicos de distintas familias que no se conocen). `isOpenClassroomStudent()` apaga el buzón (GET vacío, POST 403) y la competencia (config `enabled: false`), y el mapa no muestra la entrada a la competencia.
+
+#### Pedido de Pedro después de unir (aula abierta)
+- **Límite de la prueba:** hasta 5 mundos superados por materia (`TRIAL_WORLDS_PER_SUBJECT`). Al llegar a 5 en una materia, solo se pueden repasar los ya superados (`/api/worlds` filtra; `/api/progress` y `/api/world-attempt` devuelven 403 `trialLimit`). La prueba termina a los 30 días **o** al superar los 5 mundos de cada materia (`trialEndedBy: "mundos"`).
+- **Informe final y borrado:** al vencer, se guarda un informe (`trialReport:<código>`: mundos superados, % de aciertos por materia, fortalezas, qué reforzar con sugerencias) y se **borra el historial** (`progress:<código>`). Se hace la primera vez que el alumno vuelve a entrar o cuando el docente abre el panel (`closeExpiredTrials`). El informe se ve e imprime en la pantalla de despedida (`TrialReportCard`).
+- **Fichas en PDF solo con código:** los PDF pasaron de `public/fichas` a `private/fichas` y se descargan por `/api/fichas/<archivo>` con una cookie que se obtiene con un código de alumno válido (`/api/fichas/acceso`). `/familias` pide el código (o usa el del alumno que ya entró). Un alumno de prueba vencido ya no descarga.

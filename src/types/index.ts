@@ -18,6 +18,12 @@ export interface Student {
   // Período de prueba para alumnos del aula abierta pública.
   trialStartedAt?: string;
   trialEndsAt?: string;
+  // Cuándo se cerró la prueba: se guardó el informe final y se borró el
+  // historial de juego.
+  trialClosedAt?: string;
+  // "mundos" si la prueba terminó antes por completar los mundos de todas
+  // las materias (si no, terminó por los días).
+  trialEndedBy?: "mundos";
 }
 
 export interface ActivityResult {
