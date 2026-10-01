@@ -7,3 +7,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Trabajo en equipo (Claude + Antigravity)
+
+Este repositorio lo trabajan dos agentes en paralelo. Antes de cambiar código,
+leé `docs/equipo/README.md` y el tablero `docs/equipo/TAREAS.md`, y trabajá solo
+en las tareas asignadas a vos, en tu propia rama.
