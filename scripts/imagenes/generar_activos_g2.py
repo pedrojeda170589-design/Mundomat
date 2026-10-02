@@ -1,4 +1,6 @@
 """Generador de mapas e islas para 2.º grado (Bosque de Lengas).
+# ⚠️ YA NO SE USA: las islas y mapas de 2.º ahora son ilustraciones (CL-06).
+# No correr este script: pisaría public/theme/grados/2/**.
 Genera:
 - public/theme/grados/2/mapa/etapa-{1..4}.jpg (800x1200)
 - public/theme/grados/2/islas/mundo-{wid}.png (340x340, RGBA transparente)

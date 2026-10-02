@@ -3,7 +3,8 @@
 Uso:
   python3 scripts/imagenes/cortar_islas.py <hoja.png> <carpeta_salida> <id1> <id2> ... <id9>
   (los ids en el orden de la grilla: izquierda a derecha, arriba a abajo;
-   "practica" guarda practica.png, cualquier otro guarda mundo-<id>.png)
+   "practica" guarda practica.png, "skip" no guarda nada, cualquier otro
+   guarda mundo-<id>.png)
 
 Requiere: pip install rembg pillow numpy scipy onnxruntime
 """
@@ -53,9 +54,20 @@ def process(path, ids, OUT, maxdim=340):
         for c in range(3):
             if k >= len(ids): return
             name = ids[k]; k += 1
+            if name == "skip":
+                continue
             piece = img.crop((xs[c], ys[r], xs[c + 1], ys[r + 1]))
             rgb = np.array(piece)
             a = np.array(remove(piece, session=sess()).getchannel('A')).astype(float)
+            # El fondo es blanco puro: todo lo que no está conectado al blanco del
+            # borde es isla (evita que la roca clara de abajo quede transparente).
+            white = rgb.astype(int).min(axis=2) > 238
+            lab, _ = ndimage.label(white)
+            border = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
+            bg = np.isin(lab, list(border))
+            solid = ndimage.binary_opening(~bg, iterations=2)
+            a = np.maximum(a, np.where(solid, 255.0, 0.0))
+            a = np.where(bg & (a < 250), np.minimum(a, 60), a)
             # keep only the largest blob (+ close neighbours) to drop stray bits
             lab, n = ndimage.label(a > 30)
             if n > 1:
@@ -69,7 +81,8 @@ def process(path, ids, OUT, maxdim=340):
             rr = maxdim / max(im.size)
             if rr < 1: im = im.resize((int(im.width * rr), int(im.height * rr)), Image.LANCZOS)
             fn = f'{OUT}/{"practica" if name == "practica" else "mundo-" + name}.png'
-            im.save(fn, optimize=True)
+            # 256 colores (paleta con transparencia): ~10 veces más liviano.
+            im.quantize(256, method=Image.Quantize.FASTOCTREE).save(fn, optimize=True)
             print(fn, im.size)
 
 

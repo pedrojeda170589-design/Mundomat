@@ -93,6 +93,9 @@ export default function ActivityRunner({
   }, []);
 
   const activity = activities[index];
+  // El cuento (listen) no cuenta como actividad: el contador muestra solo las preguntas.
+  const shownTotal = activities.filter((a) => a.type !== "listen").length;
+  const shownIndex = activities.slice(0, index + 1).filter((a) => a.type !== "listen").length;
 
   function submitResult(correct: boolean) {
     const timeSpentSeconds = Math.round(
@@ -208,7 +211,8 @@ export default function ActivityRunner({
           ← Salir
         </button>
         <span className="text-sm text-amber-50 font-semibold">
-          {world.emoji} {world.name} · {index + 1}/{activities.length}
+          {world.emoji} {world.name}
+          {activity.type !== "listen" && ` · ${shownIndex}/${shownTotal}`}
         </span>
         <CoinBadge coins={coins} />
       </div>
@@ -216,8 +220,8 @@ export default function ActivityRunner({
         <span className="relative w-16 h-16 shrink-0 wk-float">
           <WorldIcon world={world} sizes="64px" />
         </span>
-        <span className="flex-1 flex gap-1" aria-label={`Actividad ${index + 1} de ${activities.length}`}>
-          {activities.map((_, i) => (
+        <span className="flex-1 flex gap-1" aria-label={`Actividad ${shownIndex} de ${shownTotal}`}>
+          {activities.map((a, i) => a.type === "listen" ? null : (
             <span
               key={i}
               className={`h-2.5 flex-1 rounded-full ${
@@ -230,7 +234,7 @@ export default function ActivityRunner({
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
-            {world.grade !== 1 && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
+            {world.grade !== 1 && !world.storyId && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
             {activity.type === "pick" && (
               <PickActivity
                 key={`pick-${index}`}

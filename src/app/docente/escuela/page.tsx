@@ -121,6 +121,9 @@ export default function SchoolPage() {
   );
 }
 
+// Grados que ya tienen mundos en el juego (ver GRADES en src/lib/grades.ts).
+const GRADOS_CON_MUNDOS = [1, 2, 3];
+
 function NewClassroom({ onCreate }: { schoolId: string; onCreate: (grade: number, division: string, year: number) => void }) {
   const [grade, setGrade] = useState(3);
   const [division, setDivision] = useState("A");
@@ -137,7 +140,13 @@ function NewClassroom({ onCreate }: { schoolId: string; onCreate: (grade: number
       >
         <label className="flex flex-col">
           Grado
-          <input type="number" min={1} max={12} value={grade} onChange={(e) => setGrade(Number(e.target.value))} className="w-20 rounded-lg border px-2 py-1" />
+          <select value={grade} onChange={(e) => setGrade(Number(e.target.value))} className="rounded-lg border px-2 py-1">
+            {[1, 2, 3, 4, 5, 6, 7].map((g) => (
+              <option key={g} value={g}>
+                {g}.º{GRADOS_CON_MUNDOS.includes(g) ? "" : " (próximamente)"}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="flex flex-col">
           División

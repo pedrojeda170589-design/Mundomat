@@ -10,10 +10,10 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
-| CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🔨 EN CURSO |
+| CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | ⏳ PENDIENTE |
-| CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🔨 EN CURSO |
-| CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🔨 EN CURSO |
+| CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🟢 UNIDA A MAIN (falta conectar Supabase: ver docs/plataforma/CONFIGURAR.md) |
+| CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
 
@@ -141,3 +141,15 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - Un mundo de cuento en las posiciones 3, 6, 9… de Lengua (`withStories` en `recorrido.ts`): 19 en 1.º (11101–11119), 19 en 2.º (21101–21119) y 6 en 3.º (31101–31106). Piden el mundo común anterior pero no bloquean el siguiente (no cambia el progreso de nadie).
 - Actividad `listen` (`ListenActivity.tsx`): en 1.º se narra sola (grabación en `public/audio/cuentos/` si existe; si no, voz del navegador); en 2.º y 3.º los chicos leen y tienen 🔊 opcional. No suma puntos: el puntaje sale de las preguntas.
 - Habilidades: 1.º `l-comp-literal/secuencia/inferencial`; 2.º `l2-comp-literal/secuencia/inferencial/vocabulario/critica`.
+- Ilustraciones: 19 cuentos × 6 escenas (`public/theme/grados/1/cuentos/`), islas de los cuentos en el estilo de cada grado (costa 11101–11119, bosque 21101–21119, meseta 31101–31106).
+
+### CL-05 · Escuelas, aulas y docentes (Claude)
+- La plataforma (`/docente`, Supabase con permisos por fila) ya cubre lo pedido: administrador general → escuelas y direcciones; dirección → aulas y docentes; docente → solo sus aulas y alumnos.
+- Probado con una base Postgres local (migraciones + datos de prueba): un docente no ve ni puede inscribir alumnos de otra aula; la dirección ve solo su escuela; el administrador general ve todo.
+- Nuevo: guía paso a paso `docs/plataforma/CONFIGURAR.md`, script `supabase/bootstrap_super_admin.sql`, selector de grado (1.º a 7.º) al crear aulas y acceso «🏫 Escuelas y aulas» desde `/admin`.
+- Pendiente de Pedro: crear el proyecto Supabase y cargar las 3 variables en Vercel.
+
+### CL-06 · Imágenes ilustradas de 2.º (Claude)
+- 120 islas nuevas «bosque de lengas en otoño» (100 mundos + 19 lecturas + práctica) con el mismo estilo ilustrado de 1.º, y 4 mapas (primavera, verano, otoño, invierno).
+- `scripts/imagenes/cortar_islas.py`: relleno del fondo blanco (la roca clara no queda transparente), paleta de 256 colores (archivos ~10 veces más livianos) y celdas `skip`.
+- `scripts/imagenes/generar_activos_g2.py` (dibujos geométricos de AG-03) ya no se usa: no correrlo, pisaría las islas nuevas.

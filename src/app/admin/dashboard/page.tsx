@@ -205,6 +205,9 @@ export default function AdminDashboardPage() {
             </h1>
             <p className="text-amber-100 text-sm">MundoTest26</p>
           </div>
+          <Link href="/docente" className="ml-auto mr-4 text-amber-100 text-sm underline">
+            🏫 Escuelas y aulas
+          </Link>
           <button
             onClick={handleLogout}
             className="text-amber-100 text-sm underline"
