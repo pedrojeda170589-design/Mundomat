@@ -138,6 +138,13 @@ export const AVATAR_OPTIONS: string[] = [
   "puma",
   "guardaparque",
   "dragon",
+  // Halloween (tienda, solo durante la temporada de Halloween).
+  "calabaza",
+  "fantasmita",
+  "brujita",
+  "vampirito",
+  "gato-negro",
+  "murcielago",
 ];
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
@@ -165,6 +172,12 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   puma: { label: "Puma", emoji: "🐆" },
   guardaparque: { label: "Guardaparque", emoji: "🌲" },
   dragon: { label: "Dragón amigo", emoji: "🐉" },
+  calabaza: { label: "Calabacita", emoji: "🎃" },
+  fantasmita: { label: "Fantasmita", emoji: "👻" },
+  brujita: { label: "Brujita", emoji: "🧙" },
+  vampirito: { label: "Vampirito", emoji: "🧛" },
+  "gato-negro": { label: "Gato negro", emoji: "🐈‍⬛" },
+  murcielago: { label: "Murcielaguito", emoji: "🦇" },
 };
 
 // --- Tienda ---
@@ -173,8 +186,11 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
 export interface ShopAvatar {
   id: string;
   price: number;
-  category: "proceres" | "fauna" | "oficios" | "fantasia";
+  category: "proceres" | "fauna" | "oficios" | "fantasia" | "halloween";
   blurb: string;
+  // Si tiene temporada, solo se puede comprar mientras esa festividad está
+  // activa (ver src/lib/seasons.ts). Lo comprado queda para siempre.
+  season?: string;
 }
 
 export const SHOP_AVATARS: ShopAvatar[] = [
@@ -184,6 +200,12 @@ export const SHOP_AVATARS: ShopAvatar[] = [
   { id: "belgrano", price: 220, category: "proceres", blurb: "Creador de la Bandera argentina." },
   { id: "juana-azurduy", price: 230, category: "proceres", blurb: "Heroína de la independencia." },
   { id: "san-martin", price: 250, category: "proceres", blurb: "Libertador de Argentina, Chile y Perú." },
+  { id: "calabaza", price: 120, category: "halloween", season: "halloween", blurb: "Una calabaza sonriente con sombrerito." },
+  { id: "fantasmita", price: 120, category: "halloween", season: "halloween", blurb: "Un fantasma bueno que da abrazos." },
+  { id: "brujita", price: 140, category: "halloween", season: "halloween", blurb: "Hace pociones de colores… ¡y de matemática!" },
+  { id: "vampirito", price: 140, category: "halloween", season: "halloween", blurb: "Un vampiro simpático que solo toma jugo." },
+  { id: "gato-negro", price: 130, category: "halloween", season: "halloween", blurb: "Un gatito negro muy curioso." },
+  { id: "murcielago", price: 130, category: "halloween", season: "halloween", blurb: "Un murcielaguito que duerme cabeza abajo." },
 ];
 
 export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
@@ -191,6 +213,7 @@ export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
   fauna: "🐾 Fauna",
   oficios: "🧰 Oficios",
   fantasia: "✨ Fantasía",
+  halloween: "🎃 Halloween",
 };
 
 export function getShopAvatar(id: string): ShopAvatar | undefined {

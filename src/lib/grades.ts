@@ -6,17 +6,54 @@ import { Student, StudentProgress, WorldDef } from "@/types";
 import { WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 
+// Ambiente visual de cada grado: el recorrido de 1.º a 7.º pasa por
+// distintos paisajes de Santa Cruz (1.º costa, 2.º bosque de lengas, 3.º
+// meseta y montaña, 4.º glaciares…), con la misma interfaz: islas en un
+// sendero y 4 etapas de paisaje que crecen con el avance.
+export interface GradeTheme {
+  id: string;
+  label: string;
+  island: (worldId: number) => string; // imagen de la isla de cada mundo
+  map: (stage: number) => string; // fondo del mapa (etapas 1–4)
+  scenery: "mountains" | "seashore"; // silueta de fondo (SVG)
+  dayBg: string; // clase CSS del fondo de día (mapa)
+  nightBg: string; // clase CSS del fondo de noche (actividades)
+}
+
+export const THEMES: Record<string, GradeTheme> = {
+  meseta: {
+    id: "meseta",
+    label: "Meseta y montaña",
+    island: (id) => `/theme/islands/mundo-${id}.png`,
+    map: (stage) => `/theme/map/etapa-${stage}.jpg`,
+    scenery: "mountains",
+    dayBg: "bg-explorer-day",
+    nightBg: "bg-explorer-night",
+  },
+  costa: {
+    id: "costa",
+    label: "Costa patagónica",
+    // Las zonas de práctica (ids 19000+) comparten una isla propia.
+    island: (id) => (id >= 19000 && id < 20000 ? "/theme/grados/1/islas/practica.png" : `/theme/grados/1/islas/mundo-${id}.png`),
+    map: (stage) => `/theme/grados/1/mapa/etapa-${stage}.jpg`,
+    scenery: "seashore",
+    dayBg: "bg-costa-day",
+    nightBg: "bg-costa-night",
+  },
+};
+
 export interface GradeDef {
   grade: number;
   label: string;
+  theme: GradeTheme;
   worlds: WorldDef[];
   masteryPct: number; // % para quedar "a un repaso de completar"
   unlockPct: number; // % de una vuelta que abre los mundos que siguen
 }
 
 export const GRADES: GradeDef[] = [
-  { grade: 1, label: "1.º grado", worlds: GRADE1_WORLDS, masteryPct: 80, unlockPct: 60 },
-  { grade: 3, label: "3.º grado", worlds: WORLDS, masteryPct: 90, unlockPct: 0 },
+  { grade: 1, label: "1.º grado", theme: THEMES.costa, worlds: GRADE1_WORLDS, masteryPct: 80, unlockPct: 60 },
+  { grade: 3, label: "3.º grado", theme: THEMES.meseta, worlds: WORLDS, masteryPct: 90, unlockPct: 0 },
 ];
 
 export const DEFAULT_GRADE = 3;
@@ -27,6 +64,14 @@ export function gradeOf(student: Pick<Student, "grade"> | null | undefined): num
 
 export function getGrade(grade: number): GradeDef {
   return GRADES.find((g) => g.grade === grade) ?? GRADES.find((g) => g.grade === DEFAULT_GRADE)!;
+}
+
+export function themeForGrade(grade: number): GradeTheme {
+  return getGrade(grade).theme;
+}
+
+export function themeForWorld(world: Pick<WorldDef, "grade">): GradeTheme {
+  return getGrade(world.grade ?? DEFAULT_GRADE).theme;
 }
 
 export function gradeOfWorld(worldId: number): number {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
@@ -9,13 +9,15 @@ import { fichaHref, fichaVersions } from "@/lib/fichas";
 import FichasGate from "@/components/FichasGate";
 
 export default function FichasView() {
-  const [grade, setGrade] = useState<number>(() => {
-    if (typeof window !== "undefined" && window.location.hash) {
-      const match = window.location.hash.match(/mundo-(\d+)/);
-      if (match && parseInt(match[1], 10) >= 10000) return 1;
-    }
-    return 3;
-  });
+  const [grade, setGrade] = useState<number>(3);
+  // Si se llega desde el mapa de 1.º (#mundo-11013), se muestra 1.º. Se lee
+  // después de montar para no desincronizar el HTML del servidor.
+  useEffect(() => {
+    const match = window.location.hash.match(/mundo-(\d+)/);
+    // Sincroniza con el hash de la URL (API externa al render).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match && parseInt(match[1], 10) >= 10000) setGrade(1);
+  }, []);
   const subjects = Object.keys(SUBJECT_INFO) as WorldSubject[];
 
   const worlds = grade === 1 ? GRADE1_WORLDS : WORLDS;

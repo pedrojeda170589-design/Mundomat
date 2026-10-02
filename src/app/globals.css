@@ -110,6 +110,14 @@ body {
   background: linear-gradient(180deg, #7ec8f0 0%, #bfe6f5 35%, #eaf6e1 70%, #d7ecc4 100%);
 }
 
+/* 1.º grado (costa patagónica): cielo claro que baja al mar y la arena. */
+.bg-costa-day {
+  background: linear-gradient(180deg, #8fd3f4 0%, #c6ecfa 38%, #e8f7fb 62%, #f6ecc9 100%);
+}
+.bg-costa-night {
+  background: linear-gradient(180deg, #0c1f3a 0%, #14315a 50%, #183b63 78%, #1b2f4d 100%);
+}
+
 /* Versión de noche: cielo profundo, cerros oscuros, misma composición. */
 .bg-explorer-night {
   background: linear-gradient(180deg, #0b1130 0%, #161b3f 45%, #1c2340 75%, #141a33 100%);

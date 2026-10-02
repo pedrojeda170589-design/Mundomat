@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
-import { DEFAULT_GRADE, getGrade, missingPrerequisite } from "@/lib/grades";
+import { DEFAULT_GRADE, getGrade, missingPrerequisite, themeForGrade } from "@/lib/grades";
+import Seashore from "@/components/Seashore";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { practiceZonesFor } from "@/lib/grade1/practice";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
@@ -220,9 +221,9 @@ export default function StudentPlayPage() {
   const medalInfo = MEDAL_INFO[medal];
 
   return (
-    <main className="relative flex-1 flex flex-col bg-explorer-day py-8 overflow-hidden">
+    <main className={`relative flex-1 flex flex-col ${themeForGrade(grade).dayBg} py-8 overflow-hidden`}>
       <CloudsBackground />
-      <Mountains isDay />
+      {themeForGrade(grade).scenery === "seashore" ? <Seashore isDay /> : <Mountains isDay />}
 
       {isTrialStudent && trialEndsAt && (
         <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-2">

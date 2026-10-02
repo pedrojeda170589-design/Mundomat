@@ -1,0 +1,1679 @@
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+
+
+
+
+        DISEÑO CURRICULAR PARA EL NIVEL PRIMARIO
+
+
+
+
+                                  MATEMÁTICA
+
+
+
+
+                                                   81
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+
+
+                                                         MATEMÁTICA
+
+I.- Presentación.
+
+         Reflexionar sobre el conocimiento matemático, al igual que ocurre con la diversidad de tantos otros
+conocimientos culturales existentes, traslada inevitablemente a sus distintos momentos históricos, en vínculo con los
+problemas que tienen lugar en los diferentes entornos sociales y culturales. En el correr de este siglo, dicho
+conocimiento ha logrado un desarrollo exponencial dentro de su misma disciplina y al servicio de otras para continuar
+describiendo y explorando los fenómenos físicos y sociales.
+
+            En consecuencia, debe considerarse a la matemática como un conjunto de conocimientos dinámicos, en constante
+            evolución, relacionados entre sí, organizados en un todo armónico sin contradicciones, que sirven como herramienta
+            potente y valiosa para el planteamiento y la resolución de problemas derivados de la realidad, relacionados con el
+            desarrollo de otras disciplinas o aquellas puramente matemáticas originadas en el placer de resolver desafíos. Por esta
+            razón la matemática está ligada al desarrollo social y cultural de los pueblos. Es un producto del hacer humano y su
+                                                                                 1
+            proceso de construcción está sustentado en marchas y contramarchas .
+
+
+       La enseñanza de la matemática en la escolaridad primaria tiene como meta fundamental la construcción de
+un modo de pensar y producir conocimientos y para ello, resulta primordial la democratización de estos saberes de
+modo que sean accesibles a todas las trayectorias escolares.
+
+            En razón de su enseñanza escolar en el período de la educación obligatoria, debe ser considerada más como un proceso
+            de pensamiento que como una acumulación de resultados. La actual concepción de la matemática en la escuela, pone en
+            evidencia tanto su aspecto formativo e informativo como su comprensión y mejoramiento del mundo científico, industrial
+            y tecnológico en el que vivimos. Además de útil, formativa y necesaria para el desarrollo social e individual de la persona,
+                                                                                         2
+            es una habilidad humana a la que todos pueden acceder en forma placentera.
+
+         Desde esta mirada se reconoce a la matemática aspectos vinculados con el arte puesto que posibilita la
+conjunción entre sus distintas partes y teorías, o entre proposiciones aparentemente desligadas, así como la elegancia
+y limpidez de sus razonamientos, la brevedad y elocuencia y, a veces, la sorpresa de sus resultados. Otra faceta no
+menos importante es su lenguaje preciso y por supuesto, como instrumento para resolver cuestiones de la vida
+cotidiana o de la más sofisticada tecnología.
+
+         Los niños al interactuar en los distintos escenarios sociales aprenden las prácticas habituales de cada contexto
+y construyen saberes, algunos de ellos se relacionan con la Matemática. Estos saberes son vitales para la enseñanza y
+en consecuencia deben ser recuperados en la escuela para ligarlos a los conocimientos que deben aprender, ya sea
+para reconocerlos como parte de ellos y sistematizarlos, como para utilizarlos en nuevos contextos. De esta manera, es
+factible que los alumnos puedan incorporar en su vida cotidiana nuevas prácticas superadoras y valorar el aporte
+brindado por la escuela para su adquisición.
+
+         La matemática reúne una serie de características que le son propias y que tienen que ver con una manera
+particular de producir, de analizar, de argumentar, de validar, de comunicar. Su enseñanza se instala entonces, en la
+construcción de conocimientos mediante la resolución de problemas en múltiples contextos que posibiliten un modo
+de hacer y pensar sobre lo realizado. Para ello es necesario generar las condiciones didácticas adecuadas de modo tal
+que en el aula ocurran momentos de reflexión individual y entre pares, alentando procesos de argumentación, contra-
+argumentación y justificación de lo elaborado con validaciones acordes al lenguaje matemático. Además, donde la
+gestión del error sea un momento clave para el aprendizaje y se nutra de las intervenciones docentes.
+
+         Mediante la resolución de problemas los alumnos tienen la posibilidad de reconstruir conceptos matemáticos
+a partir de diferentes actividades intelectuales que se habilitan al enfrentarse a un problema y que en ocasiones
+escapan a los conocimientos disponibles. Ahora bien, para que el alumno "construya" el conocimiento, es necesario
+que se interese personalmente por la resolución del problema planteado en la situación didáctica. Entonces, se puede
+decir que el proceso de resolución de dicho problema se compara a un juego de estrategia o a un proceso de toma de
+decisiones. Es así que una situación fu io a de a e a adidá ti a ua do el do e te log a ue el alu o asu a el
+
+
+
+1
+    Consejo Provincial de Educación de la Provincia de Santa Cruz (2004): Diseño Curricular Provincial EGB. Matemática.
+2
+    Ibídem-
+                                                                                                                                     82
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+problema planteado como propio, y entre en un proceso de búsqueda autónomo, sin ser guiado por lo que pudiera
+suponer que el maestro espera.
+
+         Por otro lado, debido a la peculiar característica del conocimiento matemático, que incluye tanto conceptos
+como sistemas de representación simbólica y procedimientos de desarrollo y validación de nuevas ideas matemáticas,
+es preciso contemplar varios tipos de situaciones:
+
+        situaciones de acción, sobre el medio, que favorecen el surgimiento de teorías (implícitas) que después
+         funcionarán en la clase como modelos proto-matemáticos. Chevallard (1985) denomina conocimientos proto-
+         matemáticos a los conocimientos no explícitos en el currículum de las matemáticas escolares pero presentes
+         en su proceso de estudio; es decir cuyas propiedades se utilizan en la práctica para resolver problemas sin
+         tomarse como objeto de estudio, por ejemplo las tareas algebraicas de factorización y simplificación de
+         expresiones algebraicas.
+
+        situaciones de formulación, que favorecen la adquisición de modelos y lenguajes explícitos. Este momento se
+         requiere la comunicación entre los estudiantes. Se comparten experiencias en la construcción del aprendizaje.
+         Por eso, en este proceso es importante el control de la comunicación de las ideas. La situación de formulación
+         es básicamente el enfrentar a un grupo de estudiantes con un problema dado, generando la necesidad de que
+         cada integrante del grupo participe del proceso, es decir, que todos se vean comprometidos a comunicar las
+         ideas e interactuar con el medio didáctico.
+
+        situaciones de validación, requieren de los alumnos la explicitación de pruebas y por tanto explicaciones de
+         las teorías relacionadas, con medios que subyacen en los procesos de demostración. Los estudiantes
+         despliegan distintas estrategias para comprender, resolver y justificar los procedimientos elegidos, entre
+         varios, en el campo de las intervenciones posibles, y además ponen en valor sus explicaciones desde un
+         lenguaje informal. Siguiendo a Patricia Sadovsky La uestió de la valida ió de la a tividad del alu o de e
+         contemplar dos aspectos: por un lado, las situaciones que se proponen deben ofrecer la posibilidad de ser
+         validadas a través de argumentos; por otra parte, es imprescindible conseguir que los estudiantes se hagan
+          a go de esta valida ió , log o ue e ige o pe o u a t adi ió ultu al e te esta le ida . He aquí la
+         importancia de la puesta en práctica de estrategias de comprensión lectora y de potenciar el lugar del
+                                                                                                3
+         lenguaje como instrumento mediador para otorgar un sentido a estas prácticas situadas .
+
+        situaciones de institucionalización, que tienen por finalidad establecer y dar un status oficial a algún
+         conocimiento aparecido durante la actividad de la clase. En particular se refiere al conocimiento, las
+         representaciones simbólicas, que deben ser retenidas para el trabajo posterior.
+
+         Es necesario entonces priorizar en la escuela, desde el momento en que los niños se inician en el estudio de la
+Matemática, la construcción de los conocimientos por medio de la resolución de problemas y de la reflexión sobre
+éstos, para promover así un modo particular de trabajo matemático que esté al alcance de todos los alumnos.
+
+                                            4
+         En suma, al decir de Charlot , la a tividad ate áti a o es i a                des u i , es ea , p odu i ,
+fa i a …Ha e ate áti a es u t a ajo del pe sa ie to ue o st u e los o eptos pa a esolve p o le as, ue
+plantea nuevos problemas a partir de conceptos así construidos, que rectifica los conceptos para resolver problemas
+nuevos, que generaliza y unifica poco a poco los conceptos en los universos matemáticos que se articulan entre ellos, se
+est u tu a    se desest u tu a     se eest u tu a si esa . trabajo comprometido y que compromete a todos los
+educadores.
+
+
+
+
+3
+   SANCHEZ, Sandra Ma iel         : ¿Qué te e os ue mirar del trabajo docente cuándo las actividades están instrumentadas por
+  o putado as? “e i a io de i t odu ió a la i vestiga ió e p á ti as docentes. La Plata. UNIPE.
+4
+  Charlot B.: La epistemología implícita en las prácticas de enseñanza de la matemática. Conferencia dictada en Cannes, marzo 1986.
+                                                                                                                                83
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+             II – Expectativas de logro
+
+                   Las expectativas de logro, son metas a las cuales es deseable que el alumno arribe como resultantes de los procesos de enseñanza y de aprendizaje, que deben orientar la acción
+                                                5
+             docente y las propuestas didácticas . Dichas expectativas, para el área de Matemática, se plantean por cada Unidad Pedagógica que conforma el Nivel Primario.
+
+
+
+                                                                                                        Expectativas de logro
+
+                                 Primera Unidad Pedagógica                                              Segunda Unidad Pedagógica                                             Tercera Unidad Pedagógica
+
+
+              Desarrollar confianza en las propias posibilidades para resolver                                                                               Afianzar el desarrollo de la confianza en las propias
+                                                                                      Profundizar el desarrollo de la confianza en las propias
+               problemas y formularse interrogantes, justificar sus ideas,                                                                                     posibilidades para resolver problemas y formularse
+                                                                                       posibilidades para resolver problemas y formularse
+               considerar las ideas y opiniones de sus pares, debatirlas y                                                                                     interrogantes, justificar sus ideas, considerar las ideas y
+                                                                                       interrogantes, justificar sus ideas, considerar las ideas y
+               elaborar conclusiones en el marco de una verdadera práctica                                                                                     opiniones de sus pares, debatirlas y elaborar conclusiones
+                                                                                       opiniones de sus pares, debatirlas y elaborar conclusiones
+               democrática.                                                                                                                                    aceptando que los errores son propios de todo proceso de
+                                                                                       aceptando que los errores son propios de todo proceso de
+              Interpretar la información presentada en forma oral o escrita
+                                                                                       aprendizaje, en el marco de una verdadera práctica democrática.         aprendizaje, logrando ser crítico de su accionar
+                                                                                                                                                               matemático, en el marco de una verdadera práctica
+                                                                                      Discutir sobre la validez de los procedimientos realizados y de los
+               (con textos, tablas, dibujos, gráficos).
+                                                                                                                                                               democrática.
+             
+                                                                                       resultados obtenidos, reflexionando para determinar qué
+                                                                                                                                                              Conocer y saber usar con mayor precisión el lenguaje oral,
+                  Comparar procedimientos utilizados para resolver problemas,
+                                                                                       procedimientos fueron los más adecuados o útiles para la
+                 analizar la validez de las respuestas en tanto su adecuación a la
+                                                                                       situación resuelta.                                                     gráfico y simbólico para expresar conceptos y relaciones,
+                 situación planteada y explorar dicha validez en las afirmaciones
+                                                                                                                                                               especialmente funcionales, y explicar procedimientos sobre
+                                                                                      Establecer relaciones y elaborar formas de representación,
+                 propias y ajenas.
+                                                                                                                                                               producciones propias y ajenas, reconociendo la diversidad
+              Comunicar de forma oral y escrita los resultados y
+                                                                                       discutirlas con los demás, confrontar las interpretaciones sobre        de lenguajes que de modo general dan significado a las
+                                                                                       ellas y acerca de la notación convencional.                             situaciones problemáticas en distintos contextos.
+               procedimientos utilizados para resolver problemas aritméticos,
+                                                                                      Elaborar conjeturas, formularlas, comprobarlas mediante el uso         Abordar la construcción significativa y funcional, mediante
+               geométricos y de medida.
+
+              Usar la serie numérica aproximadamente hasta 10.000 ó 15.000
+                                                                                       de ejemplos o justificarlas utilizando contraejemplos o                 y para la resolución de problemas de los diferentes
+
+5
+    Conceptualización- Diseño Curricular EGB. (2004) Pcia. de Santa Cruz.
+
+                                                                                                                                                                                                                       84
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+             identificando y analizando las regularidades en la serie oral y en       propiedades conocidas para resolver problemas aritméticos,             conjuntos numéricos (N, Z, Q, R), comprendiendo las
+             la serie escrita, para leer, escribir y ordenar números.                 geométricos y de medida produciendo, además, textos con                propiedades que los definen y las formas alternativas de
+
+          
+                                                                                      información matemática avanzando en el uso del vocabulario             representación de sus elementos.
+              Resolver problemas que involucran analizar el valor posicional
+                                                                                                                                                           Interpretar, registrar, comunicar y comparar cantidades y
+                                                                                      adecuado.
+              e té i os de u os , die es , ie es          iles .
+                                                                                   Profundizar el estudio de los números naturales y racionales
+          
+                                                                                                                                                            números tanto para los números naturales como para
+              Elaborar recursos de cálculo a partir de componer y                   positivos, sus relaciones, las formas básicas de registrar y            fracciones y/o expresiones decimales, eligiendo la
+              descomponer números en forma aditiva o usando la                      organizar información, y avanzar hacia las nociones de                  representación más adecuada en función del problema a
+              multiplicación por 10, 100 y 1000.                                    probabilidad.                                                           resolver.
+
+           Iniciar la comprensión de las relaciones y usos de los números         Resolver problemas que involucran distintos sentidos de las            Operar seleccionando el tipo de cálculo y la forma de
+            naturales, las reglas del sistema de numeración decimal, las            operaciones, de suma, resta, multiplicación y división, utilizando,     expresar los números involucrados que resulten más
+            fracciones más usuales y los decimales positivos para                   comunicando y comparando diversas estrategias y cálculos                convenientes en función de la situación y evaluando la
+            aproximarse a un conocimiento numérico significativo y                  posibles.                                                               razonabilidad del resultado obtenido.
+            funcional a través de la resolución de problemas.
+                                                                                   Producir y analizar diferentes procedimientos de cálculo (exacto       Elaborar y comparar procedimientos de cálculo –exacto y
+           Interpretar, resolver y producir situaciones problemáticas              y aproximado, mental, escrito y con calculadora) de sumas,              aproximado, mental, escrito y con calculadora– de
+            sencillas aplicando las cuatro operaciones.                             restas, multiplicaciones y divisiones entre fracciones y entre          multiplicaciones de fracciones y expresiones decimales
+
+          
+                                                                                    decimales, incluyendo el encuadramiento de los resultados entre         incluyendo el encuadramiento de los resultados entre
+               Utilizar, comparar y analizar distintos procedimientos para
+                                                                                    números naturales y evaluando la pertinencia y economía del             naturales y analizando la pertinencia y economía del
+              calcular en forma exacta y aproximada, estimar, comparar
+                                                                                    procedimiento en relación con los números involucrados.                 procedimiento en relación con los números involucrados.
+              cantidades y descubrir regularidades numéricas.
+                                                                                                                                                          Elaborar y comparar distintos procedimientos –incluyendo
+          
+                                                                                       Profundizar el conocimiento y uso de relaciones numéricas y sus
+              Reconocer y usar relaciones espaciales en la resolución de
+                                                                                      significados. Sus operaciones, funciones numéricas (como la           el uso de la constante de proporcionalidad– para calcular
+              problemas en espacios explorables o que puedan ser explorados
+                                                                                      proporcionalidad) en el conjunto de números naturales y               valores de cantidades que se corresponden o no
+              efectivamente.
+                                                                                      racionales positivos.                                                 proporcionalmente, evaluando la pertinencia del
+           Describir y comunicar la ubicación de objetos en el espacio así
+                                                                                   Resolver problemas que exigen poner en juego propiedades del
+                                                                                                                                                            procedimiento en relación con los datos disponibles.
+
+                                                                                                                                                           Interpretar y aplicar los conceptos y procedimientos
+            como sus desplazamientos utilizando diagramas, dibujos o
+                                                                                    círculo y la circunferencia, de los triángulos y de cuadriláteros
+            instrucciones verbales.
+                                                                                    para copiarlos, construirlos, describirlos o anticipar medidas,         básicos de la estadística y la probabilidad, reconociendo
+             Producir e interpretar croquis y sencillos planos, para resolver      elaborar conjeturas y debatir acerca de la validez o no de              tanto los alcances como las limitaciones de su uso para la
+
+
+                                                                                                                                                                                                                   85
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+             problemas relativos a localizaciones y desplazamientos en el           diferentes tipos de enunciados.                                     resolución de problemas y la toma de decisiones.
+
+                                                                                 Producir y analizar construcciones geométricas considerando las    Interpretar, elaborar y comparar representaciones del
+             espacio.
+
+             Identificar características de figuras y cuerpos geométricos en     propiedades involucradas y los instrumentos utilizados.             espacio (croquis, planos) explicitando las relaciones de
+
+                                                                                 Comprender el proceso de medir, considerando diferentes
+             situaciones que involucren descripciones, copiados y                                                                                     proporcionalidad utilizadas; teniendo en cuenta las
+             construcciones.                                                                                                                          relaciones espaciales entre los elementos representados.
+                                                                                  expresiones posibles para una misma cantidad.
+             Usar instrumentos de medida y unidades de uso social –                                                                                 Describir, comparar y clasificar figuras geométricas en base
+             convencionales o no- para estimar o determinar longitudes,            Analizar y usar reflexivamente distintos procedimientos para      a las propiedades conocidas.
+                                                                                    estimar y calcular medidas.
+                                                                                                                                                     Producir y comparar desarrollos planos de cuerpos
+             capacidades, pesos y tiempo.
+
+                                                                                 Resolver problemas que involucren el uso del SIMELA para            geométricos argumentando sobre su pertinencia.
+                                                                                  longitud, capacidad y peso estableciendo relaciones entre
+                                                                                  fracciones, expresiones decimales, unidades de medida y            Copiar y construir figuras geométricas a partir de diferentes
+                                                                                  nociones de proporcionalidad.                                       informaciones sobre propiedades y medidas utilizando
+                                                                                                                                                      distintos instrumentos y evaluando la adecuación de la
+                                                                                                                                                      figura obtenida.
+
+                                                                                                                                                     Argumentar sobre la equivalencia de distintas expresiones
+                                                                                                                                                      para una misma cantidad, utilizando las relaciones de
+                                                                                                                                                      proporcionalidad que organizan las unidades del SIMELA.
+
+                                                                                                                                                       Elaborar y comparar procedimientos para calcular áreas de
+                                                                                                                                                        polígonos, estableciendo equivalencias entre figuras de
+                                                                                                                                                        diferente    forma     mediante      composiciones      y
+                                                                                                                                                        descomposiciones para obtener rectángulos.
+
+                                                                                                                                                        Resolver problemas que involucran análisis de las
+                                                                                                                                                        variaciones en perímetros y áreas y el estudio de algunas
+                                                                                                                                                        unidades y fórmulas convencionales para medir áreas de
+                                                                                                                                                        triángulos y cuadriláteros.
+
+
+
+                                                                                                                                                                                                                86
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+III.- Ejes organizadores.
+
+       Los ejes organizadores que estructuran los saberes y contenidos del área de Matemática, por Unidad
+Pedagógica y por grado, se inscriben en los Núcleos de Aprendizajes Prioritarios.
+
+        Asimismo, dichos ejes integran los saberes que conforman el área de conocimiento, en amplitud y
+complejidad creciente para dar cuenta de la profundidad con la que se los debe abordar a lo largo de la escolaridad
+primaria.
+
+                                              Primera Unidad Pedagógica
+
+                                   Ejes organizadores                              Grados
+
+
+               El número y las operaciones.                               1°       2°        3°
+
+               La geometría y la medida                                   1°       2°        3°
+
+
+
+
+                                              Segunda Unidad Pedagógica
+
+                                        Ejes organizadores                              Grados
+
+
+               El número y las operaciones.                                        4°        5°
+
+               La geometría y la medida                                            4°        5°
+
+
+
+
+                                              Tercera Unidad Pedagógica
+
+                                        Ejes organizadores                              Grados
+
+
+               El número y las operaciones.                                        6°        7°
+
+               El álgebra y las funciones                                          6°        7°
+
+               La geometría y la medida                                            6°        7°
+
+               La probabilidad y la estadística                                    6°        7°
+
+
+
+
+                                                                                                                87
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+         IV –Saberes y contenidos
+
+                Los saberes y contenidos del área de Matemática se van graduando y complejizando a lo largo de los grados que conforman cada Unidad Pedagógica del Nivel Primario.
+
+                 Los mismos deberán articularse para propiciar experiencias educativas en contexto, significativas, atractivas, dinámicas y que promuevan en los alumnos trayectorias escolares
+         gratificantes y exitosas. Asimismo, es dable destacar que si bien se presentan estructurados en torno a Ejes organizadores, su orden de presentación no implica una secuencia de desarrollo,
+         sino que será tarea y responsabilidad de cada docente o equipo que éste conforme, diseñar la propuesta según la configuración didáctica que se considere más apropiada.
+
+
+
+
+                                                                                        Primera Unidad Pedagógica
+                                                                                            Saberes y contenidos
+        Ejes                                    1° grado                                                        2° grado                                                        3° grado
+    organizadores
+
+                       Exploración de diferentes contextos y funciones de los
+                        números en el uso social.
+
+                       Resolución de situaciones de conteo de colecciones de
+                        objetos.
+
+                                                                                      Resolución de problemas que permitan retomar la lectura,          Resolución de problemas que permiten retomar la
+                                                                                       escritura y orden de los números hasta aproximadamente             lectura, escritura y orden de los números hasta
+    EL NÚMERO Y                                                                        100 ó 150.                                                         aproximadamente 1.000 ó 1.500.
+
+                       Uso de números naturales de una, dos y más cifras, a          Uso de números naturales de una, dos, tres y más cifras, a        Uso de números naturales de una, dos, tres y más
+         LAS
+    OPERACIONES
+                        través de su designación oral y representación escrita, al     través de su designación oral y representación escrita, al         cifras, a través de su designación oral y representación
+                        determinar y comparar cantidades y posiciones.                 comparar cantidades y números (incluido los números para           escrita, al comparar cantidades y números (incluido los
+                                                                                       expresar medidas).                                                 números para expresar medidas).
+
+                       Análisis de la escritura de números que tienen una y dos      Análisis de la escritura de números que tienen una, dos y tres    Análisis de la escritura de números que tienen una, dos
+                        cifras cuando los números se refieren a cantidad de            cifras cuando los números se refieren a cantidades de              y tres cifras cuando los números se refieren a
+                        objetos.                                                       objetos y cuando no se refieran a cantidades de objetos            cantidades de objetos y cuando no se refieran a
+                                                                                       (como cuando se identifican direcciones, posiciones, se            cantidades de objetos (como cuando se identifican 88
+                                                                                                                                                          direcciones, posiciones, se cantan los números en el
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                    cantan los números en el juego de la lotería, etc.).                    juego de la lotería, etc.).
+
+                             Exploración de las regularidades en la serie numérica oral y         Exploración de las regularidades en la serie numérica oral y           Exploración de las regularidades en la serie numérica
+                                                                                                                                                     6                                                                             7
+                              escrita en números de diversa cantidad de cifras, según el            escrita en números de diversa cantidad de cifras , según el             oral y escrita en números de diversa cantidad de cifras ,
+                              tramo trabajado y por medio de cuadros numéricos. (Ej.                tramo trabajado y por medio de cuadros numéricos.                       por medio de cuadros numéricos.
+                              Del 10 al 30, aumentando de 1 en 1; de 10 en 10, del 10 al
+                              90, etc.)
+
+                             Uso de la i fo a ió so e ú e os edo dos               , ,            Uso de la i fo a ió so e ú e os edo dos               , ,              Uso de la i fo a ió so e ú e os edo dos           ,
+                              30, etc.) para reconstruir cómo se llaman y escriben otros              ,… ó     ,   ,  , et . para reconstruir cómo se llaman y                , ,…ó       ,   ,   ,…ó .   , .   , .    , et .
+                              números, analizando intervalos numéricos hasta 100.                   escriben otros números, analizando intervalos numéricos                 para reconstruir cómo se llaman y escriben otros
+                                                                                                    hasta 1.000.                                                            números, analizando intervalos numéricos hasta
+                                                                                                                                                                            10.000.
+
+                             Reconocimiento y uso de las regularidades en la serie                Reconocimiento y uso de las regularidades en la serie                  Reconocimiento y uso de las regularidades en la serie
+       EL NÚMERO Y            numérica oral y escrita para leer, escribir y ordenar los             numérica oral y escrita para leer, escribir y ordenar los               numérica oral y escrita para leer, escribir y ordenar los
+            LAS               números hasta 100 ó 150.                                              números hasta 1.000 ó 1.500.                                            números hasta 10.000 ó 15.000.
+       OPERACIONES
+                             Resolución de problemas que involucren el análisis del               Resolución de problemas que involucran el análisis del valor         Resolución de problemas que involucran el análisis del
+                              valor de la cifra según la posición que ocupa, en términos            de la cifra según la posición que ocupa (en términos de              valor de la cifra según la posición que ocupa (en términos
+                              de u os       die es .                                                 u os , die es      ie es .                                          de u os , die es , ie es            iles .
+
+                                                                       Uso de la calculadora para analizar cómo varía el valor de una cifra según la posición que ocupa en el número.
+
+                             Construcción de composiciones y descomposiciones                     Construcción de composiciones y descomposiciones aditivas              Construcción de composiciones y descomposiciones
+                              aditivas de los números de dos cifras para escribir                   y multiplicativas de los números de dos y tres cifras para              aditivas y multiplicativas de los números de tres y
+                              números.                                                              escribir números.                                                       cuatro cifras para escribir números.
+
+                             Producción de escrituras aditivas de números, en                     Producción de escrituras aditivas de números, en problemas             Producción de escrituras aditivas de números, en
+                              problemas que involucren el análisis de las escrituras                que involucren el análisis de las escrituras numéricas en el            problemas que involucren el análisis de las escrituras
+                              numéricas en el contexto del dinero, usando billetes de $10           contexto del dinero usando billetes de $100, $10 y monedas              numéricas en el contexto del dinero, usando billetes de
+
+
+6
+    Análisis de intervalos nu é i os de ie ú e os, po ej. del       al   , au e ta do de e          ,    ,    … , o de e            ,    ,    ,… , p esentando extractos completos o para completar, entre 1 y 1.000.
+7
+    Análisis de intervalos numéricos de mil números , por ejemplo de 1.000 a 2.000, aumentando de 10 en 10 ( 1.010, 1.020, 1.0   … o de 100 en 100 , ejemplo del 2.000 a .           ,     ,    ,… , entre 1 y 10.000.
+                                                                                                                                                                                                                                        89
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                         y monedas de $ 1.                                                       de $1.                                                                 $100, $10 y monedas de $1.
+
+                           Resolución de problemas de suma y resta que involucren              Resolución de problemas de suma y resta que involucran                Resolución de problemas de suma y resta que
+                            los sentidos más sencillos de estas operaciones: unir,               distintos sentidos de estas operaciones: unir, agregar, ganar,         involucran distintos sentidos de estas operaciones: unir,
+                            agregar, ganar, avanzar, quitar, perder, retroceder, por             avanzar, quitar, perder, retroceder, por medio de diversos             agregar, ganar, avanzar, quitar, perder, retroceder,
+                            medio de diversos procedimientos- dibujos, marcas,                   procedimientos y reconociendo los cálculos que permiten                reconociendo y utilizando los cálculos que permiten
+                            números y cálculos.                                                  resolverlos.                                                           resolverlos.
+
+                                                                                                                                                                       Exploración de problemas de suma y resta que
+                                                                                                                                                                        involucran otros significados más complejos de estas
+                                                                                                                                                                        operaciones, por medio de diversos procedimientos
+
+                           Uso de estrategias de conteo y sumas repetidas (sumas de sumandos iguales) para resolver problemas de series que se repiten.
+     EL NÚMERO Y
+
+                           Construcción y uso de un repertorio memorizado de                   Uso progresivo de resultados de cálculos memorizados y de             Uso progresivo de resultados de cálculos memorizados
+          LAS                                                                                                                                                8                                                                        9
+     OPERACIONES
+                            resultados de sumas y restas para resolver otros cálculos.           las propiedades de la adición (conmutativa y asociativa) para          y de las propiedades de la adición (conmutativa y
+                                                                                                 resolver otros cálculos.                                               asociativa) para resolver otros cálculos.
+
+                           Construcción y uso de un repertorio de cálculos conocidos           Construcción y uso de un repertorio de cálculos conocidos de          Construcción y uso de un repertorio de cálculos
+                            para realizar composiciones y descomposiciones aditivas de           sumas y restas que permitan realizar composiciones y                   conocidos de sumas y restas que permitan realizar
+                            los números de una y dos cifras para resolver cálculos               descomposiciones aditivas de los números de dos y tres                 composiciones y descomposiciones aditivas y
+                            mentales (escritos en forma horizontal) para la suma y               cifras, para resolver cálculos mentales escritos horizontales.         multiplicativas de los números de cuatro cifras para
+                            resta.                                                                                                                                      resolver cálculos mentales escritos horizontales de
+                                                                                                                                                                        suma y de resta.
+
+                           Exploración de estrategias de cálculo aproximado de sumas           Construcción y utilización de estrategias de cálculo mental           Construcción y utilización de estrategias de cálculo
+
+
+
+
+8
+  Por ejemplo en la suma de redondos iguales y de números fáciles iguales de dos cifras; sumas y restas de números redondos; sumas de cienes más dieces; sumas de cienes más unos; cálculos que sumen o resten 10 y 100 a un número
+cualquiera de una, dos o tres cifras; sumas y restas de múltiplos de 5; dobles y mitades)
+9
+ Por ejemplo con números redondos; sumas de miles, cienes, dieces y unos; sumas y restas de números redondos de cuatro cifras; cálculos que sumen o resten 1.000 a un número cualquiera; cálculos que sumen o resten un número
+redondo de cuatro cifras a un número cualquiera; restas que den redondos. Por ejemplo para resolver 1250 + 2430 se realizará las operaciones 1000+2000, 200+400 y 50+30= 3000+600+80; de igual manera para las restas.
+                                                                                                                                                                                                                                          90
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                         y restas.                                                                      para resolver sumas y restas.                                    mental para resolver sumas y restas.
+
+                                Selección de estrategias de cálculo de suma y resta , de acuerdo con la situación y los números involucrados.
+                                                                                         10
+
+
+
+
+                                Suma y resta en situaciones que presentan los datos en contextos variados, analizando datos necesarios e innecesarios, pertinencia de las preguntas y cantidad de soluciones del
+                                 problema.
+
+                                Exploración de problemas en los cuales se trata de
+                                 determinar la cantidad de elementos de una colección
+                                 formada por grupos de igual cantidad de elementos, por
+                                 medio de diversos procedimientos: dibujos, marcas,
+                                 números, sumas.
+          EL NÚMERO Y
+                                Uso de la calculadora para realizar cálculos sencillos de sumas y restas, poniendo en juego estrategias de cálculo mental y analizando los números involucrados.
+               LAS
+          OPERACIONES
+
+                                                                                                                                                                         Resolución de problemas de suma y resta que se
+                                                                                                                                                                          resuelven con más de un cálculo, por medio de diversos
+                                                                                                                                                                          procedimientos.
+
+                                Análisis de relaciones numéricas (en series de números y              Análisis de relaciones numéricas (en series de números y         Análisis de relaciones numéricas (en series de números
+                                 en cálculos) con apoyo en el estudio de las regularidades              reglas de cálculo de sumas, restas y multiplicaciones) con        y reglas de cálculo de sumas, restas y multiplicaciones)
+                                 de la serie numérica escrita para poder hacer otros cálculos           apoyo en el estudio de las regularidades de la serie numérica     con apoyo en el estudio de las regularidades de la serie
+                                                                                                                                               11                                                                          12
+                                 (cómo cambia un número cuando se le suma o se le resta 1               escrita para poder hacer otros cálculos .                         numérica escrita para poder hacer otros cálculos .
+                                 ó 10).
+
+
+
+
+10
+     Por ejemplo: 30+7+10+2=
+                   40+9
+     11
+          Analizar cómo cambia un número al sumar o restar 100, cuál es la regla que funciona en la serie de números de una tabla de multiplicar.
+     12
+          Analizar cómo cambia un número al sumar o restar 100, cuál es la regla que funciona en la serie de números de una tabla de multiplicar.
+
+
+
+                                                                                                                                                                                                                                     91
+PROVINCIA DE SANTA CRUZ
+
+                                                                                         Producción de diversos procedimientos para resolver problemas sencillos que involucren los sentidos de la multiplicación
+Consejo Provincial de Educación
+
+                                                                                          tales como proporcionalidad -donde se da como dato el valor unitario- y organizaciones rectangulares de los elementos
+                                                                                          (filas y columnas).
+
+                                                                                         Resolución de problemas que involucran algunos sentidos de        Resolución de problemas que involucran diferentes
+                                                                                          la multiplicación (series proporcionales y organizaciones          sentidos de la multiplicación (series proporcionales y
+                                                                                                       13
+                                                                                          rectangulares ) inicialmente por medio de diversos                 organizaciones      rectangulares),   reconociendo   y
+                                                                                          procedimientos y luego usando diferentes cálculos que              utilizando los cálculos que permiten resolverlos.
+                                                                                          permiten resolverlos.
+
+                                                                                                                                                            Exploración de problemas que implican determinar la
+                                                                                                                                                             cantidad que resulta de combinar elementos de dos
+       EL NÚMERO Y
+                                                                                                                                                             colecciones distintas por medio de diversas estrategias
+            LAS
+                                                                                                                                                             y cálculos.
+       OPERACIONES
+                                                                                         Reconocimiento de la propiedad conmutativa de la multiplicación al representar los productos como sumas diferentes,
+                                                                                          pero de igual resultado.
+
+                                                                                         Construcción progresiva de estrategias de cálculo mental          Construcción de un repertorio multiplicativo (cálculos
+                                                                                          para resolver multiplicaciones.                                    memorizados y relacionados entre sí).
+
+                                                                                         Uso progresivo de resultados de cálculos memorizados              Uso progresivo de resultados de cálculos memorizados
+                                                                                          (incluyendo la multiplicación por 10) y de las propiedades de      (incluyendo los productos básicos -multiplicación y
+                                                                                          la multiplicación -conmutativa y asociativa- para resolver         división- con números redondos) y de las propiedades
+                                                                                          otros cálculos.                                                    de la multiplicación -conmutativa y asociativa- para
+                                                                                                                                                             resolver otros cálculos.
+
+                                                                                                                                                            Uso de cálculos mentales conocidos para estimar
+                                                                                                                                                             resultados de produ tos de ú e os o edo dos .
+
+                                                                                         Multiplicación en situaciones que presenten los datos en contextos variados, analizando los que son necesarios e
+
+
+
+  13
+   Por ejemplo a partir de la observación de una porción del patio marcada identificar cantidad de baldosas, cantidad de pinturitas de una caja de acuarelas, o bien cantidad de teclas de la calculadora, de botones del
+  portero eléctrico.
+                                                                                                                                                                                                                       92
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                      innecesarios, pertinencia de las preguntas y cantidad de soluciones del problema.
+
+                                                                                      Elaboración de diferentes procedimientos (conteo, sumas         Elaboración de procedimientos (dibujos, sumas y restas
+                                                                                       sucesivas, restas sucesivas) para resolver problemas de          repetidas, y -en forma progresiva- por medio de
+                                                                                       particiones equivalentes y no equivalentes y análisis de las     cálculos mentales) para resolver problemas de repartos
+                                                                                       condiciones del problema (si sobran elementos o no y si          y particiones equitativas que exijan analizar si hay resto,
+                                                                                       éstos se pueden partir o no).                                    si es posible o no partirlo o repartirlo y si el resto altera
+                                                                                                                                                        la respuesta del problema.
+
+                       Exploración de problemas de reparto por medio de              Resolución de problemas de reparto y partición, por medio       Resolución de problemas de repartos y particiones
+                        diversos procedimientos: dibujos, marcas, números, sumas,      de diversos procedimientos (dibujos, marcas, números y           equitativas, organizaciones rectangulares, series
+                        restas.                                                        cálculos).                                                       proporcionales, por medio de diversos procedimientos
+                                                                                                                                                        y reconociendo, posteriormente, la división como la
+    EL NÚMERO Y
+                                                                                                                                                        operación que resuelve este tipo de problemas.
+         LAS
+                       Ela o a ió de p egu tas a pa ti de disti tas i fo
+    OPERACIONES
+                                                                            a io es i áge es, e u iados i o pletos de p o le as, ál ulos… .
+
+
+                                                                                                                                                       Construcción de un repertorio de cálculos mentales de
+                                                                                                                                                        multiplicación y división por la unidad seguida de ceros,
+                                                                                                                                                        analizando regularidades y relaciones con el sistema de
+                                                                                                                                                        numeración.
+
+                                                                                                                                                       Análisis y uso de diferentes algoritmos de la
+                                                                                                                                                        multiplicación por una cifra.
+
+                                                                                                                                                       Exploración y uso de diferentes algoritmos de división
+                                                                                                                                                        por una cifra.
+
+                                                                                                                                                       Selección de estrategias de cálculo de multiplicación y
+                                                                                                                                                        división, de acuerdo con la situación y los números
+                                                                                                                                                        involucrados.
+
+
+
+
+                                                                                                                                                                                                                        93
+PROVINCIA DE SANTA CRUZ
+
+                                                                                                                                                                 Exploración de problemas de división que demandan
+Consejo Provincial de Educación
+
+                                                                                                                                                                  analizar el resto o cuántas veces entra un número
+                                                                                                                                                                  dentro de otro, por medio de diversos procedimientos y
+                                                                                                                                                                  reconociendo la división como la operación que
+                                                                                                                                                                  resuelve este tipo de problemas.
+
+                                                                                                                                                                 Resolución de problemas que requieran               usar
+                                                                                                                                                                  algunas/varias de las cuatro operaciones.
+
+                                                                                                                                                                 Resolución de problemas de reparto que implican partir
+                                                                                                                                                                  el entero en partes iguales, utilizando mitades o cuartos
+                                                                                                                                                                  y explorando la escritura de los números 1/2, 1/4, etc.
+
+                                                                                                    Uso de la calculadora para análisis de resultados.
+
+                            Resolución de problemas que involucran la comunicación            Resolución de problemas que implican la descripción,             Resolución de problemas que implican la producción e
+                             oral de la ubicación de personas y objetos en el espacio.          interpretación y análisis de la ubicación de personas y           interpretación de instrucciones escritas para comunicar
+                                                                                                objetos en el espacio.                                            la ubicación de personas y objetos en el espacio,
+                                                                                                                                                                  analizando posteriormente la pertinencia y suficiencia
+      La geometría y la                                                                                                                                           de las indicaciones dadas.
+
+                            Resolución de problemas que implican la comunicación e
+           medida
+                                                                                                Resolución de problemas que implican la comunicación e interpretación de recorridos por medio de dibujos, gráficos o
+                             interpretación de desplazamientos y trayectos por medio            instrucciones orales o escritas.
+                             de dibujos, gráficos o instrucciones verbales orales o
+                             escritas.
+
+                            Resolución de problemas que implican interpretar dibujos y        Resolución de problemas que implican interpretar planos de       Resolución de problemas que implican interpretar
+                             planos de diferentes espacios físicos conocidos y                  diferentes espacios físicos conocidos (aula, patio, casa),        sistemas de referencias, formas de representación y
+                                                                                                                                                                                                              14
+                             desconocidos para anticipar y comunicar la ubicación de            analizando puntos de vista, ubicación de objetos, formas          trayectos en diferentes planos de uso social referidos
+                             objetos.                                                           diversas de representar, proporciones, códigos y referencias.     a espacios físicos amplios (museo, borde costero,
+                                                                                                                                                                  barrio, ciudad).
+
+
+
+
+14
+     Se podrán utilizar el croquis de lugares factibles a ser conocidos: zoológico, planetarios, parques temáticos, entre otros.
+                                                                                                                                                                                                                              94
+PROVINCIA DE SANTA CRUZ
+
+                        Resolución de problemas que implican realizar                   Resolución de problemas que implican identificar diferentes puntos de vista desde los cuales puede ser representado un
+Consejo Provincial de Educación
+
+                         representaciones gráficas de espacios pequeños y                 objeto o situación.
+                         conocidos ubicando algunos objetos.
+
+                                                                                                                                                             Resolución de problemas que involucran la producción
+                                                                                                                                                              de planos de diferentes espacios físicos (plaza, patio),
+                                                                                                                                                              analizando puntos de vista, ubicación de objetos,
+                                                                                                                                                              formas diversas de representar proporciones, códigos y
+                                                                                                                                                              referencias.
+
+                        Reconocimiento de las características de figuras planas,        Reconocimiento de las características de figuras planas (como presencia de bordes curvos o rectos y, si son rectos,
+                         como presencia de bordes curvos o rectos y, si son rectos,       número de vértices o lados) a partir del copiado, construcción o representación de un modelo dado.
+                         número de lados o vértices.
+
+                        Exploración, reconocimiento y uso de las características de figuras geométricas para distinguir unas de otras.
+
+                        Reproducción de figuras que contienen cuadrados y               Reproducción de figuras que contienen cuadrados, rectángulos y triángulos como medio para analizar algunas
+                         rectángulos, como medio para analizar algunas                    características.
+                         características.
+
+                        Exploración del uso de la regla como material de utilidad       Uso de la regla como elemento para realizar la reproducción de modelos rectos.
+                         para realizar la reproducción de modelos rectos.
+
+                        Establecimiento de relaciones entre distintas figuras geométricas (cuadrados, rectángulos y triángulos).                            Establecimiento de relaciones entre distintas figuras
+                                                                                                                                                              geométricas (cuadrados, rectángulos y triángulos).
+
+                        Producción de conjeturas y validación de enunciados (sobre figuras geométricas) con base en argumentaciones empíricas, tales como comprobaciones o verificaciones realizadas por
+                         superposición o por plegado.
+
+                        Interpretación de instrucciones orales para identificar         Interpretación de instrucciones orales o escritas (lectura de consignas) para identificar figuras planas.
+   La geometría y la
+        medida
+                         figuras planas.
+
+                        Reproducción de cuerpos geométricos como medio para             Reproducción de cuerpos geométricos como medio para                Exploración, reconocimiento y uso de las características
+                         explorar algunas características de cubos y prismas.             explorar algunas características de cubos, prismas y                de los cuerpos geométricos para distinguir unos de
+                                                                                          pirámides.                                                          otros.
+
+                                                                                                                                                                                                                         95
+PROVINCIA DE SANTA CRUZ
+
+                                                                                       Reproducción e interpretación de distintos cuerpos                 Reproducción e interpretación de las reproducciones de
+Consejo Provincial de Educación
+
+                                                                                        geométricos como medio para explorar algunas de sus                 distintos cuerpos geométricos como medio para
+                                                                                        características.                                                    explorar algunas de sus características
+
+                                                                                       Establecimiento de relaciones entre cuerpos y figuras geométricas.
+
+                                                                                       Elaboración de instrucciones orales o escritas para identificar figuras planas o cuerpos.
+
+                        Exploración de mediciones a partir de comparación directa
+                         (sin instrumentos) de longitudes, pesos o capacidades para
+                         ordenar según algún criterio (más largo que, menos pesado
+                         que, etc.) o para clasificar (tan pesado como).
+
+                        Exploración de mediciones a partir de comparación
+                         indirecta de longitudes para descubrir un elemento
+                         transportable que actúe como    intermediario en la
+                         comparación.
+
+                        Exploración de distintas unidades de medida e instrumentos de uso social para la medición de longitudes, capacidades y pesos.
+
+                        Resolución de problemas que impliquen medir y comparar medidas de longitudes.
+
+                        Resolución de problemas que impliquen usar unidades convencionales y no convencionales para medir longitudes.
+
+                                                                                       Utilización de regla y cintas métricas para medir longitudes y conocer la equivalencia entre metro y centímetro.
+
+   La geometría y la                                                                                                                                       Resolución de problemas que impliquen la medición de
+       medida.                                                                                                                                              longitudes usando el metro, el centímetro y el
+                                                                                                                                                            milímetro como unidades de medida.
+
+                                                                                       Uso de números racionales de uso frecuente (decimales -con una o dos cifras decimales- y fracciones) al comparar, sumar
+                                                                                        y restar medidas mediante diferentes procedimientos.
+
+                                                                                                                                                           Resolución de problemas que impliquen usar medios y
+
+
+                                                                                                                                                                                                                     96
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                                            cuartos kilos, y medios y cuartos litros.
+
+                       Reconocimiento de la distribución de días en la semana y       Lectura de la hora en diferentes tipos de relojes, y para calcular duraciones
+                        de meses en el año y utilización del calendario para ubicar
+                        fechas y determinar duraciones.
+
+                                                                                                                                                           Resolución de problemas que exijan usar equivalencia
+                                                                                                                                                            entre horas y minutos y usar expresiones 1/2 hora, 1/4
+                                                                                                                                                            hora y 3/4 hora.
+
+
+
+
+                                                                                                                                                                                                                     97
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                         Segunda Unidad Pedagógica
+
+                                                                                                             Saberes y Contenidos
+
+                          Ejes                                                          4° grado                                                                               5° grado
+                      organizadores
+                                           Resolución de problemas que permitan usar, leer, escribir y comparar números hasta el        Resolución de problemas que permitan usar, leer, escribir y comparar
+                                            orden de los millones.                                                                        números sin límite.
+
+                                           Producción de problemas entre pares, ya sea en parejas, grupos pequeños y también en         Producción de problemas entre pares, ya sea en parejas, grupos pequeños y
+                                            forma individual donde usen y comparen números hasta el orden de los millones.                también en forma individual donde usen y comparen números sin límite.
+
+                                           Uso y producción de escalas ascendentes y descendentes de 100 en 100, de 500 en 500, de      Uso y construcción de escalas de 1.000 en 1.000, de 2.500 en 2.500, de 5.000
+                                            1.000 en 1.000 de números hasta el millón, analizando las regularidades que se observan.      en 5.000 para cualquier número, analizando las regularidades que se
+                                                                                                                                          observan.
+
+                El número y las            Producción de argumentaciones sobre resultados de comparaciones entre números                Producción de argumentaciones sobre equivalencias entre distintos órdenes.
+                  operaciones               naturales y sobre procedimientos de cálculo, acudiendo al valor posicional de las cifras.     (10.000= 10 veces 1000 )
+
+                                           Resolución de problemas que exijan componer y descomponer números en forma aditiva y multiplicativa analizando el valor posicional y las relaciones con la multiplicación y
+                                                                                        15
+                                            la división por la unidad seguida de ceros.
+
+                                           Comparación del sistema de numeración decimal con el sistema de numeración romano.           Exploración de diversos sistemas de numeración posicionales, no
+                                                                                                                                          posicionales, aditivos, multiplicativos, decimales y analizar su evolución
+                                                                                                                                          histórica.
+
+                                           Resolución de problemas que involucran distintos sentidos de la suma y la resta,             Resolución de problemas que involucran significados más complejos de la
+                                            identificando cuáles son los posibles cálculos que los resuelven.                             suma y la resta, identificando los cálculos que los resuelven.
+
+                                           Resolución de problemas que involucran tratar con series proporcionales y con                Resolución de problemas sencillos que involucran multiplicaciones y
+                                                                                                                      16
+                                            organizaciones rectangulares, utilizando la multiplicación y la división.                     divisiones: series proporcionales, organizaciones rectangulares, repartos y
+
+
+
+15
+     Por ejemplo identificar con cuál de estos cálculos se obtiene el número 48.379? a.- 5x 10000 + 8 x 1000 + 7x 100 + 3 x 10 + 9
+                                                                                     b.- 4x 10000 + 8x 1000 + 9 x 1+ 7 x 10 + 100 x 3
+                                                                                                                                                                                                                          98
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                                    particiones.
+
+                                          Resolución de problemas que exigen usar la división para situaciones de repartos y                      Resolución de problemas que implica analizar el resto de la división.
+                                           particiones.
+
+                                                                                                                                                   Resolución de problemas que implican determinar la cantidad que resulta de
+                                                                                                                                                    combinar y permutar elementos por medio de diversas estrategias y cálculos.
+
+                                          Resolución de cálculos mentales y estimativos de suma y resta, utilizando                               Resolución de cálculos mentales de multiplicaciones y divisiones que implican
+                                           descomposiciones de los números y cálculos conocidos.                                                    poner en juego propiedades de las operaciones y del sistema de numeración.
+
+                El número y las           Elaboración y utilización un repertorio de cálculos disponibles de multiplicación, a partir de
+                 operaciones.              relaciones entre productos de la tabla pitagórica.
+
+                                          Uso de la calculadora para explorar el comportamiento de números (cómo cambian cuando se le suma, resta, multiplica o divide por 1.000, 10.000 ó 100.000) de acuerdo
+                                           con el problema.
+
+                                          Resolución de problemas que implican analizar el resto de una división y reconocer y usar               Resolución de problemas que implican reconocer y usar el cociente y el resto
+                                           la división en situaciones de iteración, resueltas inicialmente por medio de sumas, restas o             de la división en situaciones de iteración.
+                                                              17
+                                           multiplicaciones.
+
+                                                                                                                                                   Resolución de problemas que implican analizar las relaciones entre
+                                                                                                                                                    dividendo, divisor, cociente y resto.
+
+                                          Resolución de problemas donde sea necesario transitar varios pasos con las cuatro                       Resolución de problemas seleccionando la estrategia de cálculo más
+                                           operaciones y diferentes modos de presentar la información.                                              adecuada según los números y cálculos involucrados.
+
+                                          Resolución de problemas que implican analizar, comparar y utilizar cálculos algorítmicos de multiplicación y división por una y por dos cifras.
+
+                                                                                                                                                   Resolución de problemas que implica el uso de múltiplos y divisores, y
+                                                                                                                                                    además el uso de múltiplos y divisores comunes entre varios números.
+                                          Resolución de problemas en los que se presentan números fraccionarios de uso frecuente:                 Resolución de problemas de división en los que tiene sentido repartir el resto
+
+
+16
+     Un ejemplo de problema de organizaciones rectangulares: En el cine hay 350 butacas distribuidas en 35 por cada fila. ¿Cuántas filas hay?
+17
+     Los problemas de iteración son aquellos permiten establecer cuántas veces entra un número dentro de otro, por ejemplo Karen tiene $250 para comprar caramelos en el mes. Si gasta $10 por día ¿para cuántos días le alcanza?
+                                                                                                                                                                                                                                     99
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                                                                                                     18
+                                          1/2, 1/4, 3/4, 1 y 1/2 y 2 y 1/4 asociadas a litros y kilos.                                                 y se ponen en juego relaciones entre fracciones y división.
+
+                                         Uso de diferentes procedimientos (expresiones equivalentes, representaciones gráficas)                      Uso de fracciones equivalentes (amplificación y simplificación de fracciones)
+                                          para comparar fracciones.                                                                                    para comparar fracciones.
+
+                                         Utilización de la recta numérica para estudiar relaciones entre fracciones y con los enteros.               Localización de fracciones en la recta numérica a partir de diferentes
+                                                                                                                                                       informaciones.
+
+                                         Resolución de problemas de medida en los cuales las relaciones entre partes o bien entre partes y el todo pueden expresarse usando fracciones.
+               El número y las                                                                                                                                                                          19
+                operaciones.
+                                         Resolución de problemas de proporcionalidad directa en los que una de las cantidades o bien la constante es una fracción.
+                                                                                                                                                                                     20
+
+
+
+                                                                                                                                                      Resolución de problemas que requieren considerar a la fracción como una
+                                                                                                                                                       proporción.
+
+                                         Reconocimiento y utilización de fracciones mayores que la unidad como, 1½, 1¼, o 3/2,                       Establecimiento de relaciones entre una fracción y el entero, así como entre
+                                          5/4, y escrituras aditivas y multiplicativas como 1 + 1/2; 3 x 1/2 para resolver problemas en                fracciones de un mismo entero.
+                                          los que se requiera interpretar, registrar o comparar el resultado de una medición, de un
+                                          reparto o una partición.
+
+                                         Resolución de problemas de reparto en los cuales el resultado puede expresarse usando fracciones a partir de distintos contextos
+
+                                         Resolución de problemas de suma y resta entre fracciones y con números naturales,                           Resolución de problemas que demandan realizar sumas y restas entre
+                                          apelando al cálculo mental, a las relaciones entre fracciones y a la equivalencia entre                      fracciones utilizando diferentes recursos de cálculo.
+                                          fracciones.
+
+                                                                                                                                                      Resolución de problemas que demandan multiplicar o dividir una fracción por
+                                                                                                                                                       un número natural.
+
+
+18
+   Se trata de identificar que el resultado de un reparto equitativo puede ser expresado con una fracción. Por ejemplo: Se reparten 9 chocolates entre 4 chicos, en partes iguales
+y no sobra nada. ¿Cuánto le tocó a cada uno? Repartir 9 entre 4 hace corresponder 9/4 a cada uno, y este resultado es equivalente a 2 y 1/4.
+19
+   Por ejemplo a partir de la representación de un rectángulo sombrear la cuarta parte pero de manera triangular.
+20
+     Utilizando las variables peso-precio presentar tablas para completar como por ejemplo. Cantidad de pan en kg ½ 1 ¾ 2 ¼
+                                                                                            Precio               $10 … …. …. …..
+                                                                                                                                                                                                                                       100
+PROVINCIA DE SANTA CRUZ
+
+                                   Resolución de problemáticas de proporcionalidad cuya constante sea ¼, ½, ¾.                   Resolución de problemas de proporcionalidad directa que involucran
+Consejo Provincial de Educación
+
+                                                                                                                                   números naturales, utilizando, comunicando y comparando diversas
+                                                                                                                                   estrategias
+
+                                   Reconocimiento y uso de la multiplicación para resolver problemas de proporcionalidad         Distinción de la pertinencia o no de recurrir al modelo proporcional para
+                                    que impliquen recurrir en forma implícita a las propiedades que caracterizan a las             resolver problemas.
+                                    relaciones de proporcionalidad directa.
+
+                                                                                                                                  Resolución de problemas en los que una de las magnitudes es una cantidad
+            El número y las
+             operaciones.
+                                                                                                                                   fraccionaria.
+
+                                                                                                                                  Resolución de problemas de proporcionalidad directa que involucran
+                                                                                                                                   expresiones decimales en el contexto del dinero y la medida.
+
+                                                                                                                                  Resolución de problemas que involucran la interpretación y la producción de
+                                                                                                                                   gráficos circulares, utilizando las relaciones entre proporcionalidad,
+                                                                                                                                   porcentaje, fracciones y medidas de ángulos.
+
+                                                                                                                                  Resolución de problemas sencillos de proporcionalidad inversa utilizando,
+                                                                                                                                   comunicando y comparando diversas estrategias.
+
+                                   Exploración del uso social de las expresiones decimales en los contextos del dinero y la      Resolución de problemas que demandan usar expresiones decimales para
+                                    medida.                                                                                        comparar, sumar, restar y multiplicar precios y medidas, mediante diversas
+                                                                                                                                   estrategias de cálculo mental.
+
+                                   Establecimiento de relaciones entre décimos, centésimos y milésimos en expresiones            Resolución de problemas que exigen analizar las relaciones entre fracciones
+                                    decimales con 1/10, 1/100 y 1/1000, apelando al dinero y a las medidas de longitud, peso y     decimales y expresiones decimales
+                                    capacidad.
+
+                                   Comparación de cantidades expresadas en números decimales dentro del contexto del             Resolver problemas que exigen analizar el valor posicional en las escrituras
+                                    dinero y la medida.                                                                            decimales. Identificar que entre dos expresiones decimales siempre es
+                                                                                                                                   posible encontrar otra expresión decimal o una fracción, usando la recta
+                                                                                                                                   numérica.
+
+                                                                                                                                  Resolución de problemas que demandan leer, escribir y ordenar expresiones
+
+                                                                                                                                                                                                                  101
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                                    decimales, usando la recta numérica.
+
+                                         Análisis de la multiplicación y división de números decimales por la unidad seguida de                   Resolución de problemas que demandan analizar la multiplicación y división
+                                                                                                                              21
+                                          ceros y establecimiento relaciones con el valor posicional de las cifras decimales.                       de números decimales por la unidad seguida de ceros y establecer relaciones
+              El número y las                                                                                                                       con el valor posicional de las cifras decimales.
+               operaciones.
+                                                                                                                                                   Utilización de recursos de cálculo mental exacto y aproximado para sumar y
+                                                                                                                                                    restar expresiones decimales entre sí y multiplicar una expresión decimal por
+                                                                                                                                                    un número natural. De igual manera para los cálculos algorítmicos de suma y
+                                                                                                                                                    resta de expresiones decimales.
+
+                                         Interpretación de la información presentada en tablas y gráficos ya confeccionados.                      Interpretación de la información presentada en tablas y gráficos, incluyendo
+                                                                                                                                                    gráficos de barras y pictogramas.
+
+                                         Interpretación de planos de espacios no conocidos.                                                       Interpretación de planos y croquis de espacios no conocidos a partir del
+                                                                                                                                                    análisis de numeración y sentidos de las calles.
+
+                                         Construcción de planos de espacios conocidos de mayor complejidad a los abordados en la
+                                          1° U.P.
+             La geometría y la           Uso del compás para transportar segmentos o para comprobar congruencia de segmentos.                     Uso apropiado de diferentes instrumentos de geometría –en especial el
+                 medida.                                                                                                                            compás- para construir triángulos y cuadriláteros.
+
+                                         Uso de la escuadra para construir o comprobar la presencia de ángulos rectos.
+
+                                                                                                                                                   Construcción de figuras que demandan identificar y trazar rectas paralelas y
+                                                                                                                                                    perpendiculares.
+
+                                         Resolución de problemas que permitan construir la noción de perpendicularidad a partir
+                                          del trazado de ángulos rectos
+
+                                         Resolución de problemas que permitan identificar algunas características de diferentes
+
+
+21
+   Se sugiere partir del análisis del contexto dinero: 10 monedas de 10 centavos arman 1 peso, entonces 10 x 0,10 = 1. Situación traslativa al contexto medida : 100 cm arman 1metro y por lo tanto, como 1 cm es 1/100, 1/100 x 100 = 1, o
+bien que 0,01 x 100 = 1. El mismo tipo de análisis se propone para la división por la unidad seguida de ceros.
+                                                                                                                                                                                                                                              102
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                         figuras geométricas para poder distinguir unas de otras.
+
+                                        Reconocimiento y uso de las propiedades de círculos y circunferencias, a partir del                   Reconocimiento y uso de las propiedades de círculos, circunferencias, arcos
+                                         copiado, construcción o comunicación de figuras planas.                                                de circunferencias a partir del copiado, construcción o comunicación de
+                                                                                                                                                figuras planas.
+
+                                        Uso del compás para dibujar figuras que contienen circunferencias.
+
+                                                                                                                                               Elaboración de conjeturas y análisis de una demostración de la propiedad de
+                                                                                                                                                la suma de los ángulos interiores de los triángulos.
+
+                                        Construcción de triángulos a partir de las medidas de sus lados.                                      Construcción de triángulos a partir de las medidas de sus lados y/o de sus
+            La geometría y la                                                                                                                   ángulos para identificar sus propiedades.
+                medida.
+                                                                                                                                               Uso de propiedades de suma de ángulos interiores de triángulos y de
+                                                                                                                                                cuadriláteros convexos para anticipar posibles valores de ángulos en figuras
+                                                                                                                                                planas más complejas que incluyan puntos medios y diagonales.
+
+                                        Reconocimiento de las propiedades de rectángulos y cuadrados a partir del copiado,                    Reconocimiento de propiedades de los lados y de los ángulos interiores de
+                                         construcción o comunicación de figuras planas.                                                         los cuadriláteros (rectángulos, cuadrados y rombos).
+
+                                                                                                                                               Construcción de cuadrados y rectángulos como estrategia para profundizar el
+                                                                                                                                                                                       22
+                                                                                                                                                estudio de algunas de sus propiedades.
+
+                                                                                                                                               Resolución de problemas que permitan argumentar relaciones entre
+                                                                                                                                                triángulos, rectángulos y cuadrados.
+
+                                        Reconocimiento de propiedades de cuerpos geométricos (especialmente en cubos y                        Reconocimiento y producción de propiedades de cubos, prismas con bases
+                                         prismas de base rectangular y de base triangular) que pongan de relieve relaciones entre               de diferentes formas y pirámides de diferentes tipos de base, que pongan de
+                                         caras, aristas y figuras planas.                                                                       relieve relaciones entre caras y figuras planas.
+
+                                                                                                                                               Resolución de problemas que permitan identificar características de los
+
+
+22
+   Una posible propuesta problematizadora es construir un cuadrado en hoja lisa usando escuadra y regla graduada. Otra problemática: construir un cuadrado en hoja lisa usando escuadra, regla no graduada y compás. Otro tipo de
+problemas deberá propiciar la elaboración de instructivos para que otra persona pueda reproducir una figura que entregará la maestra por grupos.
+                                                                                                                                                                                                                                    103
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                  cubos, prismas y pirámides.
+
+                                                                                                                                  Producción de argumentos para justificar la validez de propiedades de los
+                                                                                                                                   cuerpos (qué figuras planas son sus bases, cuántas caras laterales tienen)
+                                                                                                                                   para anticipar construcciones de los mismos.
+
+                                   Resolución de problemas que implican la determinación y comparación de longitudes             Resolución de problemas que implican profundizar las equivalencias entre las
+                                    usando el metro, el centímetro y el milímetro como unidades de medida.                         unidades del Sistema Métrico Legal para longitud, capacidad y peso.
+
+                                   Resolución de problemas que exigen determinar y comparar pesos y capacidades, usando          Uso de expresiones decimales y fracciones decimales para expresar
+                                    diferentes unidades de medida: litro, mililitro, kilogramo, gramo y miligramo.                 equivalencias entre medidas de longitud, entre medidas de capacidad y entre
+                                                                                                                                   medidas de peso.
+
+                                   Uso de expresiones decimales y fracciones para expresar longitudes, capacidades y pesos.      Resolución de problemas que demandan cálculos aproximados de longitudes,
+           La geometría y la
+               medida.
+                                                                                                                                   capacidades y pesos.
+
+                                   Uso del transportador para determinar, comparar y construir ángulos.
+
+                                   Medición de ángulos, usando el ángulo recto como unidad de medida.                            Resolución de problemas que exigen el uso del transportador para medir y
+                                                                                                                                   comparar ángulos, usando el grado como unidad de medida de los ángulos.
+                                   Uso de relojes y calendarios para ubicar diferentes acontecimientos, ubicarse en el tiempo    Resolución de problemas que implican la determinación o el cálculo de
+                                    y medir duraciones.                                                                            duraciones usando equivalencias entre horas, minutos y segundos y
+                                                                                                                                   apelando a expresiones fraccionarias.
+                                                                                                                                  Selección y uso de unidades para realizar mediciones y estimaciones de
+                                                                                                                                   superficies.
+                                                                                                                                  Exploración y uso de unidades convencionales m² y cm² para el cálculo de
+                                                                                                                                   áreas (de lugares conocidos), a partir de estimar o medir por cubrimiento con
+                                                                                                                                   la unidad.
+                                   Exploración de diferentes procedimientos para medir superficies y para medir contornos        Exploración de diferentes procedimientos para calcular perímetros y áreas al
+                                    de rectángulos, cuadrados y triángulos al resolver problemas.                                  variar las formas geométricas.
+
+
+
+
+                                                                                                                                                                                                                   104
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+
+
+
+
+                                                                                            Tercer Unidad Pedagógica
+
+                                                                                               Saberes y Contenidos
+
+             Ejes                                                   6° grado                                                                                     7° grado
+         Organizadores
+
+                            Resolución de problemas que implican usar, leer, escribir y comparar números sin límite.     Interpretación, registro, comunicación y comparación de números enteros positivos
+                                                                                                                           y racionales positivos, eligiendo la representación más adecuada (fracción, decimal
+                                                                                                                           y porcentaje) de acuerdo al problema.
+
+                            Resolución de problemas en donde sea necesario la composición y descomposición de            Comparación de números naturales y racionales para anticipar ideas de discretitud
+                             números en forma aditiva y multiplicativa analizando el valor posicional y las relaciones     y densidad.
+                             con la multiplicación y la división por la unidad seguida de ceros.
+
+         El número y las    Resolución de variedad de problemas y cálculos de suma y resta como estrategia para          Explicitación de propiedades de la suma, la resta, la multiplicación y la división en N.
+                                                                                    23
+          operaciones.       utilizar las propiedades de los números y operaciones.
+
+                            Reconocimiento de relaciones entre el sistema de numeración decimal posicional y algunos de los sistemas de medida, apoyados en las relaciones de proporcionalidad directa.
+
+                                                                                                                          Selección y justificación del tipo de cálculo (mental y escrito, exacto y aproximado,
+                                                                                                                           con y sin uso de la calculadora) y de la forma de expresar los números involucrados,
+
+
+
+23
+  Resulta conveniente planificar situaciones donde se posibilite el despliegue de estrategias de cálculo que favorezcan la utilización y explicitación de las propiedades de los números y de las
+operaciones. Un ejemplo:
+Si sabemos que 6136 + 6224 = 12360, los resultados de los siguientes cálculos:
+6146+ 6224 =
+71346+ 6224 =
+61360 + 62240 =
+                                                                                                                                                                                                                      105
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                                                                                                                                  evaluando la razonabilidad del resultado.
+
+                                 Resolución de problemas que involucran relaciones de proporcionalidad directa y organizaciones rectangulares.
+
+                                 Resolución de problemas que requiere determinar la cantidad que resulta de combinar y permutar elementos.
+
+                                 Resolución de problemas que implican reconocer y usar el cociente y el resto de la división
+                                                               24
+                                  en situaciones de iteración.
+
+                                 Resolución de problemas que implican analizar las relaciones entre dividendo, divisor, cociente y resto, y considerar la cantidad de soluciones posibles en función de las relaciones
+                                  entre los datos.
+
+                                 Resolución de problemas de varios pasos con las cuatro operaciones y diferentes modos          Producción de cálculos que combinen varias operaciones en relación con un
+                                  de presentar la información.                                                                    problema y producción de un problema en relación con un cálculo.
+
+                                 Uso de la calculadora para explorar el comportamiento de números.
+            El número y las                                                                           25
+             operaciones.
+                                                                                                                                 Indagación de nuevas regularidades con el objeto de expresar su resultado en
+                                                                                                                                  forma coloquial y simbólica que puedan validarse usando las propiedades
+                                                                                                                                  conocidas.
+
+                                 Resolución de problemas que involucran cálculos estimativos de multiplicación y división       Resolución de problemas que involucran cálculos estimativos de multiplicación y
+                                  para anticipar, resolver y controlar los resultados                                             división con complejidad creciente.
+
+                                 Resolución de problemas donde sea posible el uso de múltiplos y divisores, y múltiplos y       Exploración de problemas que requieran acudir a múltiplos y divisores comunes.
+                                  divisores comunes entre varios números
+
+                                 Resolución de problemas donde sea factible el uso de múltiplos y divisores para realizar       Producción de cálculos que combinen varias operaciones en relación con un
+                                  descomposiciones multiplicativas, encontrar resultados de multiplicaciones, cocientes y         problema y producción de un problema en relación con un cálculo.
+
+
+
+24
+  Los problemas de iteración permiten conocer cuántas veces entra un número dentro de otro, y cuánto sobra una vez realizada dicha partición. Por ejemplo: Eric tiene $2200 en el cajero. Si saca
+$600 por día, ¿para cuántos días le alcanza? ¿Cuánto le sobra? ¿Cuánto debería tener guardado para que le alcance para un día más?
+25
+     Se pueden plantear situaciones como estas ¿Cuál es el menor número natural que multiplicado por 325 da un producto de 4 cifras? Obtener el resto: dividir al 814 por 17 con calculadora.
+                                                                                                                                                                                                                          106
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                              restos, y decidir la validez de ciertas afirmaciones.
+
+                                    Resolución de problemas que requieran el uso de criterios de divisibilidad para establecer                Reconocimiento de números primos y co-primos para la resolución de situaciones
+                                     relaciones numéricas y anticipar resultados.                                                               mediante la factorización.
+
+                                                                                                                                               Resolución de problemas de potenciación (con exponente positivo) y de
+                                                                                                                                                                                                    26
+
+                                                                                                                                                radicación de números naturales donde se argumente significados, usos y
+                                                                                                                                                propiedades.
+
+                                    Establecimiento de relaciones entre fracciones y el cociente entre números naturales.
+
+                                    Resolución de problemas de proporcionalidad directa en los que la constante es una                        Selección y justificación de distintos contextos de fracciones, (entre ellos la fracción
+                                     fracción.                                                                                                  como medida y en contexto de la proporcionalidad) de acuerdo a la necesidad que
+                                                                                                                                                imponga el problema que hay que resolver.
+
+                                    Resolución de problemas donde se tome a la fracción como una proporción.
+
+             El número y las        Elaboración de recursos que permiten encontrar al menos una fracción entre dos fracciones dadas.
+
+                                    Resolución de problemas que requiera el comparar fracciones y encontrar fracciones entre números dados usando la recta numérica.
+              operaciones.
+
+
+                                    Resolución de problemas que demandan realizar sumas y restas entre fracciones utilizando diferentes recursos de cálculo.
+
+                                    Resolución de problemas que involucran la multiplicación entre una fracción y un entero, y la multiplicación entre fracciones.
+
+                                    Resolución de problemas que exigen analizar las relaciones entre fracciones decimales y expresiones decimales
+
+                                    Exploración y análisis de equivalencias entre expresiones fraccionarias y decimales, considerando la posibilidad de buscar fracciones a partir de cualquier expresión decimal y los
+                                     problemas que surgen al buscar expresiones decimales para algunas fracciones.
+
+                                    Reconocimiento que entre dos expresiones decimales siempre es posible encontrar otra expresión decimal o una fracción, usando la recta numérica.
+
+                                    Resolución de problemas que demandan analizar la multiplicación y división de números decimales por la unidad seguida de ceros y establecer relaciones con el valor posicional de
+
+
+26
+     Un recurso válido es trabajar con el triángulo de Fibonacci (disposición particular de la sucesión de los números impares) que permite escribir la suma de cada fila como potencia cúbica de los naturales.
+                                                                                                                                                                                                                                           107
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+                              las cifras decimales
+
+                                    Construcción de recursos de cálculo mental y algorítmico, exacto y aproximado para sumar, restar, multiplicar y dividir expresiones decimales entre sí y con números naturales
+
+                                    Resolución de problemas de proporcionalidad directa que involucran números naturales y racionales.
+
+                                    Selección de la pertinencia o no de recurrir al modelo proporcional para resolver problemas.
+
+                                    Resolución de problemas que involucran la interpretación y la producción de gráficos circulares, utilizando las relaciones entre proporcionalidad, porcentaje, fracciones y medidas
+                                     de ángulos.
+
+                                    Resolución de       problemas sencillos de proporcionalidad inversa mediante diversas                    Resolución de problemas de proporcionalidad inversa con creciente complejidad.
+                                     estrategias.
+
+                                                                                                                                              Escritura, lectura, y evaluación de expresiones en las que se usan letras en lugar de
+                                                                                                                                               números.
+
+                                    Reconocimiento de las partes de una expresión usando términos matemáticos (suma,                         Análisis de la variación de perímetros y áreas en función de la variación de
+                                     término, producto, factor, cociente, entre otros); señalando una o más partes de una                      diferentes dimensiones de figuras.
+                                                                       27
+                                     expresión como una única entidad.
+
+                                    Evaluación de expresiones para valores específicos de sus variables, incluyendo las que                  Uso de ecuaciones y otras expresiones simbólicas.
+           El álgebra y las
+           funciones
+                                     surjan de fórmulas usadas en problemas reales.
+
+                                    Resolución de problemas que implique el uso de operaciones aritméticas, incluyendo                       Construcción y comparación de formulas para expresar procedimientos de cálculos
+                                     aquellas que implican exponentes naturales, en el orden convencional cuando no hay                        y propiedades.
+                                                                                      28
+                                     paréntesis para especificar un orden particular.
+
+                                    Uso sistemático de símbolos para expresar cantidades indeterminadas y generalizaciones, especialmente mediante notaciones simbólico-literales.
+
+                                    Uso de fórmulas para conjeturar y validar expresiones que expresen divisibilidad, tales como es             últiplo de… o es   últiplo de....
+
+
+
+27
+     Por ejemplo, describir la expresión 2 . (5+ 3 ) como un producto de dos factores; ver tanto como una única entidad (5+ 3) como una suma de dos términos.
+28
+     Por ejemplo, cuando se usa la fórmula L2 para hallar la superficie del cuadrado.
+                                                                                                                                                                                                                                       108
+PROVINCIA DE SANTA CRUZ
+
+                                                                                                                             Reconocimiento, explicitación y diferenciación de propiedades de relaciones directa
+Consejo Provincial de Educación
+
+                                                                                                                              e inversamente proporcionales.
+
+                             Resolución de problemas que involucran interpretar y producir representaciones gráficas        Resolución de problemas que involucran interpretar y producir representaciones
+                              de magnitudes directamente proporcionales.                                                      gráficas de magnitudes directa e inversamente proporcionales.
+
+
+
+                             Resolución de problemas geométricos sencillos que implique el uso de instrumentos de           Resolución de problemas geométricos de creciente complejidad que implique el
+                              geometría y programas graficadores para la construcción de figuras a partir de                  uso de instrumentos de geometría y programas graficadores para la construcción
+                              informaciones.                                                                                  de figuras a partir de informaciones.
+
+                             Construcción de triángulos a partir de las medidas de sus lados y sus ángulos para recordar    Resolución de problemas que implique comprobar la validez de la propiedad
+                              sus propiedades.                                                                                triangular y propiedad de la suma de ángulos interiores de triángulos y
+                                                                                                                              cuadriláteros.
+
+                             Construcción de cuadrados, rectángulos y rombos para identificar propiedades relativas a sus lados y a sus ángulos
+
+                             Construcción de paralelogramos como medio para estudiar algunas de sus propiedades: de los ángulos y diagonales.
+
+                             Resolución de problemas que permiten establecer relaciones entre algunos cuadriláteros y la circunferencia que los inscribe.
+
+        La geometría y la                                                                                                    Reconocimiento de problemas extra-matemáticos para cuya resolución sea
+             medida                                                                                                           necesario estimar la medida, sin acudir al cálculo.
+
+                             Resolución de problemas que implican profundizar las equivalencias entre las unidades del      Reconocimiento de la inexactitud de la medida.
+                              Sistema Métrico Legal para longitud, capacidad y peso.
+
+                             Exploración de equivalencias entre unidades de medida utilizadas en diferentes sistemas de uso actual.
+
+                             Análisis de desarrollos planos de cubos, prismas y pirámides para profundizar en el estudio    Construcción y uso reflexivo de fórmulas para el cálculo de perímetros, áreas y
+                              de sus propiedades.                                                                             volúmenes, en torno a la resolución de diversidad de problemas.
+
+                             Uso de expresiones decimales y fracciones decimales para expresar equivalencias entre          Uso del cálculo y la estimación de áreas de figuras, y áreas y volúmenes de cuerpos
+                              medidas de longitud, entre medidas de capacidad y entre medidas de peso.                        para resolver problemas extra-matemáticos.
+
+
+                                                                                                                                                                                                                    109
+PROVINCIA DE SANTA CRUZ
+
+                             Análisis de la variación del perímetro y del área de un rectángulo en función de la medida        Producción y comparación de procedimientos para el cálculo de perímetros y áreas
+Consejo Provincial de Educación
+
+                              de sus lados en figuras sobre papel cuadriculado.                                                  de polígonos.
+
+                                  Comparación de la organización del SIMELA y el sistema sexagesimal.
+
+                                  Análisis de las diferencias entre sistemas sexagesimales y decimales.                        Resolución de problemas que implique utilizar las operaciones en           el sistema
+                                                                                                                                 sexagesimal.
+
+                                  Interpretación de información presentada en tablas y gráficos estadísticos (pictogramas, diagramas de barra, gráficos circulares, de línea, de punto) y análisis de las ventajas y
+                                   desventajas de acuerdo a la información que se persigue comunicar.
+
+                                  Resolución de problemas que requiera la construcción de gráficos estadísticos sencillos.     Construcción de gráficos estadísticos y análisis de la pertinencia del tipo de gráfico,
+                                                                                                                                 y cuando sea necesario de la escala a usar.
+
+           La probabilidad y                                                                                                    Interpretación de significado de media aritmética para describir datos en estudio.
+
+                                                                                                                                Comparación de probabilidades de diferentes sucesos (incluido suceso seguro e
+             la estadística.
+                                                                                                                                                                              29
+                                                                                                                                 imposible) para espacios muestrales finitos.
+
+                                  Resolución de problemas que permita el uso de estrategias; ejemplo diagrama de árbol.        Uso de diferentes estrategias para resolver problemas de conteo, entre ellas el uso
+                                                                                                                                 de diagrama de árbol.
+
+
+
+
+29
+     Por ej. registros de días de lluvia/nevadas en el mes y/o año en una localidad.
+                                                                                                                                                                                                                           110
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+V.- Orientaciones didácticas.
+
+                     No ha ada ás ási o e u a dis ipli a ue su odo de pe sa . No ha ada ás i po ta te e su
+        enseñanza que proporcionar al niño una temprana oportunidad para aprender ese modo de pensar: las formas de
+     relacionar, las actitudes, anhelos y bromas y decepciones que la acompañan. En una palabra: la mejor introducción a
+            un tema es el tema en sí. Desde el primer momento, el joven estudiante debe tener oportunidad de solucionar
+      problemas, hacer conjeturas, oponerse tal y como todo ello se lleva a cabo en el fondo de la disciplina. ¿Cómo puede
+                                                            log a se? Je o e “. B u e . Ha ia u a teo ía de la i st u ió
+
+
+
+          Es evidente que la pregunta de Bruner ha recorrido muchos años y con ellos transformaciones en lo que
+respecta a la enseñanza del área. Por esto, la importancia de reflexionar sobre la enseñanza de la matemática en la
+escuela primaria. Una forma de lograr lo planteado se centra en el logro de una tarea rigurosamente planificada por el
+docente en función de su grupo de alumnos. Tarea que les permitan ir construyendo saberes matemáticos para
+utilizarlos como instrumentos en la resolución de problemas, y principalmente para traducirlos en objetos culturales.
+Para ello, es necesario asegurar condiciones didácticas adecuadas durante las clases de matemática que, desde una
+práctica democratizadora, posibilite que todos los niños y niñas aprendan los contenidos seleccionados para cada año,
+porque dicho aprendizaje es su derecho.
+
+         Al respecto, es preciso tomar las previsiones didácticas necesarias para que todos los alumnos puedan
+construir aprendizajes potentes en el área. A modo de facilitador didáctico, se puede dividir la tarea pedagógica en
+distintos momentos:
+
+         Antes de la clase:
+          Se espera que los docentes seleccionen una batería de problemas que permitan instalar a los alumnos en los
+contenidos seleccionados puesto que los conocimientos matemáticos se extienden a largo plazo. Resulta entonces
+aconsejable la planificación de secuencias de trabajo con un repertorio de problemas que abarquen contextos
+significativos y contemplen un tiempo de elaboración de ese contenido abordado. Además, la selección de esa batería
+de problemas debe apuntar a que los alumnos desplieguen su experiencia, pongan en juego los conocimientos que
+poseen ya sean, correctos, incorrectos, completos e incompletos para tratar de descubrir reglas, leyes y criterios.
+
+         A su vez, es importante atender a los distintos tipos de problemas a presentar, ya que su diversidad
+condiciona la calidad de los aprendizajes a los que se aspiran llegar.
+         En este sentido, Roland Charnay señala una tipología de problemas, cuyo tránsito por ellos asegura
+aprendizajes significativos:
+      los problemas destinados a involucrar a los alumnos en la construcción de nuevos conocimientos (a menudo
+         llamadas situaciones-problema);
+      los problemas destinados a permitir a los alumnos la utilización de los conocimientos ya estudiados (a menudo
+         llamados problemas de reinversión);
+      los problemas destinados a permitir a los alumnos la extensión del campo de utilización de una noción ya
+         estudiada (llamados a veces problemas de transferencia, con toda la ambigüedad de esta palabra);
+      los problemas más complejos en los cuales los alumnos deben utilizar conjuntamente varias categorías de
+         conocimientos (a veces llamados problemas de integración o de síntesis);
+      los problemas cuyo objetivo es permitir al docente y a los alumnos conocer el estado de conocimientos
+         (problemas de evaluación);
+      los problemas destinados a poner al alumno en situación de investigación y por lo tanto de desarrollar
+           o pete ias etodológi as p o le as a ie tos .
+                                                              30
+
+         Es por ello que es recomendable incluir esta variedad de problemas en las secuencias didácticas durante toda
+la escolaridad primaria.
+
+       Durante la clase:
+        Tan importante como la planificación de cada clase, en función del propósito de la misma, es la previsión de
+intervenciones que los docentes ofrecen durante las distintas mediaciones con sus alumnos. No es lo mismo responder
+a un niño a te u a o sulta: Fijate bien, pensá… a ¿qué necesitas averiguar? , ¿Qué es lo que ya se sabe al
+respecto? , o bien evocando otros problemas similares: ¿Recordás alguna situación similar ya resuelta?.
+
+
+30
+     Charnay, Rolando (1994) Aprender por medio de la resolución de problemas en Parra-Saiz Didáctica de Matemática, Paidós.
+
+
+                                                                                                                               111
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+En consecuencia, se presentan algunas ideas fuerza que deben estar presente en toda práctica áulica durante la
+gestión de la clase:
+                La búsqueda de la resolución del problema planteado, vinculando lo que se quiere resolver con lo que
+                  ya se sabe y así generar nuevos interrogantes.
+
+               La formulación de estrategias personales y contrastarlas con sus pares considerando que los
+                procedimientos incorrectos o las exploraciones que no los llevan al resultado esperado son instancias
+                ineludibles y necesarias para el aprendizaje.
+
+               Momentos de discusión sobre la validez de los procedimientos realizados y de los resultados
+                obtenidos.
+
+               Reflexión colaborativa para justificar qué procedimientos fueron los más adecuados o útiles para la
+                situación resuelta.
+
+               Elaboración de formas de representación, discutirlas con los demás, confrontar las interpretaciones
+                so e ellas, ha e se a go de las de isio es to adas e la esolu ió            a e a de la ota ió
+                convencional.
+
+               Producción de conjeturas, formularlas, comprobarlas, mediante el uso de ejemplos o justificarlas
+                utilizando contra-ejemplos o propiedades conocidas.
+
+               Identificación de nuevos conocimientos y relacionarlos con los ya sabidos.
+
+               Análisis de la información presentada de distintos modos, y evolución de una forma de
+                representación a otra según adecuación a la situación que se quiere resolver.
+
+               Producción de textos argumentativos, avanzando en el uso del vocabulario adecuado.
+
+               La gestión del error como momento vital de la enseñanza y el aprendizaje. Du a te este p o eso la
+                actividad del docente es de orientación, supervisión y acompañamiento a las tareas desarrolladas por
+                los alumnos. En el marco de esta tarea es muy importante que el docente motive a sus alumnos a
+                aprender de los errores. Todo este planteo supone una actividad incesante de los alumnos,
+                                                                31
+                participación permanente, consultas al docente.
+
+              El uso del aula digital móvil como herramienta para generar propuestas de enseñanza que integren
+               las TIC a lo pedagógico y promuevan aprendizajes desde el desarrollo de la creatividad, el análisis
+               crítico, la reflexión en el marco de la resolución de problemas.
+
+              Estudiar durante la clase de matemática es una estrategia tan necesaria como la evocación, puesto
+               que permite transitar momentos de meta-cognición y autoevaluación de lo aprendido, durante el
+               ejercicio de revisitar las producciones de cuadernos, carpetas, afiches, entre otros.
+
+              La institucionalización demanda considerar la diversidad de procedimientos generados y desde allí
+               p odu i u a sí tesis ue legiti e los sa e es so ial e te e o o idos. No se trata de yuxtaponer
+               nombres y formulaciones a aquello que han producido los alumnos, se trata de establecer una
+               verdadera articulación que haga posible el reconocimiento de un nuevo aprendizaje, que permita que
+               los estudiantes retengan del problema aquello que es gestor del sentido y no solamente los aspectos
+                                        32
+               superficiales del mismo.
+
+        Al final de la clase:
+          El análisis sobre las intervenciones de los alumnos en cruce con las intervenciones de los docentes, a partir de
+la lectura de registros anecdóticos realizados en distintos momentos, desde el trabajo en parejas pedagógicas. Esta
+actividad permite la reflexión sobre la práctica para la búsqueda de estrategias nuevas o la profundización de otras
+llevadas a cabo durante los momentos de la clase.
+
+31
+   DGCyE, SSEE, Dirección Provincial de Educación Primaria (2005): Aportes para el fortalecimiento de la Matemática en
+la EPB. La Plata.
+32
+   Ibídem.
+                                                                                                                   112
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+
+       Finalmente, y a modo de síntesis, resulta ponderable hacer foco en algunos aspectos de la enseñanza de la
+matemática mediante la resolución de problemas, a saber:
+
+                   La cuestión del sentido:
+              Es importante reconocer que lo ue ha e señado esté a gado de sig ifi ado, ue te ga se tido para el
+                               33                                  34
+             alu o Charnay (1994). Siguiendo a Guy Brousseau (1983) el se tido de u o o i ie to ate áti o
+             se define por la colección de situaciones; donde este conocimiento es realizado como teoría; no sólo por la
+             colección de situaciones donde el sujeto lo ha encontrado como medio de solución sino también por el
+             conjunto de concepciones que rechaza, de errores que evita, de economías que preocupa, de formulaciones
+               ue eto a… solo se trata de construir el sentido. Por ello, la importancia del gesto profesional traducido en
+             el lenguaje, tanto en sus manifestaciones verbales como no verbales, explícitas e implícitas.
+
+                   La selección de estrategia/s adecuada/s al contexto situacional:
+               Esta ele ió      ue ada u o ha e al e os i plí ita e te está i fluida por numerosas variables: el punto
+              de vista del docente sobre la disciplina enseñada, su punto de vista sobre los objetivos, su punto de vista
+              sobre los alumnos (sus posibilidades, sus expectativas), la imagen que el docente se hace de las demandas de
+              la i stitu ió e plí itas, i plí itas o supuestas , de la de a da so ial o ta ié de la de los pad es .
+              (Charnay, op.cit. p.54).
+
+                   Las características de la relación pedagógica mediada por el contrato didáctico:
+               Al decir de Brousseau, se entiende por contrato didáctico al o ju to de o po ta ie tos del aest o
+              que son esperados por el alumno, y conjunto de comportamientos del alumno que son esperados por el
+              maestro, y que regulan el funcionamiento de la clase y las relaciones maestro-alumnos-saber, definiendo así
+              los roles de cada uno y la repartición de las tareas: ¿quién puede hacer qué?, ¿quién debe hacer qué?,
+              ¿ uáles so los fi es los o jetivos? . Lo expuesto permite el análisis de: la distribución de roles, las
+              características de la interacción pedagógica, el proyecto de cada uno, las reglas de juego y la adecuación de
+              la propuesta a los requerimientos contextuales, entre otros.
+
+        En definitiva enseñar matemática implica una reflexiva tarea docente que atienda a las condiciones de
+enseñanza explicitadas para la construcción de saberes matemáticos y una recursiva mirada sobre la práctica
+pedagógica a fin de mejorar la enseñanza para así lograr más y mejores aprendizajes.
+
+VI.-Orientaciones para la evaluación.
+
+        La evaluación como parte de los procesos de enseñanza y aprendizaje es la práctica que posibilita tomar
+decisiones; ya que al decir de Scriven no se puede mejorar sin evaluar . En esta práctica es posible reconocer dos
+cuestiones fundamentales para evaluar:
+
+           los aprendizajes de los alumnos;
+           el proceso de enseñanza.
+
+           Toda evalua ió e uie e, p evia e te, de la fo ula ió        e pli ita ió de los criterios que se utilizarán
+tomando como referencia las expectativas de logro. Es necesario que los criterios sean conocidos y compartidos con los
+alumnos puesto que se trata no solamente de que aprendan determinados contenidos, sino de que aprendan a
+identificar cómo han logrado este aprendizaje. Toda actividad que se realiza en las aulas puede pensarse como un
+indicador acerca del avance y de los obstáculos de los procesos de enseñanza y de aprendizaje en su conjunto, por lo
+ ual es i po ta te dispo e de i st u e tos pa a o te e esta i fo a ió .
+                                                                             35
+
+
+
+         En este sentido, si durante la gestión de las clases se han propiciado momentos para que los alumnos puedan
+producir, comunicar, validar, conjeturar, debatir, interpretar información matemática presentada de diferente manera,
+la evaluación debe ser coherente con esa propuesta.
+
+            Algunas sugerencias para desplegar en torno a la evaluación, pueden ser:
+
+            -Proponer problemas para resolver en parejas, en un pequeño grupo e individualmente.
+
+33
+     Charnay, Rolando (1994) Aprender por medio de la resolución de problemas en Parra-Saiz Didáctica de Matemática, Paidós.
+34
+   B ousseau, Gu           Fu da e tos        étodos de la didá ti a , RDM Nº 9 (3). Versión en español publicada por Facultad de
+Matemática, Astronomía y Física de la Universidad de Córdoba
+35
+   Sánchez, Sandra- Zorzoli, Néstor (2014).¡¿Yo, directivo?!, Ed. Graficar. Bs As.
+                                                                                                                               113
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+        -Considerar las argumentaciones escritas que trasciende la escritura de algoritmos.
+
+        -Leer registros que guardan memoria de cómo participa cada alumno en la discusión con pares, en cómo apela
+          a sus conocimientos, si se trasladan a nuevas situaciones.
+
+        -Atender la participación de cada alumno en clases de repaso, donde se enseña a estudiar matemática de las
+          producciones: el cuaderno o carpeta como agenda de lo trabajado.
+
+        -Entregar a cada estudiante dos problemas, de distinta complejidad a fin de evaluar en qué nivel de
+          construcción de los conocimientos está cada alumno. Esta práctica permite acompañar, si es necesario, esa
+          trayectoria a partir de espacios donde se flexibilice el aula para re-trabajar los contenidos.
+
+        -Solicitar a los alumnos que propongan problemas en relación a los contenidos enseñados.
+
+        -Ponderar la razonabilidad del//los camino/s elegido/s para la resolución de problemas.
+
+        -Valorar el uso de lenguaje matemático en forma oral y escrita.
+
+        -Utilizar soportes informáticos para invitar a los alumnos a realizar presentaciones sobre lo trabajado en la
+        secuencia didáctica.
+
+        En suma, la propuesta de evaluación debe focalizar la construcción y reconstrucción de los conocimientos. Si
+el maestro coordina, promueve, acompaña, regula, produce mediaciones adecuadas para la construcción de los
+conocimientos, la evaluación se integra a ese proceso. Por lo tanto, se espera lograr una evaluación procesual, integral,
+que atienda a la diversidad de lo enseñado y los sujetos. En definitiva una evaluación comprensiva para mejorar los
+aprendizajes.
+
+
+
+
+Bibliografía y Webgrafía.
+
+
+       Broitman, C. (1999). Las operaciones en el primer ciclo Aportes para el trabajo en el aula. Buenos Aires:
+        Novedades Educativas.
+       Broitman, C. (2000). Reflexiones en torno a la enseñanza del espacio. En Itkin, S. (comp.). Educación
+        matemática: Propuestas de trabajo, experiencias y reflexiones. La educación en los primeros años. Serie 0 a 5
+        (22). (pp. 24-41). Buenos Aires: Novedades Educativas.
+       Broitman, C. e Itzcovich, H. (2000). El estudio de las figuras y cuerpos geométricos. Actividades para los
+        primeros años de escolaridad. Buenos Aires: Novedades Educativas.
+       Broitman, C. e Itzcovich, H. (2003). Geometría en los primeros grados de la escuela primaria: problemas de su
+        enseñanza, problemas para su enseñanza. En Panizza, M. (comp.). Enseñar matemática en el Nivel Inicial y
+        Primer Ciclo de EGB. Análisis y propuestas. (pp.289-323.) Buenos Aires: Paidós.
+       Broitman, Claudia; Itzcovich, Horacio y Quaranta, María Emilia.          La e seña za de los ú e os
+        de i ales: el a álisis del valo posi io al u a ap o i a ió a la de sidad , e Revista Lati oa e i a a de
+        Investigación en Matemática Educativa, N° 1, México.
+       BROITMAN, C Y KUPERMAN C.              . I te p eta ió de ú e os        e plo a ió de egula idades e la se ie
+        numérica. Propuesta didáctica para primer grado: la lotería. Facultad de Filosofía y Letras de la UBA. Buenos
+        Aires.
+       B ousseau, Gu       : Fu da e tos       étodos de la didá ti a , RDM Nº 9 (3). Versión en español publicada
+        por Facultad de Matemática, Astronomía y Física de la Universidad de Córdoba.
+       Brousseau, G. (2007). Iniciación al estudio de la Teoría de las situaciones didácticas. Buenos Aires: Libros del
+        Zorzal.
+       Charlot, B: (1989) La epistemología implícita en las prácticas de enseñanza de la matemática. Conferencia
+        dictada en Cannes, marzo.
+       Charnay, Rolando (1994) Aprender por medio de la resolución de problemas en Parra-Saiz Didáctica de
+        Matemática, Paidós.
+       Consejo Provincial de Educación (2004:) Diseño Curricular de EGB. Santa Cruz.
+       Diseño curricular de la provincia de Bs. As. (2007) Buenos Aires.
+                                                                                                                     114
+PROVINCIA DE SANTA CRUZ
+
+    DGCyE, SSE, Dirección Provincial de Educación Primaria (2001) Orientaciones didácticas para la enseñanza de
+Consejo Provincial de Educación
+
+        la Geometría en EGB, Documento Nº 3, Matemática. La Plata.
+       Graciela Chemello, Mónica Agrasar, Silvia Chara y Analía Crippa – Equipo Áreas curriculares del Ministerio de
+        Educación. Aportes de la didáctica de la Matemática para pensar la enseñanza.
+       HISSE, MA. CRISTINA Y )ÁTERA, OLGA Coo d.             Ha ia u a alidad ejo de la edu a ió rural.
+        Mate áti a. Do u e to de apo o pa a la apa ita ió . DGC E/“u se eta ia de Edu a ió . Es uelas u ales
+        1º y 2º ciclo
+       IT)COVICH, HORACIO.          . La Mate áti a es ola . Las p á ti as de e seña za e el aula . AIQUE. Bue os
+        Aires.
+       Kopitowski, Ada, (1999) Enseñanza de la matemática. Entre el discurso y la práctica. Buenos Aires, Aique.
+       LEY      .        : Le de Edu a ió Na io al . Pode Eje utivo Na io al.
+       LEY 3305 (2012): Le de Edu a ió P ovi ial . Go ie o de la P ovi ia de “a ta C uz.
+       Lerner, D., (1992): La matemática en la escuela aquí y ahora. Buenos Aires, Aique.
+       Lerner, D.; Sadovsky, P. y Wolman, S., (1994): El siste a de u e a ió : u p o le a didá ti o , e Parra, C.
+        y Saiz, I. (comp.), Didáctica de matemáticas. Aportes y reflexiones. Buenos Aires.
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2012). Núcleos de Aprendizajes
+        Prioritarios. 1° Ciclo Educación Primaria. Buenos Aires.
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2012). Núcleos de Aprendizajes
+        Prioritarios. 2° Ciclo Educación Primaria. Buenos Aires
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2011). Núcleos de Aprendizajes
+        Prioritarios. SÉPTIMO AÑO. 7° año Educación Primaria/1° año Educación Secundaria. Buenos Aires
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2006). Cuadernos para el aula 1,2 y 3.
+        Matemática. Primer Ciclo EGB/Nivel Primario. Buenos Aires.
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2006). Cuadernos para el aula 4, 5 y 6.
+        Matemática. Segundo Ciclo EGB/Nivel Primario. Buenos Aires.
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2006). Aportes para el seguimiento del
+        aprendizaje en procesos de enseñanza. 1° Ciclo EGB/ Nivel Primario. 1ª. Ed. Buenos Aires
+       MINISTERIO DE EDUCACIÓN, CIENCIA Y TECNOLOGÍA DE LA NACIÓN (2006). Aportes para el seguimiento del
+        aprendizaje en procesos de enseñanza. 2° Ciclo EGB/Nivel Primario. 1ª. Ed. Buenos Aires
+       Ministerio de Educación, (2006) Enseñar Matemática en el segundo ciclo en los Cuadernos para el aula NAP.
+        Buenos Aires. (Disponible en: www.me.gov.ar/curriform/matematica.html).
+       Panizza, Mabel y Sadovsky, Patricia, (1992): El papel del problema en la construcción de conceptos
+        matemáticos. Buenos Aires, FLACSO.
+       Resolución CFE 174/12: Pautas federales para el mejoramiento de la enseñanza y el aprendizaje y las
+        Trayectorias Escolares en el nivel inicial, primario y modalidades, y su regulación.
+       Resolución CFE 188/12: Plan Nacional de Educación Obligatoria y Formación Docente.
+       Resolución CPE 027/13: Nueva estructura del Nivel Primario.
+       Resolución CPE 2822/13: Pautas para la evaluación, acreditación y promoción, Anexo I Promoción
+        Acompañada, Anexo II.
+       Rickenmann, René (20      : El ol de los a tefa tos ultu ales e la est u tu a ió         gestió de se ue ias de
+        e seña za ap e dizaje . “uiza, U ive sidad de Gi e a.
+       Sadovsky, P. (coord.); Quaranta, M., Ponce, H. (2006) Cálculo mental con números naturales Apuntes para la
+        enseñanza. Gob de la Ciudad de Bs As. Secretaría de Educación. Dirección de Currícula. Disponible en
+        http://estatico.buenosaires.gov.ar/areas/educacion/curricula/pdf/primaria/calculo_naturales_web.pdf).
+       “aiz, I a, Dividi o difi ultad o la difi ultad de dividi , e Pa a, Ce ilia             “aiz, I   a   o ps. , (1994)
+        Didáctica de las Matemáticas. Aportes y reflexiones. Buenos Aires, Paidós,
+
+
+                                                                                                                       115
+PROVINCIA DE SANTA CRUZ
+
+    Sánchez, “a d a Ma iel
+Consejo Provincial de Educación
+                                 : ¿Qué te e os ue i a del t a ajo do e te uá do las a tividades está
+        i st u e tadas po o putado as? “e i a io de i t odu ió a la i vestiga ió e p á ti as do e tes. La
+        Plata. UNIPE
+       Sánchez, Sandra y Zorzoli, Néstor (2014).¡¿Yo, directivo?!, Ed. Graficar. Bs As.
+       Vergnaud, Gerard, (1991) El niño/a, las matemáticas y la realidad. Problemas de las matemáticas en la
+        escuela. México, Trillas.
+Sitios Web sugeridos:
+
+       Biblioteca Nacional del Maestro: http://www.me.gov.ar/consejo/resoluciones/cf_resoluciones.html
+       Colección CD Educ.ar: http://coleccion.educ.ar/
+       Colección Educ.ar en línea: http://www.educ.ar/recursos/ver?rec_id=90103
+       Colección     Educ.ar       en      el     aula:     Nivel                Inicial    y       Primer    Ciclo.
+        http://www.educ.ar/recursos/ver?id=122937&referente=docentes
+       Consejo Provincial de Educación. Santa Cruz: http://educacionsantacruz.gov.ar/
+       Conectar Igualdad. Escritorio Modalidad de Educación Especial: http://escritorioeducacionespecial.educ.ar/
+       Conectar Igualdad. Escritorio Educación Rural Primaria: http://escritoriorural.educ.ar/inicio-
+        primaria/index.html
+       Dirección Nacional de Gestión Curricular y Formación Docente. Publicaciones:
+        http://www.me.gov.ar/curriform/publicaciones.html#egb1y2
+       Educación Sexual Integral: http://esi.educ.ar/
+       Formación Docente continua: http://portal.educacion.gov.ar/primaria/formacion-docente/formacion-
+        continua/
+       Inclusión digital educativa. Primaria: http://pnide.educacion.gob.ar/primaria
+       Ministerio de Educación de la Nación (MEN): http://portal.educacion.gov.ar/
+       Núcleos de Aprendizajes Prioritarios para el Nivel Primario:
+        http://portal.educacion.gov.ar/primaria/contenidos-curriculares-comunes-nap/
+       Portal Educación Primaria- MEN: http://portal.educacion.gov.ar/primaria/
+       Portal Educ.ar: http://www.educ.ar/
+       Recursos educativos y publicaciones. Colecciones.(MEN): http://portal.educacion.gov.ar/primaria/recursos-
+        didacticos-y-publicaciones/
+       Organización de los Estados Iberoamericanos (OEI). Publicaciones.
+        http://www.oei.es/publicaciones/destacado.php
+       OEI. Colecciones: http://www.oei.es/publicaciones/colecciones.php
+       Primaria Digital: http://primariadigital.educ.ar/
+       Portal Paka Paka: http://www.pakapaka.gob.ar
+       Resoluciones del Consejo Federal de Educación:
+        http://www.me.gov.ar/consejo/resoluciones/cf_resoluciones.html
+       Unicef Argentina. Publicaciones: http://www.unicef.org/argentina/spanish/resources_10848.htm
+Modalidades Educativas:
+
+           Ed. Artística: http://portal.educacion.gov.ar/primaria/modalidades/educacion-artistica/
+           Ed. Domiciliaria y Hospitalaria: http://portal.educacion.gov.ar/primaria/modalidades/educacion-
+            domiciliaria-y-hospitalaria/
+           Ed. Especial: http://portal.educacion.gov.ar/primaria/modalidades/educacion-especial/
+           Ed. Intercultural Bilingüe: http://portal.educacion.gov.ar/primaria/modalidades/educacion-intercultural-
+            bilingue/
+
+                                                                                                                 116
+PROVINCIA DE SANTA CRUZ
+Consejo Provincial de Educación
+            http://eib.educ.ar/
+
+       Ed. Rural: http://portal.educacion.gov.ar/primaria/modalidades/educacion-rural/
+
+
+
+
+                                                                                          117
+

@@ -188,6 +188,14 @@ export const SEASONAL_EVENTS: SeasonalEvent[] = [
     },
   },
   {
+    id: "halloween",
+    label: "Halloween",
+    emoji: "🎃",
+    kind: "festividad",
+    description: "¡Semana de disfraces! En la tienda hay avatares de Halloween por pocos días.",
+    isActive: (d) => inRange(d, 1024, 1102),
+  },
+  {
     id: "tradicion",
     label: "Día de la Tradición",
     emoji: "🐴",
@@ -255,9 +263,12 @@ export function getEventRewardIds(eventId: string): string[] {
 // Fondo que muestra el modo "automático": el de la festividad activa, o si
 // no hay ninguna, el de la estación.
 export function getAutoBackgroundId(now: Date = new Date()): string {
-  const [first] = getActiveEvents(now);
-  const bg = first && BACKGROUND_OPTIONS.find((b) => b.eventId === first.id);
-  return bg ? bg.id : "patagonia";
+  // La primera festividad/estación activa que tenga fondo propio.
+  for (const e of getActiveEvents(now)) {
+    const bg = BACKGROUND_OPTIONS.find((b) => b.eventId === e.id);
+    if (bg) return bg.id;
+  }
+  return "patagonia";
 }
 
 // Resuelve el fondo guardado del alumno a uno concreto para dibujar.
@@ -316,4 +327,9 @@ export function birthdayAge(birthday: string | undefined, now: Date = new Date()
   const y = +birthday.slice(0, 4);
   const age = getArgentinaDate(now).year - y;
   return age > 0 && age < 100 ? age : null;
+}
+
+// ¿Está activa esta festividad ahora? (para la tienda de temporada)
+export function isEventActiveNow(eventId: string, now: Date = new Date()): boolean {
+  return getActiveEvents(now).some((e) => e.id === eventId);
 }

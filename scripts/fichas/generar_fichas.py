@@ -27,6 +27,13 @@ OUT = os.path.join(ROOT, "private", "fichas")
 ISLANDS = os.path.join(ROOT, "public", "theme", "islands")
 
 
+def island_path(wid):
+    """Isla del mundo según su grado (1.º: 11001+, 2.º: 21001+…; 3.º: 1–47)."""
+    if wid >= 10000:
+        return os.path.join(ROOT, "public", "theme", "grados", str(wid // 10000), "islas", f"mundo-{wid}.png")
+    return os.path.join(ISLANDS, f"mundo-{wid}.png")
+
+
 def find_font(filename):
     for d in (FONT_DIR, HERE, "/tmp/fonts2"):
         p = os.path.join(d, filename)
@@ -108,7 +115,7 @@ class Sheet:
             c.drawString(M + 16, top - 44, self.fit(self.data["title"], "Fredoka", 19, W - 2 * M - 120))
             c.setFont("Andika", 10)
             c.drawString(M + 16, top - 62, f"Para seguir aprendiendo después de: {self.name}")
-            img = os.path.join(ISLANDS, f"mundo-{self.wid}.png")
+            img = island_path(self.wid)
             if os.path.exists(img):
                 c.drawImage(ImageReader(img), W - M - 94, top - 90, 90, 90, mask="auto", preserveAspectRatio=True)
             y = top - hh - 22

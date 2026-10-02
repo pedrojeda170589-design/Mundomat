@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import { isEventActiveNow } from "@/lib/seasons";
 import {
   ACCESSORY_CATALOG_TIENDA,
   AVATAR_INFO,
@@ -39,6 +40,12 @@ export default function ShopModal({
   const [status, setStatus] = useState<string | null>(null);
   const owned = useMemo(() => new Set(progress.shopCollection ?? []), [progress.shopCollection]);
   const coins = progress.coins;
+  // Avatares de temporada: se ven mientras su festividad está activa (o si
+  // ya los compró).
+  const seasonal = useMemo(
+    () => SHOP_AVATARS.filter((a) => a.season && (isEventActiveNow(a.season) || owned.has(a.id))),
+    [owned]
+  );
 
   const previewAvatar = preview?.avatar ?? progress.avatar;
   const previewAccessories: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
@@ -190,7 +197,14 @@ export default function ShopModal({
         {status && <p className="text-center text-sm text-white">{status}</p>}
 
         <div className="max-h-[52vh] overflow-y-auto pr-1">
-          {tab === "avatares" && <ul className="grid grid-cols-3 gap-2">{SHOP_AVATARS.map(avatarCard)}</ul>}
+          {tab === "avatares" && (
+            <>
+              {seasonal.length > 0 && (
+                <p className="text-xs font-bold text-orange-300 mb-2">🎃 ¡Temporada de Halloween! Estos avatares están por pocos días.</p>
+              )}
+              <ul className="grid grid-cols-3 gap-2">{[...seasonal, ...SHOP_AVATARS.filter((a) => !a.season)].map(avatarCard)}</ul>
+            </>
+          )}
           {tab === "objetos" && (
             <ul className="grid grid-cols-3 gap-2">
               {ACCESSORY_CATALOG_TIENDA.map((acc) => {

@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { WorldDef } from "@/types";
+import { THEMES, themeForWorld } from "@/lib/grades";
 
 // Cada mundo se ve como una pequeña isla ilustrada (PNG con fondo
 // transparente) que representa su tema: una aldea, un bosque, un castillo...
-// Ver public/theme/islands/mundo-<id>.png.
-const islandSrc = (id: number) => `/theme/islands/mundo-${id}.png`;
+// Cada grado tiene su ambiente (ver GradeTheme en src/lib/grades.ts):
+// 3.º public/theme/islands/, 1.º public/theme/grados/1/islas/.
 
 // Desplazamiento horizontal (en %) de cada isla para que el camino
 // zigzaguee, como el "mapa de mundos" del póster de la escuela, en vez de
@@ -59,7 +60,7 @@ export default function WorldMap({
       className="relative w-full max-w-md mx-auto px-6 rounded-[2rem] overflow-hidden border-4 border-amber-800/30 shadow-xl"
       style={{
         height: containerHeight,
-        backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.28)), url(/theme/map/etapa-${mapStage}.jpg)`,
+        backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.28)), url(${(worlds[0] ? themeForWorld(worlds[worlds.length - 1]) : THEMES.meseta).map(mapStage)})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -110,26 +111,15 @@ export default function WorldMap({
               aria-label={`${world.name}${enabled ? "" : " (bloqueado)"}`}
             >
               <span className="relative block" style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}>
-                {world.grade === 1 ? (
-                  <span
-                    className={`absolute inset-2 flex items-center justify-center rounded-full border-4 border-white/80 shadow-[0_6px_10px_rgba(0,0,0,0.3)] text-5xl ${
-                      enabled ? "" : "grayscale opacity-70"
-                    } ${world.kind === "refuerzo" ? "animate-pulse" : ""}`}
-                    style={{ background: `radial-gradient(circle at 35% 30%, ${world.colorFrom}, ${world.colorTo})` }}
-                  >
-                    {world.emoji}
-                  </span>
-                ) : (
-                  <Image
-                    src={islandSrc(world.id)}
-                    alt=""
-                    fill
-                    sizes="124px"
-                    className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
-                      enabled ? "" : "grayscale opacity-70"
-                    }`}
-                  />
-                )}
+                <Image
+                  src={themeForWorld(world).island(world.id)}
+                  alt=""
+                  fill
+                  sizes="124px"
+                  className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
+                    enabled ? "" : "grayscale opacity-70"
+                  } ${world.kind === "refuerzo" ? "animate-pulse" : ""}`}
+                />
                 {!enabled && (
                   <span className="absolute inset-0 flex items-center justify-center text-3xl drop-shadow">
                     🔒

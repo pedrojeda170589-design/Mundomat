@@ -21,6 +21,8 @@ import TraceActivity from "@/components/activities/TraceActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
+import Seashore from "@/components/Seashore";
+import { themeForWorld } from "@/lib/grades";
 import Image from "next/image";
 import VisualAid from "@/components/activities/VisualAid";
 import Burst from "@/components/weekend/Burst";
@@ -194,8 +196,8 @@ export default function ActivityRunner({
   }
 
   return (
-    <div className="relative flex-1 flex flex-col px-4 py-6 overflow-hidden">
-      <Mountains isDay={false} />
+    <div className={`relative flex-1 flex flex-col px-4 py-6 overflow-hidden ${themeForWorld(world).nightBg}`}>
+      <Scenery world={world} isDay={false} />
       <div className="wood-panel-light relative z-10 flex items-center justify-between mb-4 max-w-md w-full mx-auto rounded-2xl px-4 py-2">
         <button onClick={onExit} className="text-amber-50 text-sm font-semibold">
           ← Salir
@@ -430,8 +432,8 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
   }
 
   return (
-    <div className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 text-center overflow-hidden bg-explorer-night">
-      <Mountains isDay={false} />
+    <div className={`relative flex-1 flex flex-col items-center justify-center px-6 py-12 text-center overflow-hidden ${themeForWorld(world).nightBg}`}>
+      <Scenery world={world} isDay={false} />
       <div className="parchment-panel relative z-10 rounded-3xl px-8 py-10 max-w-sm w-full mx-4">
         {outcome?.kind === "completed" && <Burst big count={20} />}
         <span className="relative block w-36 h-36 mx-auto mb-2 wk-float">
@@ -461,19 +463,12 @@ function newClientId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 }
 
-// Imagen del mundo (isla). Los mundos de 1.º todavía no tienen isla
-// dibujada: se muestra su emoji.
+// Imagen del mundo (isla), según el ambiente de su grado.
 function WorldIcon({ world, sizes }: { world: WorldDef; sizes: string }) {
-  if (world.grade === 1 || world.image === "") {
-    return (
-      <span
-        className="absolute inset-0 flex items-center justify-center rounded-full shadow-lg"
-        style={{ background: `radial-gradient(circle at 35% 30%, ${world.colorFrom}, ${world.colorTo})`, fontSize: `calc(${sizes} * 0.5)` }}
-        aria-hidden
-      >
-        {world.emoji}
-      </span>
-    );
-  }
-  return <Image src={world.image ?? `/theme/islands/mundo-${world.id}.png`} alt="" fill sizes={sizes} className="object-contain drop-shadow-lg" />;
+  return <Image src={world.image ?? themeForWorld(world).island(world.id)} alt="" fill sizes={sizes} className="object-contain drop-shadow-lg" />;
+}
+
+// Silueta de fondo según el ambiente del grado (montañas, costa…).
+function Scenery({ world, isDay }: { world: WorldDef; isDay: boolean }) {
+  return themeForWorld(world).scenery === "seashore" ? <Seashore isDay={isDay} /> : <Mountains isDay={isDay} />;
 }

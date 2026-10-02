@@ -7,7 +7,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-01 | [Aula abierta de prueba para 3.º grado](./tareas/AG-01-aula-abierta.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
 | CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🟢 UNIDA A MAIN |
-| AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
+| AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | ⏳ PENDIENTE |
+| CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
 
@@ -68,3 +70,15 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - Actividades nuevas reutilizables: elegir (con audio y cuento), contar, armar con fichas y trazar; Lengua con palabras decodificables según las letras trabajadas; letra: nombre y sonido separados con audios grabables (`docs/primer-grado/AUDIOS.md`).
 - Seguimiento por habilidad (`skillStats`), niveles sin iniciar → dominado, zonas de práctica automáticas en el mapa e informe docente «¿Qué sabe? / ¿Qué está aprendiendo? / ¿Dónde tiene dificultades? / ¿Qué debería practicar?».
 - Para 1.º no se muestran todavía la aventura del finde, la competencia ni las fichas (son de 3.º).
+
+#### Revisión de Claude (AG-02)
+- Probado: `tsc`, `eslint`, build y el script de 96 mundos × 40 vueltas sin problemas; Sociales y Naturales ahora mezclan 6 preguntas + 2 actividades de otros tipos.
+- Arreglos al unir:
+  - Las fuentes que se agregaron en `scripts/fichas/` eran **variables** (Fredoka salía en su versión fina): se reemplazaron por las estáticas (Andika Regular/Bold, Fredoka Bold) y se regeneraron las 190 fichas.
+  - `/familias` (`FichasView.tsx`) leía `window.location.hash` al crear el estado: en el servidor daba 3.º y en el navegador 1.º (desajuste de HTML). Ahora se lee después de montar.
+  - Las fichas de 1.º usan la isla de 1.º en el encabezado (`island_path` en `generar_fichas.py`).
+
+### CL-03 · Ambientes por grado, imágenes de 1.º y Halloween (Claude)
+- `GradeTheme` en `src/lib/grades.ts`: cada grado define su isla, su mapa (4 etapas), su silueta de fondo y sus colores. 1.º = **costa patagónica** (`public/theme/grados/1/`), 3.º = meseta y montaña (lo de siempre). Plan del recorrido: 1.º costa · 2.º bosque de lengas · 3.º meseta y montaña · 4.º glaciares · 5.º a 7.º estepa, lagos y cielo austral.
+- 97 islas de 1.º (una por mundo + zona de práctica) y 4 fondos de mapa; silueta `Seashore.tsx`.
+- Halloween: festividad del 24/10 al 2/11 y 6 avatares de temporada en la tienda (solo se compran durante Halloween; lo comprado queda).

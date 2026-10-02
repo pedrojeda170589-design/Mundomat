@@ -22,6 +22,7 @@ import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
+import { isEventActiveNow } from "@/lib/seasons";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
 import { grade1HasContent } from "@/lib/grade1/content";
 import {
@@ -554,6 +555,9 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
   const progress = await getProgress(code);
   const owned = progress.shopCollection ?? [];
   if (owned.includes(itemId)) return { ok: false, error: "¡Ya lo tenés!" };
+  if (avatar?.season && !isEventActiveNow(avatar.season)) {
+    return { ok: false, error: "Este avatar solo se consigue durante su temporada." };
+  }
   if (progress.coins < price) {
     return { ok: false, error: `Te faltan ${price - progress.coins} monedas.` };
   }
