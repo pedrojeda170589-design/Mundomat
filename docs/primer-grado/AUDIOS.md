@@ -97,3 +97,24 @@ Copiá los archivos a `public\audio\letras\` y subilos como siempre
 (`git add public/audio`, commit y push). O pasámelos y los agrego yo.
 No hace falta tenerlos todos: cada archivo nuevo reemplaza a la voz del
 navegador solo para esa letra.
+
+## Cuentos para escuchar (opcional)
+
+Los mundos de cuentos de 1.º (11101–11119) leen cada cuento escena por escena
+(en 2.º y 3.º los chicos leen y el audio queda en el botón 🔊). Si no hay
+grabación, lee la voz del navegador. Para que se escuche **tu voz** (lo
+ideal: los chicos te conocen), grabá una pista por escena y guardala en
+`public\audio\cuentos\` con el nombre `<cuento>-<escena>.mp3`, escenas 1 a 6.
+En la escena 1 decí también el título.
+
+Cuentos (en orden del recorrido): `liebre-tortuga`, `leon-raton`,
+`tres-chanchitos`, `gallinita-roja`, `ricitos-osos`, `zorro-cuervo`,
+`cigarra-hormiga`, `caperucita`, `patito-feo`, `leyenda-calafate`,
+`pastorcito-mentiroso`, `raton-campo-ciudad`, `gallina-huevos-oro`,
+`musicos-bremen`, `juan-porotos`, `medias-flamencos`, `traje-emperador`,
+`tortuga-gigante`, `leyenda-elal`. Por ejemplo: `liebre-tortuga-1.mp3` …
+`liebre-tortuga-6.mp3`.
+
+Leé exactamente el texto de cada escena (está en
+`src/lib/cuentos/catalogo.ts`), despacio y con expresión. Cada pista dura
+entre 10 y 25 segundos. Mismo formato que las letras (MP3 mono).

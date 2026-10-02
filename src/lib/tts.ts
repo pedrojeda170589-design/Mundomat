@@ -37,10 +37,14 @@ function sanitizeForSpeech(text: string): string {
     .trim();
 }
 
-export function speak(text: string) {
-  if (!isSpeechSupported()) return;
+export function speak(text: string, onEnd?: () => void) {
+  if (!isSpeechSupported()) {
+    onEnd?.();
+    return;
+  }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(sanitizeForSpeech(text));
+  if (onEnd) utterance.onend = () => onEnd();
   utterance.lang = "es-AR";
   utterance.rate = 0.95;
   const voice = pickSpanishVoice();

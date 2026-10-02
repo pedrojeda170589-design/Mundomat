@@ -1,6 +1,7 @@
 import { WorldDef } from "@/types";
 import { buildGrade1Activities } from "@/lib/grade1/content";
 import { buildGrade2Activities } from "@/lib/grade2/content";
+import { buildStoryActivities } from "@/lib/cuentos/actividades";
 
 export type ShapeKind = "circulo" | "cuadrado" | "rectangulo" | "triangulo";
 
@@ -46,6 +47,19 @@ export type ActivitySpec = (
       promptEmoji?: string; // dibujo grande en la consigna
       story?: { title: string; text: string; scenes?: string[] }; // texto para escuchar/leer antes
       storyFirst?: boolean; // false: el cuento ya se mostró antes (se puede volver a ver)
+      hint: string;
+    }
+  | {
+      // Escuchar un cuento ilustrado, escena por escena (no suma puntos:
+      // después vienen las preguntas).
+      type: "listen";
+      id: string;
+      title: string;
+      prompt: string;
+      storyId: string;
+      // "listen": se narra solo (1.º); "read": lo leen ellos, audio opcional (2.º y 3.º).
+      mode?: "listen" | "read";
+      scenes: { text: string; image: string }[];
       hint: string;
     }
   | {
@@ -6823,6 +6837,7 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
 // ---------------------------------------------------------------------------
 
 export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
+  if (world.storyId) return buildStoryActivities(world);
   if (world.grade === 1) return buildGrade1Activities(world);
   if (world.grade === 2) return buildGrade2Activities(world);
   switch (world.category) {

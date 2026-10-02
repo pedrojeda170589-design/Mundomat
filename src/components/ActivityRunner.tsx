@@ -18,6 +18,7 @@ import PickActivity from "@/components/activities/PickActivity";
 import CountActivity from "@/components/activities/CountActivity";
 import BuildActivity from "@/components/activities/BuildActivity";
 import TraceActivity from "@/components/activities/TraceActivity";
+import ListenActivity from "@/components/activities/ListenActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
@@ -54,6 +55,8 @@ function speakTextFor(activity: ActivitySpec): string {
       return activity.statement;
     case "find-error":
       return `${activity.prompt} ${activity.resolution}`;
+    case "listen":
+      return activity.scenes.map((sc) => sc.text).join(" ");
     case "pick":
     case "count":
     case "build":
@@ -148,7 +151,8 @@ export default function ActivityRunner({
           code: studentCode,
           worldId: world.id,
           correctCount: finalCorrectCount,
-          totalActivities: activities.length,
+          // El cuento para escuchar no cuenta como actividad con puntaje.
+          totalActivities: activities.filter((a) => a.type !== "listen").length,
         }),
       });
       const data = await res.json();
@@ -265,6 +269,9 @@ export default function ActivityRunner({
                 onDone={submitResult}
               />
             )}
+            {activity.type === "listen" && (
+              <ListenActivity key={`listen-${index}`} title={activity.title} storyId={activity.storyId} mode={activity.mode ?? "listen"} scenes={activity.scenes} onFinish={handleNext} />
+            )}
             {activity.type === "trace" && (
               <TraceActivity key={`trace-${index}`} prompt={activity.prompt} say={activity.say} glyph={activity.glyph} onDone={submitResult} />
             )}
@@ -347,16 +354,18 @@ export default function ActivityRunner({
               />
             )}
 
-            <div className="w-full max-w-md">
-              <AssistControls
-                speakText={speakTextFor(activity)}
-                hint={activity.hint}
-                difficulty={world.difficulty}
-                coins={coins}
-                studentCode={studentCode}
-                onCoinsChange={onCoinsChange}
-              />
-            </div>
+            {activity.type !== "listen" && (
+              <div className="w-full max-w-md">
+                <AssistControls
+                  speakText={speakTextFor(activity)}
+                  hint={activity.hint}
+                  difficulty={world.difficulty}
+                  coins={coins}
+                  studentCode={studentCode}
+                  onCoinsChange={onCoinsChange}
+                />
+              </div>
+            )}
           </>
         )}
 

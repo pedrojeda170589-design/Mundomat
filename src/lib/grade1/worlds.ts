@@ -7,6 +7,7 @@
 // Ids: 1 + materia + número → Lengua 11001…, Matemática 12001…,
 // Sociales 13001…, Naturales 14001… (cada materia admite hasta 999 mundos).
 import { WorldDef, WorldDifficultyVars, WorldSubject } from "@/types";
+import { withStories } from "@/lib/cuentos/recorrido";
 
 const SUBJECT_BASE: Record<WorldSubject, number> = {
   lengua: 11000,
@@ -70,7 +71,8 @@ function build(subject: WorldSubject, specs: Spec[]): WorldDef[] {
 const VOC = { language: "letra", imageSupport: true, audioSupport: true, options: 3, autonomy: "guiado" } as const;
 const CONS = { language: "silaba", imageSupport: true, audioSupport: true, options: 3, autonomy: "guiado" } as const;
 
-export const GRADE1_LENGUA: WorldDef[] = build("lengua", [
+// Cada dos mundos va uno de cuento (posiciones 3, 6, 9…): ver src/lib/cuentos/recorrido.ts.
+export const GRADE1_LENGUA: WorldDef[] = withStories(1, build("lengua", [
   // Oralidad y escucha
   { n: 1, name: "La Ronda de la Conversación", emoji: "🗣️", description: "Saludar, pedir, agradecer y esperar tu turno.", objective: "Reconocer pautas de los intercambios orales: turnos, saludo, pedido y agradecimiento.", contents: ["Participación en conversaciones respetando turnos de habla", "Fórmulas de saludo, pedido y agradecimiento"], skills: ["l-oralidad"], after: [], vars: { language: "imagen", imageSupport: true, audioSupport: true, options: 3, autonomy: "acompañado" } },
   { n: 2, name: "El Bosque de los Sonidos", emoji: "👂", description: "Escuchá con atención: ¿qué suena?", objective: "Escuchar con atención y discriminar sonidos y palabras.", contents: ["Escucha atenta", "Juegos sonoros y del lenguaje"], skills: ["l-escucha"], after: [1], vars: { language: "sonido", audioSupport: true, imageSupport: true, options: 3, memory: false } },
@@ -117,7 +119,8 @@ export const GRADE1_LENGUA: WorldDef[] = build("lengua", [
   { n: 37, name: "Escribo Palabras", emoji: "🔡", description: "Escribí palabras con letras móviles.", objective: "Escribir palabras con las letras trabajadas (letras móviles).", contents: ["Escritura asidua de palabras", "Correspondencia fonema-grafema en el orden correcto"], skills: ["l-escritura", "l-grafema-fonema"], after: [17] },
   { n: 38, name: "Listas, Títulos y Epígrafes", emoji: "📝", description: "¿Qué título le pondrías?", objective: "Reconocer y producir listas, títulos y epígrafes con acompañamiento.", contents: ["Listas de personajes, nombres y elementos", "Títulos posibles para un cuento", "Epígrafes para una ilustración"], skills: ["l-textos-breves", "l-escritura"], after: [37] },
   { n: 39, name: "Mensajes e Invitaciones", emoji: "💌", description: "Armá un mensaje o una invitación.", objective: "Reconocer partes y propósito de mensajes e invitaciones; completarlos.", contents: ["Mensajes", "Invitaciones para eventos escolares", "Respuestas a preguntas sobre temas conocidos"], skills: ["l-textos-breves", "l-escritura"], after: [38] },
-]);
+  // Los cuentos para escuchar se intercalan con withStories (src/lib/cuentos).
+]));
 
 // ------------------------------------------------------------------
 // MATEMÁTICA

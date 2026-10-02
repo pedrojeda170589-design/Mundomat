@@ -27,7 +27,8 @@ export const THEMES: Record<string, GradeTheme> = {
   meseta: {
     id: "meseta",
     label: "Meseta y montaña",
-    island: (id) => `/theme/islands/mundo-${id}.png`,
+    // TEMPORAL: las lecturas (31101+) usan la isla de la Biblioteca hasta tener las suyas.
+    island: (id) => (id > 31100 && id < 31200 ? "/theme/islands/mundo-16.png" : `/theme/islands/mundo-${id}.png`),
     map: (stage) => `/theme/map/etapa-${stage}.jpg`,
     scenery: "mountains",
     dayBg: "bg-explorer-day",
@@ -37,7 +38,7 @@ export const THEMES: Record<string, GradeTheme> = {
     id: "costa",
     label: "Costa patagónica",
     // Las zonas de práctica (ids 19000+) comparten una isla propia.
-    island: (id) => (id >= 19000 && id < 20000 ? "/theme/grados/1/islas/practica.png" : `/theme/grados/1/islas/mundo-${id}.png`),
+    island: (id) => ((id >= 19000 && id < 20000) || (id > 11100 && id < 11200) ? "/theme/grados/1/islas/practica.png" : `/theme/grados/1/islas/mundo-${id}.png`),
     map: (stage) => `/theme/grados/1/mapa/etapa-${stage}.jpg`,
     scenery: "seashore",
     dayBg: "bg-costa-day",
@@ -47,7 +48,7 @@ export const THEMES: Record<string, GradeTheme> = {
     id: "bosque",
     label: "Bosque de lengas",
     // Las zonas de práctica de 2.º (ids 29000+) comparten su propia isla.
-    island: (id) => (id >= 29000 && id < 30000 ? "/theme/grados/2/islas/practica.png" : `/theme/grados/2/islas/mundo-${id}.png`),
+    island: (id) => ((id >= 29000 && id < 30000) || (id > 21100 && id < 21200) ? "/theme/grados/2/islas/practica.png" : `/theme/grados/2/islas/mundo-${id}.png`),
     map: (stage) => `/theme/grados/2/mapa/etapa-${stage}.jpg`,
     scenery: "forest",
     dayBg: "bg-bosque-day",

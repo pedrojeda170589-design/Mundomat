@@ -8,8 +8,12 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
 | CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🟢 UNIDA A MAIN |
 | AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
-| AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
+| CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🔨 EN CURSO |
+| AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | ⏳ PENDIENTE |
+| CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🔨 EN CURSO |
+| CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🔨 EN CURSO |
 
 ## Resúmenes de tareas terminadas
 
@@ -131,3 +135,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - `GradeTheme` en `src/lib/grades.ts`: cada grado define su isla, su mapa (4 etapas), su silueta de fondo y sus colores. 1.º = **costa patagónica** (`public/theme/grados/1/`), 3.º = meseta y montaña (lo de siempre). Plan del recorrido: 1.º costa · 2.º bosque de lengas · 3.º meseta y montaña · 4.º glaciares · 5.º a 7.º estepa, lagos y cielo austral.
 - 97 islas de 1.º (una por mundo + zona de práctica) y 4 fondos de mapa; silueta `Seashore.tsx`.
 - Halloween: festividad del 1/10 al 2/11 y 7 avatares de temporada en la tienda a 200 monedas cada uno (calabaza, fantasmita, brujita, vampirito, gato negro, murcielaguito y ratita); solo se compran durante la temporada y lo comprado queda.
+
+### CL-04 · Cuentos en 1.º, 2.º y 3.º (Claude)
+- Motor en `src/lib/cuentos/`: 19 cuentos del canon (Esopo, tradicionales, Perrault, Grimm, Andersen, Quiroga y dos leyendas tehuelches), 6 escenas ilustradas cada uno (`public/theme/grados/1/cuentos/<id>-<n>.jpg`) y preguntas por grado.
+- Un mundo de cuento en las posiciones 3, 6, 9… de Lengua (`withStories` en `recorrido.ts`): 19 en 1.º (11101–11119), 19 en 2.º (21101–21119) y 6 en 3.º (31101–31106). Piden el mundo común anterior pero no bloquean el siguiente (no cambia el progreso de nadie).
+- Actividad `listen` (`ListenActivity.tsx`): en 1.º se narra sola (grabación en `public/audio/cuentos/` si existe; si no, voz del navegador); en 2.º y 3.º los chicos leen y tienen 🔊 opcional. No suma puntos: el puntaje sale de las preguntas.
+- Habilidades: 1.º `l-comp-literal/secuencia/inferencial`; 2.º `l2-comp-literal/secuencia/inferencial/vocabulario/critica`.

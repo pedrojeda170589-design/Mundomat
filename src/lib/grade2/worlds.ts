@@ -7,6 +7,7 @@
 // Total: 100 mundos.
 
 import { WorldDef, WorldDifficultyVars, WorldSubject } from "@/types";
+import { withStories } from "@/lib/cuentos/recorrido";
 
 const SUBJECT_BASE: Record<WorldSubject, number> = {
   lengua: 21000,
@@ -67,7 +68,8 @@ function build(subject: WorldSubject, specs: Spec[]): WorldDef[] {
 // ------------------------------------------------------------------
 // LENGUA (21001 - 21038)
 // ------------------------------------------------------------------
-export const GRADE2_LENGUA: WorldDef[] = build("lengua", [
+// Cada dos mundos va uno de lectura de cuento (posiciones 3, 6, 9…): ver src/lib/cuentos/recorrido.ts.
+export const GRADE2_LENGUA: WorldDef[] = withStories(2, build("lengua", [
   {
     n: 1,
     name: "El Gran Desafío de Leer",
@@ -450,7 +452,7 @@ export const GRADE2_LENGUA: WorldDef[] = build("lengua", [
     after: [37],
     kind: "integracion",
   },
-]);
+]));
 
 // ------------------------------------------------------------------
 // MATEMÁTICA (22001 - 22028)

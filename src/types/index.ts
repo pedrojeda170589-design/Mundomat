@@ -614,6 +614,8 @@ export interface WorldDef {
   activityCount?: number;
   // Imagen del mundo (si no hay, el mapa dibuja el emoji).
   image?: string;
+  // Mundo de cuento (comprensión auditiva/lectora): id en src/lib/cuentos.
+  storyId?: string;
 }
 
 // Variables que definen la dificultad de un mundo (no solo fácil/difícil).

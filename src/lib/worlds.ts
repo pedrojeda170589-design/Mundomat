@@ -1,5 +1,7 @@
 import { WorldDef } from "@/types";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
+import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+import { withStories } from "@/lib/cuentos/recorrido";
 
 // 14 mundos organizados según la Planificación Anual de Matemática de 3º
 // grado, en progresión real por trimestre:
@@ -11,7 +13,7 @@ import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 //   medidas de capacidad y peso.
 // - Trimestre 3 (mundos 11-14, "avanzado"): integración de las 4
 //   operaciones, fracciones, números grandes y cuerpos geométricos/tiempo.
-export const WORLDS: WorldDef[] = [
+const BASE_WORLDS: WorldDef[] = [
   {
     id: 1,
     name: "La Aldea de los Números",
@@ -574,9 +576,27 @@ export const WORLDS: WorldDef[] = [
   },
 ];
 
-// Busca en todos los grados (3.º y 1.º).
+// Mundos de 3.º con las lecturas de cuentos intercaladas en Lengua (una
+// cada dos mundos: ver src/lib/cuentos/recorrido.ts). Los ids de siempre
+// no cambian: solo se suman los nuevos (31101+).
+export const WORLDS: WorldDef[] = (() => {
+  const lengua = withStories(3, BASE_WORLDS.filter((w) => w.subject === "lengua"));
+  const out: WorldDef[] = [];
+  let k = 0;
+  for (const w of BASE_WORLDS) {
+    if (w.subject !== "lengua") {
+      out.push(w);
+      continue;
+    }
+    out.push(lengua[k++]);
+    while (k < lengua.length && lengua[k].storyId) out.push(lengua[k++]);
+  }
+  return out;
+})();
+
+// Busca en todos los grados.
 export function getWorld(id: number): WorldDef | undefined {
-  return WORLDS.find((w) => w.id === id) ?? GRADE1_WORLDS.find((w) => w.id === id);
+  return WORLDS.find((w) => w.id === id) ?? GRADE1_WORLDS.find((w) => w.id === id) ?? GRADE2_WORLDS.find((w) => w.id === id);
 }
 
 // Etapa del paisaje del Mapa de Mundos (1 a 4). Crece con el avance
