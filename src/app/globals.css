@@ -118,6 +118,14 @@ body {
   background: linear-gradient(180deg, #0c1f3a 0%, #14315a 50%, #183b63 78%, #1b2f4d 100%);
 }
 
+/* 2.º grado (bosque de lengas): cielo andino que baja a la arboleda verde y dorada. */
+.bg-bosque-day {
+  background: linear-gradient(180deg, #87ceeb 0%, #bde5f8 35%, #d8efc4 65%, #c8e0a8 100%);
+}
+.bg-bosque-night {
+  background: linear-gradient(180deg, #0a1826 0%, #112832 45%, #183838 75%, #152c28 100%);
+}
+
 /* Versión de noche: cielo profundo, cerros oscuros, misma composición. */
 .bg-explorer-night {
   background: linear-gradient(180deg, #0b1130 0%, #161b3f 45%, #1c2340 75%, #141a33 100%);

@@ -22,6 +22,7 @@ import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
 import Seashore from "@/components/Seashore";
+import Forest from "@/components/Forest";
 import { themeForWorld } from "@/lib/grades";
 import Image from "next/image";
 import VisualAid from "@/components/activities/VisualAid";
@@ -468,7 +469,10 @@ function WorldIcon({ world, sizes }: { world: WorldDef; sizes: string }) {
   return <Image src={world.image ?? themeForWorld(world).island(world.id)} alt="" fill sizes={sizes} className="object-contain drop-shadow-lg" />;
 }
 
-// Silueta de fondo según el ambiente del grado (montañas, costa…).
+// Silueta de fondo según el ambiente del grado (montañas, costa, bosque…).
 function Scenery({ world, isDay }: { world: WorldDef; isDay: boolean }) {
-  return themeForWorld(world).scenery === "seashore" ? <Seashore isDay={isDay} /> : <Mountains isDay={isDay} />;
+  const s = themeForWorld(world).scenery;
+  if (s === "seashore") return <Seashore isDay={isDay} />;
+  if (s === "forest") return <Forest isDay={isDay} />;
+  return <Mountains isDay={isDay} />;
 }

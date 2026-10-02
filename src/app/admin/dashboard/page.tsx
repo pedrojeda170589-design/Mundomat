@@ -11,6 +11,8 @@ import StudentBlock from "@/components/admin/StudentBlock";
 import SkillReport from "@/components/admin/SkillReport";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
+import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
@@ -29,6 +31,7 @@ export default function AdminDashboardPage() {
   // Pestaña de mundos: grado que se está configurando y sus mundos habilitados.
   const [worldsGrade, setWorldsGrade] = useState(3);
   const [g1Enabled, setG1Enabled] = useState<number[]>([]);
+  const [g2Enabled, setG2Enabled] = useState<number[]>([]);
   const [adding, setAdding] = useState(false);
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedProgress, setSelectedProgress] =
@@ -48,6 +51,10 @@ export default function AdminDashboardPage() {
     fetch("/api/worlds?grade=1")
       .then((r) => r.json())
       .then((d) => setG1Enabled(d.config?.enabledWorldIds ?? []))
+      .catch(() => {});
+    fetch("/api/worlds?grade=2")
+      .then((r) => r.json())
+      .then((d) => setG2Enabled(d.config?.enabledWorldIds ?? []))
       .catch(() => {});
     setStudents(studentsData.students ?? []);
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
@@ -75,6 +82,7 @@ export default function AdminDashboardPage() {
     [students]
   );
   const primero = useMemo(() => students.filter((s) => s.grade === 1), [students]);
+  const segundo = useMemo(() => students.filter((s) => s.grade === 2), [students]);
 
   async function handleAddStudent(e: React.FormEvent) {
     e.preventDefault();
@@ -130,6 +138,22 @@ export default function AdminDashboardPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ enabledWorldIds: next, adminPassword, grade: 1 }),
+    });
+  }
+
+  async function toggleG2World(ids: number[], on: boolean) {
+    if (!adminPassword) return;
+    const set = new Set(g2Enabled);
+    for (const id of ids) {
+      if (on) set.add(id);
+      else set.delete(id);
+    }
+    const next = [...set].sort((a, b) => a - b);
+    setG2Enabled(next);
+    await fetch("/api/worlds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabledWorldIds: next, adminPassword, grade: 2 }),
     });
   }
 
@@ -228,6 +252,7 @@ export default function AdminDashboardPage() {
                 aria-label="Grado"
               >
                 <option value={3}>3.º</option>
+                <option value={2}>2.º</option>
                 <option value={1}>1.º</option>
               </select>
               <button
@@ -257,6 +282,17 @@ export default function AdminDashboardPage() {
               onViewStats={handleViewStats}
               selectedCode={selectedCode}
             />
+            {segundo.length > 0 && (
+              <StudentBlock
+                title="Alumnos de 2.º grado"
+                emoji="🌲"
+                students={segundo}
+                adminPassword={adminPassword}
+                onDeleted={handleDeleted}
+                onViewStats={handleViewStats}
+                selectedCode={selectedCode}
+              />
+            )}
             {primero.length > 0 && (
               <StudentBlock
                 title="Alumnos de 1.º grado"
@@ -277,7 +313,7 @@ export default function AdminDashboardPage() {
 
         {tab === "mundos" && (
           <div className="flex gap-2 mb-4">
-            {[3, 1].map((g) => (
+            {[3, 2, 1].map((g) => (
               <button
                 key={g}
                 onClick={() => setWorldsGrade(g)}
@@ -288,6 +324,55 @@ export default function AdminDashboardPage() {
                 {g}.º grado
               </button>
             ))}
+          </div>
+        )}
+
+        {tab === "mundos" && worldsGrade === 2 && (
+          <div className="flex flex-col gap-8">
+            <p className="text-amber-950/80 text-sm parchment-panel rounded-xl p-3">
+              En 2.º los mundos se abren con 60% en el mundo anterior y maestría al 85%. Acá elegís cuáles están disponibles para tus alumnos de 2.º (por defecto, todos).
+            </p>
+            {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
+              const ws = GRADE2_WORLDS.filter((w) => w.subject === subject);
+              const allOn = ws.every((w) => g2Enabled.includes(w.id));
+              return (
+                <div key={subject}>
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2 flex-wrap">
+                    <SubjectBadge subject={subject} size={30} />
+                    {SUBJECT_INFO[subject].label} · 2.º
+                    <button
+                      onClick={() => toggleG2World(ws.map((w) => w.id), !allOn)}
+                      className="ml-auto text-xs font-bold rounded-full bg-white/80 border border-amber-700/30 px-3 py-1"
+                    >
+                      {allOn ? "Bloquear todos" : "Habilitar todos"}
+                    </button>
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {ws.map((w) => {
+                      const enabled = g2Enabled.includes(w.id);
+                      return (
+                        <button
+                          key={w.id}
+                          onClick={() => toggleG2World([w.id], !enabled)}
+                          title={w.objective}
+                          className={`rounded-2xl p-3 text-left border-2 transition ${
+                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
+                          }`}
+                        >
+                          <div className="text-2xl mb-1">{w.emoji}</div>
+                          <p className="text-amber-950 text-sm font-bold leading-tight">
+                            {w.worldNumber}. {w.name}
+                          </p>
+                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
+                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -431,6 +516,7 @@ export default function AdminDashboardPage() {
                           className="rounded-lg bg-white/70 border border-amber-700/30 px-1 py-0.5"
                         >
                           <option value={3}>3.º</option>
+                          <option value={2}>2.º</option>
                           <option value={1}>1.º</option>
                         </select>
                       </label>
@@ -468,7 +554,7 @@ export default function AdminDashboardPage() {
                 {!!selectedProgress.worldsNeedingTeacherReview?.length && (
                   <div>
                     <p className="text-orange-700 font-semibold text-sm mb-1">
-                      🌱 Mundos a tratar (no llegaron al {selectedStudent.grade === 1 ? 80 : 90}%)
+                      🌱 Mundos a tratar (no llegaron al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%)
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsNeedingTeacherReview
@@ -498,10 +584,10 @@ export default function AdminDashboardPage() {
                   </div>
                 )}
 
-                {selectedStudent.grade === 1 && (
+                {(selectedStudent.grade === 1 || selectedStudent.grade === 2) && (
                   <div>
-                    <p className="text-amber-950 font-black mb-2">📚 Habilidades de 1.º grado</p>
-                    <SkillReport progress={selectedProgress} />
+                    <p className="text-amber-950 font-black mb-2">📚 Habilidades de {selectedStudent.grade}.º grado</p>
+                    <SkillReport progress={selectedProgress} grade={selectedStudent.grade} />
                   </div>
                 )}
 

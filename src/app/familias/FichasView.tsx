@@ -4,23 +4,28 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
+import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
 import { SUBJECT_INFO, WorldSubject } from "@/types";
 import { fichaHref, fichaVersions } from "@/lib/fichas";
 import FichasGate from "@/components/FichasGate";
 
 export default function FichasView() {
   const [grade, setGrade] = useState<number>(3);
-  // Si se llega desde el mapa de 1.º (#mundo-11013), se muestra 1.º. Se lee
-  // después de montar para no desincronizar el HTML del servidor.
+  // Si se llega desde el mapa de 1.º o 2.º (#mundo-11013, #mundo-21001), se muestra su grado.
+  // Se lee después de montar para no desincronizar el HTML del servidor.
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     const match = window.location.hash.match(/mundo-(\d+)/);
-    // Sincroniza con el hash de la URL (API externa al render).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (match && parseInt(match[1], 10) >= 10000) setGrade(1);
+    if (match) {
+      const wid = parseInt(match[1], 10);
+      if (wid >= 20000 && wid < 30000) setGrade(2);
+      else if (wid >= 10000 && wid < 20000) setGrade(1);
+    }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
   const subjects = Object.keys(SUBJECT_INFO) as WorldSubject[];
 
-  const worlds = grade === 1 ? GRADE1_WORLDS : WORLDS;
+  const worlds = grade === 1 ? GRADE1_WORLDS : grade === 2 ? GRADE2_WORLDS : WORLDS;
 
   return (
     <FichasGate onUnlocked={(g) => setGrade(g)}>
@@ -37,6 +42,17 @@ export default function FichasView() {
             }`}
           >
             🎒 1.º Grado (96 mundos)
+          </button>
+          <button
+            type="button"
+            onClick={() => setGrade(2)}
+            className={`px-4 py-2 rounded-xl font-bold text-sm transition shadow ${
+              grade === 2
+                ? "bg-amber-500 text-slate-950 ring-2 ring-amber-300 scale-105"
+                : "bg-amber-900/40 text-amber-100 hover:bg-amber-900/60"
+            }`}
+          >
+            🌲 2.º Grado (100 mundos)
           </button>
           <button
             type="button"
@@ -76,6 +92,16 @@ export default function FichasView() {
                         }}
                       >
                         {w.emoji}
+                      </span>
+                    ) : w.grade === 2 ? (
+                      <span className="relative w-12 h-12 shrink-0">
+                        <Image
+                          src={`/theme/grados/2/islas/mundo-${w.id}.png`}
+                          alt=""
+                          fill
+                          sizes="48px"
+                          className="object-contain"
+                        />
                       </span>
                     ) : (
                       <span className="relative w-12 h-12 shrink-0">

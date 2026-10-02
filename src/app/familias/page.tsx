@@ -18,7 +18,7 @@ export default function FamiliasPage() {
             <p className="text-amber-100 text-sm">
               Propuestas para seguir aprendiendo en casa lo que se trabajó en cada mundo, sin
               repetir la app: hacer con objetos de la casa, jugar en familia, investigar,
-              conversar y crear. Cada mundo tiene sus fichas de refuerzo (dos para 3.º grado, una para 1.º grado).
+              conversar y crear. Cada mundo tiene sus fichas de refuerzo (dos para 3.º grado, una para 1.º y 2.º grado).
             </p>
           </div>
           <Link href="/" className="text-amber-100 text-sm font-bold underline shrink-0">

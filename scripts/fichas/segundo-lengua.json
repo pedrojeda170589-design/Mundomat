@@ -1,0 +1,1820 @@
+{
+  "21001": [
+    {
+      "title": "El gran desafío de leer",
+      "purpose": "Acompañen al estudiante a leer con ritmo, entonación y confianza pequeños textos y listas de palabras conocidas.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Lectura en eco y a coro",
+          "steps": [
+            "Un adulto lee una oración con entonación expresiva y el estudiante la repite como un eco.",
+            "Luego leen la misma oración juntos al unísono, marcando bien cada punto.",
+            "Cronometren de forma divertida cuántas palabras leen sin tropezar en medio minuto."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Caza de palabras veloces",
+          "steps": [
+            "Escriban seis tarjetas con palabras de dos y tres sílabas (bosque, viento, sendero, zorro, arroyo, nido).",
+            "Den vuelta una tarjeta rápido y el estudiante la lee en un segundo.",
+            "Armen oraciones combinando dos tarjetas leídas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi cartel lector",
+          "steps": [
+            "Escribí una oración cortita sobre tu rincón favorito de la casa para leer.",
+            "Ilustrá tu momento de lectura preferido."
+          ],
+          "draw": "Dibujate leyendo tu libro o cuento favorito.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer oraciones completas sin deletrear cada palabra.",
+        "Puedo hacer pausas cuando encuentro un punto.",
+        "Puedo reconocer a simple vista palabras de uso frecuente."
+      ]
+    }
+  ],
+  "21002": [
+    {
+      "title": "El dragón y la piedra",
+      "purpose": "Ayuden al estudiante a pronunciar, reconocer y escribir palabras con el grupo consonántico DR (dra, dre, dri, dro, dru).",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El rugido del dragón",
+          "steps": [
+            "Practicamos el sonido dr haciendo vibrar la lengua contra el paladar: dra, dre, dri, dro, dru.",
+            "Buscamos en la casa o en libros palabras con dr: cuadro, madre, piedra, ladrillo, cocodrilo.",
+            "Cada vez que alguien dice una palabra con dr, hace un gesto de alas de dragón."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Construyendo con ladrillos de palabras",
+          "steps": [
+            "Completamos las oraciones eligiendo la palabra correcta con dr.",
+            "Escribimos las palabras en la tabla según la sílaba trabada que contengan."
+          ],
+          "table": {
+            "cols": [
+              "Con dra / dre",
+              "Con dri / dro / dru"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El dragón del bosque",
+          "steps": [
+            "Dibujá al dragón Pedro durmiendo sobre una piedra.",
+            "Escribí una oración con las palabras dragón y piedra."
+          ],
+          "draw": "Dibujá al dragón sobre una gran roca.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar con claridad sílabas con dr.",
+        "Puedo identificar palabras con dr en un texto breve.",
+        "Puedo escribir palabras como dragón, piedra y cuadro sin omitir la r."
+      ]
+    }
+  ],
+  "21003": [
+    {
+      "title": "El tren de la pradera",
+      "purpose": "Acompañen al estudiante a reconocer y escribir el grupo TR (tra, tre, tri, tro, tru) jugando con trabalenguas y rimas.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El tren del trabalenguas",
+          "steps": [
+            "Decimos juntos despacito y luego rápido: Tres tristes tigres comen trigo en un trigal.",
+            "Cambiamos el ritmo imitando el chiqui-chiqui de las ruedas del tren.",
+            "Buscamos quién puede repetirlo tres veces seguidas sin equivocarse."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Vagones de palabras",
+          "steps": [
+            "Escribimos en papelitos palabras con tr: tren, estrella, cuatro, trompeta, trineo, sastre.",
+            "Las ordenamos de menor a mayor cantidad de letras para armar un tren de palabras.",
+            "Completamos la tabla con cosas u objetos cotidianos que tengan tr."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con TR",
+              "¿En qué parte suena? (inicio o medio)"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El viaje en tren",
+          "steps": [
+            "Dibujá un tren de cuatro vagones cruzando una pradera bajo las estrellas.",
+            "Escribí una oración usando tren y estrella."
+          ],
+          "draw": "Dibujá el tren y el paisaje nocturno estrellado.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar trabalenguas con el sonido tr.",
+        "Puedo escribir palabras como tren, cuatro y estrella.",
+        "Puedo distinguir el sonido tr del sonido t simple."
+      ]
+    }
+  ],
+  "21004": [
+    {
+      "title": "El castillo de cristal",
+      "purpose": "Ayuden al estudiante a identificar y utilizar palabras con el grupo CR (cra, cre, cri, cro, cru) en situaciones significativas de lectura.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Sonidos crujientes",
+          "steps": [
+            "Pronunciamos cra, cre, cri, cro, cru haciendo crujir un pedacito de papel con los dedos.",
+            "Buscamos en la cocina o alacena cosas que crujen o cremas: galletita crocante, crema, croqueta.",
+            "Anotamos cuatro palabras con cr que encontremos en casa o en la mochila."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adivina la palabra con CR",
+          "steps": [
+            "Un adulto da pistas: Es de vidrio transparente y se puede romper si se cae (cristal).",
+            "Es el descanso para jugar en la escuela (recreo).",
+            "Es un animal de mar con pinzas que camina de costado (cangrejo / crustáceo).",
+            "Completamos la tabla con las respuestas."
+          ],
+          "table": {
+            "cols": [
+              "Pista",
+              "Palabra con CR"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El cofre de cristal",
+          "steps": [
+            "Dibujá un castillo de cristal con altas torres.",
+            "Escribí una oración contando qué secreto guarda el cofre del castillo."
+          ],
+          "draw": "Dibujá un castillo transparente con torres de cristal.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer palabras con cra, cre, cri, cro, cru.",
+        "Puedo escribir cristal y recreo sin confundir cr con c sola.",
+        "Puedo pensar palabras con cr a partir de una pista."
+      ]
+    }
+  ],
+  "21005": [
+    {
+      "title": "El clavel del claro",
+      "purpose": "Acompañen al estudiante a diferenciar y escribir palabras con el grupo CL (cla, cle, cli, clo, clu) reconociendo la combinación consonántica con L.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Observadores del entorno",
+          "steps": [
+            "Buscamos objetos o imágenes que tengan cl: clavo, bicicleta, ancla, teclado, clavel, cliente.",
+            "Pronunciamos exagerando el sonido cla, cle, cli, clo, clu levantando la punta de la lengua.",
+            "Escribimos tres de esas palabras en tarjetas y las pegamos cerca del objeto si es posible."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El crucigrama hablado",
+          "steps": [
+            "Completamos las oraciones incompletas diciendo la palabra con cl en voz alta:",
+            "Para andar por el parque uso mi bi-ci-cle-ta.",
+            "Para colgar el cuadro en la pared golpeo un cla-vo.",
+            "El barco no se mueve porque bajó el an-cla."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Un ramo de claveles",
+          "steps": [
+            "Dibujá una bicicleta apoyada junto a un claro del bosque lleno de claveles.",
+            "Escribí una oración con bicicleta y clavel."
+          ],
+          "draw": "Dibujá la bicicleta y las flores del claro.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con cl con fluidez.",
+        "Puedo escribir bicicleta y clavo colocando la l entre la c y la vocal.",
+        "Puedo distinguir auditivamente cr (cristal) de cl (clavel)."
+      ]
+    }
+  ],
+  "21006": [
+    {
+      "title": "El fruto del fresno",
+      "purpose": "Ayuden al estudiante a practicar la lectura y escritura de palabras con FR (fra, fre, fri, fro, fru) a través de actividades lúdicas.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El frutero de las palabras",
+          "steps": [
+            "Pensamos nombres de frutas o cosas ricas que lleven fr: frutilla, frambuesa, frutos secos.",
+            "Hacemos una ronda rápida: cada participante dice una palabra con fra, fre, fri, fro o fru sin repetir.",
+            "Anotamos en una lista las palabras que aparecieron: frasco, cofre, cofradía, frente, frío."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El termómetro del frío",
+          "steps": [
+            "Conversamos sobre qué cosas nos dan frío en el invierno patagónico.",
+            "Completamos la tabla clasificando palabras según tengan fr al principio o en el medio."
+          ],
+          "table": {
+            "cols": [
+              "Empiezan con FR",
+              "Tienen FR en el medio"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El cofre misterioso",
+          "steps": [
+            "Dibujá un cofre antiguo escondido debajo de un gran fresno.",
+            "Escribí qué tesoro frutado o mágico hay adentro del cofre."
+          ],
+          "draw": "Dibujá el cofre bajo las ramas del fresno.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer palabras con fra, fre, fri, fro, fru.",
+        "Puedo escribir fruta, frío y cofre correctamente.",
+        "Puedo diferenciar el sonido fr del sonido f simple."
+      ]
+    }
+  ],
+  "21007": [
+    {
+      "title": "La flecha y la flor",
+      "purpose": "Acompañen al estudiante a reconocer y escribir palabras con FL (fla, fle, fli, flo, flu) descubriendo su sonoridad.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Sopladores de aire suave",
+          "steps": [
+            "Colocamos la mano delante de la boca y decimos fla, fle, fli, flo, flu sintiendo el aire.",
+            "Buscamos cosas en casa que floten en un jarro con agua (un corcho, una tapita de plástico).",
+            "Conversamos sobre el verbo flotar y la palabra flotador."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "La orquesta de flautas",
+          "steps": [
+            "Imaginamos que tocamos una flauta mágica tocando notas imaginarias mientras decimos palabras con fl:",
+            "flauta, flecha, flor, flamenco, reflejo, inflador.",
+            "Completamos la tabla anotando cuatro palabras con fl y dibujando un pequeño símbolo al lado."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con FL",
+              "¿Para qué sirve o qué es?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Un jardín florido",
+          "steps": [
+            "Dibujá un campo de flores silvestres con un flamenco rosado cerca de la orilla.",
+            "Escribí una oración con las palabras flor y flamenco."
+          ],
+          "draw": "Dibujá las flores y el ave flamenca.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar fluidamente sílabas con fl.",
+        "Puedo escribir flor, flecha y flauta sin olvidar la l.",
+        "Puedo distinguir auditivamente fr (fruta) de fl (flauta)."
+      ]
+    }
+  ],
+  "21008": [
+    {
+      "title": "El grillo en la gruta",
+      "purpose": "Ayuden al estudiante a afianzar el grupo consonántico GR (gra, gre, gri, gro, gru) mediante juegos de ritmo y observación.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El canto del grillo",
+          "steps": [
+            "Imitamos el sonido del grillo en el pasto diciendo cri-cri y luego gri-gri.",
+            "Notamos cómo la garganta vibra diferente con la g: gra, gre, gri, gro, gru.",
+            "Buscamos palabras con gr en nuestro vocabulario: grillo, tigre, ogro, granja, vinagre, negro."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Palabras en la gruta",
+          "steps": [
+            "Leemos juntos estas oraciones y subrayamos las palabras con gr:",
+            "El tigre camina silencioso por la hierba.",
+            "El grillo canta de noche cerca de la granja.",
+            "Completamos la tabla con palabras según la vocal que acompaña a gr."
+          ],
+          "table": {
+            "cols": [
+              "Sílaba",
+              "Palabra de ejemplo"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La gruta misteriosa",
+          "steps": [
+            "Dibujá una gruta de piedra y un tigre descansando en la sombra.",
+            "Escribí una oración con tigre y gruta."
+          ],
+          "draw": "Dibujá la cueva de piedra y el tigre.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con gr claramente.",
+        "Puedo escribir tigre, grillo y negro correctamente.",
+        "Puedo diferenciar gr de g simple al leer y escribir."
+      ]
+    }
+  ],
+  "21009": [
+    {
+      "title": "El globo en el glaciar",
+      "purpose": "Acompañen al estudiante a reconocer y escribir palabras con GL (gla, gle, gli, glo, glu) vinculadas al paisaje patagónico.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El glaciar de palabras",
+          "steps": [
+            "Conversamos sobre el glaciar Perito Moreno en Santa Cruz y pronunciamos glaciar.",
+            "Buscamos objetos escolares o cotidianos con gl: regla, globo, pegamento (cola/engrudo), iglú.",
+            "Medimos con una regla tres objetos de la mesa y anotamos sus medidas en centímetros."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Globo al aire",
+          "steps": [
+            "Si tienen un globo en casa, se lo pasan por el aire sin que toque el suelo.",
+            "Cada toque debe ir acompañado de una palabra con gl: ¡globo!, ¡regla!, ¡glaciar!, ¡iglú!, ¡iglesia!.",
+            "Completamos la tabla con las palabras pronunciadas."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con GL",
+              "Oración de ejemplo"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Sobrevolando el glaciar",
+          "steps": [
+            "Dibujá un gran globo aerostático de colores volando sobre los hielos de un glaciar.",
+            "Escribí qué se ve desde arriba del globo."
+          ],
+          "draw": "Dibujá el globo sobre el inmenso glaciar.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer y pronunciar sílabas con gl.",
+        "Puedo escribir globo, regla y glaciar sin omitir la l.",
+        "Puedo relacionar la palabra glaciar con los paisajes de nuestra provincia."
+      ]
+    }
+  ],
+  "21010": [
+    {
+      "title": "La bruja y el broche",
+      "purpose": "Ayuden al estudiante a reconocer y escribir el grupo BR (bra, bre, bri, bro, bru) recordando la regla de B antes de R.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El hechizo de la bruja",
+          "steps": [
+            "Jugamos a inventar hechizos graciosos rimando con br: ¡Abracadabra, pata de cabra, que este libro se abra!.",
+            "Buscamos partes del cuerpo que tengan br: brazo, hombro (ceja/ojo/brazo).",
+            "Pronunciamos bra, bre, bri, bro, bru tocándonos el brazo en cada sílaba."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Colección de palabras con BR",
+          "steps": [
+            "Leemos juntos las palabras: libro, brazo, cebra, sombrero, abrigo, bruja, broche.",
+            "Recordamos la regla de oro: después de B siempre va R o L, nunca se escribe con V corta.",
+            "Completamos la tabla con palabras según la prenda, animal o persona."
+          ],
+          "table": {
+            "cols": [
+              "Tipo",
+              "Palabra con BR"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El sombrero y la cebra",
+          "steps": [
+            "Dibujá una cebra simpática con un sombrero que tiene un broche brillante.",
+            "Escribí una oración con las palabras cebra y sombrero."
+          ],
+          "draw": "Dibujá la cebra con su sombrero y broche.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con br con soltura.",
+        "Puedo escribir libro, brazo y bruja siempre con B alta.",
+        "Puedo recordar que nunca se usa V antes de R."
+      ]
+    }
+  ],
+  "21011": [
+    {
+      "title": "El blanco de la nieve",
+      "purpose": "Acompañen al estudiante a reconocer y escribir el grupo BL (bla, ble, bli, blo, blu) aplicando la regla de B antes de L.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Cosas blancas en casa",
+          "steps": [
+            "Buscamos en la cocina y en la ropa cosas que sean de color blanco (hoja, leche, remera, azúcar).",
+            "Escribimos la palabra blanco y observamos cómo se forma con bl.",
+            "Recordamos que delante de L siempre se escribe B y nunca V."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Familia de bloques",
+          "steps": [
+            "Jugamos a buscar palabras que terminen en ble: amable, responsable, visible, increíble.",
+            "Decimos una cualidad linda de un familiar usando una palabra que termine en ble.",
+            "Completamos la tabla con palabras con bl."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con BL",
+              "Significado o uso"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Paisaje de nieve blanca",
+          "steps": [
+            "Dibujá una montaña cubierta de nieve blanca con un pueblito de cabañas abajo.",
+            "Escribí una oración usando blanco y pueblo."
+          ],
+          "draw": "Dibujá la montaña nevada y las casas del pueblo.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con bl correctamente.",
+        "Puedo escribir blanco, tabla y cable siempre con B.",
+        "Puedo recordar que las combinaciones bl y br se escriben con B."
+      ]
+    }
+  ],
+  "21012": [
+    {
+      "title": "La pluma y el plato",
+      "purpose": "Ayuden al estudiante a identificar y escribir palabras con PL (pla, ple, pli, plo, plu) a través de actividades lúdicas.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El juego de la pluma liviana",
+          "steps": [
+            "Soplamos una pluma o un pedacito de algodón para que no caiga al suelo mientras decimos pla, ple, pli, plo, plu.",
+            "Buscamos en la cocina platos, fuentes o plantas de interior.",
+            "Anotamos palabras con pl: plato, pluma, playa, plaza, planta, plomo."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "De paseo por la plaza",
+          "steps": [
+            "Imaginamos qué cosas hay en una plaza que lleven pl: plantas, plaza, juegos de plástico.",
+            "Completamos las oraciones incompletas con la palabra correcta.",
+            "Completamos la tabla organizando palabras con pl según su significado."
+          ],
+          "table": {
+            "cols": [
+              "Lugar u objeto",
+              "Palabra con PL"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi planta favorita",
+          "steps": [
+            "Dibujá una planta con hojas verdes en una maceta sobre un plato decorado.",
+            "Escribí una oración contando cómo cuidás las plantas de tu casa."
+          ],
+          "draw": "Dibujá la planta en su maceta con plato.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con pl con claridad.",
+        "Puedo escribir plato, planta y pluma sin omitir la l.",
+        "Puedo distinguir pl (plato) de pr (prado) al escuchar las palabras."
+      ]
+    }
+  ],
+  "21013": [
+    {
+      "title": "El premio del prado",
+      "purpose": "Acompañen al estudiante a reconocer y escribir palabras con PR (pra, pre, pri, pro, pru) practicando en contextos reales de escritura.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Los primos en primavera",
+          "steps": [
+            "Jugamos a adivinar palabras con pr que empiezan con pri: la estación de las flores (primavera), el hijo de mi tío (primo), el que llega antes que todos (primero).",
+            "Pronunciamos pra, pre, pri, pro, pru como si fuéramos locutores de carreras dando un premio.",
+            "Anotamos en tarjetas las palabras adivinadas."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Preguntas y profesores",
+          "steps": [
+            "Leemos juntos un texto breve y marcamos las palabras con pr: pregunta, profesor, problema, pronto, precio.",
+            "Completamos la tabla con palabras según la vocal con la que se une pr."
+          ],
+          "table": {
+            "cols": [
+              "Sílaba",
+              "Palabra con PR"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La entrega de premios",
+          "steps": [
+            "Dibujá una medalla o trofeo de premio con una cinta dorada.",
+            "Escribí una oración diciendo a quién le entregarías este premio y por qué."
+          ],
+          "draw": "Dibujá la medalla de premiación.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar sílabas con pr con soltura.",
+        "Puedo escribir primero, primo y premio sin omitir la r.",
+        "Puedo diferenciar auditivamente pr (prado) de pl (plato)."
+      ]
+    }
+  ],
+  "21014": [
+    {
+      "title": "Fiesta de trabadas",
+      "purpose": "Consoliden junto al estudiante todas las sílabas trabadas con L y R integrándolas en un gran juego de mesa familiar.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El gran tablero de trabadas",
+          "steps": [
+            "Dibujamos un camino de 15 casilleros en una hoja en blanco.",
+            "En cada casillero escribimos una combinación: TR, DR, BL, BR, CL, CR, FL, FR, GL, GR, PL, PR.",
+            "Tiramos un dado y al caer en un casillero hay que decir dos palabras con ese grupo consonántico para seguir avanzando."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Desafío de clasificación",
+          "steps": [
+            "Leemos una lista mezclada de palabras: dragón, plato, flor, tigre, blusa, cristal, tren, globo.",
+            "Las separamos en dos columnas según tengan L o R en su grupo trabado.",
+            "Completamos la tabla clasificatoria."
+          ],
+          "table": {
+            "cols": [
+              "Trabadas con R (dr, tr, cr, fr, gr, br, pr)",
+              "Trabadas con L (bl, cl, fl, gl, pl)"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Una historia con trabadas",
+          "steps": [
+            "Escribí una historia corta de tres renglones usando al menos tres palabras trabadas de la fiesta.",
+            "Hacé un dibujo de los personajes de tu historia."
+          ],
+          "draw": "Dibujá los personajes de tu relato fantástico.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer palabras trabadas con fluidez y sin vacilar.",
+        "Puedo escribir palabras complejas con grupos con L y con R.",
+        "Puedo disfrutar de juegos de palabras en familia."
+      ]
+    }
+  ],
+  "21015": [
+    {
+      "title": "La casa del queso",
+      "purpose": "Ayuden al estudiante a dominar la regla ortográfica del fonema /k/: se escribe con C ante a, o, u (ca, co, cu) y con QU ante e, i (que, qui).",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La balanza de la C y la QU",
+          "steps": [
+            "Escribimos en grande: CA, CO, CU de un lado, y QUE, QUI del otro.",
+            "Recordamos que la Q siempre va acompañada de la U muda antes de la E y la I.",
+            "Buscamos en la cocina alimentos con estos sonidos: queso, manteca, coco, fideos secos, queso crema."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adivinanzas con C y QU",
+          "steps": [
+            "¿Qué animal pone huevos y cacarea? (gallina o pato / cloquea).",
+            "¿Qué comida amarilla le encanta a los ratones? (queso).",
+            "¿Qué vehículo usamos para no mojarnos en la lluvia? (colectivo / auto).",
+            "Completamos la tabla con palabras con ca, co, cu y con que, qui."
+          ],
+          "table": {
+            "cols": [
+              "Con C (ca, co, cu)",
+              "Con QU (que, qui)"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El paquete de queso",
+          "steps": [
+            "Dibujá una mesa con un rico queso y un paquete de galletitas.",
+            "Escribí una oración con las palabras queso y paquete."
+          ],
+          "draw": "Dibujá el queso sobre la mesa.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo recordar que queso y quince se escriben con QU.",
+        "Puedo recordar que casa, comida y cuna se escriben con C.",
+        "Puedo explicar por qué que y qui llevan la u muda en el medio."
+      ]
+    }
+  ],
+  "21016": [
+    {
+      "title": "El cine y la cebolla",
+      "purpose": "Acompañen al estudiante a reconocer el sonido suave de la C delante de las vocales E e I (ce, ci).",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El sonido suave de la C",
+          "steps": [
+            "Pronunciamos despacito: ca, co, cu (fuerte) y comparamos con ce, ci (suave como una s).",
+            "Buscamos palabras que empiecen con ce y ci: cebolla, cine, cielo, ciruela, cepillo, cebra.",
+            "Escribimos una lista de compras de verduras que lleven ce o ci."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Cine mudo en familia",
+          "steps": [
+            "Un jugador actúa sin hablar una palabra con ce o ci (cepillarse los dientes, llorar cortando cebolla, mirar el cielo).",
+            "Los demás tienen que adivinar y escribir la palabra en una hoja asegurando que empiece con C.",
+            "Completamos la tabla con las palabras adivinadas."
+          ],
+          "table": {
+            "cols": [
+              "Con CE",
+              "Con CI"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Noche de cine bajo el cielo",
+          "steps": [
+            "Dibujá una pantalla de cine al aire libre bajo un cielo lleno de estrellas.",
+            "Escribí una oración usando cielo y cine."
+          ],
+          "draw": "Dibujá la escena del cine al aire libre.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer que ce y ci tienen sonido suave.",
+        "Puedo escribir cebolla, cielo y cepillo con C y no con S.",
+        "Puedo diferenciar el sonido de ca, co, cu del sonido de ce, ci."
+      ]
+    }
+  ],
+  "21017": [
+    {
+      "title": "El gato y el guiso",
+      "purpose": "Ayuden al estudiante a diferenciar el sonido suave de la G: ga, go, gu y gue, gui (donde la u es muda).",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La U que guarda el secreto",
+          "steps": [
+            "Escribimos en grande: GATO, GOTA, GUSANO (la g suena suave con a, o, u).",
+            "Luego escribimos GUISO y MANGUERA: explicamos que la U se pone en el medio para que la G no se enoje y siga sonando suave.",
+            "Leemos palabras en voz alta tapando la u para ver cómo cambiaría el sonido."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Cocinando un guiso con guitarra",
+          "steps": [
+            "Pensamos palabras con gue y gui: guiso, guitarra, águila, manguera, juguete, hormiguero.",
+            "Completamos la tabla clasificando palabras según tengan sonido suave directo o con u intermedia."
+          ],
+          "table": {
+            "cols": [
+              "Con ga, go, gu",
+              "Con gue, gui (u muda)"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El gato que toca la guitarra",
+          "steps": [
+            "Dibujá un gato simpático tocando la guitarra junto a una olla de guiso humeante.",
+            "Escribí una oración usando gato y guitarra."
+          ],
+          "draw": "Dibujá al gato músico junto al fuego.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer palabras con gue y gui sin pronunciar la u.",
+        "Puedo escribir guitarra, manguera y juguete con gu.",
+        "Puedo explicar para qué sirve la letra u entre la g y la e/i."
+      ]
+    }
+  ],
+  "21018": [
+    {
+      "title": "Los gigantes del bosque",
+      "purpose": "Acompañen al estudiante a reconocer el sonido fuerte de la letra G delante de E e I (ge, gi), que suena igual que la J.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El sonido raspado de la garganta",
+          "steps": [
+            "Pronunciamos ge y gi sintiendo el raspón suave en la garganta, igual que je y ji.",
+            "Buscamos palabras con ge y gi: gigante, girasol, gimnasio, gente, magia, colegio.",
+            "Anotamos cuatro palabras en un cartelito decorado."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Pasos de gigante",
+          "steps": [
+            "Damos pasos largos como gigantes cada vez que decimos una palabra con ge o gi.",
+            "Damos pasos de hormiga si la palabra tiene gue o gui (suave).",
+            "Completamos la tabla comparando palabras con sonido fuerte y suave."
+          ],
+          "table": {
+            "cols": [
+              "Sonido fuerte (ge, gi)",
+              "Sonido suave (gue, gui)"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El jardín de girasoles",
+          "steps": [
+            "Dibujá un gigante amable regando flores gigantes de girasol.",
+            "Escribí una oración con gigante y girasol."
+          ],
+          "draw": "Dibujá al gigante en su jardín florecido.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer que ge y gi suenan como je y ji.",
+        "Puedo escribir gigante y girasol con G.",
+        "Puedo diferenciar auditivamente gigante (fuerte) de juguete (suave)."
+      ]
+    }
+  ],
+  "21019": [
+    {
+      "title": "El pingüino cigüeña",
+      "purpose": "Ayuden al estudiante a descubrir y aplicar el uso de la diéresis en güe y güi para que la U suene.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Los dos ojitos de la U",
+          "steps": [
+            "Dibujamos una letra U grande y le ponemos dos puntitos arriba como si fueran dos ojitos despiertos.",
+            "Explicamos que esos dos puntitos se llaman diéresis y le avisan a quien lee que la U sí debe pronunciarse.",
+            "Comparamos la lectura: manguera (la u no suena) con cigüeña (la u sí suena)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El club del pingüino",
+          "steps": [
+            "Buscamos palabras de nuestra fauna y lengua que lleven diéresis: pingüino, cigüeña, paragüero, yagüareté, bilingüe.",
+            "Caminamos como pingüinos balanceándonos y diciendo: ¡pin-güi-no, ci-güe-ña!.",
+            "Completamos la tabla colocando los dos puntitos en las palabras correspondientes."
+          ],
+          "table": {
+            "cols": [
+              "Palabra con güe / güi",
+              "¿Suena la U? (Sí / No)"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La costa de los pingüinos",
+          "steps": [
+            "Dibujá dos pingüinos en una playa rocosa de Santa Cruz.",
+            "Escribí una oración recordando ponerle la diéresis a la palabra pingüino."
+          ],
+          "draw": "Dibujá a los pingüinos en la costa marina.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo identificar la diéresis sobre la letra u.",
+        "Puedo pronunciar la u en palabras como pingüino y cigüeña.",
+        "Puedo escribir pingüino colocando los dos puntitos sobre la u."
+      ]
+    }
+  ],
+  "21020": [
+    {
+      "title": "El ratón y el carro",
+      "purpose": "Acompañen al estudiante a diferenciar el uso de la R suave (pera, loro) de la RR fuerte (perro, carro) y de la R inicial (ratón).",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Pera o perra, coro o corro",
+          "steps": [
+            "Jugamos con pares de palabras que cambian de significado si tienen una r o dos: pera / perra, careta / carreta, coro / corro.",
+            "Pronunciamos sintiendo la vibración: suave (un golpecito) o fuerte (motor encendido).",
+            "Recordamos la regla clave: al principio de palabra NUNCA se escribe doble erre (ratón, río, rama se escriben con una sola R)."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El inspector de erres",
+          "steps": [
+            "Leemos una lista de oraciones y completamos con R o con RR según corresponda:",
+            "El pe___o corre detrás del ca___o.",
+            "El ___atón come un pedazo de queso en el ___incón.",
+            "Completamos la tabla con palabras según la posición y sonido de la r."
+          ],
+          "table": {
+            "cols": [
+              "R inicial (suena fuerte)",
+              "R suave en el medio",
+              "RR fuerte en el medio"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El viaje del ratón",
+          "steps": [
+            "Dibujá un ratón manejando un carro rojo por un sendero de tierra.",
+            "Escribí una oración con las palabras ratón y carro."
+          ],
+          "draw": "Dibujá al ratoncito en su carro.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo distinguir el sonido de la r suave del de la rr fuerte.",
+        "Puedo recordar que nunca se escribe rr al comienzo de una palabra.",
+        "Puedo escribir perro, carro y ratón aplicando la regla correcta."
+      ]
+    }
+  ],
+  "21021": [
+    {
+      "title": "El tambor y la trompeta",
+      "purpose": "Ayuden al estudiante a incorporar la regla ortográfica sin excepciones: antes de B y de P siempre se escribe M (mb y mp).",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Amigas inseparables: M con B y P",
+          "steps": [
+            "Escribimos en grande: Antes de B y P, ¡la M se ve!.",
+            "Buscamos palabras que tengan mb y mp: tambor, trompeta, bombón, sombrero, campana, campo, sombra, compás.",
+            "Comprobamos que al cerrar los labios para la M estamos listos para pronunciar la B o la P."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Banda musical de palabras",
+          "steps": [
+            "Hacemos sonar palmas o tamborileamos los dedos sobre la mesa al decir una palabra con mb o mp.",
+            "El adulto dice una palabra incompleta y el estudiante dice en voz alta si va M o N (tam-bor, cam-pana, in-vierno).",
+            "Completamos la tabla clasificando palabras con mb y con mp."
+          ],
+          "table": {
+            "cols": [
+              "Con MB (tambor, sombra)",
+              "Con MP (campana, campo)"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La fiesta en el campo",
+          "steps": [
+            "Dibujá una fiesta en el campo con una banda tocando tambores y trompetas bajo una sombra.",
+            "Escribí una oración usando tambor y trompeta."
+          ],
+          "draw": "Dibujá los instrumentos musicales de la fiesta.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo recordar la regla: antes de B y P siempre va M.",
+        "Puedo escribir campana, tambor y bombón sin usar N.",
+        "Puedo revisar mis propios textos para corregir palabras con mb y mp."
+      ]
+    }
+  ],
+  "21022": [
+    {
+      "title": "El hada del huerto",
+      "purpose": "Acompañen al estudiante a reconocer y escribir palabras de uso frecuente con la letra H muda.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La letra silenciosa",
+          "steps": [
+            "Explicamos que la letra H no tiene sonido en español, pero es muy importante para escribir bien las palabras.",
+            "Buscamos palabras con H que usamos todos los días: hoja, helado, huevo, hueso, huerto, humo, hermano, hilo, hora.",
+            "Armamos un llavero o cartel de palabras con H para tener a mano al escribir."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El huerto de las palabras con H",
+          "steps": [
+            "Descubrimos la regla de los diptongos: las palabras que empiezan con hue- o hie- siempre llevan H (huevo, hueso, huerto, hielo, hierba).",
+            "Jugamos a adivinar qué objeto del huerto lleva h a partir de pistas.",
+            "Completamos la tabla con palabras que empiezan con hue- e hie-."
+          ],
+          "table": {
+            "cols": [
+              "Empiezan con HUE-",
+              "Empiezan con HIE-"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El huerto mágico",
+          "steps": [
+            "Dibujá un hada cuidando las verduras de un huerto verde lleno de hojas.",
+            "Escribí una oración usando hada y huerto."
+          ],
+          "draw": "Dibujá el hada y el huerto florecido.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo recordar que la letra H es muda en español.",
+        "Puedo escribir helado, hoja y hermano con H inicial.",
+        "Puedo recordar que las palabras con hue- e hie- llevan H."
+      ]
+    }
+  ],
+  "21023": [
+    {
+      "title": "El chocolate del chajá",
+      "purpose": "Ayuden al estudiante a leer y escribir palabras con el dígrafo CH (cha, che, chi, cho, chu) descubriendo su sonido característico.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "El sonido del tren chapa y chapa",
+          "steps": [
+            "Pronunciamos cha, che, chi, cho, chu chasqueando la lengua contra el paladar.",
+            "Hacemos una ronda diciendo comidas ricas con ch: chocolate, churros, chicle, pochoclos, lechuga, chimichurri.",
+            "Anotamos cuatro palabras sabrosas con ch en una lista."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El chajá y sus amigos",
+          "steps": [
+            "Conversamos sobre el chajá, un ave típica de los pastizales y lagunas argentinas que hace un grito muy fuerte.",
+            "Buscamos otras palabras con ch en el entorno: cuchara, techo, mochila, noche, charco, chaleco.",
+            "Completamos la tabla organizando palabras con ch según su lugar en la palabra."
+          ],
+          "table": {
+            "cols": [
+              "CH al comienzo",
+              "CH en el medio"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Merienda con chocolate",
+          "steps": [
+            "Dibujá una taza de chocolate caliente con churros sobre un mantel a cuadros.",
+            "Escribí una oración contando con quién te gustaría compartir esa merienda."
+          ],
+          "draw": "Dibujá la taza de chocolate y los churros.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo leer palabras con cha, che, chi, cho, chu.",
+        "Puedo escribir chocolate, noche y mochila usando CH.",
+        "Puedo reconocer que la C y la H juntas forman un dígrafo con un único sonido."
+      ]
+    }
+  ],
+  "21024": [
+    {
+      "title": "Mayúscula al empezar",
+      "purpose": "Acompañen al estudiante a aplicar la mayúscula al inicio de una oración y en los nombres propios de personas y lugares.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "El semáforo de la oración",
+          "steps": [
+            "Explicamos que toda oración empieza con mayúscula como una luz verde que arranca.",
+            "Escribimos los nombres de los integrantes de la familia y de mascotas recordando la mayúscula inicial.",
+            "Comparamos la letra inicial de un nombre común (gato) con un nombre propio (Michi)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Detectives de mayúsculas",
+          "steps": [
+            "Leemos una pequeña nota donde faltan las mayúsculas al inicio y en dos nombres.",
+            "El estudiante las descubre y las rodea con un lápiz de color verde.",
+            "Completamos la tabla con nombres propios de personas, ciudades y mascotas."
+          ],
+          "table": {
+            "cols": [
+              "Nombre de persona",
+              "Nombre de ciudad o provincia",
+              "Nombre de mascota"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi ficha personal",
+          "steps": [
+            "Escribí tu nombre completo y el nombre de tu provincia o localidad usando mayúsculas bien claras.",
+            "Hacé un autorretrato tuyo en el recuadro."
+          ],
+          "draw": "Dibujá tu autorretrato sonriendo.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo empezar siempre las oraciones con letra mayúscula.",
+        "Puedo escribir nombres propios de personas y lugares con mayúscula.",
+        "Puedo revisar mis escritos para corregir mayúsculas olvidadas."
+      ]
+    }
+  ],
+  "21025": [
+    {
+      "title": "El punto final y el punto seguido",
+      "purpose": "Ayuden al estudiante a comprender la función del punto en la delimitación de ideas y la pausa en la lectura.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La señal de alto en la lectura",
+          "steps": [
+            "Explicamos que el punto es como un cartel de pare: nos pide frenar, respirar y darle sentido a la idea.",
+            "Diferenciamos el punto seguido (separa dos ideas en el mismo párrafo) del punto final (termina todo el texto).",
+            "Leemos un párrafo corto haciendo una pausa de dos segundos en cada punto."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El silbato del punto",
+          "steps": [
+            "Un adulto lee en voz alta un texto y cada vez que llega a un punto, el estudiante levanta la mano.",
+            "Completamos un texto breve donde los puntos están escondidos, colocando los puntos y luego la mayúscula que sigue.",
+            "Completamos la tabla con la función de cada signo."
+          ],
+          "table": {
+            "cols": [
+              "Signo",
+              "¿Para qué sirve?",
+              "¿Qué va después?"
+            ],
+            "rows": 2
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Dos ideas sobre mi día",
+          "steps": [
+            "Escribí dos oraciones seguidas sobre algo lindo que hiciste hoy, usando punto seguido y punto final.",
+            "Ilustrá lo que contaste."
+          ],
+          "draw": "Dibujá la actividad que describiste en tus oraciones.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo colocar punto al terminar una idea u oración.",
+        "Puedo hacer una pausa al leer cuando encuentro un punto.",
+        "Puedo recordar que después de un punto siempre se escribe con mayúscula."
+      ]
+    }
+  ],
+  "21026": [
+    {
+      "title": "Nombres de todas las cosas",
+      "purpose": "Acompañen al estudiante a reconocer los sustantivos comunes como palabras que nombran objetos, animales, plantas y lugares.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Búsqueda del tesoro de cosas",
+          "steps": [
+            "El adulto dice una categoría: una cosa de madera, un objeto suave, una parte de la casa.",
+            "El estudiante nombra la cosa y la señala (mesa, almohada, cocina).",
+            "Explicamos que todas esas palabras son sustantivos comunes porque nombran cosas en general."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "La valija de palabras",
+          "steps": [
+            "Escribimos diez tarjetas con palabras mezcladas (correr, mesa, perro, saltar, cuchara, lindo, árbol).",
+            "El estudiante separa únicamente las tarjetas que sean nombres de cosas (sustantivos).",
+            "Completamos la tabla clasificando sustantivos comunes."
+          ],
+          "table": {
+            "cols": [
+              "Cosas de la casa",
+              "Animales",
+              "Plantas o elementos del bosque"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La habitación ilustrada",
+          "steps": [
+            "Dibujá tu rincón favorito de la casa con al menos cuatro objetos diferentes.",
+            "Escribí flechas con el nombre de cada objeto (sustantivo común)."
+          ],
+          "draw": "Dibujá tu habitación o sala con sus objetos.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar qué es un sustantivo común con ejemplos propios.",
+        "Puedo distinguir un sustantivo común de una acción (verbo).",
+        "Puedo escribir una lista de sustantivos comunes con buena ortografía."
+      ]
+    }
+  ],
+  "21027": [
+    {
+      "title": "Nombres propios de amigos",
+      "purpose": "Ayuden al estudiante a distinguir los sustantivos propios de los comunes y a escribirlos siempre con mayúscula inicial.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Comunes vs. Propios",
+          "steps": [
+            "Comparamos pares de palabras: río / Río Gallegos, perro / Sultán, amiga / Valentina.",
+            "Explicamos que los sustantivos propios son los nombres particulares que distinguen a alguien o a un lugar único.",
+            "Revisamos juntos cómo se escriben los nombres y apellidos de la familia."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El mapa de los nombres propios",
+          "steps": [
+            "Nombramos localidades de Santa Cruz: Río Gallegos, El Calafate, Caleta Olivia, Puerto Deseado, Perito Moreno.",
+            "Recordamos que todos los nombres de pueblos, ríos y montañas son sustantivos propios y llevan mayúscula.",
+            "Completamos la tabla relacionando común con propio."
+          ],
+          "table": {
+            "cols": [
+              "Sustantivo común",
+              "Sustantivo propio de ejemplo"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi grupo de amigos",
+          "steps": [
+            "Dibujá a tres amigos o familiares haciendo algo divertido juntos.",
+            "Escribí debajo el nombre propio de cada uno con mayúscula inicial bien destacada."
+          ],
+          "draw": "Dibujá a tus amigos o seres queridos.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo diferenciar un sustantivo común de uno propio.",
+        "Puedo escribir siempre los nombres propios con mayúscula inicial.",
+        "Puedo dar ejemplos de sustantivos propios de personas y lugares."
+      ]
+    }
+  ],
+  "21028": [
+    {
+      "title": "Uno o muchos",
+      "purpose": "Acompañen al estudiante a comprender y transformar el número de los sustantivos (singular y plural) agregando -s o -es.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "De uno a montones",
+          "steps": [
+            "Juntamos objetos cotidianos: una tapita (singular) y varias tapitas (plural).",
+            "Observamos qué pasa al final de la palabra: gato → gatos (se suma s); árbol → árboles (se suma es).",
+            "Practicamos en voz alta con diez objetos diferentes de la mesa."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El transformador de palabras",
+          "steps": [
+            "Un jugador dice una palabra en singular (flor, lápiz, zapato, pez) y el otro la transforma en plural rápidamente.",
+            "Observamos el caso especial: pez → peces, lápiz → lápices (la z cambia a c).",
+            "Completamos la tabla con pares singular y plural."
+          ],
+          "table": {
+            "cols": [
+              "Uno solo (singular)",
+              "Muchos (plural)"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Antes y después",
+          "steps": [
+            "Dibujá de un lado un solo pájaro en una rama y del otro lado muchos pájaros volando.",
+            "Escribí una oración en singular y otra en plural debajo del dibujo."
+          ],
+          "draw": "Dibujá un pájaro solitario y luego una bandada.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar la diferencia entre singular (uno) y plural (muchos).",
+        "Puedo formar el plural agregando -s o -es según termine en vocal o consonante.",
+        "Puedo transformar oraciones enteras de singular a plural."
+      ]
+    }
+  ],
+  "21029": [
+    {
+      "title": "El y la, los y las",
+      "purpose": "Ayuden al estudiante a reconocer el género gramatical (femenino y masculino) en sustantivos y artículos concordantes.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La prueba del artículo",
+          "steps": [
+            "Explicamos que para saber si una palabra es masculina o femenina le ponemos adelante el / los o la / las.",
+            "Probamos con cosas de la casa: la mesa (femenino), el tenedor (masculino), las ventanas, los platos.",
+            "Buscamos palabras que no terminen en -o ni en -a y comprobamos su género (el lápiz, la flor)."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Banderines de colores",
+          "steps": [
+            "El adulto dice una palabra y el estudiante levanta la mano derecha si es masculina o la izquierda si es femenina.",
+            "Completamos oraciones asegurando que el artículo coincida con la palabra (concordancia).",
+            "Completamos la tabla clasificando sustantivos por su género."
+          ],
+          "table": {
+            "cols": [
+              "Masculino (el / los)",
+              "Femenino (la / las)"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La canasta de picnic",
+          "steps": [
+            "Dibujá una canasta de picnic con dos cosas masculinas (el termo, el pan) y dos femeninas (la manzana, la servilleta).",
+            "Escribí las cuatro cosas con su artículo correspondiente."
+          ],
+          "draw": "Dibujá la canasta y los alimentos con sus artículos.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo identificar si un sustantivo es masculino o femenino.",
+        "Puedo usar los artículos el, la, los y las de manera correcta.",
+        "Puedo asegurar que el artículo y el sustantivo coincidan en género y número."
+      ]
+    }
+  ],
+  "21030": [
+    {
+      "title": "¿Cómo es?",
+      "purpose": "Acompañen al estudiante a descubrir los adjetivos calificativos para describir cualidades de personas, animales y objetos.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "¿Cómo es este objeto?",
+          "steps": [
+            "Tomamos una manzana, una piedra o una bufanda con las manos.",
+            "Nos hacemos la pregunta: ¿Cómo es? (suave, fría, roja, pesada, dulce, abrigada).",
+            "Explicamos que todas las palabras que dicen cómo es algo se llaman adjetivos calificativos."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Adivina el personaje secreto",
+          "steps": [
+            "Un jugador elige en secreto un animal o familiar y da tres adjetivos (es peludo, juguetón y chiquito).",
+            "El otro jugador adivina de quién se trata.",
+            "Completamos la tabla uniendo sustantivos con adjetivos que concuerden."
+          ],
+          "table": {
+            "cols": [
+              "Sustantivo",
+              "Dos adjetivos que dicen cómo es"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Retrato con cualidades",
+          "steps": [
+            "Dibujá a tu mascota o a tu animal preferido.",
+            "Escribí dos oraciones describiendo cómo es usando al menos tres adjetivos."
+          ],
+          "draw": "Dibujá a tu animal favorito con detalles.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar qué es un adjetivo y para qué se usa.",
+        "Puedo responder a la pregunta ¿cómo es? con adjetivos variados.",
+        "Puedo cuidar que el adjetivo concuerde en género y número con el sustantivo."
+      ]
+    }
+  ],
+  "21031": [
+    {
+      "title": "El árbol de las palabras",
+      "purpose": "Ayuden al estudiante a descubrir familias de palabras reconociendo la raíz común que comparten en su significado y ortografía.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La raíz que florece",
+          "steps": [
+            "Escribimos la palabra PAN en el tronco de un árbol dibujado.",
+            "En las ramas escribimos palabras que nacen de pan: panadero, panadería, pancito, panera.",
+            "Observamos que todas comparten la raíz PAN y tienen que ver con el pan."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Caza del intruso en la familia",
+          "steps": [
+            "Leemos una serie: flor, florero, floristería, flota, florecer. ¿Cuál es el intruso? (flota, porque no viene de flor).",
+            "Jugamos con la familia de SOL: soleado, solcito, insolación, soldado (el intruso es soldado).",
+            "Completamos la tabla con familias de palabras."
+          ],
+          "table": {
+            "cols": [
+              "Palabra base",
+              "Tres palabras de la misma familia"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El árbol familiar de palabras",
+          "steps": [
+            "Dibujá un gran árbol y en el tronco escribí MAR.",
+            "En las hojas y ramas escribí al menos tres palabras de la familia de mar (marino, marea, marinero)."
+          ],
+          "draw": "Dibujá el árbol de palabras con sus ramas.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer cuándo dos palabras pertenecen a la misma familia.",
+        "Puedo identificar la raíz común de una familia de palabras.",
+        "Puedo descubrir intrusos que suenan parecido pero no tienen el mismo origen."
+      ]
+    }
+  ],
+  "21032": [
+    {
+      "title": "Gigantes y pequeñitos",
+      "purpose": "Acompañen al estudiante a formar aumentativos (-ón, -ona, -ote, -azo) y diminutivos (-ito, -ita) para enriquecer su vocabulario.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "La lupa mágica y el telescopio",
+          "steps": [
+            "Miramos cosas de la mesa: una cuchara chiquita es una cucharita (diminutivo).",
+            "Una cuchara gigante es un cucharón (aumentativo).",
+            "Jugamos a transformar palabras: casa → casita / casona; perro → perrito / perrazo; libro → librito / librote."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "La fábrica de tamaños",
+          "steps": [
+            "Explicamos que los diminutivos terminan en -ito / -ita y los aumentativos en -ote, -ón o -azo.",
+            "Observamos con cuidado la ortografía: si la palabra lleva S (casa), el diminutivo mantiene la S (casita).",
+            "Completamos la tabla con tamaños de objetos."
+          ],
+          "table": {
+            "cols": [
+              "Palabra normal",
+              "Diminutivo (pequeñito)",
+              "Aumentativo (enorme)"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "El gigante y el duendecito",
+          "steps": [
+            "Dibujá a un gigante con un zapatón enorme y a un duende con un zapatito diminuto.",
+            "Escribí una oración comparando los dos tamaños."
+          ],
+          "draw": "Dibujá al gigante y al duendecito.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo transformar palabras usando terminaciones -ito e -ita.",
+        "Puedo usar aumentativos como -ón o -ote para describir cosas muy grandes.",
+        "Puedo usar diminutivos y aumentativos en mis relatos y conversaciones."
+      ]
+    }
+  ],
+  "21033": [
+    {
+      "title": "El desfile del abecedario",
+      "purpose": "Ayuden al estudiante a dominar el orden alfabético para buscar en listas, agendas y futuros diccionarios.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "La tira del abecedario",
+          "steps": [
+            "Recorremos el abecedario de la A a la Z cantando o diciendo las letras en orden.",
+            "Tomamos cuatro nombres de personas de la familia y miramos con qué letra empieza cada uno.",
+            "Los ordenamos en fila según qué letra aparece primero en el abecedario."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "¿Quién va primero en la fila?",
+          "steps": [
+            "El adulto dice dos palabras: barco o manzana. El estudiante dice cuál va primero mirando la primera letra.",
+            "¿Qué pasa si empiezan con la misma letra? (casa y conejo): miramos la segunda letra.",
+            "Completamos la tabla ordenando alfabéticamente la lista de compras."
+          ],
+          "table": {
+            "cols": [
+              "Palabras desordenadas",
+              "Ordenadas de la A a la Z"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi mini agenda ilustrada",
+          "steps": [
+            "Escribí tres palabras de animales en estricto orden alfabético.",
+            "Ilustrá cada uno de los tres animales al lado de su nombre."
+          ],
+          "draw": "Dibujá los tres animales ordenados alfabéticamente.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo recitar o consultar el abecedario en su orden correcto.",
+        "Puedo ordenar una lista de palabras fijándome en la letra inicial.",
+        "Puedo comparar la segunda letra cuando la primera es igual."
+      ]
+    }
+  ],
+  "21034": [
+    {
+      "title": "El tesoro del cuento",
+      "purpose": "Acompañen al estudiante a identificar la estructura canónica de los cuentos narrativos: inicio, conflicto o problema, y desenlace.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Las tres partes de una historia",
+          "steps": [
+            "Recordamos un cuento conocido (por ejemplo Caperucita Roja o Los tres chanchitos).",
+            "Identificamos: ¿Cómo empieza todo tranquilo? (Inicio).",
+            "¿Qué problema aparece que complica las cosas? (Conflicto / Problema).",
+            "¿Cómo logran solucionarlo al final? (Desenlace)."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El organizador del relato",
+          "steps": [
+            "Elegimos un cuento que leímos hace poco en la escuela o en casa.",
+            "Completamos la tabla anotando qué pasó en cada una de las tres partes."
+          ],
+          "table": {
+            "cols": [
+              "Momento del cuento",
+              "¿Qué sucede en la historia?"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La portada de mi cuento",
+          "steps": [
+            "Dibujá el momento más emocionante (el problema o conflicto) de tu cuento preferido.",
+            "Escribí el título del cuento y una oración explicando qué pasó en ese momento."
+          ],
+          "draw": "Dibujá la escena principal del cuento.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo contar qué pasa al principio, en el nudo y al final de un cuento.",
+        "Puedo reconocer quién es el personaje principal y qué desafío enfrenta.",
+        "Puedo ordenar secuencias temporales usando primero, después y al final."
+      ]
+    }
+  ],
+  "21035": [
+    {
+      "title": "La fábula de la zorra",
+      "purpose": "Ayuden al estudiante a leer fábulas breves comprendiendo la moraleja o enseñanza que dejan sobre la convivencia y los valores.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Animales que nos enseñan",
+          "steps": [
+            "Leemos juntos una fábula tradicional corta (como La liebre y la tortuga o La zorra y las uvas).",
+            "Conversamos sobre cómo los animales actúan como personas para mostrarnos actitudes (presunción, paciencia, esfuerzo).",
+            "Explicamos qué es una moraleja: una enseñanza valiosa para la vida."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El análisis de la fábula",
+          "steps": [
+            "Identificamos los personajes de la fábula y qué características tienen.",
+            "Completamos la tabla con los personajes y la enseñanza aprendida."
+          ],
+          "table": {
+            "cols": [
+              "Personaje",
+              "¿Cómo actúa en la historia?",
+              "¿Qué aprendemos de su actitud?"
+            ],
+            "rows": 2
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "La ilustración de la moraleja",
+          "steps": [
+            "Dibujá a los personajes de la fábula compartiendo el final de la historia.",
+            "Escribí la moraleja o consejo con tus propias palabras en dos renglones."
+          ],
+          "draw": "Dibujá a los animales de la fábula.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar qué es una fábula y en qué se diferencia de un cuento común.",
+        "Puedo identificar la moraleja de una historia.",
+        "Puedo relacionar la enseñanza de la fábula con situaciones de la vida diaria."
+      ]
+    }
+  ],
+  "21036": [
+    {
+      "title": "Trabalenguas y adivinanzas",
+      "purpose": "Acompañen al estudiante a disfrutar de la sonoridad, el juego y el ingenio de las rimas, trabalenguas y adivinanzas populares.",
+      "blocks": [
+        {
+          "kind": "juego",
+          "title": "Batalla de trabalenguas",
+          "steps": [
+            "Memorizamos un trabalenguas corto cada uno.",
+            "Lo decimos despacio, luego a velocidad media y al final a toda velocidad sin trabarnos.",
+            "Nos reímos juntos de las confusiones y festejamos a quien logre decirlo tres veces seguidas."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "Adivina, adivinador",
+          "steps": [
+            "Leemos juntos estas adivinanzas y descubrimos la respuesta fijándonos en las pistas:",
+            "Vuelo de noche, duermo de día y nunca verás plumas en el ala mía (el murciélago).",
+            "Tiene hojas y no es árbol, tiene lomo y no es caballo (el libro).",
+            "Completamos la tabla escribiendo una adivinanza inventada y su solución."
+          ],
+          "table": {
+            "cols": [
+              "Pista o rima",
+              "Respuesta"
+            ],
+            "rows": 2
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi adivinanza ilustrada",
+          "steps": [
+            "Inventá una adivinanza corta sobre un animal del bosque patagónico.",
+            "Dibujá la respuesta escondida debajo de una solapa o en el recuadro."
+          ],
+          "draw": "Dibujá la solución secreta de tu adivinanza.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo pronunciar trabalenguas desafiantes divirtiéndome con el lenguaje.",
+        "Puedo resolver adivinanzas prestando atención a las pistas del texto.",
+        "Puedo reconocer palabras que riman al final de los versos."
+      ]
+    }
+  ],
+  "21037": [
+    {
+      "title": "El recetario del bosque",
+      "purpose": "Ayuden al estudiante a interpretar textos instructivos reconociendo la importancia del orden en los pasos y de los ingredientes.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Cocinando una ensalada de frutas",
+          "steps": [
+            "Elegimos preparar algo simple en familia (una ensalada de frutas, tostadas con dulce o limonada).",
+            "Identificamos las dos partes fundamentales de toda receta: la lista de ingredientes y los pasos de preparación numerados.",
+            "Seguimos los pasos en orden estricto para ver qué ocurre si cambiamos el orden."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El robot desobediente",
+          "steps": [
+            "Un jugador hace de robot cocinero y solo hace exactamente lo que el otro le lee en la consigna.",
+            "Comprobamos por qué los verbos deben ser claros: lavar, pelar, cortar, mezclar, servir.",
+            "Completamos la tabla con ingredientes y utensilios necesarios."
+          ],
+          "table": {
+            "cols": [
+              "Ingrediente",
+              "Cantidad necesaria",
+              "Utensilio para usar"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mi receta preferida",
+          "steps": [
+            "Escribí los tres pasos principales para preparar tu merienda favorita usando números (1, 2, 3).",
+            "Dibujá el plato terminado listo para compartir en la mesa."
+          ],
+          "draw": "Dibujá el plato o merienda terminado.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo identificar la estructura de una receta (ingredientes y pasos).",
+        "Puedo seguir instrucciones paso a paso en el orden indicado.",
+        "Puedo escribir oraciones instructivas usando verbos de acción."
+      ]
+    }
+  ],
+  "21038": [
+    {
+      "title": "Cartas y mensajes del refugio",
+      "purpose": "Acompañen al estudiante a comprender y redactar mensajes, notas y cartas breves identificando emisor, destinatario y despedida.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Escribir para comunicarnos",
+          "steps": [
+            "Conversamos sobre cómo nos comunicamos con personas que están lejos o con la familia durante el día (mensajes, cartas, notas en la heladera).",
+            "Identificamos las partes de una cartita: la fecha y lugar, a quién le escribo (destinatario), qué le cuento (mensaje), y quién firma con su nombre (emisor).",
+            "Leemos una nota breve pegada en la heladera y descubrimos qué mensaje transmite."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El cartero del hogar",
+          "steps": [
+            "Doblamos una hoja en forma de sobre de carta y escribimos el nombre del destinatario al frente.",
+            "Adentro colocamos una nota linda agradeciendo algo a un integrante de la familia.",
+            "Completamos la tabla analizando los elementos de una carta."
+          ],
+          "table": {
+            "cols": [
+              "Parte de la carta",
+              "¿Qué información contiene?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Mensaje en la botella o el refugio",
+          "steps": [
+            "Escribí un mensaje cortito para un caminante que llegue al refugio del bosque de lengas.",
+            "No te olvides de poner tu saludo, tu mensaje y tu firma al final."
+          ],
+          "draw": "Dibujá el refugio de montaña y el buzón de mensajes.",
+          "lines": 3
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer a quién va dirigida una carta o mensaje (destinatario).",
+        "Puedo escribir un mensaje claro expresando una idea o agradecimiento.",
+        "Puedo firmar con mi nombre al final de una nota personal."
+      ]
+    }
+  ]
+}

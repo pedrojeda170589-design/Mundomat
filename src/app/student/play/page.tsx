@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
 import { DEFAULT_GRADE, getGrade, missingPrerequisite, themeForGrade } from "@/lib/grades";
 import Seashore from "@/components/Seashore";
+import Forest from "@/components/Forest";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { practiceZonesFor } from "@/lib/grade1/practice";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
@@ -207,7 +208,7 @@ export default function StudentPlayPage() {
   let mapWorlds = gradeWorlds.filter((w) => w.subject === subject);
   let playableIds = enabledWorldIds;
   if (grade !== DEFAULT_GRADE) {
-    const zones = practiceZonesFor(progress, subject);
+    const zones = practiceZonesFor(progress, subject, grade);
     playableIds = enabledWorldIds.filter((id) => {
       const w = gradeWorlds.find((x) => x.id === id);
       const missing = w ? missingPrerequisite(w, progress, enabledWorldIds) : null;
@@ -220,10 +221,12 @@ export default function StudentPlayPage() {
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
 
+  const sceneryType = themeForGrade(grade).scenery;
+
   return (
     <main className={`relative flex-1 flex flex-col ${themeForGrade(grade).dayBg} py-8 overflow-hidden`}>
       <CloudsBackground />
-      {themeForGrade(grade).scenery === "seashore" ? <Seashore isDay /> : <Mountains isDay />}
+      {sceneryType === "seashore" ? <Seashore isDay /> : sceneryType === "forest" ? <Forest isDay /> : <Mountains isDay />}
 
       {isTrialStudent && trialEndsAt && (
         <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-2">

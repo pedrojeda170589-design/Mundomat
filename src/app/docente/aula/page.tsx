@@ -11,9 +11,9 @@ import {
   subjectEmoji,
   subjectLabel,
 } from "@/lib/platform/shared";
-import { WORLDS } from "@/lib/worlds";
-import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
+
 import { grade1HasContent } from "@/lib/grade1/content";
+import { getGrade } from "@/lib/grades";
 import { SUBJECT_INFO, WorldSubject } from "@/types";
 
 interface OverviewRow {
@@ -238,9 +238,9 @@ function WorldsTab({ classroom, closed, onSaved }: { classroom: Classroom; close
   const [enabled, setEnabled] = useState<Set<number>>(new Set(classroom.enabled_world_ids));
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  // Mundos del grado del aula (1.º tiene su propio catálogo; el resto, los de 3.º).
+  // Mundos del grado del aula (1.º, 2.º o 3.º según su catálogo).
   const bySubject = useMemo(() => {
-    const list = classroom.grade === 1 ? GRADE1_WORLDS.filter(grade1HasContent) : WORLDS;
+    const list = getGrade(classroom.grade).worlds.filter((w) => classroom.grade !== 1 || grade1HasContent(w));
     return SUBJECTS.map((s) => ({ s, worlds: list.filter((w) => w.subject === s) }));
   }, [classroom.grade]);
 

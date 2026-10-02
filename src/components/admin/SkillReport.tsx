@@ -1,15 +1,19 @@
 "use client";
 
 import { StudentProgress, SUBJECT_INFO, WorldSubject } from "@/types";
+import { getGrade } from "@/lib/grades";
 import { GRADE1_SKILLS } from "@/lib/grade1/skills";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { SKILL_LEVEL_INFO, SkillLevel, skillLevel } from "@/lib/progressLogic";
 
-// Informe por habilidad para el docente (1.º grado): qué sabe, qué está
+// Informe por habilidad para el docente (1.º y 2.º grado): qué sabe, qué está
 // aprendiendo, dónde tiene dificultades y qué conviene practicar. Los
 // niveles describen la práctica en la app; no son una nota.
-export default function SkillReport({ progress }: { progress: StudentProgress }) {
-  const rows = GRADE1_SKILLS.map((s) => {
+export default function SkillReport({ progress, grade = 1 }: { progress: StudentProgress; grade?: number }) {
+  const g = getGrade(grade);
+  const skills = g.skills ?? (grade === 1 ? GRADE1_SKILLS : []);
+  const worldsForGrade = g.worlds.length ? g.worlds : GRADE1_WORLDS;
+  const rows = skills.map((s) => {
     const st = progress.skillStats?.[s.id];
     const level = skillLevel(st);
     const recentPct = st && st.recent.length ? Math.round((st.recent.reduce((a, b) => a + b, 0) / st.recent.length) * 100) : null;
@@ -46,7 +50,7 @@ export default function SkillReport({ progress }: { progress: StudentProgress })
 
       {subjects.map((subject) => {
         const subjRows = rows.filter((r) => r.skill.subject === subject);
-        const worlds = GRADE1_WORLDS.filter((w) => w.subject === subject);
+        const worlds = worldsForGrade.filter((w) => w.subject === subject);
         const started = worlds.filter((w) => progress.lastWorldAttemptScore?.[w.id] !== undefined || done.has(w.id));
         return (
           <div key={subject} className="rounded-xl bg-white/60 border border-amber-700/20 p-3">

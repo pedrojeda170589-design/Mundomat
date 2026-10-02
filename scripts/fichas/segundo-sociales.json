@@ -1,0 +1,783 @@
+{
+  "23001": [
+    {
+      "title": "Exploradores de paisajes santacruceños",
+      "purpose": "Acompañen al estudiante a observar las diferencias entre la costa, la meseta ventosa y la cordillera boscosa de nuestra provincia.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Nuestros paisajes conocidos",
+          "steps": [
+            "Conversamos en familia sobre qué lugares de Santa Cruz visitamos o vimos en fotos.",
+            "Recordamos cómo era el suelo, si había mucho viento y qué plantas o animales vimos.",
+            "Elegimos nuestro paisaje favorito de la provincia para dibujarlo."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná el paisaje",
+          "steps": [
+            "Un jugador piensa en un paisaje: costa marina, meseta con coirones o bosque de lengas.",
+            "Da tres pistas sobre el lugar sin decir el nombre.",
+            "Los demás tienen que adivinar de qué rincón de Santa Cruz se trata."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Postal de mi provincia",
+          "steps": [
+            "Dibujá un paisaje patagónico con sus montañas, árboles o mar.",
+            "Escribí una oración contando qué es lo que más te gusta de ese lugar."
+          ],
+          "draw": "Dibujá tu paisaje patagónico preferido.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo reconocer distintos paisajes de Santa Cruz.",
+        "Puedo describir elementos naturales y construidos por las personas.",
+        "Puedo compartir anécdotas de paseos con mi familia."
+      ]
+    }
+  ],
+  "23002": [
+    {
+      "title": "Mi barrio y la ciudad",
+      "purpose": "Ayuden al estudiante a reconocer elementos urbanos: calles, comercios, plazas y normas de tránsito peatonal.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Caminata atenta por la cuadra",
+          "steps": [
+            "Salimos a dar una vuelta corta por la vereda con un adulto.",
+            "Contamos cuántos comercios, postes de luz y sendas peatonales vemos en la cuadra.",
+            "Anotamos en la tabla qué servicios encontramos cerca de casa."
+          ],
+          "table": {
+            "cols": [
+              "Lugar o servicio",
+              "¿Dónde queda?",
+              "¿Para qué sirve?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "El semáforo en casa",
+          "steps": [
+            "Un jugador dice 'verde' y todos caminan rápido; con 'amarillo' van despacio; con 'rojo' se quedan congelados.",
+            "El que se mueve con rojo pierde un turno.",
+            "Conversamos sobre por qué el semáforo cuida la vida de todos en la esquina."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Croquis de mi cuadra",
+          "steps": [
+            "Dibujá tu casa y las casas o negocios vecinos.",
+            "Marcá la vereda, la calle y por dónde cruzás seguro."
+          ],
+          "draw": "Dibujá el plano sencillo de tu cuadra.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo ubicar lugares importantes de mi barrio.",
+        "Puedo explicar para qué sirve la senda peatonal y el semáforo.",
+        "Puedo dibujar un croquis simple de mi cuadra."
+      ]
+    }
+  ],
+  "23003": [
+    {
+      "title": "Postales del campo patagónico",
+      "purpose": "Acompañen al estudiante a conocer cómo es la vida cotidiana en las estancias y puestos rurales de Santa Cruz.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "La vida lejos del pueblo",
+          "steps": [
+            "Conversamos sobre cómo hacen en el campo sin almacén cerca ni agua corriente de red.",
+            "Charlamos sobre el uso del molino de viento para sacar agua y de la radio para comunicarse.",
+            "Pensamos qué ventajas y qué desafíos tiene vivir rodeado de naturaleza abierta."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Mensajes por radio rural",
+          "steps": [
+            "Jugamos a ser puesteros que se mandan avisos por radio VHF.",
+            "Un jugador transmite un mensaje corto y claro: 'Aquí Puesto La Lenga, todo bien con las ovejas, cambio'.",
+            "El otro responde anotando los datos importantes del mensaje."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La estancia patagónica",
+          "steps": [
+            "Dibujá el galpón de esquila, los corrales y el molino de viento.",
+            "Escribí los nombres de dos animales que viven en la estancia."
+          ],
+          "draw": "Dibujá una estancia con sus corrales y molino.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar herramientas y transportes del campo.",
+        "Puedo explicar cómo se obtiene agua y luz en una estancia.",
+        "Puedo valorar el esfuerzo de los trabajadores rurales."
+      ]
+    }
+  ],
+  "23004": [
+    {
+      "title": "Detectives de servicios en casa",
+      "purpose": "Guíen al estudiante para valorar los servicios públicos esenciales como el gas, el agua potable y la luz.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Recorrido de las cañerías y cables",
+          "steps": [
+            "Recorremos la casa buscando por dónde entra el agua, el gas y la electricidad.",
+            "Observamos los calefactores, las canillas y las llaves de luz con cuidado y sin tocar nada peligroso.",
+            "Completamos la lista con las cosas que funcionan gracias a cada servicio."
+          ],
+          "table": {
+            "cols": [
+              "Servicio público",
+              "Aparato que lo usa",
+              "¿Cómo lo cuidamos?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "Cuidar entre todos",
+          "steps": [
+            "Conversamos sobre qué pasaría si no tuviéramos calefacción a gas en invierno en Santa Cruz.",
+            "Pensamos tres compromisos familiares para no derrochar energía ni agua."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Cartel para la canilla",
+          "steps": [
+            "Diseñá un cartelito para poner cerca de la canilla recordando cerrarla bien.",
+            "Escribí un mensaje corto: ¡Cuidá el agua, cada gota vale!"
+          ],
+          "draw": "Diseñá un cartel recordatorio para ahorrar agua.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar los tres servicios públicos básicos de mi casa.",
+        "Puedo practicar hábitos para ahorrar gas, luz y agua.",
+        "Puedo explicar por qué el agua potable es tan valiosa."
+      ]
+    }
+  ],
+  "23005": [
+    {
+      "title": "El viaje abrigado de la lana",
+      "purpose": "Acompañen al estudiante a reconstruir el circuito productivo de la lana desde la oveja en la meseta hasta la prenda tejida.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Tocamos fibras diferentes",
+          "steps": [
+            "Buscamos en casa una prenda de lana tejida y otra de algodón o tela sintética.",
+            "Cerramos los ojos y tocamos las dos prendas: sentimos la textura, el calor y el grosor.",
+            "Comprobamos cómo la lana abriga más porque atrapa el calor del cuerpo."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "El camino del vellón",
+          "steps": [
+            "Averiguamos con un adulto qué es la esquila y en qué época del año se hace.",
+            "Ordenamos los pasos: esquilar, lavar, hilar y tejer.",
+            "Escribimos qué prendas de lana usamos en los días más fríos."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "creo",
+          "title": "Mi gorro patagónico",
+          "steps": [
+            "Dibujá un gorro de lana con pompón y pompón de colores.",
+            "Pegale pedacitos de lana o hebras de hilo si tenés en casa."
+          ],
+          "draw": "Dibujá y decorá una prenda de lana para el frío.",
+          "lines": 1
+        }
+      ],
+      "selfCheck": [
+        "Puedo ordenar las etapas del circuito de la lana.",
+        "Puedo explicar qué es la esquila y quién la realiza.",
+        "Puedo reconocer prendas tejidas con lana natural."
+      ]
+    }
+  ],
+  "23006": [
+    {
+      "title": "Manos en la masa: del trigo al pan",
+      "purpose": "Acompañen al estudiante a explorar la transformación del grano en harina y de la harina en pan fresco casero.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Pequeños panaderos en la cocina",
+          "steps": [
+            "Con un adulto, ponemos en un bol una taza de harina, media taza de agua tibia, una cucharadita de levadura y una pizca de sal.",
+            "Amasamos con fuerza durante unos minutos hasta que quede un bollito suave.",
+            "Tapamos la masa con un repasador y esperamos media hora para ver cómo crece."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Los trabajadores del pan",
+          "steps": [
+            "Conversamos sobre quién sembró el trigo, quién manejó el camión y quién madruga en la panadería.",
+            "Agradecemos el trabajo de tantas personas para que el pan llegue a nuestra mesa."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La receta de mi pancito",
+          "steps": [
+            "Dibujá tu bollito de pan antes y después de leudar.",
+            "Escribí los cuatro ingredientes que usamos para la masa."
+          ],
+          "draw": "Dibujá el pan antes y después de crecer con levadura.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar los ingredientes del pan tradicional.",
+        "Puedo describir el circuito desde el trigo hasta la panadería.",
+        "Puedo observar cómo la levadura hace crecer la masa."
+      ]
+    }
+  ],
+  "23007": [
+    {
+      "title": "Sabores del mar austral",
+      "purpose": "Guíen al estudiante a conocer los puertos pesqueros santacruceños y los pescados y mariscos que nos brinda el mar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Comidas del mar",
+          "steps": [
+            "Conversamos sobre si probamos merluza, calamar o langostinos.",
+            "Charlamos sobre los pescadores de Puerto Deseado y Caleta Olivia que salen a navegar con frío y olas.",
+            "Pensamos por qué es sano comer pescado una o dos veces por semana."
+          ]
+        },
+        {
+          "kind": "investigo",
+          "title": "El muelle y los barcos",
+          "steps": [
+            "Averiguamos qué hace un buque factoría y por qué tiene que llevar hielo en la bodega.",
+            "Anotamos en la tabla qué herramientas se usan en la pesca marina."
+          ],
+          "table": {
+            "cols": [
+              "En el mar (barco)",
+              "En el puerto",
+              "En la pescadería"
+            ],
+            "rows": 3
+          }
+        },
+        {
+          "kind": "creo",
+          "title": "Un barco en altamar",
+          "steps": [
+            "Dibujá un barco pesquero con sus redes y gaviotas volando alrededor.",
+            "Escribí el nombre de dos animales marinos de nuestra costa."
+          ],
+          "draw": "Dibujá un barco pesquero navegando en el mar patagónico.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar puertos pesqueros de Santa Cruz.",
+        "Puedo identificar la merluza y el langostino patagónico.",
+        "Puedo explicar por qué el frío conserva los pescados frescos."
+      ]
+    }
+  ],
+  "23008": [
+    {
+      "title": "Caja de herramientas y oficios",
+      "purpose": "Acompañen al estudiante a explorar herramientas de trabajo manuales y tecnológicas de distintos oficios.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Herramientas en casa",
+          "steps": [
+            "Con un adulto, abrimos la caja de herramientas o miramos los utensilios de cocina.",
+            "Elegimos tres herramientas seguras (como un destornillador, una cuchara de madera o un metro).",
+            "Anotamos para qué sirve cada una y qué cuidado requiere."
+          ],
+          "table": {
+            "cols": [
+              "Herramienta",
+              "¿Quién la usa?",
+              "¿Para qué sirve?"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Dígalo con mímica de trabajadores",
+          "steps": [
+            "Un jugador actúa sin hablar usando una herramienta imaginaria (como martillar, coser o escuchar con estetoscopio).",
+            "Los demás tienen que adivinar qué profesión u oficio está representando.",
+            "Gana el que acierte más oficios."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "La herramienta del futuro",
+          "steps": [
+            "Inventá una herramienta que ayude a las personas a trabajar más fácil y seguro.",
+            "Dibujala y ponele un nombre divertido."
+          ],
+          "draw": "Dibujá tu invento para ayudar a los trabajadores.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo relacionar herramientas con sus oficios correspondientes.",
+        "Puedo explicar medidas de seguridad al usar herramientas.",
+        "Puedo valorar el aporte de todos los trabajos en la comunidad."
+      ]
+    }
+  ],
+  "23009": [
+    {
+      "title": "Viajar por la Patagonia: ayer y hoy",
+      "purpose": "Ayuden al estudiante a comparar cómo se viajaba antes en carretas y caballos con los transportes modernos de hoy.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Historias de viajes largos",
+          "steps": [
+            "Preguntamos a los abuelos o adultos cuánto tardaban en llegar a otras ciudades cuando eran chicos.",
+            "Conversamos sobre cómo los carros con bueyes tardaban semanas en cruzar la meseta.",
+            "Comparamos con los viajes de hoy en auto por ruta asfaltada o en avión."
+          ]
+        },
+        {
+          "kind": "hacer",
+          "title": "El mapa de las distancias",
+          "steps": [
+            "Miramos un mapa de Santa Cruz y buscamos la Ruta Nacional 3 y la Ruta 40.",
+            "Marcamos dónde está nuestro pueblo y qué ciudades quedan al norte y al sur.",
+            "Escribimos qué medio de transporte usaríamos para ir a cada una."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "creo",
+          "title": "Carreta versus camioneta",
+          "steps": [
+            "Dibujá de un lado una antigua carreta de bueyes y del otro una moderna camioneta 4x4.",
+            "Escribí una diferencia importante entre las dos."
+          ],
+          "draw": "Dibujá el transporte de antes y el de ahora.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar medios de transporte antiguos y actuales.",
+        "Puedo ubicar las principales rutas de mi provincia.",
+        "Puedo explicar por qué hoy viajamos más rápido y seguros."
+      ]
+    }
+  ],
+  "23010": [
+    {
+      "title": "Sobre rieles de carbón",
+      "purpose": "Acompañen al estudiante a conocer la historia de los trenes en Santa Cruz y el ferrocarril carbonero de Río Turbio.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "El tren que unió la montaña con el mar",
+          "steps": [
+            "Conversamos sobre cómo los trenes llevan cargas muy pesadas sin cansarse.",
+            "Hablamos del carbón que salía de la mina en Río Turbio y viajaba hasta el muelle de Río Gallegos.",
+            "Recordamos que en las estaciones crecían casitas y pueblos gracias al paso del tren."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "El maquinista atento",
+          "steps": [
+            "Armamos un trencito humano con la familia tomándonos de la cintura.",
+            "El primer jugador es el maquinista que avisa con silbato: un pitazo avanza despacio, dos pitazos frena.",
+            "Practicamos no soltarnos ni empujar durante el recorrido."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi locomotora a vapor",
+          "steps": [
+            "Dibujá una locomotora antigua con su chimenea echando humo blanco sobre las vías.",
+            "Escribí qué llevaba en sus vagones de carga."
+          ],
+          "draw": "Dibujá el tren cruzando el paisaje de Santa Cruz.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar qué transportaba el ferrocarril de Río Turbio.",
+        "Puedo nombrar partes del tren: locomotora, vagones y vías.",
+        "Puedo valorar el patrimonio histórico ferroviario de mi provincia."
+      ]
+    }
+  ],
+  "23011": [
+    {
+      "title": "Guardianes del suelo y del agua",
+      "purpose": "Guíen al estudiante para comprender cómo el viento y el sobrepastoreo afectan el suelo y cómo podemos protegerlo.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Experimento del viento y la tierra",
+          "steps": [
+            "En una bandejita ponemos un puñado de tierra suelta y en otra tierra con pasto o raíces.",
+            "Soplamos suavemente con un sorbete o abanico sobre las dos.",
+            "Observamos cómo la tierra sin pasto se vuela rápido mientras que las raíces sujetan el suelo."
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Cortinas de árboles",
+          "steps": [
+            "Charlamos sobre por qué en las chacras plantan hileras altas de álamos y sauces.",
+            "Pensamos cómo los árboles frenan el viento y protegen los cultivos familiares."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Compromiso ambiental",
+          "steps": [
+            "Escribí dos cosas que podemos hacer para cuidar el suelo y los ríos cuando vamos de campamento.",
+            "Dibujá un árbol fuerte plantado en la tierra."
+          ],
+          "draw": "Dibujá un árbol con raíces firmes en el suelo.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo explicar por qué las plantas cuidan la tierra del viento.",
+        "Puedo reconocer la función de las cortinas de árboles.",
+        "Puedo practicar conductas responsables al visitar la naturaleza."
+      ]
+    }
+  ],
+  "23012": [
+    {
+      "title": "El cofre de las historias familiares",
+      "purpose": "Acompañen al estudiante a valorar la historia y la diversidad de su familia a través de recuerdos y anécdotas compartidas.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Miramos fotos con historia",
+          "steps": [
+            "Buscamos un álbum de fotos familiares o imágenes en el teléfono con los adultos.",
+            "Elegimos una foto de cuando nuestros papás o abuelos eran chiquitos.",
+            "Les pedimos que nos cuenten qué estaban haciendo ese día y cómo era su vida entonces."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Adiviná de quién es la foto",
+          "steps": [
+            "Mostramos una foto vieja tapando la cara con un dedo.",
+            "Damos pistas sobre quién es hasta que los demás adivinen.",
+            "Nos reímos juntos viendo cómo cambiaron las ropas y los peinados con el tiempo."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Mi árbol familiar",
+          "steps": [
+            "Dibujá a las personas que forman tu familia y te cuidan todos los días.",
+            "Escribí una palabra linda que defina a tu hogar: amor, alegría, abrazo."
+          ],
+          "draw": "Dibujá a tu familia reunida en un momento feliz.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo escuchar con respeto historias del pasado familiar.",
+        "Puedo reconocer que existen muchas formas diversas de familias.",
+        "Puedo expresar afecto y agradecimiento hacia quienes me cuidan."
+      ]
+    }
+  ],
+  "23013": [
+    {
+      "title": "Huellas de los Aonikenk",
+      "purpose": "Ayuden al estudiante a conocer el modo de vida nómade, las viviendas y la vestimenta de los cazadores tehuelches de Santa Cruz.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "El quillango y el toldo",
+          "steps": [
+            "Averiguamos con un libro o relato familiar cómo era el toldo aonikenk hecho con postes y cueros de guanaco.",
+            "Observamos cómo pintaban los quillangos por fuera con grecas y figuras geométricas de colores minerales.",
+            "Anotamos qué animales cazaban para alimentarse y vestirse."
+          ],
+          "lines": 3
+        },
+        {
+          "kind": "hacer",
+          "title": "Pintura con pigmentos caseros",
+          "steps": [
+            "Preparamos en dos platitos un poquito de café soluble con agua y pimentón con agua.",
+            "Con un hisopo o pincel, pintamos en una hoja líneas y triángulos imitando los dibujos del quillango.",
+            "Comprobamos cómo los pueblos originarios usaban tierras y arcillas de colores naturales."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El cazador en la estepa",
+          "steps": [
+            "Dibujá un campamento aonikenk con sus toldos desmontables y boleadoras.",
+            "Escribí una palabra en memoria de este pueblo originario."
+          ],
+          "draw": "Dibujá un toldo aonikenk en la meseta patagónica.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar al pueblo Aonikenk como pobladores ancestrales de Santa Cruz.",
+        "Puedo explicar de qué estaban hechos los toldos y quillangos.",
+        "Puedo valorar el respeto que tenían por la naturaleza y la fauna."
+      ]
+    }
+  ],
+  "23014": [
+    {
+      "title": "Relatos de los Selk'nam",
+      "purpose": "Acompañen al estudiante a conocer cómo vivían los pueblos originarios de Tierra del Fuego y el significado de la ceremonia del Hain.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "El fuego en el fin del mundo",
+          "steps": [
+            "Charlamos sobre por qué la isla grande se llama Tierra del Fuego.",
+            "Recordamos que los Selk'nam mantenían fogatas siempre encendidas para protegerse de las nevadas.",
+            "Conversamos sobre la valentía de cazar con arco y flecha en bosques fríos."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Diseños ceremoniales del Hain",
+          "steps": [
+            "En una hoja, dibujá figuras con rayas blancas, rojas y puntos negros inspiradas en la pintura del Hain.",
+            "Escribí qué colores minerales usaban para pintarse."
+          ],
+          "draw": "Dibujá motivos ceremoniales con líneas y puntos de colores.",
+          "lines": 2
+        },
+        {
+          "kind": "converso",
+          "title": "La memoria y el respeto",
+          "steps": [
+            "Conversamos sobre por qué es importante recordar a los Selk'nam con respeto en la escuela.",
+            "Escribimos una frase sobre la importancia de cuidar las culturas originarias."
+          ],
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo ubicar a los Selk'nam en la Isla Grande de Tierra del Fuego.",
+        "Puedo describir cómo se abrigaban y encendían fuego en la nieve.",
+        "Puedo reconocer las pinturas corporales de la ceremonia del Hain."
+      ]
+    }
+  ],
+  "23015": [
+    {
+      "title": "Cocinar y calentar: el paso del tiempo",
+      "purpose": "Guíen al estudiante para observar cómo cambiaron los artefactos del hogar desde las lámparas de querosén a los electrodomésticos actuales.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "Objetos de antes y de ahora",
+          "steps": [
+            "Preguntamos en casa qué aparatos no existían cuando los abuelos eran chicos.",
+            "Anotamos cómo hacían antes para planchar la ropa, conservar la carne fresca y calentar agua.",
+            "Completamos la tabla comparando el pasado con el presente."
+          ],
+          "table": {
+            "cols": [
+              "Necesidad",
+              "En el pasado",
+              "En el presente"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "converso",
+          "title": "La cocina a leña y la de gas",
+          "steps": [
+            "Conversamos sobre el esfuerzo de cortar leña para cocinar versus prender una hornalla a gas.",
+            "Pensamos cómo la tecnología ayudó a tener más tiempo para estudiar y jugar."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Iluminar la noche",
+          "steps": [
+            "Dibujá de un lado una vela encendida y del otro una lámpara eléctrica moderna.",
+            "Escribí cuál te parece más segura y por qué."
+          ],
+          "draw": "Dibujá una vela de antes y una lámpara de hoy.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo comparar artefactos del hogar antiguos y modernos.",
+        "Puedo explicar cómo cambió la forma de cocinar y calefaccionar.",
+        "Puedo valorar el acceso a comodidades en la vida cotidiana."
+      ]
+    }
+  ],
+  "23016": [
+    {
+      "title": "El mensaje de las manos pintadas",
+      "purpose": "Acompañen al estudiante a valorar el sitio arqueológico de la Cueva de las Manos como patrimonio de la humanidad en Santa Cruz.",
+      "blocks": [
+        {
+          "kind": "hacer",
+          "title": "Mi mano en negativo",
+          "steps": [
+            "Apoyamos nuestra mano bien abierta sobre una hoja blanca.",
+            "Con una esponjita apenas humedecida en témpera de color, damos golpecitos alrededor de todos los dedos.",
+            "Levantamos la mano con cuidado: ¡la silueta de nuestra mano quedó grabada en negativo!"
+          ]
+        },
+        {
+          "kind": "converso",
+          "title": "Un saludo de nueve mil años",
+          "steps": [
+            "Conversamos sobre qué sentían los cazadores antiguos al dejar su mano pintada en el Cañadón del Río Pinturas.",
+            "Pensamos por qué ningún visitante debe tocar las piedras con sus manos para no dañarlas."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Patrimonio que cuidamos",
+          "steps": [
+            "Dibujá guanacos corriendo y siluetas de manos como en la cueva.",
+            "Escribí una norma para los turistas que visitan este monumento histórico."
+          ],
+          "draw": "Dibujá escenas inspiradas en las pinturas rupestres del Cañadón.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo ubicar la Cueva de las Manos en el Cañadón del Río Pinturas.",
+        "Puedo explicar cómo se hacía la técnica del negativo de manos.",
+        "Puedo explicar por qué debemos proteger los sitios arqueológicos."
+      ]
+    }
+  ],
+  "23017": [
+    {
+      "title": "Las instituciones de mi pueblo",
+      "purpose": "Ayuden al estudiante a reconocer las instituciones que atienden necesidades comunitarias: bomberos, policía, hospital y municipio.",
+      "blocks": [
+        {
+          "kind": "investigo",
+          "title": "El mapa de las instituciones",
+          "steps": [
+            "Pensamos dónde quedan en nuestro pueblo el cuartel de bomberos, la comisaría, el hospital y la escuela.",
+            "Escribimos a qué número de emergencias llamaríamos si hubiera un problema de salud o de fuego."
+          ],
+          "table": {
+            "cols": [
+              "Institución",
+              "¿Qué problema resuelve?",
+              "Teléfono útil"
+            ],
+            "rows": 4
+          }
+        },
+        {
+          "kind": "juego",
+          "title": "Simulacro de llamada de auxilio",
+          "steps": [
+            "Jugamos a llamar al 107 o al 100 con un teléfono de juguete.",
+            "Practicamos decir con voz tranquila nuestro nombre, la dirección exacta de la casa y qué pasó.",
+            "Recordamos que nunca se debe llamar a las emergencias en chiste."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "Gracias a los servidores públicos",
+          "steps": [
+            "Dibujá a un bombero, una médica o una maestra trabajando con alegría.",
+            "Escribí un mensaje de agradecimiento por su labor diaria."
+          ],
+          "draw": "Dibujá a una persona que trabaja en una institución comunitaria.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo nombrar las instituciones esenciales de mi comunidad.",
+        "Puedo saber a qué número llamar en caso de emergencia real.",
+        "Puedo valorar el trabajo voluntario de los bomberos y médicos."
+      ]
+    }
+  ],
+  "23018": [
+    {
+      "title": "Acuerdos para vivir en armonía",
+      "purpose": "Acompañen al estudiante a reflexionar sobre la importancia de las normas, el diálogo y el respeto mutuo en el aula y en el hogar.",
+      "blocks": [
+        {
+          "kind": "converso",
+          "title": "Nuestras reglas en casa",
+          "steps": [
+            "Nos sentamos en familia a conversar sobre qué reglas nos ayudan a no discutir.",
+            "Hablamos de qué hacemos cuando nos enojamos: respirar hondo, no gritar y explicar lo que nos molestó.",
+            "Elegimos tres acuerdos importantes para cumplir entre todos esta semana."
+          ]
+        },
+        {
+          "kind": "juego",
+          "title": "Las palabras mágicas",
+          "steps": [
+            "Durante todo el día jugamos a sumar puntos cada vez que decimos espontáneamente: 'por favor', 'muchas gracias', 'permiso' o 'disculpame'.",
+            "A la noche contamos los puntos de la familia y celebramos la buena convivencia con un abrazo."
+          ]
+        },
+        {
+          "kind": "creo",
+          "title": "El cartel de la convivencia",
+          "steps": [
+            "Escribí en letra clara dos acuerdos de tu hogar.",
+            "Decorá el borde con dibujos de manos unidas y sonrisas."
+          ],
+          "draw": "Dibujá a dos amigos resolviendo un problema con un apretón de manos.",
+          "lines": 2
+        }
+      ],
+      "selfCheck": [
+        "Puedo proponer acuerdos para convivir mejor en el aula y en casa.",
+        "Puedo pedir disculpas cuando me equivoco o lastimo sin querer a alguien.",
+        "Puedo usar el diálogo tranquilo para resolver un enojo."
+      ]
+    }
+  ]
+}

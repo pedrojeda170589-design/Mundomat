@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { StudentProgress } from "@/types";
 import SkillReport from "./SkillReport";
 
-// Carga el avance del alumno (habilidades de 1.º) y muestra el informe.
-export default function SkillReportByCode({ code }: { code: string }) {
+// Carga el avance del alumno (habilidades de 1.º o 2.º) y muestra el informe.
+export default function SkillReportByCode({ code, grade = 1 }: { code: string; grade?: number }) {
   const [progress, setProgress] = useState<StudentProgress | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
@@ -24,5 +24,5 @@ export default function SkillReportByCode({ code }: { code: string }) {
   }, [code]);
   if (failed) return <p className="text-sm opacity-70">No se pudo cargar el avance por habilidad.</p>;
   if (!progress) return <p className="text-sm opacity-70">Cargando…</p>;
-  return <SkillReport progress={progress} />;
+  return <SkillReport progress={progress} grade={grade} />;
 }

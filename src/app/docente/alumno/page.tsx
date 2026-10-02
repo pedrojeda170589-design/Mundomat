@@ -238,12 +238,15 @@ export default function StudentRecordPage() {
             )}
           </Panel>
 
-          {student && steps.some((st) => st.status === "active" && st.grade === 1) && (
-            <Panel>
-              <p className="font-black mb-2">📚 Habilidades de 1.º grado</p>
-              <SkillReportByCode code={student.access_code} />
-            </Panel>
-          )}
+          {student && steps.some((st) => st.status === "active" && (st.grade === 1 || st.grade === 2)) && (() => {
+            const activeGrade = steps.find((st) => st.status === "active" && (st.grade === 1 || st.grade === 2))?.grade ?? 1;
+            return (
+              <Panel>
+                <p className="font-black mb-2">📚 Habilidades de {activeGrade}.º grado</p>
+                <SkillReportByCode code={student.access_code} grade={activeGrade} />
+              </Panel>
+            );
+          })()}
 
           <Panel>
             <p className="font-black mb-1">🎯 Fortalezas y aspectos a reforzar {skills.year ? `(${skills.year})` : ""}</p>

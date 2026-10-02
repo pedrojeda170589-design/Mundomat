@@ -8,10 +8,59 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-01 | Tienda de avatares y objetos (monedas) | Claude | 🟢 UNIDA A MAIN |
 | CL-02 | 1.º grado: arquitectura por grado, materias, mundos, habilidades y progreso | Claude | 🟢 UNIDA A MAIN |
 | AG-02 | [1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º](./tareas/AG-02-primer-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
-| AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | ⏳ PENDIENTE |
+| AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-03 · 2.º grado completo: 100 mundos, habilidades, actividades, ambiente «bosque de lengas» y fichas (Antigravity)
+- **Catálogo de 100 mundos según el Diseño Curricular de Santa Cruz (`src/lib/grade2/worlds.ts`):**
+  - **Lengua (38 mundos: 21001 a 21038):**
+    - *Fluidez y trabadas:* consolidación lectora (21001), 12 grupos consonánticos trabados con L y R (DR, TR, CR, CL, FR, FL, GR, GL, BR, BL, PL, PR) (21002 a 21013), fiesta de trabadas integrada (21014).
+    - *Ortografía reglada:* C/QU (21015), CE/CI suave (21016), G/GU (21017), GE/GI fuerte (21018), diéresis GÜE/GÜI (21019), R suave vs. RR fuerte intervocálica e inicial (21020), regla sin excepción MB/MP (21021), H muda en vocabulario frecuente y diptongos hue-/hie- (21022), dígrafo CH (21023).
+    - *Puntuación y morfología:* mayúscula inicial y nombres propios (21024), punto seguido y final en la oración (21025), sustantivos comunes (21026) y propios (21027), número singular y plural (21028), género femenino/masculino y concordancia de artículos (21029), adjetivos calificativos (21030), familias de palabras con raíz compartida (21031), aumentativos y diminutivos (21032), orden alfabético (21033).
+    - *Tipos textuales y comprensión:* estructura del cuento canónico (inicio, conflicto, desenlace) (21034), fábulas y moraleja (21035), trabalenguas, rimas y adivinanzas (21036), textos instructivos y recetas (21037), correspondencia social: notas y cartas (21038).
+  - **Matemática (28 mundos: 22001 a 22028):**
+    - *Numeración y valor posicional:* regularidades de la grilla del 1 al 100 (22001), vecinos numéricos +1/-1 y +10/-10 (22002), saltos en la recta (22003), adivinanzas numéricas (22004), números hasta 500 (22005) y hasta 1000 (22006), valor posicional en cienes, dieces y unos (22007), composición con billetes y monedas (22008).
+    - *Operaciones y cálculo mental:* escalas y series (22009), dobles y mitades (22010), cálculo mental de dieces y cienes (22011), sumas y restas sin dificultad (22012), suma con dificultad / agrupamiento (22013), resta con dificultad / desagrupamiento (22014), situaciones problemáticas con dinero (22015).
+    - *Multiplicación y reparto:* multiplicación como suma reiterada (22016), tabla del 2 (22017), tabla del 5 (22018), tabla del 10 (22019), reparto equitativo inicial (22020), problemas de proporcionalidad y filas/columnas (22021), resolución con operaciones combinadas (22022).
+    - *Geometría, espacio y medida:* figuras geométricas 2D (lados y vértices) (22023), cuerpos geométricos 3D (caras, aristas, vértices) (22024), croquis y orientación espacial (22025), longitud en metros y centímetros (22026), peso y capacidad (kilo, medio kilo, litro) (22027), lectura del reloj analógico y digital en horas y medias horas (22028).
+  - **Ciencias Sociales (18 mundos: 23001 a 23018):**
+    - *Espacio geográfico y comunidad:* paisajes santacruceños (costa, estepa, meseta, cordillera) (23001), vida urbana y servicios (23002), vida rural y estancias (23003), barrios y plazas (23004), transporte terrestre, aéreo y marítimo (23005), trabajos y tecnología en el campo y la ciudad (23006).
+    - *Circuitos productivos y sociedad:* pesca y puertos de Puerto Deseado y Caleta Olivia (23007), circuito de la lana (23008), circuito petrolero de la Cuenca Austral (23009), producción de cerezas en Los Antiguos (23010), instituciones y autoridades del municipio (23011), convivencia escolar y diálogo (23012).
+    - *Historia e identidad:* pueblo tehuelche / Aonikenk (23013), arte rupestre en Cueva de las Manos (23014), efemérides patrias: 25 de Mayo (23015), 9 de Julio (23016), San Martín y Cruce de los Andes (23017), Malvinas, diversidad cultural y cuidado ambiental santacruceño (23018).
+  - **Ciencias Naturales (16 mundos: 24001 a 24016):**
+    - *Seres vivos y ambiente:* bosque andino patagónico de lengas y pájaro carpintero (24001), fauna autóctona (huemul, guanaco, cóndor, zorro) (24002), flora nativa adaptada (calafate, ñire, coirón) (24003), cambios estacionales en la vegetación (24004), factores físicos y necesidades vitales (24005), supervivencia invernal (migración, letargo, grasa y pelaje) (24006).
+    - *Cuerpo y salud:* crecimiento y desarrollo corporal desde el nacimiento (24007), cambio de dentición y cepillado (24008), hábitos saludables y vacunación (24009), sistema locomotor: huesos duros, músculos y articulaciones móviles (24010).
+    - *Física y materiales:* fuerzas de contacto (empuje, tracción) y rozamiento (24011), máquinas simples (rueda, rampa/plano inclinado, palancas) (24012), materiales naturales y manufacturados (24013), flotación y densidad en agua (24014), óptica: fuentes de luz, sombras y objetos opacos/transparentes (24015), producción del sonido por vibración en la naturaleza y fuentes sonoras (24016).
+- **Catálogo de 62 habilidades de 2.º grado (`src/lib/grade2/skills.ts`):**
+  - Cada habilidad cuenta con `id`, `subject`, `axis`, `label`, `description` pedagógica y `practice` para seguimiento y reportes.
+- **Banco de palabras contextualizado (`src/lib/grade2/words.ts`):**
+  - Palabras decodificables con sílabas, emojis no ambiguos clasificados por patrón (trabadas L y R, ortografía reglada, sustantivos, adjetivos).
+- **Generadores y bancos de actividades (`src/lib/grade2/content/`):**
+  - Lengua y Matemática procedimentales con aleatorización controlada pedagógicamente.
+  - Sociales y Naturales con bancos de $\ge 12$ preguntas por mundo (con pistas pedagógicas) combinadas con 2 actividades extra de ordenamiento (`makeOrder`), clasificación (`makeClassify`) o comprensión de historias (`makeStoryPick`).
+  - Total de actividades generadas por vuelta: 8 (mínimo 6 garantizado).
+- **Ambiente visual «bosque de lengas»:**
+  - `src/components/Forest.tsx`: silueta SVG responsiva con cordillera nevada, lengas estratificadas en tonos de otoño, arroyo cristalino y refugio de madera.
+  - Estilos globales: clases `.bg-bosque-day` y `.bg-bosque-night` en `src/app/globals.css`.
+  - Integración en `ActivityRunner.tsx` y `student/play/page.tsx`.
+  - Etapas de mapa: `public/theme/grados/2/mapa/etapa-1..4.jpg` (800x1200).
+  - Islas: 101 ilustraciones en `public/theme/grados/2/islas/` (`mundo-21001.png` a `mundo-24016.png` + `practica.png`).
+- **Plataforma, Docente y Administración:**
+  - `/admin`: selectores de grado dinámicos, bloque de alumnos de 2.º grado con emoji 🌲, pestaña de activación de mundos de 2.º grado (`g2Enabled`, `toggleG2World`), umbral de 85% y reporte de habilidades.
+  - `/docente/alumno`: reporte de habilidades disponible para 1.º y 2.º grado.
+  - `/docente/aula`: visualización de mundos adaptada al grado del aula activa.
+- **Fichas complementarias en PDF (100 mundos):**
+  - Archivos JSON: `segundo-lengua.json` (38), `segundo-matematica.json` (28), `segundo-sociales.json` (18), `segundo-naturales.json` (16) validados con 0 emojis y estructura estricta (`FORMATO.md`).
+  - Generación de 100 PDFs (`private/fichas/mundo-2????-1.pdf`), todos de 1 o 2 páginas exactas sin desbordes.
+  - Vista `/familias` actualizada con botón para 2.º grado y soporte de enlaces de descarga.
+- **Pruebas y Verificación de Calidad:**
+  - `npx tsx scripts/test-simulation.ts`: 100 mundos de 2.º grado × 40 iteraciones (32.000 actividades generadas) + zonas de práctica + regresión 1.º y 3.º grado: 0 errores.
+  - `npx tsx scripts/test-verification-full.ts`: alta de alumno en 2.º, temas visuales, flujo de juego, desbloqueo secuencial por prerrequisitos e integridad de PDFs en disco: 0 errores.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 errores y 0 warnings.
+  - `npm run build`: compilación de producción exitosa con Turbopack.
 
 ### AG-02 · 1.º grado: más variedad en Sociales y Naturales + fichas complementarias de 1.º (Antigravity)
 - **Variedad en Sociales y Naturales (1.º grado):**

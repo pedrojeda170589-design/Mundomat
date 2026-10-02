@@ -84,6 +84,20 @@ def world_names():
                     n = int(m.group(1))
                     name = m.group(2)
                     out[base + n] = (name, subj)
+
+    g2_path = os.path.join(ROOT, "src", "lib", "grade2", "worlds.ts")
+    if os.path.exists(g2_path):
+        g2_src = open(g2_path, encoding="utf-8").read()
+        bases2 = {"lengua": 21000, "matematica": 22000, "sociales": 23000, "naturales": 24000}
+        for subj, base in bases2.items():
+            pattern = rf'build\("{subj}",\s*\[(.*?)\]\);'
+            block_match = re.search(pattern, g2_src, re.DOTALL)
+            if block_match:
+                block = block_match.group(1)
+                for m in re.finditer(r'\{\s*n:\s*(\d+),\s*name:\s*"([^"]+)"', block):
+                    n = int(m.group(1))
+                    name = m.group(2)
+                    out[base + n] = (name, subj)
     return out
 
 
@@ -367,6 +381,19 @@ def main():
         p1 = os.path.join(HERE, f"primero-{subject}.json")
         if os.path.exists(p1):
             data = json.load(open(p1, encoding="utf-8"))
+            for wid_s, versions in data.items():
+                wid = int(wid_s)
+                name, subj = names[wid]
+                assert subj == subject, (wid, subj, subject)
+                for v, ficha in enumerate(versions, 1):
+                    path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
+                    pages[(wid, v)] = Sheet(path, wid, name, subject, v, ficha).build()
+                    made += 1
+
+        # 2.º grado
+        p2 = os.path.join(HERE, f"segundo-{subject}.json")
+        if os.path.exists(p2):
+            data = json.load(open(p2, encoding="utf-8"))
             for wid_s, versions in data.items():
                 wid = int(wid_s)
                 name, subj = names[wid]

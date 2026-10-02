@@ -1,5 +1,6 @@
 import { WorldDef } from "@/types";
 import { buildGrade1Activities } from "@/lib/grade1/content";
+import { buildGrade2Activities } from "@/lib/grade2/content";
 
 export type ShapeKind = "circulo" | "cuadrado" | "rectangulo" | "triangulo";
 
@@ -6823,6 +6824,7 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
 
 export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
   if (world.grade === 1) return buildGrade1Activities(world);
+  if (world.grade === 2) return buildGrade2Activities(world);
   switch (world.category) {
     case "numeros":
       return buildNumerosActivities();
