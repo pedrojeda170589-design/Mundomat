@@ -81,4 +81,4 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 ### CL-03 · Ambientes por grado, imágenes de 1.º y Halloween (Claude)
 - `GradeTheme` en `src/lib/grades.ts`: cada grado define su isla, su mapa (4 etapas), su silueta de fondo y sus colores. 1.º = **costa patagónica** (`public/theme/grados/1/`), 3.º = meseta y montaña (lo de siempre). Plan del recorrido: 1.º costa · 2.º bosque de lengas · 3.º meseta y montaña · 4.º glaciares · 5.º a 7.º estepa, lagos y cielo austral.
 - 97 islas de 1.º (una por mundo + zona de práctica) y 4 fondos de mapa; silueta `Seashore.tsx`.
-- Halloween: festividad del 24/10 al 2/11 y 6 avatares de temporada en la tienda (solo se compran durante Halloween; lo comprado queda).
+- Halloween: festividad del 1/10 al 2/11 y 7 avatares de temporada en la tienda a 200 monedas cada uno (calabaza, fantasmita, brujita, vampirito, gato negro, murcielaguito y ratita); solo se compran durante la temporada y lo comprado queda.

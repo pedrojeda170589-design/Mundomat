@@ -200,7 +200,7 @@ export default function ShopModal({
           {tab === "avatares" && (
             <>
               {seasonal.length > 0 && (
-                <p className="text-xs font-bold text-orange-300 mb-2">🎃 ¡Temporada de Halloween! Estos avatares están por pocos días.</p>
+                <p className="text-xs font-bold text-orange-300 mb-2">🎃 ¡Temporada de Halloween! Estos avatares se pueden comprar hasta el 2 de noviembre.</p>
               )}
               <ul className="grid grid-cols-3 gap-2">{[...seasonal, ...SHOP_AVATARS.filter((a) => !a.season)].map(avatarCard)}</ul>
             </>

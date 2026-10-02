@@ -145,6 +145,7 @@ export const AVATAR_OPTIONS: string[] = [
   "vampirito",
   "gato-negro",
   "murcielago",
+  "ratita",
 ];
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
@@ -178,6 +179,7 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   vampirito: { label: "Vampirito", emoji: "🧛" },
   "gato-negro": { label: "Gato negro", emoji: "🐈‍⬛" },
   murcielago: { label: "Murcielaguito", emoji: "🦇" },
+  ratita: { label: "Ratita", emoji: "🐀" },
 };
 
 // --- Tienda ---
@@ -200,12 +202,13 @@ export const SHOP_AVATARS: ShopAvatar[] = [
   { id: "belgrano", price: 220, category: "proceres", blurb: "Creador de la Bandera argentina." },
   { id: "juana-azurduy", price: 230, category: "proceres", blurb: "Heroína de la independencia." },
   { id: "san-martin", price: 250, category: "proceres", blurb: "Libertador de Argentina, Chile y Perú." },
-  { id: "calabaza", price: 120, category: "halloween", season: "halloween", blurb: "Una calabaza sonriente con sombrerito." },
-  { id: "fantasmita", price: 120, category: "halloween", season: "halloween", blurb: "Un fantasma bueno que da abrazos." },
-  { id: "brujita", price: 140, category: "halloween", season: "halloween", blurb: "Hace pociones de colores… ¡y de matemática!" },
-  { id: "vampirito", price: 140, category: "halloween", season: "halloween", blurb: "Un vampiro simpático que solo toma jugo." },
-  { id: "gato-negro", price: 130, category: "halloween", season: "halloween", blurb: "Un gatito negro muy curioso." },
-  { id: "murcielago", price: 130, category: "halloween", season: "halloween", blurb: "Un murcielaguito que duerme cabeza abajo." },
+  { id: "calabaza", price: 200, category: "halloween", season: "halloween", blurb: "Una calabaza sonriente con bufanda verde." },
+  { id: "fantasmita", price: 200, category: "halloween", season: "halloween", blurb: "Un fantasma bueno que da abrazos." },
+  { id: "brujita", price: 200, category: "halloween", season: "halloween", blurb: "Hace pociones de colores… ¡y de matemática!" },
+  { id: "vampirito", price: 200, category: "halloween", season: "halloween", blurb: "Un vampiro simpático que solo toma jugo." },
+  { id: "gato-negro", price: 200, category: "halloween", season: "halloween", blurb: "Un gatito negro muy curioso." },
+  { id: "murcielago", price: 200, category: "halloween", season: "halloween", blurb: "Un murcielaguito que duerme cabeza abajo." },
+  { id: "ratita", price: 200, category: "halloween", season: "halloween", blurb: "Una ratita curiosa con bufanda de Halloween." },
 ];
 
 export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
