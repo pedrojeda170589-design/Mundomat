@@ -5,6 +5,7 @@
 import type { ActivityCard, ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
 import {
+  makeOrder,
   numberChoices,
   numberWord,
   numbered,
@@ -910,5 +911,97 @@ export function buildMatematicaActivities(world: WorldDef): ActivitySpec[] {
   }
 
   const count = world.activityCount ?? 8;
-  return numbered(acts.slice(0, count));
+  const sliced = acts.slice(0, count);
+
+  const varied: ActivitySpec[] = sliced.map((act, i) => {
+    if (act.type !== "pick") return act;
+
+    // Actividad 3 (índice 2): intercalar input numérico o true-false
+    if (i === 2) {
+      const ansId = act.answerIds[0];
+      const isNum = typeof ansId === "string" && /^-?\d+$/.test(ansId);
+      if (isNum) {
+        return {
+          type: "input" as const,
+          id: act.id,
+          title: "",
+          prompt: `${act.prompt.trim().replace(/\?$/, "")}. Escribí el número:`,
+          answer: parseInt(ansId, 10),
+          hint: act.hint,
+          skills: act.skills,
+        };
+      }
+      const card = act.cards.find((c) => act.answerIds.includes(c.id));
+      const label = card?.label || card?.big || card?.id || "";
+      return {
+        type: "true-false" as const,
+        id: act.id,
+        title: "",
+        statement: `En la consigna: "${act.prompt}", ¿la respuesta correcta es "${label}"?`,
+        isTrue: true,
+        hint: act.hint,
+        skills: act.skills,
+      };
+    }
+
+    // Actividad 6 (índice 5): intercalar order o true-false
+    if (i === 5) {
+      if (n === 4) {
+        const nums = [randInt(100, 199), randInt(200, 299), randInt(300, 399), randInt(400, 499)];
+        return makeOrder(
+          act.id,
+          "Ordená los números de menor a mayor:",
+          nums.map(String),
+          "Pista: mirá primero la cifra de los cienes.",
+          act.skills ?? ["m2-numeros-500"]
+        );
+      }
+      if (n === 8) {
+        const base = randInt(1, 5) * 100;
+        const seq = [base, base + 100, base + 200, base + 300].map(String);
+        return makeOrder(
+          act.id,
+          "Ordená la escala de 100 en 100 de menor a mayor:",
+          seq,
+          "Pista: avanzá sumando 100 cada vez.",
+          act.skills ?? ["m2-escalas"]
+        );
+      }
+
+      const ansId = act.answerIds[0];
+      const isNum = typeof ansId === "string" && /^-?\d+$/.test(ansId);
+      const isTrue = n % 2 !== 0;
+      if (isNum) {
+        const numAns = parseInt(ansId, 10);
+        const stated = isTrue ? numAns : numAns + (numAns > 10 ? 10 : 2);
+        return {
+          type: "true-false" as const,
+          id: act.id,
+          title: "",
+          statement: `En la consigna: "${act.prompt}", ¿el resultado es ${stated}?`,
+          isTrue,
+          hint: act.hint,
+          skills: act.skills,
+        };
+      }
+
+      const correctCard = act.cards.find((c) => act.answerIds.includes(c.id));
+      const wrongCard = act.cards.find((c) => !act.answerIds.includes(c.id));
+      const chosen = isTrue ? correctCard : (wrongCard || correctCard);
+      const label = chosen?.label || chosen?.big || chosen?.id || "";
+      return {
+        type: "true-false" as const,
+        id: act.id,
+        title: "",
+        statement: `En la consigna: "${act.prompt}", ¿la respuesta correcta es "${label}"?`,
+        isTrue,
+        hint: act.hint,
+        skills: act.skills,
+      };
+    }
+
+    return act;
+  });
+
+  return numbered(varied);
 }

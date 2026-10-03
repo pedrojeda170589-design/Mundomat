@@ -84,7 +84,17 @@ export default function FichasView() {
                     id={`mundo-${w.id}`}
                     className="flex items-center gap-3 rounded-xl bg-white/60 border border-amber-700/20 px-3 py-2 scroll-mt-4 target:ring-4 target:ring-sky-400"
                   >
-                    {w.grade === 1 ? (
+                    {w.image ? (
+                      <span className="relative w-12 h-12 shrink-0">
+                        <Image
+                          src={w.image}
+                          alt=""
+                          fill
+                          sizes="48px"
+                          className="object-contain"
+                        />
+                      </span>
+                    ) : w.grade === 1 ? (
                       <span
                         className="relative w-12 h-12 shrink-0 flex items-center justify-center rounded-full border-2 border-white/80 shadow text-2xl"
                         style={{

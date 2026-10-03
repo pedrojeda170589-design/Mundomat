@@ -11,12 +11,40 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-03 | [2.º grado completo (mundos, actividades, habilidades, ambiente «bosque de lengas» e imágenes, fichas)](./tareas/AG-03-segundo-grado.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
-| AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | ⏳ PENDIENTE |
+| AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🟢 UNIDA A MAIN (falta conectar Supabase: ver docs/plataforma/CONFIGURAR.md) |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-04 · Comprensión lectora 2.º y 3.º, fichas de cuentos y variedad en 2.º (Antigravity)
+- **Preguntas de comprensión lectora por grado:**
+  - `src/lib/cuentos/preguntas-g2.ts`: 19 cuentos y leyendas de `ORDEN_G2`. 8 preguntas por cuento con distribución curricular: 2 literales, 2 de secuencia temporal, 2 inferenciales, 1 de vocabulario en contexto (extraído del texto) y 1 de estructura o valoración (identificación de género, moraleja, enseñanza). Opciones de 3 y 4 alternativas (al menos 3 con 4 opciones por cuento). Pistas formuladas con `"Pista: "` y distractores plausibles del relato.
+  - `src/lib/cuentos/preguntas-g3.ts`: 6 cuentos de `ORDEN_G3`. 10 preguntas por cuento, estrictamente 4 opciones por pregunta. Distribución curricular: 2 literales, 2 de secuencia, 3 inferenciales, 1 de vocabulario, 1 de estructura y 1 de valoración. Incorpora causa-consecuencia, comparación y evolución de personajes, y preguntas basadas en evidencia («¿Qué parte del texto muestra que...?»).
+  - Script de validación `scripts/test-cuentos.ts`: verificación automática de los tres grados (1.º, 2.º y 3.º) validando cantidad de preguntas, distribución tipológica, número de opciones, pistas y generación vía `buildStoryActivities` con 0 errores.
+- **Fichas complementarias de cuentos en PDF (44 mundos):**
+  - Módulo de contenido `scripts/fichas/data_cuentos.py`: consignas adaptadas al nivel de cada grado según `FORMATO.md` (1.º dibujo y conversación guiada, 2.º escritura breve y secuencia, 3.º análisis crítico y microrrelato), sin emojis en el texto impreso.
+  - Generador `scripts/fichas/generar_fichas.py` con `STORY_MAP`: mapeo de imágenes de islas de cuentos para 1.º, 2.º y 3.º grado.
+  - 44 fichas generadas en `private/fichas/` (`mundo-11101-1.pdf`..`11119-1.pdf`, `mundo-21101-1.pdf`..`21119-1.pdf`, `mundo-31101-1.pdf`..`31106-1.pdf`), todas de 1 o 2 páginas exactas (sin desbordes ni páginas en blanco).
+  - En `/familias` (`src/app/familias/FichasView.tsx`), las tarjetas de fichas de cuentos visualizan la miniatura de la isla correspondiente (`w.image`).
+- **Variedad en Matemática y Lengua de 2.º grado (seguimiento AG-03):**
+  - Matemática (`src/lib/grade2/content/matematica.ts`): en la actividad 3 se intercalan consignas de tipo `input` numérico (o `true-false` en geometría no numérica) y en la actividad 6 consignas de `order` (mundos 4 y 8) o `true-false`, logrando que en los 28 mundos la racha máxima consecutiva de un mismo tipo sea de 2 (estrictamente ≤ 3).
+  - Lengua (`src/lib/grade2/content/lengua.ts`):
+    - Mundo 1: intercalado de `true-false` en actividades 3 y 6.
+    - Mundos 2 a 13 (trabadas): intercalado de armado de palabras con fichas móviles (`build`) en actividades 3 y 6.
+    - Mundo 14 (fiesta de trabadas): combinación de `classify`, `true-false`, `order` y `pick`.
+    - Mundos 15 a 38 (ortografía y gramática): intercalado de `true-false` en actividades 3 y 6.
+    - Los 38 mundos de Lengua tienen racha máxima consecutiva ≤ 2.
+  - Corrección de emojis y distractores:
+    - En `src/lib/grade2/words.ts`, reemplazo de `madre` (👩) y `ladrón` (🦹) por `ladrillo` (🧱) y `almendra` (🌰) para el patrón `dr`.
+    - En `src/lib/grade2/content/lengua.ts`, reemplazo de distractores inverosímiles en mundos 14, 34, 35, 37 y 38 por alternativas pedagógicas plausibles.
+- **Control de calidad y pruebas:**
+  - `npx tsx scripts/test-cuentos.ts`: 100% aprobado.
+  - `npx tsx scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 fallos.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias o errores de linter.
+  - `npm run build`: compilación de producción exitosa con Next.js Turbopack.
 
 ### AG-03 · 2.º grado completo: 100 mundos, habilidades, actividades, ambiente «bosque de lengas» y fichas (Antigravity)
 - **Catálogo de 100 mundos según el Diseño Curricular de Santa Cruz (`src/lib/grade2/worlds.ts`):**

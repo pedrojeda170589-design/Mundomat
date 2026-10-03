@@ -27,8 +27,70 @@ OUT = os.path.join(ROOT, "private", "fichas")
 ISLANDS = os.path.join(ROOT, "public", "theme", "islands")
 
 
+STORY_MAP = {
+    # 1.º grado (11101 - 11119)
+    11101: ("tres-chanchitos", "Cuento: Los tres chanchitos", 1),
+    11102: ("leyenda-calafate", "Leyenda: La leyenda del calafate", 1),
+    11103: ("liebre-tortuga", "Fábula: La liebre y la tortuga", 1),
+    11104: ("gallinita-roja", "Cuento: La gallinita roja", 1),
+    11105: ("leyenda-hornero", "Leyenda: La leyenda del hornero", 1),
+    11106: ("leon-raton", "Fábula: El león y el ratón", 1),
+    11107: ("ricitos-osos", "Cuento: Ricitos de Oro y los tres osos", 1),
+    11108: ("leyenda-yerba-mate", "Leyenda: La leyenda de la yerba mate", 1),
+    11109: ("zorro-cuervo", "Fábula: El zorro y el cuervo", 1),
+    11110: ("caperucita", "Cuento: Caperucita Roja", 1),
+    11111: ("leyenda-siete-colores", "Leyenda: El Cerro de los Siete Colores", 1),
+    11112: ("cigarra-hormiga", "Fábula: La cigarra y la hormiga", 1),
+    11113: ("patito-feo", "Cuento: El patito feo", 1),
+    11114: ("leyenda-koonch", "Leyenda: Kóoch y el origen del mundo", 1),
+    11115: ("pastorcito-mentiroso", "Fábula: El pastorcito mentiroso", 1),
+    11116: ("musicos-bremen", "Cuento: Los músicos de Bremen", 1),
+    11117: ("leyenda-elal", "Leyenda: La leyenda de Elal", 1),
+    11118: ("raton-campo-ciudad", "Fábula: El ratón de campo y el ratón de ciudad", 1),
+    11119: ("juan-porotos", "Cuento: Juan y los porotos mágicos", 1),
+
+    # 2.º grado (21101 - 21119)
+    21101: ("caperucita", "Cuento: Caperucita Roja", 2),
+    21102: ("leyenda-koonch", "Leyenda: Kóoch y el origen del mundo", 2),
+    21103: ("leon-raton", "Fábula: El león y el ratón", 2),
+    21104: ("patito-feo", "Cuento: El patito feo", 2),
+    21105: ("leyenda-hornero", "Leyenda: La leyenda del hornero", 2),
+    21106: ("zorro-cuervo", "Fábula: El zorro y el cuervo", 2),
+    21107: ("musicos-bremen", "Cuento: Los músicos de Bremen", 2),
+    21108: ("leyenda-calafate", "Leyenda: La leyenda del calafate", 2),
+    21109: ("cigarra-hormiga", "Fábula: La cigarra y la hormiga", 2),
+    21110: ("juan-porotos", "Cuento: Juan y los porotos mágicos", 2),
+    21111: ("leyenda-yerba-mate", "Leyenda: La leyenda de la yerba mate", 2),
+    21112: ("pastorcito-mentiroso", "Fábula: El pastorcito mentiroso", 2),
+    21113: ("traje-emperador", "Cuento: El traje nuevo del emperador", 2),
+    21114: ("leyenda-siete-colores", "Leyenda: El Cerro de los Siete Colores", 2),
+    21115: ("raton-campo-ciudad", "Fábula: El ratón de campo y el ratón de ciudad", 2),
+    21116: ("medias-flamencos", "Cuento: Las medias de los flamencos", 2),
+    21117: ("leyenda-elal", "Leyenda: La leyenda de Elal", 2),
+    21118: ("gallina-huevos-oro", "Fábula: La gallina de los huevos de oro", 2),
+    21119: ("tortuga-gigante", "Cuento: La tortuga gigante", 2),
+
+    # 3.º grado (31101 - 31106)
+    31101: ("tortuga-gigante", "Cuento: La tortuga gigante", 3),
+    31102: ("leyenda-ballena", "Leyenda: Cómo llegó la ballena al mar", 3),
+    31103: ("gallina-huevos-oro", "Fábula: La gallina de los huevos de oro", 3),
+    31104: ("medias-flamencos", "Cuento: Las medias de los flamencos", 3),
+    31105: ("leyenda-iguazu", "Leyenda: La leyenda de las Cataratas del Iguazú", 3),
+    31106: ("raton-campo-ciudad", "Fábula: El ratón de campo y el ratón de ciudad", 3),
+}
+
+
 def island_path(wid):
     """Isla del mundo según su grado (1.º: 11001+, 2.º: 21001+…; 3.º: 1–47)."""
+    if wid in STORY_MAP:
+        story_id, _, grade = STORY_MAP[wid]
+        if grade == 1:
+            return os.path.join(ROOT, "public", "theme", "grados", "1", "islas", f"cuento-{story_id}.png")
+        elif grade == 2:
+            return os.path.join(ROOT, "public", "theme", "grados", "2", "islas", f"cuento-{story_id}.png")
+        else:
+            return os.path.join(ISLANDS, f"cuento-{story_id}.png")
+
     if wid >= 10000:
         return os.path.join(ROOT, "public", "theme", "grados", str(wid // 10000), "islas", f"mundo-{wid}.png")
     return os.path.join(ISLANDS, f"mundo-{wid}.png")
@@ -98,6 +160,10 @@ def world_names():
                     n = int(m.group(1))
                     name = m.group(2)
                     out[base + n] = (name, subj)
+
+    for wid, (_, name, _) in STORY_MAP.items():
+        out[wid] = (name, "lengua")
+
     return out
 
 
@@ -402,6 +468,16 @@ def main():
                     path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
                     pages[(wid, v)] = Sheet(path, wid, name, subject, v, ficha).build()
                     made += 1
+
+    # Mundos de cuentos complementarios (1.º: 11101-11119, 2.º: 21101-21119, 3.º: 31101-31106)
+    from data_cuentos import CUENTOS_FICHAS
+    for wid_s, versions in CUENTOS_FICHAS.items():
+        wid = int(wid_s)
+        name, subj = names[wid]
+        for v, ficha in enumerate(versions, 1):
+            path = os.path.join(OUT, f"mundo-{wid}-{v}.pdf")
+            pages[(wid, v)] = Sheet(path, wid, name, subj, v, ficha).build()
+            made += 1
 
     print(f"{made} fichas generadas en {OUT}")
     print("hojas por ficha:", sorted(set(pages.values())), "· más largas:", [k for k, p in pages.items() if p > 2])

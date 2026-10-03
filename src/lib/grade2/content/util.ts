@@ -207,3 +207,40 @@ export function makeMultiPick(
     skills
   );
 }
+
+export function makeTrueFalse(
+  id: string,
+  statement: string,
+  isTrue: boolean,
+  hint: string,
+  skills?: string[]
+): ActivitySpec {
+  return {
+    type: "true-false",
+    id,
+    title: "Actividad",
+    statement,
+    isTrue,
+    hint: hint.startsWith("Pista:") ? hint : `Pista: ${hint}`,
+    skills,
+  };
+}
+
+export function makeInput(
+  id: string,
+  prompt: string,
+  answer: number,
+  hint: string,
+  skills?: string[]
+): ActivitySpec {
+  return {
+    type: "input",
+    id,
+    title: "Actividad",
+    prompt,
+    answer,
+    hint: hint.startsWith("Pista:") ? hint : `Pista: ${hint}`,
+    skills,
+  };
+}
+

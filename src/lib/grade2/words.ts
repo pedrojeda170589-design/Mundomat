@@ -16,8 +16,8 @@ const RAW: [string, string, string?][] = [
   ["pie-dra", "🪨", "dr"],
   ["cua-dro", "🖼️", "dr"],
   ["co-co-dri-lo", "🐊", "dr"],
-  ["ma-dre", "👩", "dr"],
-  ["la-drón", "🦹", "dr"],
+  ["la-dri-llo", "🧱", "dr"],
+  ["al-men-dra", "🌰", "dr"],
 
   // --- Trabadas TR ---
   ["tren", "🚂", "tr"],

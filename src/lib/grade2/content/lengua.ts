@@ -7,6 +7,7 @@ import { WorldDef } from "@/types";
 import { GRADE2_WORDS, WordDef2, getWordsByPattern } from "../words";
 import {
   makeClassify,
+  makeOrder,
   numbered,
   pickOne,
   plain,
@@ -144,7 +145,7 @@ function buildTrabadaWorld(world: WorldDef, pattern: string): ActivitySpec[] {
     skills,
   });
 
-  return acts;
+  return [acts[0], acts[1], acts[4], acts[2], acts[3], acts[5], acts[6], acts[7]];
 }
 
 // --------------------------------------------------------------------------
@@ -161,17 +162,41 @@ function buildMundo1(skills: string[]): ActivitySpec[] {
     { text: "El panadero saca el pan caliente del horno.", ans: "🥖", options: [["🥖", "Pan fresco"], ["🥛", "Vaso de leche"], ["🪁", "Barrilete volando"]], hint: "Pista: el panadero hornea el pan caliente." },
     { text: "El barco pesquero regresa cargado al puerto.", ans: "🚢", options: [["🚢", "Barco en el puerto"], ["🚁", "Helicóptero volando"], ["🏠", "Casa con chimenea"]], hint: "Pista: el barco navega y atraca en el muelle." },
   ];
-  return sentences.map((s, i) => ({
-    type: "pick",
-    id: `l1-${i}`,
-    title: "",
-    prompt: `Leé la oración: "${s.text}" ¿Cuál es el dibujo correcto?`,
-    say: s.text,
-    cards: shuffle(s.options.map(([emoji, label]) => ({ id: emoji, emoji, label }))),
-    answerIds: [s.ans],
-    hint: s.hint,
-    skills,
-  }));
+  return sentences.map((s, i) => {
+    if (i === 2) {
+      return {
+        type: "true-false",
+        id: `l1-${i}`,
+        title: "",
+        statement: `Leé: "${s.text}" ¿Es verdadero o falso que esta oración habla de esquilar ovejas?`,
+        isTrue: true,
+        hint: s.hint,
+        skills,
+      };
+    }
+    if (i === 5) {
+      return {
+        type: "true-false",
+        id: `l1-${i}`,
+        title: "",
+        statement: `Leé: "${s.text}" ¿Es verdad que la oración dice que la estrella brilla a plena luz del día?`,
+        isTrue: false,
+        hint: s.hint,
+        skills,
+      };
+    }
+    return {
+      type: "pick",
+      id: `l1-${i}`,
+      title: "",
+      prompt: `Leé la oración: "${s.text}" ¿Cuál es el dibujo correcto?`,
+      say: s.text,
+      cards: shuffle(s.options.map(([emoji, label]) => ({ id: emoji, emoji, label }))),
+      answerIds: [s.ans],
+      hint: s.hint,
+      skills,
+    };
+  });
 }
 
 // --------------------------------------------------------------------------
@@ -197,23 +222,48 @@ function buildMundo14(skills: string[]): ActivitySpec[] {
   const bank: Q[] = [
     q("¿Qué palabra tiene trabada con R?", [["🚂", "tren"], ["🌸", "clavel"], ["🎈", "globo"]], 0, "Pista: tr tiene r."),
     q("¿Qué palabra tiene trabada con L?", [["🪶", "pluma"], ["🐉", "dragón"], ["🌾", "trigo"]], 0, "Pista: pl tiene l."),
-    q("¿Qué palabra rima con 'dragón'?", [["🦹", "ladrón"], ["🌸", "clavel"], ["🚂", "tren"]], 0, "Pista: terminan con el mismo sonido -ón."),
+    q("¿Qué palabra rima con 'dragón'?", [["🦁", "león"], ["🌸", "clavel"], ["🚂", "tren"]], 0, "Pista: terminan con el mismo sonido -ón."),
     q("¿Qué dibujo corresponde a la palabra 'estrella'?", [["⭐", "estrella"], ["🌙", "luna"], ["☀️", "sol"]], 0, "Pista: brilla de noche con forma de 5 puntas."),
     q("¿Cuál de estas palabras tiene dos sílabas trabadas?", [["📐", "triángulo"], ["🚲", "bicicleta"], ["4️⃣", "cuatro"]], 0, "Pista: tri-án-gu-lo."),
     q("Armá la frase: 'El tren pasa por el...'", [["🌾", "prado"], ["🛋️", "sillón"], ["🛏️", "cama"]], 0, "Pista: el tren corre en la naturaleza."),
     q("¿Qué objeto sirve para andar sobre dos ruedas y tiene CL?", [["🚲", "bicicleta"], ["🚗", "auto"], ["✈️", "avión"]], 0, "Pista: bi-ci-cle-ta."),
   ];
 
-  return [classify, ...bank.map((item, i) => ({
-    type: "pick" as const,
-    id: `l14-${i + 1}`,
-    title: "",
-    prompt: item.prompt,
-    cards: shuffle(item.options.map(([emoji, label], idx) => ({ id: `o${idx}`, emoji, label }))),
-    answerIds: [`o${item.answer}`],
-    hint: item.hint ?? "Pista: mirá bien las letras.",
-    skills,
-  }))];
+  const pickActs: ActivitySpec[] = bank.map((item, i) => {
+    const actId = `l14-${i + 1}`;
+    if (i === 2) {
+      return {
+        type: "true-false",
+        id: actId,
+        title: "",
+        statement: "¿Es verdadero o falso que 'dragón' rima con 'león'?",
+        isTrue: true,
+        hint: "Pista: ambas palabras terminan con el mismo sonido -ón.",
+        skills,
+      };
+    }
+    if (i === 5) {
+      return makeOrder(
+        actId,
+        "Ordená las palabras para armar la frase:",
+        ["El tren", "pasa por", "el prado"],
+        "Pista: empezá con la mayúscula El tren.",
+        skills
+      );
+    }
+    return {
+      type: "pick",
+      id: actId,
+      title: "",
+      prompt: item.prompt,
+      cards: shuffle(item.options.map(([emoji, label], idx) => ({ id: `o${idx}`, emoji, label }))),
+      answerIds: [`o${item.answer}`],
+      hint: item.hint ?? "Pista: mirá bien las letras.",
+      skills,
+    };
+  });
+
+  return [classify, ...pickActs];
 }
 
 // --------------------------------------------------------------------------
@@ -535,7 +585,7 @@ const GRAMMAR_WORLDS_BANKS: Record<number, { prompt: string; qList: Q[]; skills:
       q("¿Cómo se llama la parte final donde se resuelve el problema y termina la historia?", [["🏁", "El desenlace o final (Y finalmente...)"], ["⚡", "El conflicto"], ["📖", "El prólogo"]], 0, "Pista: suele terminar con 'y colorín colorado...'."),
       q("¿Qué frase típica suele iniciar un cuento tradicional?", [["✨", "Había una vez..."], ["🏁", "Y vivieron felices"], ["⚡", "De repente se apagó la luz"]], 0, "Pista: es la fórmula clásica de inicio."),
       q("En el cuento de Caperucita Roja, ¿cuál es el nudo o problema?", [["🐺", "El lobo engaña a Caperucita y llega antes a la casa de la abuela"], ["🧺", "Caperucita sale con la canastita"], ["🏡", "Caperucita merienda con su abuela salvada"]], 0, "Pista: es la complicación que pone en peligro a los personajes."),
-      q("¿Quién es el autor o ilustrador de un cuento?", [["✍️", "El autor escribe la historia y el ilustrador hace los dibujos"], ["🧑‍🍳", "El que cocina los personajes"], ["🎭", "El actor de cine"]], 0, "Pista: sus nombres aparecen en la portada del libro."),
+      q("¿Quién es el autor o ilustrador de un cuento?", [["✍️", "El autor escribe la historia y el ilustrador hace los dibujos"], ["📚", "El bibliotecario que presta los libros"], ["🧑‍🏫", "El maestro que toma lista"]], 0, "Pista: sus nombres aparecen en la portada del libro."),
       q("¿Qué personaje suele ayudar al protagonista en los cuentos?", [["🤝", "El ayudante o amigo leal"], ["🦹", "El villano malvado"], ["🐉", "El monstruo enemigo"]], 0, "Pista: le da consejos o herramientas mágicas para resolver el nudo."),
       q("¿Por qué nos gusta escuchar y leer cuentos?", [["❤️", "Porque estimulan la imaginación, nos emocionan y nos enseñan"], ["😴", "Solo para dormirnos rápido"], ["📺", "Para no hablar con nadie"]], 0, "Pista: la literatura nos transporta a mundos mágicos."),
     ],
@@ -548,10 +598,10 @@ const GRAMMAR_WORLDS_BANKS: Record<number, { prompt: string; qList: Q[]; skills:
     qList: [
       q("¿Qué es una fábula?", [["🦊", "Una historia breve con animales que hablan y nos deja una enseñanza"], ["📰", "Una noticia del diario"], ["🧁", "Una receta de cocina"]], 0, "Pista: animales como la zorra, la liebre o la tortuga son protagonistas."),
       q("¿Cómo se llama la enseñanza que nos deja una fábula al final?", [["💡", "La moraleja"], ["🏁", "El chiste"], ["📦", "El paquete"]], 0, "Pista: nos hace reflexionar sobre nuestras actitudes y valores."),
-      q("En la fábula de 'La liebre y la tortuga', ¿por qué gana la tortuga?", [["🐢", "Porque fue constante y no se confió, mientras la liebre se durmió"], ["🐇", "Porque la tortuga tenía patines a motor"], ["🏃", "Porque la liebre se fue a otro país"]], 0, "Pista: la constancia y el esfuerzo vencen a la vanidad."),
-      q("En la fábula de 'El león y el ratón', ¿cómo ayuda el pequeño ratón al rey de la selva?", [["🐭", "Royó las cuerdas de la red con sus dientes para liberarlo"], ["🦁", "Luchó contra diez cazadores"], ["🍖", "Le cocinó un asado"]], 0, "Pista: hasta el más chiquito puede ayudar a los más grandes."),
-      q("¿Qué animales suelen protagonizar las fábulas?", [["🦊", "Animales que actúan y hablan como personas"], ["🤖", "Robots espaciales"], ["🧱", "Ladrillos de pared"]], 0, "Pista: representan virtudes o defectos humanos."),
-      q("¿Qué moraleja nos enseña no mentir como el pastorcito que gritaba '¡ahí viene el lobo!'?", [["🗣️", "Que si mentimos siempre, nadie nos creerá cuando digamos la verdad"], ["🐺", "Que los lobos son vegetarianos"], ["🐑", "Que las ovejas no tienen lana"]], 0, "Pista: la honestidad es fundamental para que confíen en nosotros."),
+      q("En la fábula de 'La liebre y la tortuga', ¿por qué gana la tortuga?", [["🐢", "Porque fue constante y no se confió, mientras la liebre se durmió"], ["🐇", "Porque la liebre corrió más despacio"], ["🏃", "Porque la liebre se distrajo por el camino"]], 0, "Pista: la constancia y el esfuerzo vencen a la vanidad."),
+      q("En la fábula de 'El león y el ratón', ¿cómo ayuda el pequeño ratón al rey de la selva?", [["🐭", "Royó las cuerdas de la red con sus dientes para liberarlo"], ["🏃", "Distrajo a los cazadores haciendo ruido"], ["🌳", "Escondió al león detrás de unas ramas"]], 0, "Pista: hasta el más chiquito puede ayudar a los más grandes."),
+      q("¿Qué animales suelen protagonizar las fábulas?", [["🦊", "Animales que actúan y hablan como personas"], ["🪐", "Planetas y estrellas del cielo"], ["🚗", "Autos y camiones de juguete"]], 0, "Pista: representan virtudes o defectos humanos."),
+      q("¿Qué moraleja nos enseña no mentir como el pastorcito que gritaba '¡ahí viene el lobo!'?", [["🗣️", "Que si mentimos siempre, nadie nos creerá cuando digamos la verdad"], ["🐺", "Que hay que gritar fuerte para asustar al lobo"], ["🏃", "Que siempre hay que correr sin mirar atrás"]], 0, "Pista: la honestidad es fundamental para que confíen en nosotros."),
       q("¿Quién fue Esopo?", [["📜", "Un famoso fabulista de la antigüedad que escribió fábulas inolvidables"], ["🧑‍✈️", "Un piloto de avión"], ["👑", "Un rey de América"]], 0, "Pista: escribió fábulas hace más de dos mil años que aún leemos."),
       q("¿Dónde suele ubicarse la moraleja en una fábula?", [["🔚", "Al final del texto como conclusión"], ["📖", "En la primera palabra"], ["🖼️", "En el marco de la foto"]], 0, "Pista: se lee al terminar la historia para recordar la enseñanza."),
     ],
@@ -585,7 +635,7 @@ const GRAMMAR_WORLDS_BANKS: Record<number, { prompt: string; qList: Q[]; skills:
       q("Si una receta dice: '1 taza de harina', ¿en qué parte está?", [["🧺", "En la lista de ingredientes"], ["🔥", "En la preparación"], ["🏁", "En el saludo final"]], 0, "Pista: es la cantidad del producto que se necesita."),
       q("¿Qué otro texto instructivo conocemos además de la receta?", [["🎮", "Las reglas de un juego de mesa o el manual para armar un juguete"], ["📜", "Un poema de amor"], ["📰", "Un cuento de hadas"]], 0, "Pista: te explica paso a paso cómo jugar o construir algo."),
       q("¿Por qué es importante respetar las cantidades indicadas en una receta?", [["⚖️", "Para que la comida quede rica y con la consistencia adecuada"], ["🎨", "Para que cambie de color"], ["💨", "Para que vuele"]], 0, "Pista: poner demasiada sal o poca harina arruina la preparación."),
-      q("¿Cuál es el primer paso antes de empezar a cocinar en la cocina?", [["🧼", "Lavarse muy bien las manos con agua y jabón"], ["🔥", "Comerse todos los ingredientes crudos"], ["🚪", "Cerrar los ojos"]], 0, "Pista: la higiene de los cocineros es fundamental."),
+      q("¿Cuál es el primer paso antes de empezar a cocinar en la cocina?", [["🧼", "Lavarse muy bien las manos con agua y jabón"], ["🍽️", "Servir la comida en los platos"], ["🧹", "Barrer la cocina al terminar"]], 0, "Pista: la higiene de los cocineros es fundamental."),
     ],
   },
 
@@ -597,7 +647,7 @@ const GRAMMAR_WORLDS_BANKS: Record<number, { prompt: string; qList: Q[]; skills:
       q("¿Cómo se llama la persona a quien le escribimos una carta o mensaje?", [["📬", "El destinatario"], ["✍️", "El remitente"], ["📦", "El cartero"]], 0, "Pista: es la persona que va a recibir la carta: 'Para...'"),
       q("¿Cómo se llama la persona que escribe y firma la carta?", [["✍️", "El remitente (o emisor)"], ["📬", "El destinatario"], ["🏤", "El empleado del correo"]], 0, "Pista: pone su nombre al final: 'Con cariño, Sofía'."),
       q("¿Qué partes tiene una carta tradicional?", [["✉️", "Lugar y fecha, saludo, cuerpo (mensaje), despedida y firma"], ["📖", "Inicio, nudo y moraleja"], ["🧁", "Ingredientes y cocción"]], 0, "Pista: empieza con la fecha y quién la recibe, y termina con la firma."),
-      q("¿Qué mensaje breve dejamos pegado en la heladera para avisar algo rápido?", [["📝", "Una nota o esquela"], ["📚", "Una enciclopedia entera"], ["📜", "Un poema de diez páginas"]], 0, "Pista: 'Fui al almacén, vuelvo en diez minutos. Mamá'."),
+      q("¿Qué mensaje breve dejamos pegado en la heladera para avisar algo rápido?", [["📝", "Una nota o esquela"], ["📰", "Una noticia del diario"], ["📖", "Un libro de cuentos largo"]], 0, "Pista: 'Fui al almacén, vuelvo en diez minutos. Mamá'."),
       q("¿Dónde se colocan las cartas de papel para enviarlas por correo postal?", [["✉️", "Adentro de un sobre con estampilla"], ["📦", "En una bolsa de supermercado"], ["🗑️", "En el tacho de basura"]], 0, "Pista: el sobre tiene los datos del destinatario en el frente."),
       q("¿Qué medio digital usamos hoy para mandar un mensaje instantáneo a un familiar?", [["📱", "Un mensaje de WhatsApp o correo electrónico"], ["🕊️", "Una paloma mensajera"], ["💨", "Señales de humo"]], 0, "Pista: llega en un segundo a la pantalla del celular."),
       q("¿Qué tipo de texto combina dibujos con globitos donde hablan los personajes?", [["💬", "La historieta o cómic"], ["📰", "La noticia"], ["🧁", "El recetario"]], 0, "Pista: tiene viñetas cuadradas y globos de diálogo."),
@@ -628,16 +678,48 @@ export function buildLenguaActivities(world: WorldDef): ActivitySpec[] {
 
   const gDef = GRAMMAR_WORLDS_BANKS[n];
   if (gDef) {
-    const acts: ActivitySpec[] = gDef.qList.map((item, i) => ({
-      type: "pick" as const,
-      id: `l${n}-${i}`,
-      title: "",
-      prompt: item.prompt,
-      cards: shuffle(item.options.map(([emoji, label], idx) => ({ id: `o${idx}`, emoji, label }))),
-      answerIds: Array.isArray(item.answer) ? item.answer.map((a) => `o${a}`) : [`o${item.answer}`],
-      hint: item.hint ?? "Pista: mirá con atención las palabras.",
-      skills: item.skills ?? gDef.skills,
-    }));
+    const acts: ActivitySpec[] = gDef.qList.map((item, i) => {
+      const actId = `l${n}-${i}`;
+      const itemSkills = item.skills ?? gDef.skills;
+      const ansIdx = typeof item.answer === "number" ? item.answer : item.answer[0];
+      const correctOpt = item.options[ansIdx];
+
+      if (i === 2 && correctOpt) {
+        return {
+          type: "true-false" as const,
+          id: actId,
+          title: "",
+          statement: `En la consigna: "${item.prompt}", ¿la opción correcta es "${correctOpt[1]}"?`,
+          isTrue: true,
+          hint: item.hint ?? "Pista: leé bien la consigna y pensá con calma.",
+          skills: itemSkills,
+        };
+      }
+
+      if (i === 5 && correctOpt) {
+        const wrongOpt = item.options.find((_, idx) => idx !== ansIdx) || item.options[1];
+        return {
+          type: "true-false" as const,
+          id: actId,
+          title: "",
+          statement: `En la consigna: "${item.prompt}", ¿la opción correcta es "${wrongOpt[1]}"?`,
+          isTrue: false,
+          hint: item.hint ?? "Pista: revisá si esa opción responde realmente a la consigna.",
+          skills: itemSkills,
+        };
+      }
+
+      return {
+        type: "pick" as const,
+        id: actId,
+        title: "",
+        prompt: item.prompt,
+        cards: shuffle(item.options.map(([emoji, label], idx) => ({ id: `o${idx}`, emoji, label }))),
+        answerIds: Array.isArray(item.answer) ? item.answer.map((a) => `o${a}`) : [`o${item.answer}`],
+        hint: item.hint ?? "Pista: mirá con atención las palabras.",
+        skills: itemSkills,
+      };
+    });
     return numbered(acts.slice(0, world.activityCount ?? 8));
   }
 
