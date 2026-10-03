@@ -6,42 +6,47 @@
 // siguiente (así no se traba a nadie, y en 3.º no cambia el progreso de los
 // chicos que ya venían jugando).
 import type { WorldDef } from "@/types";
-import type { ComprehensionKind, CuentoQuestion } from "./tipos";
+import { GENERO_LABEL, type ComprehensionKind, type CuentoQuestion } from "./tipos";
 import { getCuento } from "./catalogo";
 import { PREGUNTAS_G1 } from "./preguntas-g1";
 import { PREGUNTAS_G2 } from "./preguntas-g2";
 import { PREGUNTAS_G3 } from "./preguntas-g3";
 
-// Orden de los cuentos en el recorrido de cada grado (de más simple a más
-// complejo). 2.º usa los mismos 19; 3.º tiene 12 mundos de Lengua, así que
-// lleva 6 (los de trama más rica).
-export const ORDEN_G1 = [
-  "liebre-tortuga",
-  "leon-raton",
-  "tres-chanchitos",
-  "gallinita-roja",
-  "ricitos-osos",
-  "zorro-cuervo",
-  "cigarra-hormiga",
-  "caperucita",
-  "patito-feo",
-  "leyenda-calafate",
-  "pastorcito-mentiroso",
-  "raton-campo-ciudad",
-  "gallina-huevos-oro",
-  "musicos-bremen",
-  "juan-porotos",
-  "medias-flamencos",
-  "traje-emperador",
-  "tortuga-gigante",
-  "leyenda-elal",
-];
-export const ORDEN_G2 = ORDEN_G1;
-export const ORDEN_G3 = ["musicos-bremen", "leyenda-calafate", "traje-emperador", "medias-flamencos", "tortuga-gigante", "leyenda-elal"];
+// Orden de los textos en el recorrido de cada grado. Se alternan los géneros
+// narrativos del Diseño Curricular: cuento → leyenda → fábula (y vuelta a
+// empezar), priorizando leyendas de Santa Cruz y de la Argentina. Cada grado
+// tiene su selección según su nivel: 1.º los relatos más simples y cercanos,
+// 2.º relatos más largos y de autor, 3.º (6 lugares) los de trama más rica.
+const C1 = ["tres-chanchitos", "gallinita-roja", "ricitos-osos", "caperucita", "patito-feo", "musicos-bremen", "juan-porotos"];
+const L1 = ["leyenda-calafate", "leyenda-hornero", "leyenda-yerba-mate", "leyenda-siete-colores", "leyenda-koonch", "leyenda-elal"];
+const F1 = ["liebre-tortuga", "leon-raton", "zorro-cuervo", "cigarra-hormiga", "pastorcito-mentiroso", "raton-campo-ciudad"];
+
+const C2 = ["caperucita", "patito-feo", "musicos-bremen", "juan-porotos", "traje-emperador", "medias-flamencos", "tortuga-gigante"];
+const L2 = ["leyenda-koonch", "leyenda-hornero", "leyenda-calafate", "leyenda-yerba-mate", "leyenda-siete-colores", "leyenda-elal"];
+const F2 = ["leon-raton", "zorro-cuervo", "cigarra-hormiga", "pastorcito-mentiroso", "raton-campo-ciudad", "gallina-huevos-oro"];
+
+const C3 = ["tortuga-gigante", "medias-flamencos"];
+const L3 = ["leyenda-ballena", "leyenda-iguazu"];
+const F3 = ["gallina-huevos-oro", "raton-campo-ciudad"];
+
+// cuento, leyenda, fábula, cuento, leyenda, fábula…
+function alternar(c: string[], l: string[], f: string[]): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < Math.max(c.length, l.length, f.length); i++) {
+    if (c[i]) out.push(c[i]);
+    if (l[i]) out.push(l[i]);
+    if (f[i]) out.push(f[i]);
+  }
+  return out;
+}
+
+export const ORDEN_G1 = alternar(C1, L1, F1);
+export const ORDEN_G2 = alternar(C2, L2, F2);
+export const ORDEN_G3 = alternar(C3, L3, F3);
 
 export const ORDEN: Record<number, string[]> = { 1: ORDEN_G1, 2: ORDEN_G2, 3: ORDEN_G3 };
 
-// Ids de los mundos de cuentos: <base> + posición (1, 2, 3…).
+// Ids de los mundos de comprensión: <base> + posición (1, 2, 3…).
 // 1.º 11101+, 2.º 21101+, 3.º 31101+ (no chocan con los mundos comunes).
 export const STORY_BASE: Record<number, number> = { 1: 11100, 2: 21100, 3: 31100 };
 
@@ -103,7 +108,7 @@ function storyWorld(grade: number, storyId: string, pos: number, prev: WorldDef)
   const reading = grade >= 2;
   const w: WorldDef = {
     id: STORY_BASE[grade] + pos,
-    name: `${reading ? "Lectura" : "Cuento"}: ${c.title}`,
+    name: `${GENERO_LABEL[c.genre]}: ${c.title}`,
     emoji: c.emoji,
     subject: "lengua",
     category: "lectura-cuentos",
@@ -120,10 +125,18 @@ function storyWorld(grade: number, storyId: string, pos: number, prev: WorldDef)
     kind: "normal",
     activityCount: preguntasDe(grade, storyId).length,
     storyId,
+    image: storyIsland(grade, storyId),
   };
   if (grade !== 3) w.grade = grade; // los mundos de 3.º no llevan grado (como siempre)
   if (prev.assessment) w.assessment = prev.assessment;
   return w;
+}
+
+// Isla del mundo: ilustra el texto, en el ambiente de cada grado.
+export function storyIsland(grade: number, storyId: string): string {
+  if (grade === 1) return `/theme/grados/1/islas/cuento-${storyId}.png`;
+  if (grade === 2) return `/theme/grados/2/islas/cuento-${storyId}.png`;
+  return `/theme/islands/cuento-${storyId}.png`;
 }
 
 // Intercala los cuentos del grado en el recorrido de Lengua: después de

@@ -112,7 +112,7 @@ export default function WorldMap({
             >
               <span className="relative block" style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}>
                 <Image
-                  src={themeForWorld(world).island(world.id)}
+                  src={world.image ?? themeForWorld(world).island(world.id)}
                   alt=""
                   fill
                   sizes="124px"

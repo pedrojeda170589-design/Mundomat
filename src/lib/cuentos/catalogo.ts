@@ -2,7 +2,7 @@
 //
 // Relatos del canon literario infantil de dominio público: fábulas de Esopo,
 // cuentos tradicionales, Perrault, Grimm, Andersen, Horacio Quiroga y
-// leyendas tehuelches, contados de nuevo con palabras simples. Cada cuento
+// leyendas tehuelches, guaraníes y del norte argentino, contados de nuevo con palabras simples. Cada cuento
 // tiene 6 escenas, una por ilustración en
 // public/theme/grados/1/cuentos/<id>-<n>.jpg (las mismas para todos los
 // grados). Las preguntas están aparte, una colección por grado
@@ -14,6 +14,7 @@ export const CUENTOS: Cuento[] = [
     id: "liebre-tortuga",
     title: "La liebre y la tortuga",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🐢",
     description: "Escuchá el cuento y contá qué pasó.",
     scenes: [
@@ -29,6 +30,7 @@ export const CUENTOS: Cuento[] = [
     id: "leon-raton",
     title: "El león y el ratón",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🦁",
     description: "Una fábula sobre ayudar.",
     scenes: [
@@ -44,6 +46,7 @@ export const CUENTOS: Cuento[] = [
     id: "tres-chanchitos",
     title: "Los tres chanchitos",
     origin: "Cuento tradicional",
+    genre: "cuento",
     emoji: "🐷",
     description: "¿Qué casa aguantó al lobo?",
     scenes: [
@@ -59,6 +62,7 @@ export const CUENTOS: Cuento[] = [
     id: "ricitos-osos",
     title: "Ricitos de Oro y los tres osos",
     origin: "Cuento tradicional",
+    genre: "cuento",
     emoji: "🐻",
     description: "Tres osos y una nena curiosa.",
     scenes: [
@@ -74,6 +78,7 @@ export const CUENTOS: Cuento[] = [
     id: "gallinita-roja",
     title: "La gallinita roja",
     origin: "Cuento tradicional",
+    genre: "cuento",
     emoji: "🐔",
     description: "¿Quién la ayudó a hacer el pan?",
     scenes: [
@@ -89,6 +94,7 @@ export const CUENTOS: Cuento[] = [
     id: "caperucita",
     title: "Caperucita Roja",
     origin: "Cuento tradicional (Perrault y los hermanos Grimm)",
+    genre: "cuento",
     emoji: "🧺",
     description: "Un paseo por el bosque.",
     scenes: [
@@ -104,6 +110,7 @@ export const CUENTOS: Cuento[] = [
     id: "patito-feo",
     title: "El patito feo",
     origin: "Cuento de Hans Christian Andersen",
+    genre: "cuento",
     emoji: "🦢",
     description: "Un patito distinto a los demás.",
     scenes: [
@@ -119,6 +126,7 @@ export const CUENTOS: Cuento[] = [
     id: "raton-campo-ciudad",
     title: "El ratón de campo y el ratón de ciudad",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🐭",
     description: "¿Campo tranquilo o ciudad con sustos?",
     scenes: [
@@ -134,6 +142,7 @@ export const CUENTOS: Cuento[] = [
     id: "leyenda-calafate",
     title: "La leyenda del calafate",
     origin: "Leyenda tehuelche (aonikenk) de la Patagonia",
+    genre: "leyenda",
     emoji: "🫐",
     description: "Una leyenda tehuelche de la Patagonia.",
     scenes: [
@@ -149,6 +158,7 @@ export const CUENTOS: Cuento[] = [
     id: "zorro-cuervo",
     title: "El zorro y el cuervo",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🦊",
     description: "Un zorro muy halagador y un queso.",
     scenes: [
@@ -164,6 +174,7 @@ export const CUENTOS: Cuento[] = [
     id: "cigarra-hormiga",
     title: "La cigarra y la hormiga",
     origin: "Fábula de Esopo (versión de La Fontaine)",
+    genre: "fabula",
     emoji: "🐜",
     description: "Cantar en verano, ¿y en invierno?",
     scenes: [
@@ -179,6 +190,7 @@ export const CUENTOS: Cuento[] = [
     id: "pastorcito-mentiroso",
     title: "El pastorcito mentiroso",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🐑",
     description: "¿Quién le cree a quien miente?",
     scenes: [
@@ -194,6 +206,7 @@ export const CUENTOS: Cuento[] = [
     id: "gallina-huevos-oro",
     title: "La gallina de los huevos de oro",
     origin: "Fábula de Esopo",
+    genre: "fabula",
     emoji: "🥚",
     description: "Una gallina muy especial y un granjero apurado.",
     scenes: [
@@ -209,6 +222,7 @@ export const CUENTOS: Cuento[] = [
     id: "musicos-bremen",
     title: "Los músicos de Bremen",
     origin: "Cuento de los hermanos Grimm",
+    genre: "cuento",
     emoji: "🫏",
     description: "Cuatro amigos que quieren ser músicos.",
     scenes: [
@@ -224,6 +238,7 @@ export const CUENTOS: Cuento[] = [
     id: "juan-porotos",
     title: "Juan y los porotos mágicos",
     origin: "Cuento tradicional inglés",
+    genre: "cuento",
     emoji: "🌱",
     description: "Una planta que llega hasta las nubes.",
     scenes: [
@@ -239,6 +254,7 @@ export const CUENTOS: Cuento[] = [
     id: "medias-flamencos",
     title: "Las medias de los flamencos",
     origin: "Cuentos de la selva, de Horacio Quiroga",
+    genre: "cuento",
     emoji: "🦩",
     description: "¿Por qué los flamencos tienen las patas coloradas?",
     scenes: [
@@ -254,6 +270,7 @@ export const CUENTOS: Cuento[] = [
     id: "traje-emperador",
     title: "El traje nuevo del emperador",
     origin: "Cuento de Hans Christian Andersen",
+    genre: "cuento",
     emoji: "👑",
     description: "Una tela que nadie puede ver.",
     scenes: [
@@ -269,6 +286,7 @@ export const CUENTOS: Cuento[] = [
     id: "tortuga-gigante",
     title: "La tortuga gigante",
     origin: "Cuentos de la selva, de Horacio Quiroga",
+    genre: "cuento",
     emoji: "🐢",
     description: "Una tortuga que devuelve un favor.",
     scenes: [
@@ -284,6 +302,7 @@ export const CUENTOS: Cuento[] = [
     id: "leyenda-elal",
     title: "La leyenda de Elal",
     origin: "Leyenda tehuelche (aonikenk) de la Patagonia",
+    genre: "leyenda",
     emoji: "🦢",
     description: "El héroe tehuelche que trajo el fuego.",
     scenes: [
@@ -293,6 +312,102 @@ export const CUENTOS: Cuento[] = [
       "Hacía mucho frío. Elal golpeó dos piedras, saltaron chispas… ¡y les regaló el fuego a las personas!",
       "Enseñó a los tehuelches a hacer arcos y flechas, a cazar guanacos y a coser quillangos para abrigarse.",
       "Cuando terminó su trabajo, Elal se subió otra vez al cisne y se fue volando hacia donde sale el sol. Dicen que desde allá sigue cuidando la Patagonia.",
+    ],
+  },
+  {
+    id: "leyenda-koonch",
+    title: "Kóoch y el origen del mundo",
+    origin: "Leyenda tehuelche (aonikenk) de la Patagonia",
+    genre: "leyenda",
+    emoji: "🌬️",
+    description: "Cómo nacieron el mar, el viento y la luz.",
+    scenes: [
+      "Al principio no había tierra, ni sol, ni luz. Solo existía Kóoch, rodeado de una oscuridad enorme.",
+      "Kóoch se sentía muy solo. Lloró tanto, tanto, que sus lágrimas formaron el mar.",
+      "Después dio un suspiro larguísimo y así nació el viento. El viento sopló, apartó la oscuridad y apareció la luz.",
+      "Kóoch hizo el sol para que diera calor, y las nubes para que trajeran la lluvia.",
+      "Del medio del mar levantó una gran isla. Allí aparecieron los pájaros, los peces, los insectos y los animales.",
+      "El sol, la lluvia y el viento hicieron crecer las plantas. Por eso, cuando sopla fuerte el viento en Santa Cruz, dicen que es Kóoch que todavía suspira.",
+    ],
+  },
+  {
+    id: "leyenda-hornero",
+    title: "La leyenda del hornero",
+    origin: "Leyenda guaraní del litoral argentino",
+    genre: "leyenda",
+    emoji: "🐦",
+    description: "Un pájaro que construye su casa de barro.",
+    scenes: [
+      "Hace mucho tiempo, en la selva, vivía un joven guaraní muy trabajador al que le encantaba construir.",
+      "Estaba enamorado de una joven del pueblo y quería casarse con ella.",
+      "El cacique le dijo: —Primero tenés que pasar una prueba de paciencia: quedarte tres días envuelto en un cuero, sin moverte.",
+      "El joven aceptó. Cuando pasaron los tres días y abrieron el cuero, ¡ya no estaba! Salió volando un pajarito color canela.",
+      "El pajarito juntó barro y pajitas con el pico y construyó una casita redonda, con forma de horno.",
+      "Así nació el hornero, que todavía hoy arma su casa de barro con trabajo y paciencia. Es el ave nacional de la Argentina.",
+    ],
+  },
+  {
+    id: "leyenda-yerba-mate",
+    title: "La leyenda de la yerba mate",
+    origin: "Leyenda guaraní (Misiones y Corrientes)",
+    genre: "leyenda",
+    emoji: "🧉",
+    description: "Un regalo de la luna y la nube.",
+    scenes: [
+      "Yasí, la luna, y Araí, la nube, tenían muchas ganas de conocer la selva. Un día bajaron a la tierra convertidas en dos muchachas.",
+      "Caminaron entre árboles, flores y mariposas, mirando todo con alegría.",
+      "De pronto apareció un yaguareté que las miraba con hambre. Las muchachas se quedaron quietas, muy asustadas.",
+      "Un anciano que pasaba por ahí lo vio, lo espantó con su arco y las salvó.",
+      "Esa noche el anciano compartió su comida con ellas sin saber quiénes eran. Mientras él dormía, Yasí y Araí le dejaron un regalo: una planta nueva.",
+      "Era la yerba mate. Desde entonces, el mate se comparte como señal de amistad y de agradecimiento.",
+    ],
+  },
+  {
+    id: "leyenda-siete-colores",
+    title: "El Cerro de los Siete Colores",
+    origin: "Leyenda de Purmamarca (Jujuy)",
+    genre: "leyenda",
+    emoji: "⛰️",
+    description: "Los chicos que pintaron un cerro.",
+    scenes: [
+      "Hace mucho tiempo, en Purmamarca, un pueblito de Jujuy, los cerros eran todos grises y marrones.",
+      "Los chicos del pueblo se aburrían de mirar siempre el mismo color. Un día tuvieron una idea secreta.",
+      "Esa noche, mientras los grandes dormían, salieron calladitos con pinturas y pinceles y pintaron el cerro de un color.",
+      "Cada noche pintaron un color nuevo: rojo, amarillo, verde, violeta… ¡y así durante siete noches!",
+      "La mañana del octavo día, la gente del pueblo se despertó y vio el cerro lleno de colores. ¡No lo podían creer!",
+      "Desde entonces lo llaman el Cerro de los Siete Colores, y dicen que es un regalo de los chicos de Purmamarca.",
+    ],
+  },
+  {
+    id: "leyenda-ballena",
+    title: "Cómo llegó la ballena al mar",
+    origin: "Leyenda tehuelche (aonikenk) de la costa patagónica (versión adaptada)",
+    genre: "leyenda",
+    emoji: "🐋",
+    description: "Una ballena que caminaba por la tierra.",
+    scenes: [
+      "Dicen los tehuelches que hace muchísimo tiempo las ballenas no vivían en el mar. Góos era una ballena enorme que caminaba por la tierra con patitas cortas.",
+      "Vivía en un cañadón cerca de la costa y tenía tanta hambre que se tragaba todo lo que pasaba: zorros, guanacos, pájaros… ¡y hasta cazadores!",
+      "Elal, el héroe de los tehuelches, se enteró de que faltaban animales y personas, y decidió ayudarlos.",
+      "Se convirtió en un tábano, un bichito volador muy chiquito, y se dejó tragar por Góos.",
+      "Adentro encontró a todos, asustados pero sanos. Elal le hizo tantas cosquillas por dentro que Góos abrió la boca y todos salieron corriendo.",
+      "Entonces Elal empujó a Góos hasta el mar y le dijo que viviera allí. Por eso, dicen, hoy las ballenas nadan en el mar patagónico.",
+    ],
+  },
+  {
+    id: "leyenda-iguazu",
+    title: "La leyenda de las Cataratas del Iguazú",
+    origin: "Leyenda guaraní (Misiones)",
+    genre: "leyenda",
+    emoji: "🌈",
+    description: "Una serpiente, un río y un arcoíris.",
+    scenes: [
+      "En la selva de Misiones vivía Mboi, una serpiente gigante que cuidaba el río Iguazú. Los guaraníes la respetaban mucho.",
+      "Cada año, una joven del pueblo debía ir a vivir a la orilla del río para servir a Mboi. Ese año eligieron a Naipí.",
+      "Pero Naipí y Tarobá, un joven guaraní, se querían mucho. Tarobá preparó una canoa y escaparon juntos por el río.",
+      "Mboi se enojó muchísimo. Se metió en la tierra, se retorció con fuerza y partió el río en dos: así se formaron las cataratas.",
+      "Naipí quedó convertida en una gran roca en medio de las cataratas, y Tarobá en una palmera en la orilla, mirándola.",
+      "Dicen que cuando aparece el arcoíris sobre las cataratas es un puente que une a Naipí y Tarobá, que se siguen queriendo.",
     ],
   },
 ];

@@ -24,10 +24,17 @@ export interface CuentoQuestion {
   hint: string; // empieza con "Pista: "
 }
 
+// Género del texto narrativo. Los mundos de comprensión de cada grado
+// alternan cuento → leyenda → fábula (ver recorrido.ts).
+export type Genero = "cuento" | "leyenda" | "fabula";
+
+export const GENERO_LABEL: Record<Genero, string> = { cuento: "Cuento", leyenda: "Leyenda", fabula: "Fábula" };
+
 export interface Cuento {
   id: string;
   title: string;
   origin: string; // de dónde viene (para el docente)
+  genre: Genero;
   emoji: string;
   description: string; // una línea para la tarjeta del mundo
   scenes: string[]; // 6 escenas, una por ilustración

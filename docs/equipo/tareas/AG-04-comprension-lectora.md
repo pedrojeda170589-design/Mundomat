@@ -14,7 +14,7 @@ complejas en cada grado**. Claude ya armó todo el motor:
 | Qué | Dónde | De quién |
 |---|---|---|
 | Tipos (`Cuento`, `CuentoQuestion`, `ComprehensionKind`) | `src/lib/cuentos/tipos.ts` | Claude |
-| Los 19 cuentos (6 escenas cada uno) | `src/lib/cuentos/catalogo.ts` | Claude |
+| Los 25 textos narrativos (cuentos, leyendas y fábulas; 6 escenas cada uno, campo `genre`) | `src/lib/cuentos/catalogo.ts` | Claude |
 | Preguntas de 1.º (7 por cuento, 3 opciones) | `src/lib/cuentos/preguntas-g1.ts` | Claude |
 | **Preguntas de 2.º** | `src/lib/cuentos/preguntas-g2.ts` (hoy vacío) | **Antigravity** |
 | **Preguntas de 3.º** | `src/lib/cuentos/preguntas-g3.ts` (hoy vacío) | **Antigravity** |
@@ -29,9 +29,19 @@ las de 1.º (funciona, pero es demasiado fácil). **Tu trabajo es que cada grado
 Ids de los mundos de cuentos: 1.º **11101–11119**, 2.º **21101–21119**, 3.º **31101–31106**
 (posición en `ORDEN_G1` / `ORDEN_G2` / `ORDEN_G3` + 1).
 
+**Actualización (pedido de Pedro):** los mundos alternan **cuento → leyenda → fábula**, con
+prioridad a leyendas de Santa Cruz y de la Argentina (Kóoch, Elal, el calafate, la ballena
+Góos, el hornero, la yerba mate, el Cerro de los Siete Colores y las Cataratas del Iguazú), y
+cada grado tiene su propia selección según su nivel (ver `C1/L1/F1`, `C2/L2/F2`, `C3/L3/F3`
+en `recorrido.ts`). Escribí las preguntas para **todos los textos de `ORDEN_G2`** (2.º) y de
+**`ORDEN_G3`** (3.º). En las preguntas de tipo `estructura` incluí el reconocimiento del género
+(¿es un cuento, una leyenda o una fábula?, ¿qué explica la leyenda?, ¿cuál es la moraleja?).
+La isla de cada mundo de cuento es `storyIsland(grade, storyId)` (archivo `cuento-<id>.png`):
+usala también para el encabezado de las fichas.
+
 ## 1. Preguntas de 2.º grado (`preguntas-g2.ts`)
 
-Los 19 cuentos de `ORDEN_G2`. En 2.º los chicos **leen** el cuento (pueden tocar 🔊).
+Los 19 textos de `ORDEN_G2`. En 2.º los chicos **leen** el cuento (pueden tocar 🔊).
 
 - **8 preguntas por cuento**, `options` de 3 o 4 (mezclá: al menos 3 preguntas con 4 opciones).
 - Distribución por cuento: 2 `literal`, 2 `secuencia`, 2 `inferencial`, 1 `vocabulario`,
@@ -45,7 +55,7 @@ Los 19 cuentos de `ORDEN_G2`. En 2.º los chicos **leen** el cuento (pueden toca
 
 ## 2. Preguntas de 3.º grado (`preguntas-g3.ts`)
 
-Los 6 cuentos de `ORDEN_G3` (obligatorio) y, si te da el tiempo, los otros 13 también
+Los 6 textos de `ORDEN_G3` (obligatorio) y, si te da el tiempo, el resto del catálogo
 (quedan listos para cuando 3.º tenga más mundos de Lengua).
 
 - **10 preguntas por cuento, siempre 4 opciones.**

@@ -3,7 +3,8 @@
 Uso:
   python3 scripts/imagenes/cortar_islas.py <hoja.png> <carpeta_salida> <id1> <id2> ... <id9>
   (los ids en el orden de la grilla: izquierda a derecha, arriba a abajo;
-   "practica" guarda practica.png, "skip" no guarda nada, cualquier otro
+   "practica" guarda practica.png, "cuento-<id>" guarda cuento-<id>.png
+   (islas de los mundos de cuentos), "skip" no guarda nada, cualquier otro
    guarda mundo-<id>.png)
 
 Requiere: pip install rembg pillow numpy scipy onnxruntime
@@ -80,7 +81,8 @@ def process(path, ids, OUT, maxdim=340):
             im = im.crop((max(0, bb[0] - 4), max(0, bb[1] - 4), min(im.width, bb[2] + 4), min(im.height, bb[3] + 4)))
             rr = maxdim / max(im.size)
             if rr < 1: im = im.resize((int(im.width * rr), int(im.height * rr)), Image.LANCZOS)
-            fn = f'{OUT}/{"practica" if name == "practica" else "mundo-" + name}.png'
+            base = name if name == "practica" or name.startswith("cuento-") else "mundo-" + name
+            fn = f'{OUT}/{base}.png'
             # 256 colores (paleta con transparencia): ~10 veces más liviano.
             im.quantize(256, method=Image.Quantize.FASTOCTREE).save(fn, optimize=True)
             print(fn, im.size)

@@ -9,7 +9,20 @@ let current: HTMLAudioElement | null = null;
 const missing = new Set<string>(); // audios que no existen (no reintentar)
 
 // onEnd: se llama cuando termina de sonar (audio grabado o voz).
-export function playClip({ audio, say, onEnd }: { audio?: string; say?: string; onEnd?: () => void }) {
+// onFallback: si no hay audio grabado, se llama en lugar de leer `say`
+// (para quien quiere leer el texto a su manera, p. ej. oración por oración).
+export function playClip({
+  audio,
+  say,
+  onEnd,
+  onFallback,
+}: {
+  audio?: string;
+  say?: string;
+  onEnd?: () => void;
+  onFallback?: () => void;
+}) {
+  const fallback = () => (onFallback ? onFallback() : say && speak(say, onEnd));
   stopClip();
   if (audio && !missing.has(audio) && typeof Audio !== "undefined") {
     const el = new Audio(audio);
@@ -19,15 +32,15 @@ export function playClip({ audio, say, onEnd }: { audio?: string; say?: string; 
     };
     el.onerror = () => {
       missing.add(audio);
-      if (current === el && say) speak(say, onEnd);
+      if (current === el) fallback();
     };
     el.play().catch(() => {
       // Autoplay bloqueado o archivo inexistente: voz del navegador.
-      if (current === el && say && !el.error) speak(say, onEnd);
+      if (current === el && !el.error) fallback();
     });
     return;
   }
-  if (say) speak(say, onEnd);
+  fallback();
 }
 
 export function stopClip() {

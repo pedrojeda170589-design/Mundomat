@@ -59,6 +59,7 @@ export type ActivitySpec = (
       storyId: string;
       // "listen": se narra solo (1.º); "read": lo leen ellos, audio opcional (2.º y 3.º).
       mode?: "listen" | "read";
+      genre?: "cuento" | "leyenda" | "fabula";
       scenes: { text: string; image: string }[];
       hint: string;
     }

@@ -107,13 +107,15 @@ ideal: los chicos te conocen), grabá una pista por escena y guardala en
 `public\audio\cuentos\` con el nombre `<cuento>-<escena>.mp3`, escenas 1 a 6.
 En la escena 1 decí también el título.
 
-Cuentos (en orden del recorrido): `liebre-tortuga`, `leon-raton`,
-`tres-chanchitos`, `gallinita-roja`, `ricitos-osos`, `zorro-cuervo`,
-`cigarra-hormiga`, `caperucita`, `patito-feo`, `leyenda-calafate`,
-`pastorcito-mentiroso`, `raton-campo-ciudad`, `gallina-huevos-oro`,
-`musicos-bremen`, `juan-porotos`, `medias-flamencos`, `traje-emperador`,
-`tortuga-gigante`, `leyenda-elal`. Por ejemplo: `liebre-tortuga-1.mp3` …
-`liebre-tortuga-6.mp3`.
+Textos (el orden de cada grado está en `src/lib/cuentos/recorrido.ts`):
+cuentos `tres-chanchitos`, `gallinita-roja`, `ricitos-osos`, `caperucita`,
+`patito-feo`, `musicos-bremen`, `juan-porotos`, `traje-emperador`,
+`medias-flamencos`, `tortuga-gigante`; leyendas `leyenda-calafate`,
+`leyenda-hornero`, `leyenda-yerba-mate`, `leyenda-siete-colores`,
+`leyenda-koonch`, `leyenda-elal`, `leyenda-ballena`, `leyenda-iguazu`;
+fábulas `liebre-tortuga`, `leon-raton`, `zorro-cuervo`, `cigarra-hormiga`,
+`pastorcito-mentiroso`, `raton-campo-ciudad`, `gallina-huevos-oro`.
+Por ejemplo: `leyenda-calafate-1.mp3` … `leyenda-calafate-6.mp3`.
 
 Leé exactamente el texto de cada escena (está en
 `src/lib/cuentos/catalogo.ts`), despacio y con expresión. Cada pista dura

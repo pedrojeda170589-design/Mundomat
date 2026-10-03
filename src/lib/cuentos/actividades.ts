@@ -15,6 +15,8 @@ function shuffle<T>(arr: readonly T[]): T[] {
   return a;
 }
 
+const ARTICULO = { cuento: "el cuento", leyenda: "la leyenda", fabula: "la fábula" } as const;
+
 export function buildStoryActivities(world: WorldDef): ActivitySpec[] {
   const c = world.storyId ? getCuento(world.storyId) : undefined;
   if (!c) return [];
@@ -26,9 +28,10 @@ export function buildStoryActivities(world: WorldDef): ActivitySpec[] {
       type: "listen",
       id: `${c.id}-cuento`,
       title: c.title,
-      prompt: mode === "read" ? `Leé el cuento: ${c.title}.` : `Escuchá el cuento: ${c.title}.`,
+      prompt: `${mode === "read" ? "Leé" : "Escuchá"} ${ARTICULO[c.genre]}: ${c.title}.`,
       storyId: c.id,
       mode,
+      genre: c.genre,
       scenes: c.scenes.map((text, i) => ({ text, image: cuentoImage(c.id, i + 1) })),
       hint: mode === "read" ? "Leé con atención: después vienen preguntas." : "Escuchá con atención: después vienen preguntas.",
       skills: [],

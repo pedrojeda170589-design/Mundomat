@@ -13,6 +13,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | ⏳ PENDIENTE |
 | CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🟢 UNIDA A MAIN (falta conectar Supabase: ver docs/plataforma/CONFIGURAR.md) |
+| CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
@@ -153,3 +154,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - 120 islas nuevas «bosque de lengas en otoño» (100 mundos + 19 lecturas + práctica) con el mismo estilo ilustrado de 1.º, y 4 mapas (primavera, verano, otoño, invierno).
 - `scripts/imagenes/cortar_islas.py`: relleno del fondo blanco (la roca clara no queda transparente), paleta de 256 colores (archivos ~10 veces más livianos) y celdas `skip`.
 - `scripts/imagenes/generar_activos_g2.py` (dibujos geométricos de AG-03) ya no se usa: no correrlo, pisaría las islas nuevas.
+
+### CL-07 · Cuento, leyenda y fábula (Claude)
+- Los mundos de comprensión alternan **cuento → leyenda → fábula** (géneros narrativos del DC), con una selección por grado según su nivel (`C/L/F` de cada grado en `recorrido.ts`). El nombre del mundo dice el género («Leyenda: …»).
+- 6 leyendas nuevas, con prioridad a Santa Cruz y la Argentina: Kóoch y el origen del mundo y Cómo llegó la ballena al mar (tehuelches), el hornero y la yerba mate (guaraníes), el Cerro de los Siete Colores (Jujuy) y las Cataratas del Iguazú (guaraní). Total: 25 textos ilustrados.
+- Las islas de los mundos de comprensión ilustran su texto y se guardan por texto (`cuento-<id>.png` en cada ambiente; `world.image`), así no dependen de la posición.
+- Lectura en **diapositivas**: cada escena entra con un fundido y la imagen se acerca despacio; mientras la voz lee, se resalta la oración que suena (correspondencia imagen–texto–voz). Si hay audio grabado, se resalta la escena entera.
