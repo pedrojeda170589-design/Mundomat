@@ -24,7 +24,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
-| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE (ahora) |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
@@ -33,6 +33,60 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-14 · Torneo de velocidad con las tablas (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Lógica de tiempos, metas y premios (`src/lib/torneo/tiempos.ts`):**
+    - Parámetros base configurables al inicio del archivo para fácil ajuste pedagógico por Pedro:
+      - `META_ORO_BASE = 35` segundos (para la tabla del 2).
+      - `META_ORO_INCREMENTO = 3` segundos adicionales por tabla subsiguiente (`metaOro(n) = 35 + 3 * (n - 2)`).
+      - `META_PLATA_DELTA = 15` segundos adicionales para medalla de plata (`metaPlata(n) = metaOro(n) + 15`).
+      - `PENALIDAD_ERROR_MS = 3000` (+3 segundos por intento fallido).
+    - Monedas: Oro 15 🪙, Plata 8 🪙, Bronce 3 🪙 (una vez por tabla y por día de fin de semana).
+    - Premios especiales de objetos exclusivos (desbloqueados la primera vez que se logra oro en su grupo):
+      - Tablas 2 a 4: «Vincha relámpago» ⚡ (`vincha-relampago`, slot `headwear`, molde `cuernitos-dragon`).
+      - Tablas 5 a 7: «Lentes turbo» 🕶️ (`lentes-turbo`, slot `eyewear`, molde `lentes-aviador`).
+      - Tablas 8 a 10: «Medalla del rayo» 🏅 (`medalla-rayo`, slot `pendant`, molde `sol-de-mayo`).
+  - **Generador de opciones con 3 alternativas (`src/lib/torneo/opciones.ts`):**
+    - 11 pasos en estricto orden ($N \times 0$ a $N \times 10$).
+    - Opciones matemáticas balanceadas y siempre no negativas: la respuesta correcta más dos distractores cercanos distintos entre sí y distintos de la correcta ($N \times (k-1)$, $N \times (k+1)$ o $\pm 1 / \pm 2$).
+  - **Modelos de datos y accesorios (`src/types/index.ts`):**
+    - Se agregó `tablasTorneo` en `StudentProgress` (agrupado por clave del sábado `AAAA-MM-DD` -> tabla -> `{ mejorMs, medalla, errores, monedasDia }`).
+    - Se incorporaron `vincha-relampago`, `lentes-turbo` y `medalla-rayo` a `ACCESSORY_CATALOG_PREMIO`.
+    - Se actualizaron las referencias en `scripts/coleccion/lista-para-dibujar.ts`.
+  - **Servidor y persistencia (`src/lib/data.ts`, `src/app/api/torneo/route.ts`):**
+    - `weekendSaturdayKey(now)`: agrupa sábados y domingos bajo la misma fecha del sábado para reiniciar el ranking semanalmente.
+    - `completeTorneoTable(...)`: validación estricta de fin de semana en hora argentina, rangos válidos, cálculo de medalla, entrega de monedas sin duplicar en el mismo día, desbloqueo de accesorios por primera vez y actualización del mejor tiempo.
+    - `getClassroomTorneoRanking(...)`: ranking semanal de los 5 mejores tiempos del aula por tabla, respetando la privacidad (AG-07) al mostrar únicamente el nombre visible / apodo.
+    - Endpoints `GET /api/torneo` y `POST /api/torneo` con rate limiting anti-fuerza bruta.
+  - **Interfaz del alumno en la Aventura de Fin de Semana (`src/components/weekend/TorneoTablasGame.tsx`, `src/app/student/weekend/page.tsx`):**
+    - Tarjeta banner destacada en `/student/weekend` para entrar al «⚡ Torneo de las tablas».
+    - Selector interactivo de tablas del 2 al 10 con metas visibles y ranking del aula en tiempo real.
+    - Pantalla de cuenta regresiva (3-2-1).
+    - Pantalla de juego optimizada para móviles (390px) con cronómetro de décimas de segundo, cuenta gigante («4 × 7 = ?») y 3 botones táctiles grandes sin desplazamiento al tocar rápido.
+    - Respuesta inmediata al acertar (≤ 180 ms) y sacudida roja con alerta `+3s` en caso de error (no avanza hasta corregir).
+    - Pantalla de resultado final con medalla, tiempo con penalidades, errores, monedas ganadas, aviso de nuevo objeto desbloqueado, repaso completo de las 11 multiplicaciones y opciones de reintento.
+  - **Reporte docente en Panel y Legajo (`src/components/admin/TorneoReport.tsx`, `src/components/admin/TorneoReportByCode.tsx`, `src/app/admin/dashboard/page.tsx`, `src/app/docente/alumno/page.tsx`):**
+    - Muestra en el detalle del alumno las tablas jugadas por fin de semana, mejor tiempo y cantidad de errores, alertando con un aviso destacado aquellas tablas que convendría reforzar en clase.
+- **2. Cómo se probó:**
+  - `scripts/test-torneo.ts`: suite automatizada integral que verifica:
+    - Opciones para todas las tablas 2..10 y todos los multiplicadores 0..10 (3 opciones, 1 correcta, todas distintas y ninguna negativa).
+    - Metas de tiempo oro y plata exactas para las 9 tablas.
+    - Asignación de medallas al milisegundo en bordes críticos (ej. 35.0s oro vs 35.1s plata).
+    - Penalidad de 3000 ms por error.
+    - Monedas por medalla (15, 8, 3) y restricción de una sola entrega por tabla por día.
+    - Entrega de accesorios de premio una sola vez por grupo.
+    - Rechazo fuera de fin de semana.
+    - Ranking del curso con privacidad (nombre visible/apodo).
+  - `scripts/test-simulation.ts`: 38 840 actividades simuladas sin errores ni regresiones.
+  - `scripts/test-colecciones.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores de TypeScript en todo el proyecto.
+  - `npx eslint src`: 0 advertencias y 0 errores de linter.
+  - `npm run build`: compilación de producción con Next.js Turbopack 100% limpia (41 rutas generadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Metas de tiempo por tabla:** Confirmar si el tiempo base de 35 segundos para la tabla del 2 (+3s por tabla subsiguiente) resulta adecuado para sus alumnos de 3.º grado, o si prefiere un tiempo base más relajado (ej. 40s) o más estricto.
+  - **Penalidad por error:** Se configuró en +3 segundos adicionales al cronómetro por cada error antes de poder avanzar; confirmar si ese valor resulta balanceado.
+  - **Monedas por medalla:** Se configuraron en 15 🪙 para oro, 8 🪙 para plata y 3 🪙 para bronce.
 
 ### CL-12 · Fondos, portada y Camino de premios (Claude)
 - **Colecciones de 10 días** (`DIAS_TEMPORADA = 10`, del día −4 al +5). Excepciones: Halloween del 23/10 al 1/11 (en 2026 sigue hasta el 2/11, como se anunció), Navidad del 18/12 al 27/12 y Tradición del 5/11 al 14/11. La prueba del calendario (sin superposiciones y con días libres) sigue pasando hasta 2028.

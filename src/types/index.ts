@@ -137,6 +137,20 @@ export interface StudentProgress {
       completedAt?: string;
     }
   >;
+  // Torneo de las tablas de multiplicar (fin de semana).
+  // Clave del fin de semana (sábado "YYYY-MM-DD") -> tabla (2..10) -> resultado
+  tablasTorneo?: Record<
+    string /* "AAAA-MM-DD" del sábado */,
+    Record<
+      number /* tabla (2..10) */,
+      {
+        mejorMs: number;
+        medalla: "oro" | "plata" | "bronce";
+        errores?: number;
+        monedasDia?: string[];
+      }
+    >
+  >;
 }
 
 export interface RoundInProgress {
@@ -535,6 +549,10 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
 // Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
 export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio", fitLike: "sol-de-mayo" },
+  // Premios del torneo de tablas (AG-14)
+  { id: "vincha-relampago", slot: "headwear", label: "Vincha relámpago", emoji: "⚡", group: "premio", fitLike: "cuernitos-dragon" },
+  { id: "lentes-turbo", slot: "eyewear", label: "Lentes turbo", emoji: "🕶️", group: "premio", fitLike: "lentes-aviador" },
+  { id: "medalla-rayo", slot: "pendant", label: "Medalla del rayo", emoji: "🏅", group: "premio", fitLike: "sol-de-mayo" },
   // Legendarios de cada temporada (se ganan superando mundos durante la temporada).
   ...TEMPORADAS.filter((t) => t.legendario && IMAGENES_LISTAS.has(t.legendario.id)).map(
     (t): AccessoryDef => ({

@@ -10,6 +10,7 @@ import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
 import SkillReport from "@/components/admin/SkillReport";
 import DictationReport from "@/components/admin/DictationReport";
+import TorneoReport from "@/components/admin/TorneoReport";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
@@ -862,6 +863,11 @@ export default function AdminDashboardPage() {
                     <DictationReport dictationWeeks={selectedProgress.dictationWeeks} />
                   </div>
                 )}
+
+                <div>
+                  <p className="text-amber-950 font-black mb-2">⚡ Torneo de las tablas (Fin de semana)</p>
+                  <TorneoReport tablasTorneo={selectedProgress.tablasTorneo} />
+                </div>
 
                 <div>
                   <p className="text-emerald-700 font-semibold text-sm mb-1">
