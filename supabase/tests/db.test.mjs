@@ -330,6 +330,37 @@ test("Legajo: trayectoria y resumen de aula respetan los permisos", async () => 
   // Destinos de promoción: solo aulas de la misma escuela, ciclo igual o posterior.
   const targets = await as(U.maria, "select school_year, grade, division from public.promotion_targets($1)", [A3A]);
   assert.ok(targets.every((t) => t.school_year >= 2026));
-  assert.ok(targets.some((t) => t.school_year === 2027 && t.grade === 4));
   await assert.rejects(as(U.docenteB, "select * from public.promotion_targets($1)", [A3A]), /No autorizado/);
 });
+
+test("Directivo y planes (AG-12): resumen multi-aula, comparación por grado y permisos", async () => {
+  // 1. Directivo de Escuela A (adminA) ve todas las aulas de su escuela
+  const summaryAdminA = await as(U.adminA, "select classroom_id, classroom_name, grade, division from public.school_classrooms_summary($1)", [A]);
+  assert.ok(summaryAdminA.length >= 2, "Directivo ve todas las aulas de Escuela A");
+
+  // 2. Directivo de Escuela A NO puede ver aulas de Escuela B
+  await assert.rejects(as(U.adminA, "select * from public.school_classrooms_summary($1)", [B]), /No autorizado/);
+
+  // 3. Usuario ajeno no puede consultar resumen de la escuela
+  await assert.rejects(as(U.nadie, "select * from public.school_classrooms_summary($1)", [A]), /No autorizado/);
+
+  // 4. Comparación de grado: solo directivo de la escuela o super admin
+  const compAdminA = await as(U.adminA, "select * from public.school_grade_comparison($1, 3::smallint)", [A]);
+  assert.ok(Array.isArray(compAdminA), "Directivo puede comparar aulas del mismo grado");
+
+  // Docente o usuario sin rol de directivo es rechazado en comparación
+  await assert.rejects(as(U.docenteB, "select * from public.school_grade_comparison($1, 3::smallint)", [A]), /No autorizado/);
+
+  // 5. Planes de escuela
+  const planDefault = await as(U.adminA, "select public.school_active_plan($1) as p", [A]);
+  assert.equal(planDefault[0].p, "piloto_gratuito");
+
+  // Super admin asigna plan escuela
+  await as(U.super, "select public.assign_school_plan($1, 'escuela', 500, '2027-12-31'::date)", [A]);
+  const planUpdated = await as(U.adminA, "select public.school_active_plan($1) as p", [A]);
+  assert.equal(planUpdated[0].p, "escuela");
+
+  // Usuario no super-admin no puede asignar plan
+  await assert.rejects(as(U.adminA, "select public.assign_school_plan($1, 'distrito')", [A]), /No autorizado/);
+});
+

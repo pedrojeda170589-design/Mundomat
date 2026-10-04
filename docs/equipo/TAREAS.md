@@ -17,18 +17,156 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
 | CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | CL-10 | Colecciones por temporada (15 días, calendario anual), legendarios, avatares de logro de los textos, mascotas y objetos de mano | Claude | 🟢 UNIDA A MAIN |
-| AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE (ahora; antes que AG-07) |
-| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE (después del piloto de AG-13) |
-| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-13 y AG-14, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-12 · Vista de directivo y modelo de planes (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Módulo central de definición de planes (`src/lib/planes.ts`):**
+    - Definición unificada de planes sin pasarelas de pago ni cobros:
+      - `piloto_gratuito`: 2 aulas, 35 alumnos, 2 docentes. Funciones: `resumen_aula`, `metricas_basicas`, `fichas_familias`.
+      - `escuela`: 25 aulas, 750 alumnos, 40 docentes. Suma `reportes_curso_csv`, `reportes_imprimibles`, `vista_directivo_multiaula`, `comparacion_divisiones`, `alertas_tempranas`, `curriculo_personalizado`.
+      - `distrito`: Aulas, alumnos y docentes ilimitados. Suma `analiticas_distrito` y `exportacion_masiva`.
+    - Funciones `puedeUsar(target, feature)` y `limiteDe(target, limit)`:
+      - **Regla de oro para el aula piloto de Pedro:** si `!target` o `target.is_legacy_pilot`, devuelve siempre `true` para cualquier funcionalidad y `Infinity` para cualquier límite, garantizando total retrocompatibilidad.
+    - Función `planUpgradeNotice(feature)`: mensajes amables e institucionales sin botones de compra ni precios, orientados a la gestión directiva escolar.
+  - **Migración SQL y seguridad por roles (`supabase/migrations/20261004000100_directivo_y_planes.sql`):**
+    - Se agregó columna `plan text` a `public.schools` y `public.licenses` con default `'piloto_gratuito'`.
+    - Función SQL `public.school_active_plan(p_school uuid)`: resuelve el plan vigente consultando licencias activas o la configuración de la escuela.
+    - Función SQL `public.school_classrooms_summary(p_school uuid)` (`security definer`):
+      - Directivos (`school_admin`) y administradores globales (`super_admin`) ven todas las aulas de su escuela con métricas agregadas: total de alumnos matriculados, alumnos activos en los últimos 7 días, aciertos promedio, minutos de práctica y actividades completadas.
+      - Docentes (`teacher`) ven **exclusivamente sus propias aulas asignadas** dentro de la escuela.
+      - Usuarios sin relación con la escuela reciben error SQL 42501 (insufficient privilege).
+    - Función SQL `public.school_grade_comparison(p_school uuid, p_grade smallint, p_year int)` (`security definer`):
+      - Permite a la dirección comparar métricas entre divisiones paralelas del mismo grado (alumnos, activos 7d, aciertos promedio, actividades).
+    - Función SQL `public.assign_school_plan(...)`: administración de licencias reservada a `super_admin`.
+  - **Pruebas de base de datos en Postgres (`supabase/tests/db.test.mjs`):**
+    - Se incorporó la prueba del escenario multi-escuela: verificación de que directivos ven todas las aulas de su escuela, docentes solo ven sus aulas asignadas, y docentes ajenos son bloqueados con 42501.
+  - **Vista de Dirección en la UI (`src/app/docente/escuela/page.tsx`, `src/lib/platform/shared.ts`):**
+    - Badge visual del plan activo de la escuela y tarjeta de estado de límites (aulas utilizadas vs. cupo del plan).
+    - Quota check al crear aulas nuevas: si se alcanza el cupo del plan, se bloquea el formulario con un mensaje amable explicando el límite del plan actual.
+    - **Panel de Dirección Escolar (Multi-aula):**
+      - 4 métricas globales consolidadas: Aulas activas, Alumnos matriculados, Activos últimos 7 días con porcentaje, y Aciertos promedio general de la escuela.
+      - Tiempo acumulado de práctica en plataforma.
+    - **Comparación pedagógica entre divisiones del mismo grado:**
+      - Pestañas selectoras por grado (ej. 1.º, 2.º, 3.º).
+      - Tabla comparativa entre divisiones paralelas (A, B, C...) con alumnos, activos en 7d y aciertos promedio.
+      - Gráfico de barras visual en CSS puro con código de color pedagógico (verde $\ge 75\%$, ámbar $60-74\%$, rojo $< 60\%$).
+      - **Alerta temprana de equidad pedagógica:** si la diferencia de aciertos entre dos divisiones del mismo grado es $\ge 15$ puntos porcentuales, muestra un aviso destacado recomendando articular estrategias docentes.
+    - Listado de aulas enriquecido con métricas de 7d activos y aciertos promedio.
+  - **Script de prueba automatizado (`scripts/test-planes.ts`):**
+    - Valida catálogo de planes, fallbacks, `puedeUsar`, `limiteDe`, excepciones del aula piloto de Pedro, avisos amables, agregados multi-aula y brecha de rendimiento.
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-planes.ts`: 100% aprobado (catálogo, permisos, límites, cálculo de brecha de equidad y migración SQL).
+  - `npx tsx scripts/test-actividad.ts`: 100% aprobado (validado con los 22 alumnos reales de `.data/db.json`).
+  - `npx tsx scripts/test-reportes.ts`: 100% aprobado.
+  - `npx tsx scripts/test-curriculo.ts`: 100% aprobado.
+  - `npx tsx scripts/test-resumen.ts`: 100% aprobado.
+  - `npx tsx scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores de TypeScript.
+  - `npx eslint src`: 0 errores y 0 advertencias de ESLint.
+  - `npm run build`: compilación de producción con Next.js Turbopack 100% limpia (40 rutas generadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Límites numéricos provisorios de cada plan:**
+    - Se dejaron valores de ejemplo marcados como provisorios en `src/lib/planes.ts`:
+      - *Piloto Gratuito*: 2 aulas, 35 alumnos, 2 docentes.
+      - *Escuela*: 25 aulas, 750 alumnos, 40 docentes.
+      - *Distrito*: Ilimitado.
+    - Pedro puede ajustar estos números en cualquier momento en `src/lib/planes.ts`.
+  - **Funciones asignadas a cada plan:**
+    - Revisar si el plan Escuela debe incluir también la generación de diplomas de fin de año o módulos específicos adicionales.
+  - **Sensibilidad de la alerta de equidad entre divisiones:**
+    - Se fijó en $\ge 15$ puntos porcentuales de diferencia de aciertos entre divisiones paralelas del mismo grado; confirmar si prefiere un umbral más amplio (ej. 20 pts) o más estrecho (ej. 10 pts).
+
+### AG-11 · Actividad, alertas y evolución (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Métricas de actividad por alumno y aula (`src/types/index.ts`, `src/lib/progressLogic.ts`, `src/lib/activityMetrics.ts`):**
+    - Se agregó `activeDays?: string[]` a `StudentProgress` (días calendario `YYYY-MM-DD` con actividad, podado automáticamente a 120 días).
+    - `computeCurrentStreak`: calcula la racha actual continua; si el alumno jugó hoy cuenta hacia atrás desde hoy; si jugó ayer la racha se mantiene viva y cuenta desde ayer; si no jugó ni hoy ni ayer es 0.
+    - `computeStudentActivityMetrics`: calcula racha, días activos en los últimos 7 días, en los últimos 30 días, etiqueta amigable de última conexión («Hoy», «Ayer», «Hace 3 días») y detección de inactividad o caída.
+    - En el detalle del alumno (`src/app/admin/dashboard/page.tsx` pestaña «Registro y Fortalezas»): cuatro tarjetas métricas dedicadas (Racha con 🔥, Días activos 7d, Días activos 30d, Última conexión).
+    - En el Resumen del curso (`src/components/admin/CourseSummary.tsx`): columna fija de alumnos con indicador visual de racha y última conexión.
+  - **Alertas tempranas para el docente (`src/lib/data.ts`, `src/app/api/alerts/route.ts`, `src/components/admin/TeacherAlertsBanner.tsx`):**
+    - Tarjeta «🔔 Para mirar» en la cabecera del panel docente con dos criterios pedagógicos automáticos:
+      1. **Inactividad prolongada**: alumnos sin actividad en X días (configurable por el docente, 7 días por defecto). El docente puede cambiar el umbral directamente desde el panel y se persiste en `admin_alert_config` (store Upstash / `.data/db.json`).
+      2. **Caída marcada de rendimiento**: detecta si la precisión semanal cayó $\ge 20$ puntos porcentuales respecto al promedio de las 3 semanas anteriores (`PERFORMANCE_DROP_THRESHOLD_PTS = 20`), requiriendo al menos 5 actividades en cada período para validez estadística.
+    - Cada alerta permite hacer clic en el alumno y abre directamente su ficha y registro completo.
+  - **Evolución en el tiempo sin librerías pesadas (`src/components/admin/EvolutionChart.tsx`):**
+    - Gráfico ligero responsivo en SVG puro y Tailwind, con barras dobles para aciertos (%) y tiempo de práctica (minutos), más tooltips interactivos.
+    - Integrado en el detalle individual del alumno (`/admin/dashboard`), en el reporte familiar (`/admin/reporte/alumno`) y a nivel de toda el aula en el Resumen del curso (`CourseSummary.tsx`).
+- **2. Cómo se probó:**
+  - `scripts/test-actividad.ts`: suite integral automatizada que valida:
+    - Lógica de racha continua (hoy, ayer, corte de racha tras 2 días).
+    - Conteo exacto de días activos en ventanas de 7 y 30 días.
+    - Detección precisa de caída de rendimiento ($\ge 20$ pts con $\ge 5$ actividades) vs. rendimiento estable y casos con pocas actividades.
+    - Generación y severidad de alertas docentes con umbral por defecto y personalizado.
+    - Cálculo de series temporales de evolución (alumno y aula completa).
+    - Persistencia de configuración en base de datos.
+    - Validación sin errores sobre los 22 alumnos reales del aula piloto en `.data/db.json`.
+  - `scripts/test-reportes.ts`: 100% aprobado.
+  - `scripts/test-curriculo.ts`: 100% aprobado.
+  - `scripts/test-resumen.ts`: 100% aprobado.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción exitosa (40 rutas optimizadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Umbral de caída de rendimiento (20 pts):** Definido en la constante `PERFORMANCE_DROP_THRESHOLD_PTS = 20`. Pedro puede evaluar si prefiere que sea más sensible (ej. 15 pts) o más tolerante (25 pts).
+  - **Ventana de semanas en los gráficos:** Se configuró en 8 semanas para el detalle individual y 6 semanas para el aula y reporte familiar.
+
+### AG-10 · Reportes imprimibles para familias y planilla CSV del curso (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Módulo de generación de informes familiares (`src/lib/familyReport.ts`):**
+    - Función `computeFamilyReportData(student, progress, curriculumEntries, period)`:
+      - Admite selector de período: `"mes"` (últimos 30 días), `"trimestre"` (últimos 90 días) y `"ano"` (ciclo lectivo completo).
+      - Resumen pedagógico en lenguaje cálido, positivo y accesible para las familias (sin tecnicismos fríos ni porcentajes aislados sin contexto).
+      - Identificación de **Fortalezas Destacadas** vinculadas al diseño curricular (`area` y `eje`) destacando soltura y autonomía.
+      - **Orientaciones para el Hogar**: sugerencias concretas para la familia (ej. lectura compartida de 10 min, juegos de cálculo en compras cotidianas, observación dialogada del entorno) vinculadas a los contenidos a reforzar.
+      - **Evolución Semanal**: serie de las últimas 6 semanas con porcentaje de aciertos y volumen de actividades.
+      - Espacio formal para observaciones docentes y firma del equipo pedagógico.
+  - **Página imprimible por alumno (`src/app/admin/reporte/alumno/page.tsx`):**
+    - Ruta `/admin/reporte/alumno?code=...` protegida con sesión docente.
+    - Estilos `@media print` en tamaño A4 vertical con márgenes limpios, sin botones de navegación ni cabeceras web extrañas.
+    - Selector interactivo de período en pantalla y botón «🖨️ Imprimir / Guardar como PDF» que dispara `window.print()`.
+    - **Aislamiento absoluto de privacidad:** no muestra datos, nombres ni referencias a ningún otro estudiante.
+  - **Módulo y exportación a CSV del curso (`src/lib/courseExport.ts`):**
+    - Función `generateCourseCSV(students, progressMap, worldIds, curriculumEntries)`:
+      - Exporta con **BOM UTF-8 (`\uFEFF`)** y **separador punto y coma (`;`)** para apertura perfecta en Excel en español (sin caracteres corruptos ni problemas de columnas).
+      - Columnas detalladas: Alumno, Código, Grado, Mundos Completados, Precisión Global (%), Tiempo Total (min), Actividades Últimos 7 Días, Mundos con Bajo Desempeño (<50%), Mundos Pendientes de Refuerzo, y columnas por cada mundo habilitado con su mejor puntaje registrado.
+      - Función `downloadCourseCSV` que genera la descarga directa en el navegador.
+  - **Página imprimible del curso completo (`src/app/admin/reporte/curso/page.tsx`):**
+    - Ruta `/admin/reporte/curso` (con soporte `?grade=1`, `?grade=2`, `?grade=3` o todos).
+    - Formato A4 horizontal para impresión: incluye métricas globales del aula, tabla priorizada de «A quién ayudar primero», y grilla compacta de desempeño por mundo.
+    - Botones en barra superior para imprimir y descargar CSV directamente.
+  - **Integración con el Panel Docente (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`):**
+    - En el detalle de cada alumno (pestaña «Registro y Fortalezas»): botón destacado **«🖨️ Reporte para la familia»**.
+    - En el «Resumen del curso» (`CourseSummary.tsx`):
+      - Botones superiores **«🖨️ Reporte del curso»** y **«📥 Descargar CSV»**.
+      - En la columna fija de alumnos de la grilla: icono de acceso rápido **«🖨️»** para abrir el informe familiar individual en una pestaña nueva con un clic.
+- **2. Cómo se probó:**
+  - `scripts/test-reportes.ts`: suite automatizada integral que:
+    - Carga los 21 alumnos reales del aula piloto de `.data/db.json`.
+    - Genera el reporte familiar para 3 alumnos reales en los 3 períodos ("mes", "trimestre", "ano").
+    - **Verifica estricta privacidad**: comprueba que ningún nombre ni código de otro compañero aparezca en el contenido del informe.
+    - Verifica el CSV generado: validación de BOM `\uFEFF`, separador `;`, 22 filas exactas (cabecera + 21 alumnos), 0 valores `NaN` y 0 valores `undefined`.
+  - `scripts/test-curriculo.ts`: 100% aprobado.
+  - `scripts/test-resumen.ts`: 100% aprobado.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 errores y 0 advertencias.
+  - `npm run build`: compilación de producción exitosa con 39 rutas optimizadas.
+- **3. Decisiones pendientes para Pedro:**
+  - Si desea incluir el logo oficial de su escuela o membrete institucional en la cabecera de la hoja imprimible de las familias.
 
 ### CL-10 · Colecciones por temporada y avatares de logro (Claude)
 - **Calendario de la tienda** (`src/lib/coleccion/temporadas.ts`): 16 colecciones de octubre a marzo (Animales, Guardaparques, Diversidad Cultural, Halloween, Tradición, Soberanía, Yaguareté, Suelo, Montañas, Navidad, Año Nuevo, Verano, Educación Ambiental, Humedales, Carnaval, Regreso a clases) y la lista de fechas de abril a septiembre para la segunda tanda. Cada una se vende **15 días** (del día −7 al +7, con ajustes: Halloween 18/10–1/11, Navidad 15–29/12; Carnaval es fecha móvil) y **vuelve cada año**; fuera de su fecha queda **oculta** (lo comprado se sigue viendo). Halloween 2026 respeta el 2/11 ya anunciado. `unicaVez` para exclusivos de un solo año.
@@ -38,6 +176,85 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - Un ítem aparece solo cuando tiene imagen (`src/lib/coleccion/imagenes-listas.ts`, se regenera con `npx tsx scripts/coleccion/listar-imagenes.ts`). Arte de Antigravity en `arte/coleccion/**` → `python3 scripts/coleccion/procesar_arte.py` (quita fondo, ajusta al molde). Lista de lo que falta: `npx tsx scripts/coleccion/lista-para-dibujar.ts`.
 - Pruebas: `scripts/test-colecciones.ts`.
 
+### AG-09 · Mapeo curricular Santa Cruz con validación docente (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Mapeo curricular estructurado e independiente del código (`src/lib/curriculo/`):**
+    - `src/lib/curriculo/santa-cruz.json`: 289 entradas correspondientes a la totalidad de mundos del catálogo (1.º, 2.º, 3.º grado, mundos canónicos de comprensión lectora 11101..11119, 21101..21119, 31101..31106 y mundos de dictado semanal 28001, 38001).
+      - Cada entrada contiene: `area`, `eje`, `contenido`, `fuente` (con citas precisas del Diseño Curricular de Educación Primaria - Primer Ciclo de Santa Cruz, páginas 26 a 97 según área y grado) y `"validado": false` por defecto.
+    - `src/lib/curriculo/nap.json`: 289 entradas mapeadas a los Núcleos de Aprendizajes Prioritarios nacionales (1.er Ciclo EGB / Primaria).
+    - `src/lib/curriculo/index.ts`: módulo de gestión curricular con soporte multi-marco (`santa-cruz` por defecto, alternable a `nap`), resolución por número o string, y función de mezcla con validaciones del docente.
+  - **Persistencia de validaciones docentes en store sin mutar archivos JSON (`src/lib/data.ts`, `src/app/api/curriculum/route.ts`):**
+    - Métodos `getValidatedCurriculumWorldIds()` y `validateCurriculumWorld(worldId, validated)` en el almacén de datos (Upstash Redis / local fallback `curriculum_validated_worlds`).
+    - Endpoint API `GET /api/curriculum` y `POST /api/curriculum` protegido con contraseña docente para validar o invalidar mundos.
+  - **Visualización en el Panel Docente (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`):**
+    - En **Habilitar Mundos (`tab === "mundos"`)**:
+      - Banner superior de selección de marco curricular de referencia (`Santa Cruz (1.er Ciclo)` vs. `Nacional (NAP)`).
+      - Componente unificado `AdminWorldCard` para 1.º, 2.º y 3.º grado con visualización de área y eje, tooltip completo con contenido y fuente curricular, y estado de validación (`✅ Validado` o `⚠️ Pendiente de validar`).
+      - Botón interactivo «Revisé este dato» que permite a los docentes confirmar la correspondencia curricular y guardarla inmediatamente.
+    - En **Resumen del curso (`src/components/admin/CourseSummary.tsx`)**:
+      - Integración de área y eje en los encabezados y celdas individuales con advertencia `⚠️ Propuesta pedagógica pendiente de validación docente`.
+    - En **Registro y Fortalezas (`tab === "registro"`)**:
+      - Formato curricular estandarizado («Nombre · Área · Eje») en mundos con bajo desempeño, a un repaso de completar, contenidos todavía no trabajados, fortalezas y debilidades.
+  - **Script generador (`scripts/curriculo/generate-curriculo.ts`) y script de pruebas (`scripts/test-curriculo.ts`):**
+    - Generación y verificación automatizada de integridad curricular.
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-curriculo.ts`: 100% aprobado. Verifica los 289 mundos en ambos marcos (Santa Cruz y NAP), comprueba que ninguna entrada esté vacía ni falte, valida que `validado` sea `false` en los archivos JSON y comprueba el ciclo completo de validación y desvalidación en el store.
+  - `npx tsx scripts/test-resumen.ts`: suite de AG-08 verificada sin regresiones.
+  - `npx tsx scripts/test-privacidad.ts`: suite de AG-07 verificada sin regresiones.
+  - `npx tsc --noEmit`: 0 errores de TypeScript.
+  - `npx eslint src`: 0 advertencias y 0 errores de linter.
+  - `npm run build`: compilación de producción exitosa con Next.js 16.3.5 Turbopack.
+- **3. Decisiones pendientes para Pedro:**
+  - Revisar una muestra representativa de mundos en `/admin` (pestaña «Habilitar Mundos») y hacer clic en «Revisé este dato» para validar los contenidos asignados según el plan de clases real de su escuela.
+
+### AG-08 · Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero» (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Pestaña nueva «📋 Resumen del curso» en `/admin` (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`, `src/lib/courseSummary.ts`):**
+    - **Grilla de desempeño integral:**
+      - Filas: todos los alumnos del curso en orden alfabético mostrando su **nombre completo** (regla de privacidad: en el panel docente se usa el nombre completo). La columna del alumno es fija (`sticky`) para navegación fluida en dispositivos móviles.
+      - Columnas: agrupadas por materia (con `SubjectBadge`, emoji y etiqueta), mostrando cada mundo habilitado con su emoji y número/nombre corto.
+      - Estados y colores: 🟩 Dominado (≥ 90% en 3.º, ≥ 85% en 2.º, ≥ 80% en 1.º) · 🟨 En progreso (50–89%) · 🟥 Requiere ayuda (< 50%) · ⬜ No jugado.
+      - Cada celda muestra el mejor puntaje obtenido y cuenta con `title` detallado (ej. «Ana: 72 % en 2 vueltas (umbral de dominio: 90%)»).
+      - Filtros integrados: selector por materia («Todas las materias», «Matemática», «Lengua», etc.) y filtro por grado (3.º, 2.º, 1.º o Todos).
+      - Scroll horizontal responsivo para celulares y pantallas pequeñas.
+      - Al hacer clic en un alumno se abre directamente su registro y estadísticas completas.
+    - **Métricas globales arriba:**
+      - Precisión global: promedio real de respuestas correctas del aula en base al total de actividades resueltas.
+      - Actividad semanal: cantidad y porcentaje de alumnos con al menos una actividad registrada en los últimos 7 días.
+      - Mundos más difíciles: ranking de los 3 mundos con menor puntaje promedio (exigiendo un mínimo representativo de 3 alumnos).
+    - **Indicador pedagógico «🎯 A quién ayudar primero»:**
+      - Lista priorizada y ordenada de alumnos que requieren intervención urgente, calculada por cantidad de mundos con puntaje < 50% y días de inactividad (≥ 7 días o sin ingresos).
+      - Muestra el motivo exacto («3 mundos en rojo», «No juega hace 9 días», «Sin actividad registrada») y los mundos afectados.
+      - Acceso directo con un clic a su ficha individual.
+  - **Rendimiento de carga en una sola consulta (`src/app/api/students/route.ts`):**
+    - Se agregó el parámetro `withProgress=true` a `GET /api/students`, permitiendo obtener todos los alumnos y sus registros de progreso mediante `getProgressMany` en un solo viaje de ida y vuelta a la base de datos (0 llamadas individuales por alumno).
+  - **Persistencia de mejor puntaje (`src/types/index.ts`, `src/lib/progressLogic.ts`):**
+    - Se agregó `bestWorldScore?: Record<number, number>` a `StudentProgress` para almacenar de forma retrocompatible y registrar en cada `applyWorldAttempt` el puntaje más alto obtenido por el estudiante.
+  - **Clarificación de rótulos en «Registro y Fortalezas» (`src/app/admin/dashboard/page.tsx`):**
+    - «🌱 Mundos a tratar» se renombró a **«🌱 Mundos jugados con bajo desempeño»** con el texto de ayuda explicativo: «Mundos que el alumno ya jugó pero todavía no llegó al X %. Conviene repasarlos.».
+    - «📌 Contenidos a fortalecer» se reemplazó por **«📌 Contenidos todavía no trabajados»** con el cálculo exacto de mundos habilitados del programa que el alumno aún no inició, acompañado del texto de ayuda: «Mundos habilitados del programa que el alumno todavía no empezó a jugar.».
+    - Se conservó además el apartado **«💪 Fortalezas (precisión ≥ 80%)»** y una alerta diferenciada **«⚠️ Contenidos con precisión menor al 50%»** para mundos con baja precisión acumulada.
+
+- **2. Cómo se probó:**
+  - `scripts/test-resumen.ts`: suite automatizada que valida:
+    - Umbrales pedagógicos por grado (80% en 1.º, 85% en 2.º, 90% en 3.º).
+    - Estados por celda (unplayed, mastered, in_progress, needs_help) y conteo de vueltas.
+    - Cálculo matemático independiente de precisión global, actividad de los últimos 7 días y filtro de mundos más difíciles (≥ 3 alumnos).
+    - Priorización de «A quién ayudar primero» ordenando por mundos en rojo e inactividad.
+    - Verificación manual cruzada de 3 alumnos del aula piloto real (`.data/db.json`), comprobando coherencia entre mundos completados y la grilla.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `scripts/test-vuelta.ts`: 100% aprobado.
+  - `scripts/test-dictado.ts`: 100% aprobado.
+  - `scripts/test-cuentos.ts`: 100% aprobado.
+  - `scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción exitosa con Next.js 16.3.5 Turbopack.
+
+- **3. Decisiones pendientes para que revise Pedro:**
+  - **Pestaña por defecto en `/admin`:** Se configuró «📋 Resumen del curso» como la pestaña predeterminada al ingresar al panel docente, ya que ofrece una visión panorámica inmediata de toda la clase. Si Pedro prefiere que siga abriendo por defecto en «👥 Alumnos», se puede conmutar el estado inicial en una línea.
+  - **Criterio de umbral para mundos difíciles:** Se estableció el umbral mínimo en 3 alumnos para que un mundo entre al ranking de dificultad (evitando que el intento aislado de un solo alumno sesgue la métrica). Pedro puede ajustar este valor según el tamaño promedio esperado de las aulas.
+
 ### CL-09 · Retomar mundos, tienda por tiempo limitado y revisión de AG-06 (Claude)
 - **Retomar donde se dejó** (`src/lib/vuelta.ts`, `/api/round`): al empezar una vuelta se guardan sus actividades en el servidor (`roundsInProgress`, fuera de la versión liviana) y cada respuesta avanza el índice (`roundId` en `/api/progress`). Si el alumno sale y vuelve, sigue desde la primera que le falta, con las mismas actividades, en cualquier dispositivo. En el mapa: «👣 Seguí 3/10». Sin «empezar de nuevo» (no se puede borrar una vuelta mala). Vence a los 14 días; la del dictado, al cambiar la semana; máximo 8 mundos a medias. Pruebas: `scripts/test-vuelta.ts`.
 - **Tienda por tiempo limitado** (`src/lib/tiempo-limitado.ts`): avatares y objetos con `season` se compran solo durante su festividad (validado en el servidor). La tienda muestra cada festividad con contador («Quedan 30 días (hasta el 2/11)», «¡Último día!») y lo que llega en los próximos 21 días como «Próximamente». Junto a las monedas, aviso «⏳🎃 30 días». Lo comprado queda para siempre.
@@ -45,6 +262,46 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - Lápiz dorado ✏️ (imagen y ubicación) y visible en «Colección de temporada» del perfil cuando se gana. Arreglados los agujeros transparentes del corbatín a lunares.
 - **Revisión AG-06**: unida a main. Ajustes: el premio del dictado solo se acredita en semana de dictado, la vuelta siempre cuenta 10 (no se confía en el total del navegador), errores acotados; la semana y el nivel del dictado se calculan en hora argentina (servidor en UTC y navegador cambian juntos).
 - Pendiente: islas propias del Mundo del Dictado (por ahora usa la de práctica) y voces Kokoro de los textos largos de 2.º y 3.º.
+
+### AG-07 · Privacidad de menores: nombre visible, datos sensibles y límite de intentos (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Nombre para mostrar y desambiguación (`src/lib/studentNames.ts`, `src/types/index.ts`):**
+    - Se agregó el campo opcional `displayName?: string` a la interfaz `Student`.
+    - Se implementó `proposeDisplayName(fullName)`: deduce el nombre de pila contemplando partículas compuestas («De Urquiza Iñaki» → «Iñaki», «Garcia Maite» → «Maite», «Lorenzo Daniel Perez Veron» → «Lorenzo»).
+    - Se implementó `resolveDisplayNames(students)`: calcula al vuelo la desambiguación con inicial de apellido si hay colisiones en el mismo curso (ej. «Santiago S.» y «Santiago R.»; «Agustina A.» y «Agustina R.»). No pisa ni altera el valor original almacenado.
+  - **Privacidad en todas las vistas y APIs de alumnos:**
+    - `src/lib/news.ts`: `displayName()` nunca devuelve el nombre completo ni apellido. Usa el apodo de juego si existe, luego el `displayName` confirmado o la propuesta segura.
+    - `/api/messages`, `/api/news`, `/api/competition`: emplean `resolveDisplayNames` y filtran el objeto compañero para no exponer apellidos completos ni datos sensibles (`name` contiene solo el nombre visible resuelto; en `/api/news`, `age: null` para no revelar la edad/año a compañeros).
+    - `/api/progress`: en modo `lite=1` (usado por el cliente del alumno) anonimiza el nombre completo devolviendo solo el `displayName` o propuesta.
+    - `src/components/NewsBoard.tsx`: eliminado el renderizado de la edad `(age)`. Solo muestra «🎂 {name} cumple años hoy. ¡Saludalo!».
+  - **Gestión docente y migración de existentes:**
+    - `src/app/admin/dashboard/page.tsx`:
+      - Formulario de alta con campo de «Visible:» auto-propuesto y editable.
+      - Cartel interactivo de migración «Confirmá cómo se muestra el nombre de cada alumno» para revisar y confirmar en lote los nombres propuestos de alumnos existentes vía `PATCH /api/students` (`updates: [...]`).
+    - `src/components/admin/StudentBlock.tsx`: editor en línea de `displayName` para cada alumno. Corrección del selector de fecha: eliminado el valor hardcodeado `2018-` que anteponía el año 2018 a fechas `MM-DD`.
+    - `src/app/docente/aula/page.tsx`: formulario de inscripción con propuesta y edición de `nickname` (columna nativa de Supabase).
+    - `src/app/docente/alumno/page.tsx`: detalle del alumno con visualización y edición en vivo del nombre visible en el juego.
+  - **Control de intentos y rate limiting (`src/lib/rateLimit.ts`):**
+    - Sistema de rate limiting por IP: máximo 8 intentos fallidos de código en una ventana de 10 minutos. Al 8.º fallo, la IP queda bloqueada por 10 minutos con mensaje amable («Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.»).
+    - Integrado en `/api/progress`, `/api/messages`, `/api/competition`, `/api/world-attempt`, `/api/worlds` y `/api/weekend`.
+  - **Aislamiento de aulas y aula abierta (`src/lib/data.ts`):**
+    - `sameClassroom(a, b)`: garantiza que los alumnos del aula abierta pública (`OPEN_CLASSROOM_ID`) nunca sean considerados compañeros entre sí ni de otras aulas, asegurando aislamiento total entre familias independientes.
+  - **Script de limpieza de fechas (`scripts/privacidad/limpiar-fechas.ts`):**
+    - Inspecciona el store, reporta fechas anómalas (como `2018-10-04` o fechas idénticas repetidas en ≥3 alumnos) y permite limpiarlas con `--aplicar`.
+
+- **2. Cómo se probó:**
+  - `scripts/test-privacidad.ts`: suite completa de 5 bloques probando `proposeDisplayName`, resolución de duplicados con iniciales de apellido, anonimización en `displayName()`, bloqueo de IP al 8.º intento fallido con reset, y aislamiento de `sameClassroom`.
+  - `scripts/privacidad/limpiar-fechas.ts`: ejecutado en simulación sobre los 22 alumnos reales del aula piloto.
+  - `npx tsx scripts/test-dictado.ts`: 100% aprobado.
+  - `npx tsx scripts/test-cuentos.ts`: 100% aprobado.
+  - `npx tsx scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción Next.js 16.3.5 Turbopack exitosa.
+
+- **3. Decisiones pendientes para que revise Pedro:**
+  - **¿Fecha completa o solo día y mes?:** Actualmente el sistema tolera tanto `AAAA-MM-DD` como `MM-DD`. En las vistas de alumnos ya no se expone el año ni la edad (solo «🎂 hoy cumple años»). Queda a decisión de Pedro si prefiere que el docente cargue únicamente día y mes (`MM-DD`) en el formulario para no almacenar el año de nacimiento de los menores.
+  - **Texto del aviso de confirmación de nombres:** Se implementó «Confirmá cómo se muestra el nombre de cada alumno» con explicación de privacidad. Pedro puede ajustar la redacción final si prefiere otro tono.
 
 ### AG-06 · Textos más largos por grado y dictados de números y palabras (Antigravity)
 - **Parte A: Textos más largos por grado:**

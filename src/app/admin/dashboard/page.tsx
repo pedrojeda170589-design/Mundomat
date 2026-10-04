@@ -14,20 +14,33 @@ import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
 
+import CourseSummary from "@/components/admin/CourseSummary";
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
 import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
+import { proposeDisplayName } from "@/lib/studentNames";
+import { CurriculumEntry } from "@/lib/curriculo";
+import TeacherAlertsBanner from "@/components/admin/TeacherAlertsBanner";
+import EvolutionChart from "@/components/admin/EvolutionChart";
+import { computeStudentActivityMetrics, computeStudentEvolution } from "@/lib/activityMetrics";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [adminPassword, setAdminPassword] = useState<string | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
+  const [progressMap, setProgressMap] = useState<Record<string, StudentProgress>>({});
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
+  const [curriculumEntries, setCurriculumEntries] = useState<Record<string, CurriculumEntry>>({});
+  const [activeCurriculo, setActiveCurriculo] = useState<"santa-cruz" | "nap">("santa-cruz");
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [displayNameTouched, setDisplayNameTouched] = useState(false);
+  const [confirmingNames, setConfirmingNames] = useState(false);
+  const [proposedEdits, setProposedEdits] = useState<Record<string, string>>({});
   const [newGrade, setNewGrade] = useState(3);
   // Pestaña de mundos: grado que se está configurando y sus mundos habilitados.
   const [worldsGrade, setWorldsGrade] = useState(3);
@@ -37,18 +50,20 @@ export default function AdminDashboardPage() {
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedProgress, setSelectedProgress] =
     useState<StudentProgress | null>(null);
-  const [tab, setTab] = useState<"alumnos" | "mundos" | "registro">(
-    "alumnos"
+  const [tab, setTab] = useState<"resumen" | "alumnos" | "mundos" | "registro">(
+    "resumen"
   );
 
   const loadAll = useCallback(async (pw: string) => {
     setLoading(true);
-    const [studentsRes, worldsRes] = await Promise.all([
-      fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}`),
+    const [studentsRes, worldsRes, curriculoRes] = await Promise.all([
+      fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}&withProgress=true`),
       fetch("/api/worlds"),
+      fetch(`/api/curriculum?adminPassword=${encodeURIComponent(pw)}`),
     ]);
     const studentsData = await studentsRes.json();
     const worldsData = await worldsRes.json();
+    const curriculoData = await curriculoRes.json();
     fetch("/api/worlds?grade=1")
       .then((r) => r.json())
       .then((d) => setG1Enabled(d.config?.enabledWorldIds ?? []))
@@ -58,9 +73,48 @@ export default function AdminDashboardPage() {
       .then((d) => setG2Enabled(d.config?.enabledWorldIds ?? []))
       .catch(() => {});
     setStudents(studentsData.students ?? []);
+    setProgressMap(studentsData.progressMap ?? {});
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
+    setCurriculumEntries(curriculoData.entries ?? {});
+    setActiveCurriculo(curriculoData.curriculo ?? "santa-cruz");
     setLoading(false);
   }, []);
+
+  async function handleValidateCurriculum(worldId: number) {
+    if (!adminPassword) return;
+    const res = await fetch("/api/curriculum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        adminPassword,
+        worldId,
+        validated: true,
+        curriculo: activeCurriculo,
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      setCurriculumEntries((prev) => {
+        const next = { ...prev };
+        if (next[String(worldId)]) {
+          next[String(worldId)] = { ...next[String(worldId)], validado: true };
+        }
+        return next;
+      });
+    }
+  }
+
+  async function handleSwitchCurriculo(cId: "santa-cruz" | "nap") {
+    setActiveCurriculo(cId);
+    if (!adminPassword) return;
+    const res = await fetch(
+      `/api/curriculum?adminPassword=${encodeURIComponent(adminPassword)}&curriculo=${cId}`
+    );
+    const data = await res.json();
+    if (data.entries) {
+      setCurriculumEntries(data.entries);
+    }
+  }
 
   useEffect(() => {
     const pw = sessionStorage.getItem("mundomat_admin_password");
@@ -84,6 +138,7 @@ export default function AdminDashboardPage() {
   );
   const primero = useMemo(() => students.filter((s) => s.grade === 1), [students]);
   const segundo = useMemo(() => students.filter((s) => s.grade === 2), [students]);
+  const unconfirmedStudents = useMemo(() => students.filter((s) => !s.displayName), [students]);
 
   async function handleAddStudent(e: React.FormEvent) {
     e.preventDefault();
@@ -93,15 +148,48 @@ export default function AdminDashboardPage() {
       const res = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName.trim(), adminPassword, grade: newGrade }),
+        body: JSON.stringify({
+          name: newName.trim(),
+          displayName: (newDisplayName.trim() || proposeDisplayName(newName.trim())) || undefined,
+          adminPassword,
+          grade: newGrade,
+        }),
       });
       const data = await res.json();
       if (data.student) {
         setStudents((prev) => [...prev, data.student]);
         setNewName("");
+        setNewDisplayName("");
+        setDisplayNameTouched(false);
       }
     } finally {
       setAdding(false);
+    }
+  }
+
+  async function handleConfirmAllProposed() {
+    if (!adminPassword || unconfirmedStudents.length === 0) return;
+    setConfirmingNames(true);
+    try {
+      const updates = unconfirmedStudents.map((s) => ({
+        code: s.code,
+        displayName: proposedEdits[s.code]?.trim() || proposeDisplayName(s.name),
+      }));
+      const res = await fetch("/api/students", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updates, adminPassword }),
+      });
+      if (res.ok) {
+        setStudents((prev) =>
+          prev.map((s) => {
+            const upd = updates.find((u) => u.code === s.code);
+            return upd ? { ...s, displayName: upd.displayName } : s;
+          })
+        );
+      }
+    } finally {
+      setConfirmingNames(false);
     }
   }
 
@@ -171,9 +259,15 @@ export default function AdminDashboardPage() {
   async function handleViewStats(code: string) {
     setSelectedCode(code);
     setTab("registro");
+    if (progressMap[code]) {
+      setSelectedProgress(progressMap[code]);
+    }
     const res = await fetch(`/api/progress?code=${encodeURIComponent(code)}`);
     const data = await res.json();
-    setSelectedProgress(data.progress ?? null);
+    if (data.progress) {
+      setSelectedProgress(data.progress);
+      setProgressMap((prev) => ({ ...prev, [code]: data.progress }));
+    }
   }
 
   function handleLogout() {
@@ -192,8 +286,21 @@ export default function AdminDashboardPage() {
   const selectedStudent = students.find((s) => s.code === selectedCode);
   const stats =
     selectedProgress && selectedStudent
-      ? computeStudentStats(selectedProgress, (id) => getWorld(id)?.name ?? "?")
+      ? computeStudentStats(selectedProgress, (id) => {
+          const w = getWorld(id);
+          const name = w?.name ?? "?";
+          const curr = curriculumEntries[String(id)];
+          return curr ? `${name} · ${curr.area} · ${curr.eje}` : name;
+        })
       : null;
+
+  const activityMetrics = selectedProgress
+    ? computeStudentActivityMetrics(selectedProgress)
+    : null;
+
+  const studentEvolution = selectedProgress
+    ? computeStudentEvolution(selectedProgress, 8)
+    : [];
 
   return (
     <main className="relative flex-1 bg-explorer-day py-8 px-4 overflow-hidden">
@@ -219,6 +326,7 @@ export default function AdminDashboardPage() {
 
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
+            { id: "resumen", label: "📋 Resumen del curso" },
             { id: "alumnos", label: "👥 Alumnos" },
             { id: "mundos", label: "🗺️ Habilitar Mundos" },
             { id: "registro", label: "📊 Registro y Fortalezas" },
@@ -237,18 +345,91 @@ export default function AdminDashboardPage() {
           ))}
         </div>
 
+        <TeacherAlertsBanner
+          students={students}
+          progressMap={progressMap}
+          adminPassword={adminPassword}
+          onSelectStudent={handleViewStats}
+        />
+
+        {tab === "resumen" && (
+          <CourseSummary
+            students={students}
+            progressMap={progressMap}
+            enabledWorldIds={enabledWorldIds}
+            g2Enabled={g2Enabled}
+            g1Enabled={g1Enabled}
+            curriculumEntries={curriculumEntries}
+            onSelectStudent={handleViewStats}
+          />
+        )}
+
         {tab === "alumnos" && (
           <div className="flex flex-col gap-4">
+            {unconfirmedStudents.length > 0 && (
+              <div className="rounded-2xl border-2 border-amber-600 bg-amber-50 p-4 shadow-sm flex flex-col gap-3">
+                <div className="flex items-start justify-between gap-2 flex-wrap">
+                  <div>
+                    <h4 className="font-bold text-amber-950 text-base flex items-center gap-2">
+                      <span>🔒</span> Confirmá cómo se muestra el nombre de cada alumno
+                    </h4>
+                    <p className="text-xs text-amber-900/80 mt-1">
+                      Por privacidad de menores, sus compañeros solo ven este nombre (nunca el apellido completo ni datos sensibles). Revisá las propuestas sugeridas y confirmá:
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleConfirmAllProposed}
+                    disabled={confirmingNames}
+                    className="shrink-0 rounded-xl bg-emerald-600 text-white font-bold px-4 py-2 text-sm shadow hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    {confirmingNames ? "Guardando…" : `✅ Confirmar todos (${unconfirmedStudents.length})`}
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-1">
+                  {unconfirmedStudents.map((s) => (
+                    <div key={s.code} className="flex items-center justify-between gap-2 rounded-xl bg-white/80 p-2 border border-amber-700/20 text-xs">
+                      <span className="font-medium text-amber-950 truncate flex-1" title={s.name}>{s.name}</span>
+                      <span className="text-amber-800/40">→</span>
+                      <input
+                        value={proposedEdits[s.code] ?? proposeDisplayName(s.name)}
+                        onChange={(e) => setProposedEdits((prev) => ({ ...prev, [s.code]: e.target.value }))}
+                        className="w-28 rounded border border-amber-700/30 px-1.5 py-0.5 font-bold text-amber-950 bg-white"
+                        title="Nombre para mostrar"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <form
               onSubmit={handleAddStudent}
-              className="parchment-panel flex gap-2 rounded-2xl p-3"
+              className="parchment-panel flex flex-col sm:flex-row gap-2 rounded-2xl p-3"
             >
               <input
                 value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Nombre del nuevo estudiante"
+                onChange={(e) => {
+                  setNewName(e.target.value);
+                  if (!displayNameTouched) {
+                    setNewDisplayName(proposeDisplayName(e.target.value));
+                  }
+                }}
+                placeholder="Nombre completo del estudiante"
                 className="flex-1 min-w-0 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-2 text-amber-950 outline-none focus:border-amber-500 placeholder:text-amber-800/40"
               />
+              <div className="flex items-center gap-1.5 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-1 text-xs">
+                <span className="text-amber-950/70 font-semibold shrink-0">Visible:</span>
+                <input
+                  value={newDisplayName}
+                  onChange={(e) => {
+                    setDisplayNameTouched(true);
+                    setNewDisplayName(e.target.value);
+                  }}
+                  placeholder="Nombre para mostrar"
+                  className="w-32 bg-transparent text-amber-950 font-bold outline-none"
+                  title="Nombre que ven sus compañeros en el juego"
+                />
+              </div>
               <select
                 value={newGrade}
                 onChange={(e) => setNewGrade(Number(e.target.value))}
@@ -275,6 +456,7 @@ export default function AdminDashboardPage() {
               adminPassword={adminPassword}
               onDeleted={handleDeleted}
               onViewStats={handleViewStats}
+              onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
               selectedCode={selectedCode}
             />
             <StudentBlock
@@ -284,6 +466,7 @@ export default function AdminDashboardPage() {
               adminPassword={adminPassword}
               onDeleted={handleDeleted}
               onViewStats={handleViewStats}
+              onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
               selectedCode={selectedCode}
             />
             {segundo.length > 0 && (
@@ -294,17 +477,19 @@ export default function AdminDashboardPage() {
                 adminPassword={adminPassword}
                 onDeleted={handleDeleted}
                 onViewStats={handleViewStats}
+                onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
                 selectedCode={selectedCode}
               />
             )}
             {primero.length > 0 && (
               <StudentBlock
                 title="Alumnos de 1.º grado"
-                emoji="🌱"
+                emoji="🐧"
                 students={primero}
                 adminPassword={adminPassword}
                 onDeleted={handleDeleted}
                 onViewStats={handleViewStats}
+                onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
                 selectedCode={selectedCode}
               />
             )}
@@ -312,6 +497,32 @@ export default function AdminDashboardPage() {
             <MailboxAdmin adminPassword={adminPassword} />
             <CompetitionAdmin adminPassword={adminPassword} />
             <OpenClassroomAdmin adminPassword={adminPassword} />
+          </div>
+        )}
+
+        {tab === "mundos" && (
+          <div className="bg-amber-100/90 border border-amber-300 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+            <div>
+              <p className="text-amber-950 font-black text-sm flex items-center gap-1.5">
+                🏛️ Marco Curricular de Referencia
+              </p>
+              <p className="text-amber-900/80 text-xs">
+                {activeCurriculo === "santa-cruz"
+                  ? "Diseño Curricular de Educación Primaria - Primer Ciclo (Consejo Provincial de Educación de Santa Cruz)"
+                  : "Núcleos de Aprendizajes Prioritarios (NAP) - 1.er Ciclo Primaria"}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-bold text-amber-950">Marco:</label>
+              <select
+                value={activeCurriculo}
+                onChange={(e) => void handleSwitchCurriculo(e.target.value as "santa-cruz" | "nap")}
+                className="bg-white text-xs font-bold text-amber-950 border border-amber-400 rounded-lg px-2.5 py-1.5 shadow-sm"
+              >
+                <option value="santa-cruz">Santa Cruz (1.er Ciclo)</option>
+                <option value="nap">Nacional (NAP)</option>
+              </select>
+            </div>
           </div>
         )}
 
@@ -352,27 +563,18 @@ export default function AdminDashboardPage() {
                     </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {ws.map((w) => {
-                      const enabled = g2Enabled.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleG2World([w.id], !enabled)}
-                          title={w.objective}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.worldNumber}. {w.name}
-                          </p>
-                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {ws.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={`${w.worldNumber}. ${w.name}`}
+                        objective={w.objective}
+                        enabled={g2Enabled.includes(w.id)}
+                        onToggle={() => toggleG2World([w.id], !g2Enabled.includes(w.id))}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -402,27 +604,18 @@ export default function AdminDashboardPage() {
                     </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {ws.map((w) => {
-                      const enabled = g1Enabled.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleG1World([w.id], !enabled)}
-                          title={w.objective}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.worldNumber}. {w.name}
-                          </p>
-                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {ws.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={`${w.worldNumber}. ${w.name}`}
+                        objective={w.objective}
+                        enabled={g1Enabled.includes(w.id)}
+                        onToggle={() => toggleG1World([w.id], !g1Enabled.includes(w.id))}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -437,39 +630,44 @@ export default function AdminDashboardPage() {
               const subjectWorlds = WORLDS.filter(
                 (w) => w.subject === subject
               );
+              const allOn = subjectWorlds.every((w) => enabledWorldIds.includes(w.id));
               return (
                 <div key={subject}>
-                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2">
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2 flex-wrap">
                     <SubjectBadge subject={subject} size={30} />
-                    {info.label}
+                    {info.label} · 3.º
+                    <button
+                      onClick={() => {
+                        const ids = subjectWorlds.map((w) => w.id);
+                        const next = allOn
+                          ? enabledWorldIds.filter((id) => !ids.includes(id))
+                          : Array.from(new Set([...enabledWorldIds, ...ids]));
+                        setEnabledWorldIds(next);
+                        if (adminPassword) {
+                          void fetch("/api/worlds", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ enabledWorldIds: next, adminPassword }),
+                          });
+                        }
+                      }}
+                      className="ml-auto text-xs font-bold rounded-full bg-white/80 border border-amber-700/30 px-3 py-1"
+                    >
+                      {allOn ? "Bloquear todos" : "Habilitar todos"}
+                    </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {subjectWorlds.map((w) => {
-                      const enabled = enabledWorldIds.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleWorld(w.id)}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled
-                              ? "border-emerald-500 bg-emerald-400/20"
-                              : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.name}
-                          </p>
-                          <p
-                            className={`text-xs font-semibold mt-2 ${
-                              enabled ? "text-emerald-700" : "text-amber-800/50"
-                            }`}
-                          >
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {subjectWorlds.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={w.name}
+                        enabled={enabledWorldIds.includes(w.id)}
+                        onToggle={() => toggleWorld(w.id)}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -505,9 +703,18 @@ export default function AdminDashboardPage() {
               <div className="parchment-panel rounded-2xl p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
-                    <p className="text-amber-950 font-bold text-lg">
-                      {selectedStudent.name}
-                    </p>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <p className="text-amber-950 font-bold text-lg">
+                        {selectedStudent.name}
+                      </p>
+                      <Link
+                        href={`/admin/reporte/alumno?code=${encodeURIComponent(selectedStudent.code)}`}
+                        target="_blank"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5"
+                      >
+                        🖨️ Reporte para la familia
+                      </Link>
+                    </div>
                     <p className="text-amber-800/60 text-xs font-mono">
                       Código: {selectedStudent.code}
                     </p>
@@ -555,20 +762,69 @@ export default function AdminDashboardPage() {
                   />
                 </div>
 
+                {activityMetrics && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <Stat
+                      label="Racha de actividad"
+                      value={activityMetrics.streakDays > 0 ? `🔥 ${activityMetrics.streakDays} ${activityMetrics.streakDays === 1 ? "día" : "días"}` : "0 días"}
+                    />
+                    <Stat
+                      label="Días activos (últimos 7d)"
+                      value={`${activityMetrics.activeDaysLast7} / 7`}
+                    />
+                    <Stat
+                      label="Días activos (últimos 30d)"
+                      value={`${activityMetrics.activeDaysLast30} / 30`}
+                    />
+                    <Stat
+                      label="Última conexión"
+                      value={activityMetrics.lastConnectionLabel}
+                    />
+                  </div>
+                )}
+
+                {activityMetrics?.hasPerformanceDrop && (
+                  <div className="rounded-xl border-2 border-amber-600 bg-amber-50 p-3.5 flex items-start gap-3 shadow-sm">
+                    <span className="text-xl">⚠️</span>
+                    <div className="text-xs">
+                      <p className="font-bold text-amber-950">
+                        Atención pedagógica: caída de precisión reciente
+                      </p>
+                      <p className="text-amber-900/80 mt-0.5">
+                        El promedio de aciertos de los últimos 7 días ({activityMetrics.recentAccuracyPct}%) cayó más de 20 puntos respecto al período previo ({activityMetrics.priorAccuracyPct}%). Conviene repasar mundos anteriores o revisar dudas en clase.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {studentEvolution.length > 0 && (
+                  <div className="rounded-2xl bg-white/70 border-2 border-amber-700/20 p-4 shadow-sm">
+                    <EvolutionChart
+                      data={studentEvolution}
+                      title="Evolución semanal del alumno (últimas 8 semanas)"
+                    />
+                  </div>
+                )}
+
                 {!!selectedProgress.worldsNeedingTeacherReview?.length && (
                   <div>
-                    <p className="text-orange-700 font-semibold text-sm mb-1">
-                      🌱 Mundos a tratar (no llegaron al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%)
+                    <p className="text-orange-700 font-semibold text-sm mb-0.5">
+                      🌱 Mundos jugados con bajo desempeño
+                    </p>
+                    <p className="text-xs text-orange-900/70 mb-1">
+                      Mundos que el alumno ya jugó pero todavía no llegó al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%. Conviene repasarlos.
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsNeedingTeacherReview
                         .map((id) => {
                           const name = getWorld(id)?.name ?? "?";
+                          const curr = curriculumEntries[String(id)];
+                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
                           const score =
                             selectedProgress.lastWorldAttemptScore?.[id];
                           return score !== undefined
-                            ? `${name} (${score}%)`
-                            : name;
+                            ? `${name}${tag} (${score}%)`
+                            : `${name}${tag}`;
                         })
                         .join(", ")}
                     </p>
@@ -582,7 +838,12 @@ export default function AdminDashboardPage() {
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsPendingReinforcementRetry
-                        .map((id) => getWorld(id)?.name ?? "?")
+                        .map((id) => {
+                          const name = getWorld(id)?.name ?? "?";
+                          const curr = curriculumEntries[String(id)];
+                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
+                          return `${name}${tag}`;
+                        })
                         .join(", ")}
                     </p>
                   </div>
@@ -604,7 +865,7 @@ export default function AdminDashboardPage() {
 
                 <div>
                   <p className="text-emerald-700 font-semibold text-sm mb-1">
-                    💪 Fortalezas
+                    💪 Fortalezas (precisión ≥ 80%)
                   </p>
                   {stats.strengths.length ? (
                     <p className="text-amber-950/80 text-sm">
@@ -616,20 +877,64 @@ export default function AdminDashboardPage() {
                     </p>
                   )}
                 </div>
+
                 <div>
-                  <p className="text-amber-700 font-semibold text-sm mb-1">
-                    📌 Contenidos a fortalecer
+                  <p className="text-amber-700 font-semibold text-sm mb-0.5">
+                    📌 Contenidos todavía no trabajados
                   </p>
-                  {stats.toImprove.length ? (
+                  <p className="text-xs text-amber-900/70 mb-1">
+                    Mundos habilitados del programa que el alumno todavía no empezó a jugar.
+                  </p>
+                  {(() => {
+                    const grade = selectedStudent.grade ?? 3;
+                    const enabled = grade === 1 ? g1Enabled : grade === 2 ? g2Enabled : enabledWorldIds;
+                    const unworked = enabled
+                      .filter((id) => {
+                        const completed = selectedProgress.completedWorlds.includes(id);
+                        const pending = selectedProgress.worldsPendingReinforcementRetry?.includes(id);
+                        const needing = selectedProgress.worldsNeedingTeacherReview?.includes(id);
+                        const inSummary =
+                          selectedProgress.activitySummary?.[id] &&
+                          (selectedProgress.activitySummary[id].correct > 0 ||
+                            selectedProgress.activitySummary[id].incorrect > 0);
+                        const inLog = selectedProgress.activityLog.some((a) => a.worldId === id);
+                        const hasScore = selectedProgress.lastWorldAttemptScore?.[id] !== undefined;
+                        return !completed && !pending && !needing && !inSummary && !inLog && !hasScore;
+                      })
+                      .map((id) => {
+                        const name = getWorld(id)?.name ?? `Mundo ${id}`;
+                        const curr = curriculumEntries[String(id)];
+                        return curr ? `${name} · ${curr.area} · ${curr.eje}` : name;
+                      });
+
+                    if (unworked.length > 0) {
+                      return (
+                        <p className="text-amber-950/80 text-sm">
+                          {unworked.join(", ")}
+                        </p>
+                      );
+                    }
+                    return (
+                      <p className="text-emerald-700 font-semibold text-sm">
+                        ✨ ¡Ya comenzó o completó todos los mundos habilitados!
+                      </p>
+                    );
+                  })()}
+                </div>
+
+                {stats.toImprove.length > 0 && (
+                  <div>
+                    <p className="text-rose-700 font-semibold text-sm mb-0.5">
+                      ⚠️ Contenidos con precisión menor al 50%
+                    </p>
+                    <p className="text-xs text-rose-900/70 mb-1">
+                      Mundos con bajo porcentaje de respuestas correctas acumuladas.
+                    </p>
                     <p className="text-amber-950/80 text-sm">
                       {stats.toImprove.join(", ")}
                     </p>
-                  ) : (
-                    <p className="text-amber-800/50 text-sm">
-                      Todavía no hay suficientes datos.
-                    </p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -655,3 +960,86 @@ function Stat({ label, value }: { label: string; value: string | number }) {
     </div>
   );
 }
+
+function AdminWorldCard({
+  emoji,
+  title,
+  objective,
+  enabled,
+  onToggle,
+  curr,
+  onValidate,
+}: {
+  emoji: string;
+  title: string;
+  objective?: string;
+  enabled: boolean;
+  onToggle: () => void;
+  curr?: CurriculumEntry;
+  onValidate: () => void;
+}) {
+  return (
+    <div
+      className={`rounded-2xl p-3 text-left border-2 transition flex flex-col justify-between ${
+        enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        title={objective ?? (curr?.contenido ? `${curr.contenido} (${curr.fuente})` : undefined)}
+        className="text-left w-full focus:outline-none cursor-pointer"
+      >
+        <div className="text-2xl mb-1">{emoji}</div>
+        <p className="text-amber-950 text-sm font-bold leading-tight">
+          {title}
+        </p>
+        <p
+          className={`text-xs font-semibold mt-2 ${
+            enabled ? "text-emerald-700" : "text-amber-800/50"
+          }`}
+        >
+          {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
+        </p>
+      </button>
+
+      {curr && (
+        <div className="mt-2.5 pt-2 border-t border-amber-900/10 text-xs">
+          <p
+            className="text-amber-900/80 font-medium text-[11px] leading-tight line-clamp-2"
+            title={`${curr.area} · ${curr.eje} - ${curr.contenido} (${curr.fuente})`}
+          >
+            📚 <span className="font-bold text-amber-950">{curr.area}</span> · {curr.eje}
+          </p>
+          <div className="mt-1.5 flex items-center justify-between gap-1 flex-wrap">
+            {curr.validado ? (
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full border border-emerald-300">
+                ✅ Validado
+              </span>
+            ) : (
+              <>
+                <span
+                  className="text-[10px] bg-amber-100 text-amber-900 font-medium px-1.5 py-0.5 rounded-full border border-amber-300"
+                  title="Propuesta algorítmica pendiente de validación docente"
+                >
+                  ⚠️ Pendiente de validar
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onValidate();
+                  }}
+                  className="text-[10px] font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2 py-0.5 rounded transition cursor-pointer"
+                >
+                  Revisé este dato
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+

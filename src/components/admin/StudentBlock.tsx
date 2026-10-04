@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Student } from "@/types";
+import { proposeDisplayName } from "@/lib/studentNames";
 
 interface Props {
   title: string;
@@ -10,6 +11,7 @@ interface Props {
   adminPassword: string;
   onDeleted: (code: string) => void;
   onViewStats: (code: string) => void;
+  onStudentUpdated?: (student: Student) => void;
   selectedCode?: string | null;
 }
 
@@ -20,16 +22,16 @@ export default function StudentBlock({
   adminPassword,
   onDeleted,
   onViewStats,
+  onStudentUpdated,
   selectedCode,
 }: Props) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [deletingCode, setDeletingCode] = useState<string | null>(null);
-  // Cumpleaños cargados en esta sesión (para mostrar el cambio al instante).
+  // Cumpleaños y nombres para mostrar cargados en esta sesión.
   const [birthdays, setBirthdays] = useState<Record<string, string>>({});
+  const [displayNames, setDisplayNames] = useState<Record<string, string>>({});
 
-  // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío). Mientras
-  // se escribe el año el valor puede ser incompleto: se muestra tal cual y
-  // solo se guarda cuando la fecha es válida (o cuando se borra).
+  // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío).
   async function handleBirthday(code: string, value: string) {
     setBirthdays((b) => ({ ...b, [code]: value }));
     const valid = /^(19|20)\d\d-\d\d-\d\d$/.test(value);
@@ -37,8 +39,25 @@ export default function StudentBlock({
     await fetch("/api/students", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, birthday: value, adminPassword }),
+      body: JSON.stringify({ code, birthday: value || undefined, adminPassword }),
     });
+    const s = students.find((x) => x.code === code);
+    if (s && onStudentUpdated) {
+      onStudentUpdated({ ...s, birthday: value || undefined });
+    }
+  }
+
+  async function handleDisplayNameChange(code: string, value: string) {
+    setDisplayNames((prev) => ({ ...prev, [code]: value }));
+    await fetch("/api/students", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, displayName: value.trim() || undefined, adminPassword }),
+    });
+    const s = students.find((x) => x.code === code);
+    if (s && onStudentUpdated) {
+      onStudentUpdated({ ...s, displayName: value.trim() || undefined });
+    }
   }
 
   async function handleCopy(code: string) {
@@ -88,17 +107,35 @@ export default function StudentBlock({
                   : "border-amber-700/15 bg-white/50"
               }`}
             >
-              <button
-                onClick={() => onViewStats(s.code)}
-                className="text-left flex-1 min-w-0"
-              >
-                <p className="text-amber-950 text-sm font-semibold truncate">
-                  {s.name}
-                </p>
-              </button>
+              <div className="flex-1 min-w-0 flex flex-col">
+                <button
+                  onClick={() => onViewStats(s.code)}
+                  className="text-left min-w-0"
+                >
+                  <p className="text-amber-950 text-sm font-semibold truncate">
+                    {s.name}
+                  </p>
+                </button>
+                <div className="flex items-center gap-1.5 text-xs text-amber-900/80 mt-0.5">
+                  <span className="shrink-0 text-amber-950/60 font-medium">Visible:</span>
+                  <input
+                    type="text"
+                    value={displayNames[s.code] ?? (s.displayName || "")}
+                    placeholder={proposeDisplayName(s.name)}
+                    onChange={(e) => handleDisplayNameChange(s.code, e.target.value)}
+                    title="Nombre para mostrar que ven sus compañeros"
+                    className="w-28 rounded border border-amber-700/30 bg-white/80 px-1 py-0.5 text-xs text-amber-950 font-bold focus:border-amber-600 focus:bg-white"
+                  />
+                  {!s.displayName && (
+                    <span className="text-[10px] text-amber-600 italic shrink-0" title="Propuesta sugerida, sin confirmar">
+                      (sugerido)
+                    </span>
+                  )}
+                </div>
+              </div>
               <label
                 className="shrink-0 flex items-center gap-1 text-xs text-amber-900"
-                title="Fecha de nacimiento"
+                title="Fecha de nacimiento (opcional)"
               >
                 🎂
                 <input
@@ -106,8 +143,8 @@ export default function StudentBlock({
                   value={(() => {
                     const b = birthdays[s.code] ?? s.birthday;
                     if (!b) return "";
-                    // Los cargados antes solo tenían día y mes.
-                    return b.length === 5 ? `2018-${b}` : b;
+                    // Si tiene formato MM-DD se usa año 2000 solo de referencia visual en el selector
+                    return b.length === 5 ? `2000-${b}` : b;
                   })()}
                   onChange={(e) => handleBirthday(s.code, e.target.value)}
                   className="w-[8.75rem] rounded-md border border-amber-700/30 bg-white/70 px-1 py-0.5 text-amber-950"

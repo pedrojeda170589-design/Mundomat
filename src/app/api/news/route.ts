@@ -11,20 +11,41 @@ import {
   getTeacherNotes,
 } from "@/lib/news";
 import { classmatesOf, getClassSnapshot, getProgress } from "@/lib/data";
-import { birthdayAge, isBirthdayToday } from "@/lib/seasons";
+import { isBirthdayToday } from "@/lib/seasons";
 import { getMessages, isMessagingEnabled } from "@/lib/messages";
 import { BIRTHDAY_MESSAGES, sameArgDay } from "@/lib/messagesShared";
 
 const BIRTHDAY_GIFTS = new Set(["torta", "regalito", "globo"]);
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { resolveDisplayNames } from "@/lib/studentNames";
+
 // GET: novedades de la clase (últimas primero). Con ?code= también devuelve
 // un mensaje para animar a ese alumno y los cumpleaños de hoy (fijos arriba
 // del pizarrón, para que los compañeros puedan saludar).
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
+
+  if (code) {
+    const rateLimit = await checkCodeRateLimit(ip);
+    if (rateLimit.blocked) {
+      return Response.json(
+        { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+        { status: 429 }
+      );
+    }
+  }
+
   const snapshot = code ? await getClassSnapshot() : null;
   const me = code ? snapshot!.students.find((s) => s.code.toUpperCase() === code.toUpperCase()) : undefined;
+
+  if (code && !me) {
+    await recordFailedCodeAttempt(ip);
+    return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
+
   const [items, notes] = await Promise.all([getNews(me?.classroomId), getTeacherNotes(me?.classroomId)]);
   let message: string | undefined;
   let birthdays: {
@@ -43,8 +64,9 @@ export async function GET(request: NextRequest) {
     const student = me;
     const students = student ? classmatesOf(student, snapshot!.students) : [];
     if (student) {
+      const resolvedNames = resolveDisplayNames(students);
       const progress = snapshot!.progress.get(student.code) ?? (await getProgress(student.code));
-      message = encouragement(progress, displayName(student, progress));
+      message = encouragement(progress, displayName(student, progress, resolvedNames.get(student.code)));
       const today = students.filter((s) => isBirthdayToday(s.birthday));
       if (today.length > 0) {
         const [msgs, enabled] = await Promise.all([getMessages(), isMessagingEnabled()]);
@@ -60,8 +82,8 @@ export async function GET(request: NextRequest) {
             const received = msgs.filter((m) => m.to === s.code && isGreeting(m));
             return {
               code: s.code,
-              name: displayName(s, p),
-              age: birthdayAge(s.birthday),
+              name: displayName(s, p, resolvedNames.get(s.code)),
+              age: null, // Por privacidad de menores, no se expone la edad ni el año de nacimiento
               avatar: p?.avatar,
               accessories: p?.avatarAccessories,
               background: p?.avatarBackground,

@@ -5,15 +5,29 @@ import { filterTrialWorlds } from "@/lib/openClassroom";
 import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { checkAdminPassword } from "@/lib/auth";
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+
 // GET → configuración del aula piloto (panel de siempre).
 // GET ?code= → mundos habilitados para ese alumno (según su aula).
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
   const params = new URL(request.url).searchParams;
   const code = params.get("code");
   if (code) {
+    const rateLimit = await checkCodeRateLimit(ip);
+    if (rateLimit.blocked) {
+      return Response.json(
+        { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+        { status: 429 }
+      );
+    }
     const student = await findStudentByCode(code);
+    if (!student) {
+      await recordFailedCodeAttempt(ip);
+      return Response.json({ error: "Código no encontrado." }, { status: 404 });
+    }
     const enabled = await getEnabledWorldIdsFor(student);
-    if (student && isOpenClassroomStudent(student)) {
+    if (isOpenClassroomStudent(student)) {
       // Aula de prueba: hasta 5 mundos superados por materia.
       const progress = await getProgress(student.code);
       return Response.json({ config: { enabledWorldIds: filterTrialWorlds(enabled, progress), trialAllEnabledIds: enabled } });

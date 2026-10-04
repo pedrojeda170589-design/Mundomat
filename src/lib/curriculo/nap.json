@@ -1,0 +1,2025 @@
+{
+  "1": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de problemas que permiten retomar la lectura, escritura y orden de los números hasta aproximadamente 1.000 ó 1.500.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "2": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de problemas de suma y resta que involucran distintos sentidos (unir, agregar, ganar, avanzar, quitar, perder) y uso de cálculos.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "3": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Construcción y utilización de estrategias de cálculo mental para resolver sumas y restas con repertorio memorizado.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "4": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Ubicación espacial, interpretación y producción de croquis y planos del espacio cercano con puntos de referencia.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "5": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de problemas de proporcionalidad directa y organizaciones rectangulares mediante tablas del 2, 5 y 10.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "6": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Análisis de relaciones numéricas y regularidades en las tablas de multiplicar intermedias (3, 4 y 6).",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "7": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Uso progresivo de resultados memorizados y estrategias de cálculo multiplicativo con factores mayores (7, 8 y 9).",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "8": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de problemas de partición y reparto equitativo analizando el cociente y el resto.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "9": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Reconocimiento y descripción de figuras geométricas (lados, vértices, diagonales) y relaciones entre triángulos y cuadriláteros.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "10": {
+    "area": "Matemática",
+    "eje": "En relación con la medida",
+    "contenido": "Estimación y medición de longitudes, pesos y capacidades con unidades convencionales (metro, centímetro, kilo, litro).",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de problemas complejos que combinan las cuatro operaciones básicas e interpretación de la información del enunciado.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Uso de fracciones de uso social habitual (1/2, 1/4, 3/4) en situaciones de reparto y medición.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "13": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Exploración de la serie numérica hasta el 10.000: lectura, escritura, orden y valor posicional de las cifras (miles, cienes, dieces, unos).",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "14": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Exploración de cuerpos geométricos (caras, aristas, vértices) y lectura horaria en reloj de agujas y digital.",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "15": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Participación en conversaciones áulicas, narración de experiencias y descripción oral fluida de objetos y situaciones.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "16": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Frecuentación asidua de cuentos de autores consagrados, recuperación de la secuencia argumental e inferencias directas.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "17": {
+    "area": "Lengua",
+    "eje": "En relación con la escritura",
+    "contenido": "Escritura autónoma de palabras y oraciones complejas con correspondencia fonema-grafema y separación de palabras.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "18": {
+    "area": "Lengua",
+    "eje": "En relación con la reflexión sobre la lengua y los textos",
+    "contenido": "Reconocimiento y clasificación de sustantivos comunes y propios, adjetivos calificativos y concordancia de género y número.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "19": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Lectura comprensiva de leyendas y relatos tradicionales de los pueblos originarios de la región patagónica y argentina.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "20": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Lectura de textos informativos breves, notas de enciclopedia y localización de datos específicos en el texto.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21": {
+    "area": "Lengua",
+    "eje": "En relación con la escritura",
+    "contenido": "Producción de cartas personales, notas y mensajes considerando el destinatario, la estructura y fórmulas de cortesía.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22": {
+    "area": "Lengua",
+    "eje": "En relación con la reflexión sobre la lengua y los textos",
+    "contenido": "Familias de palabras, derivación léxica mediante prefijos y sufijos de uso frecuente y ortografía de la raíz.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "23": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Participación en intercambios orales de opinión, escucha atenta del punto de vista ajeno y fundamentación de ideas.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "24": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Lectura autónoma, fluida y con entonación de textos narrativos extensos de literatura infantil.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "25": {
+    "area": "Lengua",
+    "eje": "En relación con la escritura",
+    "contenido": "Escritura de relatos narrativos breves respetando la estructura canónica (inicio, conflicto, desenlace).",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "26": {
+    "area": "Lengua",
+    "eje": "En relación con la reflexión sobre la lengua y los textos",
+    "contenido": "Relaciones de sinonimia y antonimia en textos diversos para evitar repeticiones y enriquecer el vocabulario.",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "27": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Reconocimiento de la flora y fauna autóctona de Santa Cruz y sus adaptaciones a las condiciones ambientales.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "28": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Exploración de mezclas de sólidos y líquidos y métodos sencillos de separación (tamización, filtración, decantación).",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "29": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Efectos del calor en los objetos, nociones de temperatura y propagación térmica en materiales cotidianos.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "30": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Observación y descripción de paisajes naturales y modificados por la acción humana en la región patagónica.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "31": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Cadenas alimentarias y relaciones de interdependencia entre productores, consumidores y descomponedores.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "32": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Cambios de estado de agregación de la materia (fusión, solidificación, evaporación, condensación) en el ciclo del agua.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "33": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Producción y propagación del sonido a través de vibraciones y distinción de tonos e intensidades.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "34": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Movimientos aparentes del Sol y la Luna, fenómenos meteorológicos locales (viento, nieve, escarcha) y estaciones.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "35": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Comparación anatómica y funcional de vertebrados e invertebrados en ambientes aeroterrestres y acuáticos.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "36": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Transformaciones químicas cotidianas (oxidación, combustión, cocción) y elaboración de informes descriptivos.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "37": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Integración de fenómenos ópticos, térmicos y acústicos a través de experimentos guiados y registro de datos.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "38": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Instrumentos de orientación temporal y espacial (puntos cardinales, brújula, reloj solar) en la vida cotidiana.",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "39": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Características de los espacios urbanos y rurales en Santa Cruz, servicios básicos y vínculos de interconexión.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "40": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Formas de vida cotidiana, grupos sociales y trabajo en la época colonial en el Río de la Plata.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "41": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Instituciones de gobierno colonial y actual, funciones del Cabildo histórico y pautas de convivencia social.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "42": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Circuitos productivos regionales de la Patagonia (ganadería ovina, pesca, energía) desde la materia prima al comercio.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "43": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Patrimonio cultural, monumentos y edificios históricos como huellas materiales del pasado en la comunidad.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "44": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Organización municipal, roles de las autoridades locales y participación de los ciudadanos en la vida comunitaria.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "45": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Medios de transporte y vías de comunicación en Santa Cruz y su impacto en la conservación ambiental.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "46": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Cronología histórica de acontecimientos significativos de la historia argentina y efemérides patrias.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "47": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Diversidad cultural, respeto por las diferencias, derechos del niño y construcción democrática de la ciudadanía.",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "11001": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Participación en conversaciones respetando turnos de habla. Fórmulas de saludo, pedido y agradecimiento",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11002": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Escucha atenta. Juegos sonoros y del lenguaje",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11003": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Escucha comprensiva de consignas de tarea escolar",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11004": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Juegos con el lenguaje: segmentación oral",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11005": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Exploración de rimas en situaciones lúdicas",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11006": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Segmentación y comparación de sílabas",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11007": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Segmentación y comparación de sílabas",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11008": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema (inicio)",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11009": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Escritura de nombres. Listas de nombres",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11010": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Relación grafema-fonema: vocales",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11011": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Relación grafema-fonema: vocales",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11012": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Relación grafema-fonema: vocales",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11013": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema. Lectura de sílabas y palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11014": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema. Lectura de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11015": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema. Lectura de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11016": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema. Lectura de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11017": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura de palabras. Escritura de palabras con letras móviles",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11018": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11019": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11020": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11021": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11022": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11023": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11024": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema. Duda ortográfica inicial",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11025": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11026": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11027": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Empleo del abecedario. Nombre de las letras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11028": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura y escritura asidua de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11029": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "La palabra como unidad. La oración: mayúscula y punto. Direccionalidad de la escritura",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11030": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura de palabras y oraciones con abundantes ilustraciones",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11031": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura exploratoria y localización de información",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11032": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Comprensión de narraciones con estructura canónica. Situación inicial, conflicto y resolución",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11033": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Escucha y disfrute de poesías, coplas, canciones y rondas. Exploración de rimas y repeticiones",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11034": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Memorización y recitación de adivinanzas. Juegos con el lenguaje",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11035": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Renarración de cuentos. Ordenamiento cronológico de las acciones",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11036": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Direccionalidad y orientación de las letras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11037": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Escritura asidua de palabras. Correspondencia fonema-grafema en el orden correcto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11038": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Listas de personajes, nombres y elementos. Títulos posibles para un cuento. Epígrafes para una ilustración",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11039": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Mensajes. Invitaciones para eventos escolares. Respuestas a preguntas sobre temas conocidos",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11101": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11102": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11103": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11104": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11105": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda guaraní del litoral argentino. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11106": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11107": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11108": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda guaraní (Misiones y Corrientes). Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11109": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11110": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional (Perrault y los hermanos Grimm). Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11111": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda de Purmamarca (Jujuy). Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11112": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo (versión de La Fontaine). Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11113": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento de Hans Christian Andersen. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11114": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11115": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11116": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento de los hermanos Grimm. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11117": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11118": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "11119": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional inglés. Escucha comprensiva de textos literarios leídos por un adulto",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12001": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Exploración de diferentes contextos y funciones de los números",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12002": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Resolución de situaciones de conteo de colecciones",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12003": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Conteo de colecciones de objetos",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12004": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Designación oral y representación escrita de números",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12005": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Comparar cantidades y posiciones",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12006": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Orden de la serie numérica",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12007": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Regularidades de la serie numérica",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12008": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Regularidades en la serie (del 10 al 30)",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12009": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Regularidades en la serie numérica hasta 100. Uso de números redondos para leer y escribir otros",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12010": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Valor posicional en términos de unos y dieces. Escrituras aditivas con billetes de $10 y monedas de $1",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12011": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Composiciones y descomposiciones aditivas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12012": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas de suma: unir, agregar, ganar",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12013": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas de resta: quitar, perder",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12014": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas de avanzar y retroceder",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12015": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Repertorio memorizado de sumas y restas. Cómo cambia un número al sumar o restar 1 o 10",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12016": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas con grupos de igual cantidad (sumas repetidas)",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12017": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Exploración de problemas de reparto",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12018": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas en el contexto del dinero. Elaboración de preguntas a partir de información",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12019": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Comunicación oral de la ubicación en el espacio",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12020": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Desplazamientos y trayectos. Interpretación de planos de espacios conocidos",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12021": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Características de figuras planas: bordes curvos o rectos, lados y vértices",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12022": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Exploración de cubos y prismas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12023": {
+    "area": "Matemática",
+    "eje": "En relación con la medida",
+    "contenido": "Comparación directa e indirecta de longitudes, pesos y capacidades. Unidades no convencionales",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "12024": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Distribución de días en la semana y meses en el año. Uso del calendario para ubicar fechas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "13001": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Historia personal y familiar",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13002": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Grupos sociales primarios: miembros y roles",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13003": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Necesidades educativas, habitacionales, alimentarias, sanitarias",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13004": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Escuelas, hospitales, clubes, cooperativas, centros culturales",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13005": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Normas y resolución de conflictos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13006": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Deberes y derechos en contextos familiar y escolar. Participación, cooperación y solidaridad",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13007": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Espacio cercano urbano/rural y espacios lejanos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13008": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Elementos naturales y construidos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13009": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Producción de un bien primario. Uso de la tierra: agricultura, ganadería, horticultura, minería",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13010": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Servicios: agua corriente, alumbrado, transporte. Falta de acceso a servicios",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13011": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Medios de transporte en espacios urbanos y rurales",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13012": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Croquis, planos, mapas. Representación gráfica mediante dibujos y croquis",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13013": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Cambios y continuidades en la vida cotidiana",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13014": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Producción del pasado y actual: pan, tejido, tracción a sangre, iluminación",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13015": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Compra-venta, ganancia e intercambio",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13016": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Vida cotidiana de sociedades indígenas",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13017": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Objetos, construcciones y huellas del pasado",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "13018": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Celebraciones y conmemoraciones",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "14001": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Diversidad de seres vivos: vegetales, animales y personas",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14002": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Plantas y animales del entorno inmediato",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14003": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Características propias de los animales",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14004": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Características propias de las plantas",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14005": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Funciones vitales de las personas y otros seres vivos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14006": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Características externas del cuerpo humano",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14007": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Hábitos saludables. Cuidado y respeto del cuerpo",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14008": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Materiales: características comunes, distintivas y usos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14009": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Propiedades de los materiales percibidas por los sentidos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14010": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Diferencias entre líquidos y sólidos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14011": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Acciones mecánicas y sus efectos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14012": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "La luz: sombra y oscuridad",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14013": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "El paisaje como conjunto de elementos observables",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14014": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Diversidad de paisajes, cambios y usos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "14015": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Cuerpos que conforman el cielo de día y de noche",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "21001": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura asidua de palabras y oraciones. Comprensión lectora autónoma",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21002": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema en sílabas trabadas con r. Lectura de palabras complejas",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21003": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Correspondencia fonema-grafema en sílabas trabadas con r. Lectura de palabras con tr",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21004": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con r. Lectura y escritura de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21005": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con l. Lectura y escritura de palabras con cl",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21006": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con r. Lectura de palabras con fr",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21007": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con l. Lectura de palabras con fl",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21008": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con r. Lectura de palabras con gr",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21009": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con l. Lectura de palabras con gl",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21010": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con r. Lectura de palabras con br",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21011": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con l. Lectura de palabras con bl",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21012": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con l. Lectura de palabras con pl",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21013": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Grupos consonánticos con r. Lectura de palabras con pr",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21014": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Integración de sílabas trabadas. Lectura fluida de textos breves",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21015": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Convenciones ortográficas: ca, co, cu y que, qui",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21016": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Convenciones ortográficas: ce, ci",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21017": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Convenciones ortográficas: ga, go, gu y gue, gui",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21018": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Convenciones ortográficas: ge, gi",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21019": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Convención ortográfica: diéresis (güe, güi)",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21020": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Oposición fonológica r / rr. Norma ortográfica",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21021": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Reglas ortográficas sin excepción: mb y mp",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21022": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Uso de la h en palabras frecuentes",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21023": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Dígrafo ch: lectura y escritura",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21024": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Signos de puntuación y mayúsculas: inicio de oración y nombres propios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21025": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "La oración: unidad gráfica y de sentido. Punto seguido y final",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21026": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Clases de palabras: sustantivos comunes",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21027": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Clases de palabras: sustantivos propios y mayúscula",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21028": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Morfología: número (singular y plural)",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21029": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Morfología: género (masculino y femenino)",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21030": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Clases de palabras: adjetivos calificativos. Concordancia",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21031": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Formación de palabras: raíz común y familias de palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21032": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Sufijación: aumentativos y diminutivos",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21033": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Uso del abecedario para ordenar palabras",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21034": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Estructura narrativa: inicio, complicación y desenlace",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21035": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Lectura de fábulas: personajes y enseñanza",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21036": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Poesía y juegos del lenguaje: trabalenguas y adivinanzas",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21037": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Textos instructivos: ingredientes y orden de pasos",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21038": {
+    "area": "Lengua",
+    "eje": "En relación con la comprensión y producción oral",
+    "contenido": "Textos epistolares breves e historietas. Destinatario y mensaje",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21101": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional (Perrault y los hermanos Grimm). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21102": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21103": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21104": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento de Hans Christian Andersen. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21105": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda guaraní del litoral argentino. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21106": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21107": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento de los hermanos Grimm. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21108": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21109": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo (versión de La Fontaine). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21110": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento tradicional inglés. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21111": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda guaraní (Misiones y Corrientes). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21112": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21113": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuento de Hans Christian Andersen. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21114": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda de Purmamarca (Jujuy). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21115": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21116": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuentos de la selva, de Horacio Quiroga. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21117": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la Patagonia. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21118": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "21119": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuentos de la selva, de Horacio Quiroga. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22001": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Exploración de regularidades en el cuadro numérico hasta 100",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22002": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Análisis de relaciones numéricas: cómo cambia al sumar o restar 1 y 10",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22003": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Uso de información sobre números redondos (100, 200, 300...)",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22004": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Lectura, escritura y orden de números hasta 500",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22005": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Lectura, escritura y orden de números hasta 1000",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22006": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Valor de la cifra según la posición que ocupa: unos, dieces y cienes",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22007": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Escrituras aditivas en el contexto del dinero: billetes de $100, $10 y monedas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22008": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Orden y comparación en la recta numérica",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22009": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Estrategias de cálculo mental: dobles y mitades",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22010": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Cálculo mental: complementos a 100",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22011": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Cálculo mental: sumas de cienes y dieces redondos",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22012": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Procedimientos de suma sin dificultad por descomposición",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22013": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Algoritmos de la suma con reagrupación",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22014": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Procedimientos de resta sin dificultad",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22015": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Algoritmos de la resta con dificultad",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22016": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Sentidos de la suma y la resta: unir, agregar, quitar, comparar",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22017": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas de series que se repiten y sumas sucesivas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22018": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Organizaciones rectangulares: filas y columnas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22019": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Tablas de multiplicar: tabla del 2",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22020": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Tablas de multiplicar: tabla del 5",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22021": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Multiplicación por 10 y regularidades numéricas",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22022": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Problemas de reparto y partición equitativa",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22023": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Figuras geométricas: lados rectos y curvos, vértices",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22024": {
+    "area": "Matemática",
+    "eje": "En relación con la geometría y el espacio",
+    "contenido": "Cuerpos geométricos: cubos, prismas, pirámides, cilindros",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22025": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Planos sencillos de espacios conocidos y puntos de vista",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22026": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Medición de longitudes: unidades convencionales (metro y centímetro)",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22027": {
+    "area": "Matemática",
+    "eje": "En relación con la medida",
+    "contenido": "Medición de peso y capacidad: kilo y litro",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "22028": {
+    "area": "Matemática",
+    "eje": "En relación con el número y las operaciones",
+    "contenido": "Lectura de la hora (en punto y media). Uso del calendario",
+    "fuente": "NAP Matemática 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "23001": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Observación y descripción de diversos paisajes rurales y urbanos de la provincia",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23002": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Reconocimiento de las ciudades como concentración de población, bienes y servicios",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23003": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "El espacio rural: asentamientos, trabajos y modos de vida",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23004": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Función de los servicios públicos en los espacios urbanos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23005": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Circuitos productivos: transformación de materia prima en producto manufacturado",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23006": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Proceso de producción de bienes secundarios: tecnología y trabajos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23007": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Actividades económicas regionales y transformación de recursos marinos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23008": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Actores sociales, herramientas, trabajos y tecnologías en la producción",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23009": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Evolución de los medios de transporte: carretas, carreros patagónicos y transportes modernos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23010": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "El tren en la historia regional y la conexión de comunidades",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23011": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Recursos naturales (suelo, agua, pasturas) y problemáticas ambientales",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23012": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Diversas formas de organización familiar y costumbres de la vida cotidiana",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23013": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Vida cotidiana de sociedades indígenas del territorio patagónico: Aonikenk",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23014": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Sociedades originarias del sur: formas de vida, vivienda y vestimenta",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23015": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades y los espacios geográficos",
+    "contenido": "Desarrollo tecnológico a través del tiempo: iluminación, cocción y calefacción",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23016": {
+    "area": "Ciencias Sociales",
+    "eje": "Las sociedades a través del tiempo",
+    "contenido": "Bienes patrimoniales y huellas materiales del pasado en la provincia",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23017": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Instituciones que atienden necesidades sociales de la comunidad",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "23018": {
+    "area": "Ciencias Sociales",
+    "eje": "Las actividades humanas y la organización social",
+    "contenido": "Funciones de las normas y mecanismos de resolución pacífica de conflictos",
+    "fuente": "NAP Ciencias Sociales 1.er ciclo",
+    "validado": false
+  },
+  "24001": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Caracterización de plantas y animales respecto a los ambientes cercanos",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24002": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Identificación de fauna local y modos de vida relacionados con el ambiente",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24003": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Estructuras y adaptaciones de las plantas autóctonas frente al ambiente",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24004": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Comportamiento de los seres vivos frente a los cambios estacionales",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24005": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Relaciones entre factores físicos del ambiente y necesidades básicas",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24006": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Modos de adaptación animal al frío extremo y escasez invernal",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24007": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Cambios en el cuerpo humano desde el nacimiento hasta la actualidad",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24008": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Cambio de dentición y pautas de higiene bucodental",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24009": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Acciones básicas de prevención primaria de enfermedades y hábitos saludables",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24010": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "El cuerpo humano: huesos, músculos y articulaciones en el movimiento corporal",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24011": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Fuerzas de contacto: empuje, tracción y rozamiento sobre el movimiento",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24012": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "Máquinas simples: rueda, plano inclinado y palanca en la vida diaria",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24013": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Origen y propiedades de los materiales naturales y manufacturados",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24014": {
+    "area": "Ciencias Naturales",
+    "eje": "Los materiales y sus cambios",
+    "contenido": "Comportamiento de materiales en líquidos: flotación y densidad",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24015": {
+    "area": "Ciencias Naturales",
+    "eje": "Los seres vivos: diversidad, unidad, interrelaciones y cambios",
+    "contenido": "Propiedades ópticas: fuentes luminosas, sombras y reflexión",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "24016": {
+    "area": "Ciencias Naturales",
+    "eje": "Los fenómenos del mundo físico",
+    "contenido": "El sonido: vibración de fuentes sonoras y propagación en el medio",
+    "fuente": "NAP Ciencias Naturales 1.er ciclo",
+    "validado": false
+  },
+  "28001": {
+    "area": "Lengua y Matemática",
+    "eje": "Reflexión sobre la Lengua y Número",
+    "contenido": "Dictado de números hasta 1.000 y escritura correcta de palabras y oraciones con mayúscula y punto.",
+    "fuente": "NAP Lengua y Matemática 1.er ciclo",
+    "validado": false
+  },
+  "31101": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuentos de la selva, de Horacio Quiroga. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "31102": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda tehuelche (aonikenk) de la costa patagónica (versión adaptada). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "31103": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "31104": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Cuentos de la selva, de Horacio Quiroga. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "31105": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Leyenda guaraní (Misiones). Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "31106": {
+    "area": "Lengua",
+    "eje": "En relación con la lectura",
+    "contenido": "Fábula de Esopo. Lectura comprensiva de textos literarios",
+    "fuente": "NAP Lengua 1.er ciclo (EGB 1 / Primaria)",
+    "validado": false
+  },
+  "38001": {
+    "area": "Lengua y Matemática",
+    "eje": "Reflexión sobre la Lengua y Número",
+    "contenido": "Dictado de números hasta 10.000, ortografía literal estricta y oraciones con signos de interrogación, exclamación y coma.",
+    "fuente": "NAP Lengua y Matemática 1.er ciclo",
+    "validado": false
+  }
+}

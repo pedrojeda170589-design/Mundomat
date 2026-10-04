@@ -23,10 +23,22 @@ import {
   getPresenceMap,
 } from "@/lib/messages";
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { resolveDisplayNames } from "@/lib/studentNames";
+
 // GET ?code=  → buzón del alumno + compañeros (con quién está conectado).
 //               También marca al alumno como conectado.
 // GET ?adminPassword= → historial completo y estado (para el docente).
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const adminPassword = searchParams.get("adminPassword");
   const enabled = await isMessagingEnabled();
@@ -49,7 +61,10 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
-  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  if (!me) {
+    await recordFailedCodeAttempt(ip);
+    return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
   if (isOpenClassroomStudent(me)) {
     return Response.json({ enabled: false, classmates: [], inbox: [], unread: 0, coinsSentToday: 0, messagesSentToday: 0 });
   }
@@ -62,6 +77,7 @@ export async function GET(request: NextRequest) {
   }
 
   const mates = classmatesOf(me, students);
+  const resolvedNames = resolveDisplayNames(mates);
   const [, all, snapshot, presence] = await Promise.all([
     touchPresence(me.code),
     getMessages(),
@@ -75,7 +91,7 @@ export async function GET(request: NextRequest) {
       const p = snapshot.progress.get(s.code);
       return {
         code: s.code,
-        name: displayName(s, p),
+        name: displayName(s, p, resolvedNames.get(s.code)),
         avatar: p?.avatar,
         accessories: p?.avatarAccessories,
         background: p?.avatarBackground,
@@ -104,6 +120,15 @@ export async function GET(request: NextRequest) {
 // POST { code, markRead: true } → marcar el buzón como leído.
 // POST { adminPassword, enabled } → el docente prende/apaga el buzón.
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   if (body.adminPassword !== undefined) {
     if (!checkAdminPassword(body.adminPassword)) {
@@ -123,7 +148,10 @@ export async function POST(request: NextRequest) {
   };
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
-  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  if (!me) {
+    await recordFailedCodeAttempt(ip);
+    return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   if (isOpenClassroomStudent(me)) return Response.json({ error: "El buzón no está disponible en el aula de prueba." }, { status: 403 });
   const all = await getMessages();

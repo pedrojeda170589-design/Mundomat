@@ -8,7 +8,19 @@ import { closeTrialIfExpired, isTrialWorldBlocked } from "@/lib/openClassroom";
 import { ActivityResult } from "@/types";
 import { avanzarVuelta } from "@/lib/vuelta";
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt, recordSuccessfulCodeAttempt } from "@/lib/rateLimit";
+import { proposeDisplayName } from "@/lib/studentNames";
+
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   if (!code) {
@@ -18,8 +30,11 @@ export async function GET(request: NextRequest) {
   // la plataforma (promociones, cambios de aula) antes de responder.
   const student = (await syncStudentWithPlatform(code)) ?? (await findStudentByCode(code));
   if (!student) {
+    await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
+  await recordSuccessfulCodeAttempt(ip);
+
   if (isTrialExpired(student)) {
     // Primera vez después del vencimiento: se guarda el informe final y se
     // borra el historial de juego.
@@ -28,14 +43,27 @@ export async function GET(request: NextRequest) {
   }
   const progress = await getProgress(student.code);
   // ?lite=1 (pantallas del alumno): sin el registro detallado de
-  // actividades, que solo usa el docente. La respuesta es mucho más chica.
+  // actividades, que solo usa el docente. Por privacidad, solo expone el nombre para mostrar.
   if (searchParams.get("lite")) {
-    return Response.json({ student, progress: liteProgress(progress) });
+    const safeStudent = {
+      ...student,
+      name: student.displayName?.trim() || proposeDisplayName(student.name) || student.name,
+    };
+    return Response.json({ student: safeStudent, progress: liteProgress(progress) });
   }
   return Response.json({ student, progress });
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   const { code, worldId, activityIndex, correct, incorrect, timeSpentSeconds, clientId, roundId, mistake } =
     body as {
@@ -57,6 +85,7 @@ export async function POST(request: NextRequest) {
 
   const student = await findStudentByCode(code);
   if (!student) {
+    await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(student)) {

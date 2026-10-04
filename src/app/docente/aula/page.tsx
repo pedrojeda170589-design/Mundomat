@@ -450,8 +450,12 @@ function MovesTab({ classroom, rows, onDone }: { classroom: Classroom; rows: Stu
   );
 }
 
+import { proposeDisplayName } from "@/lib/studentNames";
+
 function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed: boolean; onDone: () => void }) {
   const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [nicknameTouched, setNicknameTouched] = useState(false);
   const [birth, setBirth] = useState("");
   const [result, setResult] = useState<{ name: string; code: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -466,11 +470,20 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
       p_full_name: name.trim(),
       p_birth_date: birth || null,
     });
+    if (err) {
+      setBusy(false);
+      return setError(friendlyError(err));
+    }
+    const s = data as { id?: string; full_name: string; access_code: string };
+    const nickToSave = nickname.trim() || proposeDisplayName(name.trim());
+    if (s.id && nickToSave) {
+      await platform().from("students").update({ nickname: nickToSave }).eq("id", s.id);
+    }
     setBusy(false);
-    if (err) return setError(friendlyError(err));
-    const s = data as { full_name: string; access_code: string };
     setResult({ name: s.full_name, code: s.access_code });
     setName("");
+    setNickname("");
+    setNicknameTouched(false);
     setBirth("");
     onDone();
   }
@@ -484,11 +497,27 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
       <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
         <input
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre y apellido"
+          onChange={(e) => {
+            setName(e.target.value);
+            if (!nicknameTouched) {
+              setNickname(proposeDisplayName(e.target.value));
+            }
+          }}
+          placeholder="Nombre completo"
           required
           disabled={closed}
           className="flex-1 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2"
+        />
+        <input
+          value={nickname}
+          onChange={(e) => {
+            setNicknameTouched(true);
+            setNickname(e.target.value);
+          }}
+          placeholder="Nombre visible"
+          title="Nombre que verán sus compañeros en el juego"
+          disabled={closed}
+          className="w-36 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2 font-bold"
         />
         <input
           type="date"

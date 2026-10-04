@@ -8,6 +8,8 @@ export type StudentType = "aula" | "agregado" | "prueba";
 export interface Student {
   code: string;
   name: string;
+  // Nombre para mostrar en el juego (confirmado por el docente para proteger la privacidad).
+  displayName?: string;
   type: StudentType;
   createdAt: string;
   // Fecha de nacimiento "AAAA-MM-DD" (los cargados antes: "MM-DD", sin año).
@@ -48,6 +50,8 @@ export interface StudentProgress {
   // sin fin y la app siga rápida): totales por mundo.
   activitySummary?: Record<number, { correct: number; incorrect: number; timeSpentSeconds: number }>;
   lastPlayedAt?: string;
+  // Días calendario (YYYY-MM-DD) con al menos una actividad resuelta (acotado a 120 días)
+  activeDays?: string[];
   coins: number; // moneda ganada por respuestas correctas / mundos completados
   // Personalización propia del alumno (no afecta el nombre real, que sigue
   // viviendo en Student.name y es el único que ve el docente).
@@ -97,6 +101,8 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+  // Mejor puntaje (0-100) histórico alcanzado en cada mundo.
+  bestWorldScore?: Record<number, number>;
   // Avatares de logro ganados (90 % o más en un mundo de comprensión).
   achievementCollection?: string[];
   // Mundos superados (90 %+) durante cada temporada, para su legendario.
