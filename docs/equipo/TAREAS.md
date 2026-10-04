@@ -27,7 +27,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
-| AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | ⏳ PENDIENTE (ahora) |
+| AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-14 | El profe Pedro en la app: poses por momento (saluda, trofeo, aplaude, ánimo, lee, lupa, mate, reloj) y vestimentas por mundo; mapa de mundos por **módulos** con paisajes de Santa Cruz (Cerro Ventana, Fitz Roy, Glaciar, Cueva de las Manos, Bosque Petrificado, Ría Deseado) en 3.º | Claude | 🟢 UNIDA A MAIN |
 | CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
@@ -36,6 +36,83 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-17 · Corrección completa del contenido de 4.º grado (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` para revisión).
+
+#### 1. Estructura y catálogo completo de 108 mundos curriculares (+ 1 Dictado = 109 mundos)
+- **Lengua:** 28 mundos (41001 a 41028), banco de 20 preguntas balanceadas por mundo (560 preguntas en total) + 2 actividades interactivas no-pick por mundo (clasificar, ordenar, verdadero/falso).
+  - Mundos de comprensión lectora con textos informativos y biográficos propios: 41002 (Noticias patagónicas), 41004 (Naturaleza santacruceña), 41006 (Biografías de pioneros).
+  - Mundos ortográficos ampliados y profundizados: 41027 (Acentuación: agudas, graves, esdrújulas con tilde), 41028 (Reglas de b/v, nv/mb, c/s/z, h y palabras homófonas).
+- **Matemática:** 28 mundos (42001 a 42028), generadores dinámicos que garantizan variedad en cada vuelta.
+  - Rango pedagógico de 4.º: arranca en 100.000 (42001) y escala al 1.000.000 (42002).
+  - Temas del Diseño Curricular incorporados: proporcionalidad directa (42008), fracciones usuales (42012-42014), números mixtos (42015), fracciones en la recta (42016), suma y resta de fracciones homogéneas (42017), decimales en dinero y medidas (42018), decimales por 10, 100 y 1.000 (42019), suma y resta de decimales (42020), rectas y ángulos (42021-42022), triángulos y cuadriláteros (42023-42024), peso y capacidad (42025-42026), tablas y gráficos de barras (42027), y planos y coordenadas espaciales (42028).
+  - Bugs numéricos corregidos: sin fracciones equivalentes en distractores de 2/8 vs 1/4; intercambio de dígitos sin duplicados; 42007 barajado sin respuesta siempre en el centro; 42002/42003 sin números delatados en la consigna; 42008 con precios aleatorios variables.
+- **Ciencias Sociales:** 26 mundos (43001 a 43026), 15 preguntas por mundo (390 preguntas) + 2 actividades no-pick garantizadas en el 100% de las vueltas.
+  - Temas del DC incorporados: pueblos originarios patagónicos y fueguinos (43016-43019: cazadores-recolectores, aonikenk, selk'nam, yaganes y kawésqar, pueblo mapuche y mapuche-tehuelche), civilizaciones americanas (43017: Tawantinsuyu incaico, terrazas y caminos), viajes de exploración y fundación de ciudades (43020-43021), Revolución de Mayo (43021), Independencia en Tucumán (43022), vida cotidiana tras la independencia (43023), Constitución Nacional (43024), tres niveles de gobierno (43025: municipal, provincial, nacional) y derechos ciudadanos y convivencia democrática (43026).
+- **Ciencias Naturales:** 26 mundos (44001 a 44026), 15 preguntas por mundo (390 preguntas) + 2 actividades no-pick garantizadas en el 100% de las vueltas.
+  - Temas del DC incorporados: ambientes y adaptaciones provinciales (44001-44004), relaciones ecológicas y redes tróficas (44005-44007), sistema osteo-artro-muscular y cuidados (44008-44010), nutrición y salud (44011-44012), propiedades de materiales, conductores térmicos/eléctricos y aislantes (44013-44015), propiedades del sonido: tono, timbre e intensidad y propagación (44016-44017), fuerzas y efectos mecánicos (44018), gravedad terrestre y diferencia masa/peso (44019), magnetismo y brújula (44020), dimensiones y forma geoide de la Tierra en el sistema solar (44021), rotación día-noche y puntos cardinales (44022), fases lunares (44023), traslación y estaciones del año (44024), subsistemas terrestres (44025: geósfera, hidrósfera, atmósfera, biósfera), y procesos geológicos internos: sismos, vulcanismo y cenizas patagónicas (44026).
+
+#### 2. Módulos por materia y paisajes de Santa Cruz (`src/lib/mapa/modulos.ts`)
+- **Lengua (4 módulos):**
+  - M1: *Noticias y textos expositivos* (mundos 41001 a 41007) — Paisaje: Ría Deseado (puerto-deseado), Profe: escritor.
+  - M2: *Fábulas, teatro y poesías* (mundos 41008 a 41014) — Paisaje: Cueva de las Manos (cueva-manos), Profe: explorador.
+  - M3: *Oraciones, sujeto y predicado* (mundos 41015 a 41021) — Paisaje: Glaciar Perito Moreno (glaciar), Profe: montanes.
+  - M4: *Morfología, acentuación y ortografía* (mundos 41022 a 41028) — Paisaje: Bosque Petrificado (bosque-petrificado), Profe: maestro.
+- **Matemática (4 módulos):**
+  - M1: *Números grandes y cálculo mental* (mundos 42001 a 42007) — Paisaje: Cerro Fitz Roy (fitz-roy), Profe: montanes.
+  - M2: *Multiplicación, división y proporcionalidad* (mundos 42008 a 42014) — Paisaje: Cerro Ventana (cerro-ventana), Profe: aventurero.
+  - M3: *Fracciones y números decimales* (mundos 42015 a 42021) — Paisaje: Glaciar Perito Moreno (glaciar), Profe: cientifico.
+  - M4: *Geometría, medida y estadística* (mundos 42022 a 42028) — Paisaje: Bosque Petrificado (bosque-petrificado), Profe: explorador.
+- **Ciencias Sociales (4 módulos):**
+  - M1: *Espacio geográfico santacruceño* (mundos 43001 a 43008) — Paisaje: Ría Deseado (puerto-deseado), Profe: navegante.
+  - M2: *Actividades económicas y circuitos* (mundos 43009 a 43015) — Paisaje: Cerro Ventana (cerro-ventana), Profe: gaucho.
+  - M3: *Pueblos originarios y pasado colonial* (mundos 43016 a 43021) — Paisaje: Cueva de las Manos (cueva-manos), Profe: arqueologo.
+  - M4: *Independencia, Estado y ciudadanía* (mundos 43022 a 43026) — Paisaje: Cerro Fitz Roy (fitz-roy), Profe: historiador.
+- **Ciencias Naturales (4 módulos):**
+  - M1: *Diversidad de ambientes y seres vivos* (mundos 44001 a 44007) — Paisaje: Bosque Petrificado (bosque-petrificado), Profe: guardaparque.
+  - M2: *Cuerpo humano, sostén y movimiento* (mundos 44008 a 44012) — Paisaje: Cerro Ventana (cerro-ventana), Profe: deportista.
+  - M3: *Materiales, fuerzas y energía* (mundos 44013 a 44020) — Paisaje: Ría Deseado (puerto-deseado), Profe: cientifico.
+  - M4: *La Tierra, el universo y sus cambios* (mundos 44021 a 44026) — Paisaje: Glaciar Perito Moreno (glaciar), Profe: astronomo.
+
+#### 3. Calidad lingüística, balance de opciones y corrección factual
+- **Balance de longitud de opciones (evaluación exhaustiva de 1340 preguntas de opción múltiple):**
+  - Respuesta correcta estrictamente más larga: **16.87%** (226 / 1340) — Cumple estrictamente con el límite `<= 25.0%`.
+  - Respuesta correcta estrictamente más corta: **18.58%** (249 / 1340) — Cumple estrictamente con el límite `<= 30.0%`.
+- **Cero frases de relleno prohibidas:** 0 ocurrencias en todo el catálogo de preguntas, enunciados y pistas (eliminadas frases como "en distintas partes del territorio", "a lo largo del territorio", etc.).
+- **Cero palabras repetidas consecutivas:** 0 ocurrencias de duplicaciones sintácticas como "El El" o "Los Los" sin separación de signos de puntuación.
+- **Correcciones factuales implementadas:**
+  - *Rosa mosqueta:* flores rosadas o blancas y frutos rojos carnosos (escaramujos).
+  - *Proteínas anticongelantes:* exclusivas de peces marinos de aguas polares.
+  - *Mara patagónica:* endémica de Argentina (no exclusiva de la Patagonia).
+  - *Macá tobiano:* amenazas reales (visón americano, gaviota cocinera, truchas introducidas).
+  - *Corzuela:* uso correcto del artículo femenino ("la corzuela").
+  - *Expedición de Magallanes:* primera circunnavegación del globo y paso interoceánico (no "demostración de que la Tierra es redonda").
+  - *Patagones:* aclarado origen mítico/etimología legendaria.
+  - *Mareas santacruceñas:* precisadas como "de las más amplias del mundo".
+  - *Lago San Martín:* compartido entre Argentina y Chile.
+  - *Represas hidroeléctricas:* denominación precisa de Cóndor Cliff y La Barrancosa sobre el río Santa Cruz.
+  - *Parque Nacional Perito Moreno:* acceso desde Gobernador Gregores.
+  - *Gran Bajo de San Julián:* mención explícita como depresión bajo el nivel del mar (-105 m).
+  - *Caleta Olivia:* centro del Monumento al Obrero Petrolero ("El Gorosito").
+  - *Nao Victoria:* categorización histórica precisa como nao (no carabela).
+  - *Sustantivo colectivo de árbol:* "arboleda" (se removió "bosque" como distractor conflictivo).
+  - *Gentilicio patagónico:* no se penaliza "patagón" como incorrecto.
+  - *Sin erratas ni filtraciones:* sin "Tugo" ni pistas delatadas entre paréntesis.
+
+#### 4. Verificación de pruebas
+- `npx tsx scripts/test-grado4.ts`: 11 verificaciones pasadas con éxito, incluyendo simulación de 200 iteraciones por cada uno de los 109 mundos (174.800 actividades generadas e inspeccionadas).
+- `npx tsx scripts/test-modulos.ts`: 8 materias comprobadas con mapas y vestimentas.
+- `npx tsx scripts/test-simulation.ts`: 119 mundos de 2.º y regresiones de 1.º y 3.º sin errores.
+- `npx tsx scripts/test-cuentos.ts`: validación de cuentos y balance en 1.º, 2.º y 3.º OK.
+- `npx tsx scripts/test-dictado.ts`: 100% de pruebas de dictado aprobadas.
+- `npx tsx scripts/test-colecciones.ts`: calendarios, rachas y drops aprobados.
+- `npx tsx scripts/test-vuelta.ts`: persistencia de vueltas aprobada.
+- `npx tsx scripts/test-privacidad.ts`: validación de privacidad y rate limit OK.
+- `npx tsc --noEmit`: 0 errores de compilación TypeScript.
+- `npx eslint scripts/test-grado4.ts src/lib/grade4/`: 0 errores, 0 warnings.
+- `npm run build`: compilación limpia en Next.js con Turbopack (41 rutas generadas).
 
 ### Revisión de Claude de AG-14, AG-15 y AG-16 (4/10)
 

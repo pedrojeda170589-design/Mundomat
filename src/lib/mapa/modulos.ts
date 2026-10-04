@@ -99,8 +99,37 @@ const TERCERO: Partial<Record<WorldSubject, ModuloDef[]>> = {
   ],
 };
 
+// 4.º grado: ampliación por la geografía, historia y naturaleza de Santa Cruz.
+const CUARTO: Partial<Record<WorldSubject, ModuloDef[]>> = {
+  matematica: [
+    { titulo: "Números grandes y cálculo", lugar: "cerro-ventana", profe: "matematico", mundos: [42001, 42002, 42003, 42004, 42005, 42006, 42007] },
+    { titulo: "Multiplicación y proporciones", lugar: "chalten", profe: "andinista", mundos: [42008, 42009, 42010, 42011, 42012, 42013, 42014] },
+    { titulo: "Fracciones y decimales", lugar: "glaciar", profe: "guardaparque", mundos: [42015, 42016, 42017, 42018, 42019, 42020, 42021, 42022, 42023] },
+    { titulo: "Figuras, medidas y gráficos", lugar: "bosque-petrificado", profe: "almacenero", mundos: [42024, 42025, 42026, 42027, 42028] },
+  ],
+  lengua: [
+    { titulo: "Noticias y exposiciones", lugar: "puerto-deseado", profe: "escritor", mundos: [41001, 41002, 41003, 41004, 41005, 41006, 41007] },
+    { titulo: "Fábulas, teatro y poesías", lugar: "cueva-manos", profe: "explorador", mundos: [41008, 41009, 41010, 41011, 41012] },
+    { titulo: "Oraciones y verbos", lugar: "cerro-ventana", profe: "escritor", mundos: [41013, 41014, 41015, 41016, 41017, 41018, 41019, 41020, 41021, 41022, 41023] },
+    { titulo: "Vocabulario y ortografía", lugar: "glaciar", profe: "guardaparque", mundos: [41024, 41025, 41026, 41027, 41028] },
+  ],
+  sociales: [
+    { titulo: "Santa Cruz y sus paisajes", lugar: "cerro-ventana", profe: "gaucho", mundos: [43001, 43002, 43003, 43004, 43005, 43006, 43007, 43008] },
+    { titulo: "Recursos y ambiente", lugar: "puerto-deseado", profe: "gaucho", mundos: [43009, 43010, 43011, 43012] },
+    { titulo: "Pueblos originarios", lugar: "cueva-manos", profe: "explorador", mundos: [43013, 43014, 43015, 43016, 43017, 43018] },
+    { titulo: "Conquista y organización", lugar: "chalten", profe: "explorador", mundos: [43019, 43020, 43021, 43022, 43023, 43024, 43025, 43026] },
+  ],
+  naturales: [
+    { titulo: "Ambientes y seres vivos", lugar: "glaciar", profe: "guardaparque", mundos: [44001, 44002, 44003, 44004, 44005, 44006, 44007] },
+    { titulo: "El cuerpo humano", lugar: "cerro-ventana", profe: "cientifico", mundos: [44008, 44009, 44010] },
+    { titulo: "Materiales, luz y sonido", lugar: "bosque-petrificado", profe: "cientifico", mundos: [44011, 44012, 44013, 44014, 44015, 44016, 44017, 44018, 44019, 44020] },
+    { titulo: "La Tierra y sus cambios", lugar: "chalten", profe: "astronomo", mundos: [44021, 44022, 44023, 44024, 44025, 44026] },
+  ],
+};
+
 export const MODULOS: Record<number, Partial<Record<WorldSubject, ModuloDef[]>>> = {
   3: TERCERO,
+  4: CUARTO,
 };
 
 // Vestimenta del profe para un mundo: la de su módulo y, si no tiene,
