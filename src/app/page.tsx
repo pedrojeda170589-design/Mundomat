@@ -3,6 +3,7 @@
 import Link from "next/link";
 import SkyScene from "@/components/SkyScene";
 import HeroFondo from "@/components/HeroFondo";
+import BannerAniversario from "@/components/BannerAniversario";
 import LiveClock from "@/components/LiveClock";
 import { useSkyTheme } from "@/lib/useSkyTheme";
 import { SEASON_INFO } from "@/lib/skyTheme";
@@ -25,6 +26,7 @@ export default function Home() {
       <HeroFondo period={isDay ? "day" : "night"} />
       <SkyScene showCelestial={false} />
 
+      <BannerAniversario />
       <div className="relative z-10 text-center mb-8">
         <p className="text-sm mb-1 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
           {HOME_SCHOOL}

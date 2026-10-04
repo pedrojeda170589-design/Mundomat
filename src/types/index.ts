@@ -476,6 +476,7 @@ export const ACCESSORY_CATALOG_TEMPORADA: AccessoryDef[] = [
   { id: "panuelo-gaucho", slot: "face", label: "Pañuelo gaucho", emoji: "🧣", group: "temporada", eventId: "tradicion" },
   { id: "gorro-navidad", slot: "headwear", label: "Gorro navideño", emoji: "🎅", group: "temporada", eventId: "navidad" },
   { id: "corona-cumple", slot: "headwear", label: "Corona de cumpleaños", emoji: "🎂", group: "temporada", eventId: "cumple" },
+  { id: "gorrito-aniversario", slot: "headwear", label: "Gorrito del cumple de la Escuela", emoji: "🏫", group: "temporada", eventId: "aniversario", fitLike: "gorrito-fiesta" },
   // Premios del cofre de la Aventura de fin de semana (uno por cada día
   // completado, en este orden, hasta tenerlos todos).
   { id: "sombrero-mago", slot: "headwear", label: "Sombrero de mago de los números", emoji: "🧙", group: "temporada", eventId: "fin-de-semana" },
@@ -697,6 +698,7 @@ export const BACKGROUND_OPTIONS: BackgroundDef[] = [
   { id: "tradicion", label: "Día de la Tradición", emoji: "🐎", css: bgImage("tradicion"), eventId: "tradicion" },
   { id: "navidad", label: "Navidad", emoji: "🎄", css: bgImage("navidad"), eventId: "navidad" },
   { id: "cumple", label: "Mi cumpleaños", emoji: "🎂", css: bgImage("cumple"), eventId: "cumple" },
+  { id: "aniversario", label: "Cumple de la Escuela", emoji: "🏫", css: bgImage("aniversario"), eventId: "aniversario" },
 ];
 
 export function getBackgroundById(id?: string): BackgroundDef | undefined {

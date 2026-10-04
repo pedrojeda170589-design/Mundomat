@@ -1,6 +1,7 @@
 "use client";
 
 import HeroFondo from "@/components/HeroFondo";
+import BannerAniversario from "@/components/BannerAniversario";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,6 +68,7 @@ export default function StudentLoginPage() {
       <HeroFondo period="night" />
       <MusicToggle />
       <SkyScene showCelestial={false} />
+      <BannerAniversario />
       {expiredStudent ? (
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col gap-4">
           <div className="parchment-panel rounded-2xl p-6 sm:p-8 flex flex-col gap-4 text-center shadow-xl border-2 border-amber-600/40">

@@ -1,6 +1,15 @@
 // Generado por scripts/coleccion/listar-imagenes.ts: no editar a mano.
 // Ítems de las colecciones que ya tienen imagen en public/theme.
 export const IMAGENES_LISTAS = new Set<string>([
+  "anteojos-arcoiris",
+  "anteojos-carpincho",
+  "anteojos-estrellas",
+  "anteojos-manteca",
+  "anteojos-margaritas",
+  "anteojos-nube",
+  "anteojos-palta",
+  "anteojos-rana",
+  "anteojos-soles",
   "camara-naturaleza",
   "exploradora-gato",
   "guardian-animales",
@@ -9,5 +18,23 @@ export const IMAGENES_LISTAS = new Set<string>([
   "mascota-gato",
   "mochila-mascota",
   "perro-ovejero",
-  "veterinaria"
+  "squishy-carpincho",
+  "squishy-dumpling",
+  "squishy-estrella",
+  "squishy-gatito",
+  "squishy-leche",
+  "squishy-nube",
+  "squishy-palta",
+  "squishy-pinguino",
+  "squishy-tostada",
+  "veterinaria",
+  "vincha-carpincho",
+  "vincha-corazones",
+  "vincha-estrellas",
+  "vincha-manteca",
+  "vincha-mate",
+  "vincha-notas",
+  "vincha-nubes",
+  "vincha-paltas",
+  "vincha-rana"
 ]);

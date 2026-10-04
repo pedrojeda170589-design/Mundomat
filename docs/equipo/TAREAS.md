@@ -28,6 +28,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
+| CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
 | CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |

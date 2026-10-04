@@ -42,7 +42,20 @@ export async function GET(request: NextRequest) {
     const report = await closeTrialIfExpired(student);
     return Response.json({ trialExpired: true, student, report, error: "Tu período de prueba terminó." }, { status: 403 });
   }
-  const progress = await getProgress(student.code);
+  // Festividades del día: el premio llega al entrar (no hace falta jugar).
+  // En el cumpleaños de la Escuela, además, el gorrito se pone solo si no
+  // tiene nada en la cabeza: todos festejan con su avatar.
+  let progress = await getProgress(student.code);
+  {
+    const { progress: conPremios, newRewards } = collectActiveSeasonalRewards(progress, new Date(), student.birthday);
+    if (newRewards.length) {
+      progress = conPremios;
+      if (newRewards.includes("gorrito-aniversario") && !progress.avatarAccessories?.headwear) {
+        progress = { ...progress, avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" } };
+      }
+      await saveProgress(progress);
+    }
+  }
   // ?lite=1 (pantallas del alumno): sin el registro detallado de
   // actividades, que solo usa el docente. Por privacidad, solo expone el nombre para mostrar.
   if (searchParams.get("lite")) {
