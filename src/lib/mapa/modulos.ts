@@ -33,36 +33,42 @@ export const LUGARES: Record<string, Lugar> = {
     nombre: "Cerro Ventana",
     localidad: "Gobernador Gregores",
     imagen: "/theme/santa-cruz/cerro-ventana.jpg",
+    listo: true,
   },
   chalten: {
     id: "chalten",
     nombre: "Cerro Fitz Roy",
     localidad: "El Chaltén",
     imagen: "/theme/santa-cruz/chalten.jpg",
+    listo: true,
   },
   glaciar: {
     id: "glaciar",
     nombre: "Glaciar Perito Moreno",
     localidad: "El Calafate",
     imagen: "/theme/santa-cruz/glaciar.jpg",
+    listo: true,
   },
   "cueva-manos": {
     id: "cueva-manos",
     nombre: "Cueva de las Manos",
     localidad: "Cañadón del Río Pinturas",
     imagen: "/theme/santa-cruz/cueva-manos.jpg",
+    listo: true,
   },
   "bosque-petrificado": {
     id: "bosque-petrificado",
     nombre: "Bosque Petrificado",
     localidad: "Jaramillo",
     imagen: "/theme/santa-cruz/bosque-petrificado.jpg",
+    listo: true,
   },
   "puerto-deseado": {
     id: "puerto-deseado",
     nombre: "Ría Deseado",
     localidad: "Puerto Deseado",
     imagen: "/theme/santa-cruz/puerto-deseado.jpg",
+    listo: true,
   },
 };
 

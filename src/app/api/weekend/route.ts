@@ -22,6 +22,8 @@ import { WEEKEND_REWARD_IDS } from "@/types";
 import { addNews, displayName } from "@/lib/news";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { resolveDisplayNames } from "@/lib/studentNames";
+import { torneoHabilitado } from "@/lib/torneo/tiempos";
+import { gradeOf } from "@/lib/grades";
 
 import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 
@@ -72,6 +74,7 @@ export async function GET(request: NextRequest) {
     perfectBonus: PERFECT_BONUS,
     finalBonus: FINAL_BONUS,
     maxPoints: maxPointsForDay(plan),
+    torneo: torneoHabilitado(gradeOf(student), now),
     daysCompleted: progress.weekendDaysCompleted ?? 0,
   });
 }

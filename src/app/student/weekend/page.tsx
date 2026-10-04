@@ -23,6 +23,7 @@ interface WeekendState {
   perfectBonus?: number;
   finalBonus?: number;
   maxPoints?: number;
+  torneo?: boolean; // torneo de las tablas: desde 3.º y de julio a diciembre
   daysCompleted?: number;
 }
 
@@ -140,7 +141,7 @@ export default function WeekendPage() {
   const nextReward = data.nextRewardId ? getAccessoryById(data.nextRewardId) : undefined;
 
   // --- Pantallas del juego ---
-  if (screen.kind === "torneo") {
+  if (screen.kind === "torneo" && data.torneo) {
     return (
       <main className="relative flex-1 flex flex-col bg-explorer-day py-8 px-4 overflow-hidden">
         <CloudsBackground />
@@ -323,7 +324,8 @@ export default function WeekendPage() {
       <CloudsBackground />
       {header}
       <div className="relative z-10 max-w-md w-full mx-auto flex flex-col gap-3">
-        {/* Tarjeta destacada: Torneo de las tablas */}
+        {/* Tarjeta destacada: Torneo de las tablas (desde 3.º, de julio en adelante) */}
+        {data.torneo && (
         <div className="parchment-panel rounded-2xl p-3.5 flex items-center justify-between gap-3 border-2 border-amber-400 bg-gradient-to-r from-amber-100/90 via-yellow-50 to-amber-100/90 shadow-md">
           <div className="flex items-center gap-3">
             <span className="text-3xl animate-bounce">⚡</span>
@@ -339,6 +341,7 @@ export default function WeekendPage() {
             <span>🚀</span> ¡Jugar!
           </button>
         </div>
+        )}
 
         <div className="parchment-panel rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
           <span>

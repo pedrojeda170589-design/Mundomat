@@ -48,17 +48,7 @@ const ALT: Record<PoseProfe, string> = {
 
 // Vestimentas cuyo dibujo todavía no está en public/theme/profe/: mientras
 // tanto se usa otra pose. Al agregar el PNG, sacarla de esta lista.
-const PENDIENTES: Partial<Record<PoseProfe, PoseProfe>> = {
-  andinista: "saluda",
-  guardaparque: "lupa",
-  cientifico: "explica",
-  astronomo: "lupa",
-  explorador: "lupa",
-  gaucho: "mate",
-  escritor: "lee",
-  matematico: "explica",
-  almacenero: "explica",
-};
+const PENDIENTES: Partial<Record<PoseProfe, PoseProfe>> = {};
 
 export default function Profe({
   pose,

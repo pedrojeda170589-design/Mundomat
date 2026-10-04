@@ -9,7 +9,8 @@ import {
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { getWeekendDay } from "@/lib/weekend/plan";
 import { delKey, getJSON, setJSON } from "@/lib/store";
-import { PENALIDAD_ERROR_MS } from "@/lib/torneo/tiempos";
+import { PENALIDAD_ERROR_MS, torneoHabilitado } from "@/lib/torneo/tiempos";
+import { gradeOf } from "@/lib/grades";
 
 // Cada partida se abre en el servidor cuando arranca el reloj ({action:"start"})
 // y se cierra una sola vez al terminar: así nadie puede mandar un tiempo
@@ -101,6 +102,9 @@ export async function POST(request: NextRequest) {
     }
     if (!getWeekendDay(new Date())) {
       return Response.json({ error: "El torneo es solo el fin de semana." }, { status: 400 });
+    }
+    if (!torneoHabilitado(gradeOf(alumno))) {
+      return Response.json({ error: "El torneo de las tablas empieza en 3.º grado, después de junio." }, { status: 403 });
     }
     const partida: PartidaAbierta = { id: crypto.randomUUID(), tabla, t: Date.now() };
     await setJSON(partidaKey(alumno.code), partida, { ttlSeconds: 15 * 60 });

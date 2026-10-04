@@ -41,6 +41,8 @@ import Forest from "@/components/Forest";
 import { themeForWorld } from "@/lib/grades";
 import Image from "next/image";
 import VisualAid from "@/components/activities/VisualAid";
+import PitagoricaActivity from "@/components/activities/PitagoricaActivity";
+import RepartoActivity from "@/components/activities/RepartoActivity";
 import Burst from "@/components/weekend/Burst";
 
 interface Props {
@@ -69,6 +71,9 @@ function speakTextFor(activity: ActivitySpec): string {
       return activity.statement;
     case "find-error":
       return `${activity.prompt} ${activity.resolution}`;
+    case "pitagorica":
+    case "reparto":
+      return activity.prompt;
     case "listen":
       return activity.scenes.map((sc) => sc.text).join(" ");
     case "pick":
@@ -336,7 +341,7 @@ export default function ActivityRunner({
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
-            {world.grade !== 1 && !world.storyId && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
+            {world.grade !== 1 && !world.storyId && activity.type !== "pitagorica" && activity.type !== "reparto" && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
             {activity.type === "pick" && (
               <PickActivity
                 key={`pick-${index}`}
@@ -456,6 +461,26 @@ export default function ActivityRunner({
                 choices={activity.choices}
                 answerIndex={activity.answerIndex}
                 correctAnswer={activity.correctAnswer}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "pitagorica" && (
+              <PitagoricaActivity
+                key={`pit-${index}`}
+                prompt={activity.prompt}
+                modo={activity.modo}
+                fila={activity.fila}
+                columna={activity.columna}
+                onDone={submitResult}
+              />
+            )}
+            {activity.type === "reparto" && (
+              <RepartoActivity
+                key={`rep-${index}`}
+                prompt={activity.prompt}
+                total={activity.total}
+                cajas={activity.cajas}
+                objeto={activity.objeto}
                 onDone={submitResult}
               />
             )}

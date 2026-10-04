@@ -13,9 +13,11 @@ export const IMAGENES_LISTAS = new Set<string>([
   "camara-naturaleza",
   "exploradora-gato",
   "guardian-animales",
+  "lentes-turbo",
   "logro-liebre-tortuga",
   "mascota-conejo",
   "mascota-gato",
+  "medalla-rayo",
   "mochila-mascota",
   "perro-ovejero",
   "squishy-carpincho",
@@ -36,5 +38,6 @@ export const IMAGENES_LISTAS = new Set<string>([
   "vincha-notas",
   "vincha-nubes",
   "vincha-paltas",
-  "vincha-rana"
+  "vincha-rana",
+  "vincha-relampago"
 ]);

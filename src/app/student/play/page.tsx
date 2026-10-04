@@ -560,6 +560,17 @@ export default function StudentPlayPage() {
         />
       </div>
 
+      {grade >= 2 && (
+        <div className="relative z-10 text-center mt-6">
+          <a
+            href="/tabla-pitagorica"
+            target="_blank"
+            className="inline-flex items-center gap-2 rounded-full bg-white/90 border-2 border-indigo-300 px-4 py-2 text-sm font-black text-indigo-800 shadow"
+          >
+            📥 Mi tabla pitagórica para imprimir
+          </a>
+        </div>
+      )}
       <div className="relative z-10 text-center mt-8">
         <button
           onClick={handleLogout}
