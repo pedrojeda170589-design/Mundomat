@@ -11,7 +11,7 @@ import {
   premioGrupoParaTabla,
   PremioGrupoItem,
 } from "@/lib/torneo/tiempos";
-import { getAccessorySrc } from "@/types";
+import { getAccessoryById, getAccessorySrc } from "@/types";
 
 export interface TorneoTablasGameProps {
   code: string;
@@ -42,8 +42,10 @@ export default function TorneoTablasGame({
   const [tablaSeleccionada, setTablaSeleccionada] = useState<number>(2);
 
   // Rankings por tabla
-  const [ranking, setRanking] = useState<RankingEntry[]>([]);
-  const [loadingRanking, setLoadingRanking] = useState(false);
+  // Ranking de la última tabla pedida (si es de otra tabla, está cargando).
+  const [rankingDe, setRankingDe] = useState<{ tabla: number; lista: RankingEntry[] } | null>(null);
+  const ranking = rankingDe?.tabla === tablaSeleccionada ? rankingDe.lista : [];
+  const loadingRanking = rankingDe?.tabla !== tablaSeleccionada;
 
   // Estado de la cuenta regresiva
   const [cuentaRegresiva, setCuentaRegresiva] = useState<number>(3);
@@ -75,26 +77,30 @@ export default function TorneoTablasGame({
   // Cronómetro
   const tiempoInicioRef = useRef<number>(0);
   const timerAnimRef = useRef<number | null>(null);
+  // Partida abierta en el servidor (se pide al arrancar el reloj).
+  const partidaRef = useRef<Promise<string | null> | null>(null);
+  const terminadaRef = useRef(false);
+  const [sacudir, setSacudir] = useState(0); // cambia en cada error para repetir la sacudida
 
   // Cargar ranking al seleccionar o cambiar tabla
   useEffect(() => {
+    if (fase !== "seleccion") return;
     let cancelled = false;
     fetch(`/api/torneo?code=${encodeURIComponent(code)}&tabla=${tablaSeleccionada}`)
       .then((r) => r.json())
       .then((d) => {
         if (!cancelled && d.ok) {
-          setRanking(d.ranking ?? []);
+          setRankingDe({ tabla: tablaSeleccionada, lista: d.ranking ?? [] });
         }
       })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoadingRanking(false);
+      .catch(() => {
+        if (!cancelled) setRankingDe({ tabla: tablaSeleccionada, lista: [] });
       });
 
     return () => {
       cancelled = true;
     };
-  }, [code, tablaSeleccionada]);
+  }, [code, tablaSeleccionada, fase]);
 
   // Manejo de la cuenta regresiva (3-2-1)
   useEffect(() => {
@@ -109,12 +115,21 @@ export default function TorneoTablasGame({
 
     const t = setTimeout(() => {
       tiempoInicioRef.current = performance.now();
+      terminadaRef.current = false;
+      partidaRef.current = fetch("/api/torneo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "start", code, tabla: tablaSeleccionada }),
+      })
+        .then((r) => r.json())
+        .then((d) => (d.ok ? (d.partida as string) : null))
+        .catch(() => null);
       setTiempoTranscurridoMs(0);
       setPenalidadMs(0);
       setFase("jugando");
     }, 400);
     return () => clearTimeout(t);
-  }, [fase, cuentaRegresiva]);
+  }, [fase, cuentaRegresiva, code, tablaSeleccionada]);
 
   // Manejo del reloj mientras se está jugando
   useEffect(() => {
@@ -123,10 +138,15 @@ export default function TorneoTablasGame({
       return;
     }
 
+    // Se redibuja cada décima (no 60 veces por segundo: celulares modestos).
+    let ultimo = -1;
     const updateTimer = () => {
-      const now = performance.now();
-      const diff = Math.floor(now - tiempoInicioRef.current);
-      setTiempoTranscurridoMs(diff);
+      const diff = Math.floor(performance.now() - tiempoInicioRef.current);
+      const decima = Math.floor(diff / 100);
+      if (decima !== ultimo) {
+        ultimo = decima;
+        setTiempoTranscurridoMs(diff);
+      }
       timerAnimRef.current = requestAnimationFrame(updateTimer);
     };
 
@@ -154,7 +174,8 @@ export default function TorneoTablasGame({
   }
 
   // Respuesta del alumno a una de las 3 opciones
-  function handleElegirOpcion(opcion: number) {
+  // `momento`: el timeStamp del toque (misma base que performance.now()).
+  function handleElegirOpcion(opcion: number, momento: number) {
     if (fase !== "jugando" || opcionCorrectaPresionada !== null) return;
 
     const actual = pasos[pasoActual];
@@ -167,8 +188,10 @@ export default function TorneoTablasGame({
 
       // Si es el último paso (11: N x 10)
       if (pasoActual >= pasos.length - 1) {
+        if (terminadaRef.current) return;
+        terminadaRef.current = true;
         if (timerAnimRef.current) cancelAnimationFrame(timerAnimRef.current);
-        const tiempoFinalMs = tiempoTranscurridoMs + penalidadMs;
+        const tiempoFinalMs = Math.floor(momento - tiempoInicioRef.current) + penalidadMs;
         setFase("guardando");
         void guardarPartida(tiempoFinalMs, errores);
       } else {
@@ -184,6 +207,7 @@ export default function TorneoTablasGame({
       setErrores((e) => e + 1);
       setPenalidadMs((p) => p + PENALIDAD_ERROR_MS);
       setOpcionErroneaPresionada(opcion);
+      setSacudir((n) => n + 1);
       setAlertaPenalidad(true);
       setTimeout(() => setAlertaPenalidad(false), 900);
     }
@@ -197,6 +221,7 @@ export default function TorneoTablasGame({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code,
+          partida: (await partidaRef.current) ?? undefined,
           tabla: tablaSeleccionada,
           ms: msTotal,
           errores: totalErrores,
@@ -206,15 +231,14 @@ export default function TorneoTablasGame({
       const data = await res.json();
       if (!res.ok || !data.ok) {
         setErrorEnvio(data.error || "No se pudo registrar la partida.");
-        // Aún así calculamos medalla local para no frustrar la experiencia
-        const localMedalla = calcularMedalla(tablaSeleccionada, msTotal);
+        // Mostramos cómo le fue, pero sin decir que se guardó.
         setResultadoFinal({
           ms: msTotal,
           errores: totalErrores,
-          medalla: localMedalla,
+          medalla: calcularMedalla(tablaSeleccionada, msTotal),
           monedasGanadas: 0,
           mejorMs: msTotal,
-          esMejorTiempo: true,
+          esMejorTiempo: false,
         });
       } else {
         setResultadoFinal({
@@ -231,15 +255,14 @@ export default function TorneoTablasGame({
         }
       }
     } catch {
-      setErrorEnvio("Ocurrió un error al contactar al servidor.");
-      const localMedalla = calcularMedalla(tablaSeleccionada, msTotal);
+      setErrorEnvio("No pudimos guardar la partida (¿hay internet?). Probá de nuevo.");
       setResultadoFinal({
         ms: msTotal,
         errores: totalErrores,
-        medalla: localMedalla,
+        medalla: calcularMedalla(tablaSeleccionada, msTotal),
         monedasGanadas: 0,
         mejorMs: msTotal,
-        esMejorTiempo: true,
+        esMejorTiempo: false,
       });
     } finally {
       setFase("resultado");
@@ -458,14 +481,14 @@ export default function TorneoTablasGame({
 
               return (
                 <button
-                  key={`${pasoActual}-${i}`}
+                  key={`${pasoActual}-${i}-${opcionErroneaPresionada === opcion ? sacudir : 0}`}
                   disabled={opcionCorrectaPresionada !== null || fase === "guardando"}
-                  onClick={() => handleElegirOpcion(opcion)}
+                  onClick={(e) => handleElegirOpcion(opcion, e.timeStamp)}
                   className={`w-full py-4 sm:py-4.5 px-4 rounded-2xl font-mono font-black text-3xl border-3 shadow-md transition transform active:scale-95 flex items-center justify-center select-none ${
                     esCorrectaPresionada
                       ? "bg-emerald-500 border-emerald-600 text-white scale-102 ring-4 ring-emerald-300"
                       : esErroneaPresionada
-                        ? "bg-rose-500 border-rose-700 text-white animate-shake"
+                        ? "bg-rose-500 border-rose-700 text-white torneo-sacudir"
                         : "bg-white hover:bg-amber-50 border-amber-300 text-slate-900 active:bg-amber-100"
                   }`}
                   style={{ minHeight: "68px" }}
@@ -523,7 +546,11 @@ export default function TorneoTablasGame({
               {tiempoSegundos} s
             </span>
             <span className="block text-[10px] text-amber-900/70 mt-1">
-              {resultadoFinal.esMejorTiempo ? "⭐ ¡Tu mejor tiempo!" : `Mejor: ${(resultadoFinal.mejorMs / 1000).toFixed(1)}s`}
+              {errorEnvio
+                ? "Sin guardar"
+                : resultadoFinal.esMejorTiempo
+                  ? "⭐ ¡Tu mejor tiempo!"
+                  : `Mejor: ${(resultadoFinal.mejorMs / 1000).toFixed(1)}s`}
             </span>
           </div>
           <div className="rounded-2xl bg-amber-50 border border-amber-200 p-3">
@@ -543,7 +570,7 @@ export default function TorneoTablasGame({
             <div className="rounded-xl bg-amber-100 border border-amber-300 py-2 px-3 text-xs font-black text-amber-950 flex items-center justify-center gap-2">
               <span>🪙 +{resultadoFinal.monedasGanadas} monedas ganadas</span>
             </div>
-          ) : (
+          ) : errorEnvio ? null : (
             <div className="rounded-xl bg-amber-50 border border-amber-200 py-1.5 px-3 text-[11px] text-amber-900/80">
               Ya habías recolectado las monedas de hoy para esta tabla.
             </div>
@@ -551,21 +578,27 @@ export default function TorneoTablasGame({
 
           {resultadoFinal.nuevoObjeto && (
             <div className="rounded-2xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-100 border-2 border-amber-400 p-3 flex items-center gap-3 text-left shadow-sm animate-pulse">
-              <span className="relative w-12 h-12 shrink-0">
-                <Image
-                  src={getAccessorySrc(resultadoFinal.nuevoObjeto.id)}
-                  alt=""
-                  fill
-                  sizes="48px"
-                  className="object-contain"
-                />
+              <span className="relative w-12 h-12 shrink-0 flex items-center justify-center text-3xl">
+                {getAccessoryById(resultadoFinal.nuevoObjeto.id) ? (
+                  <Image
+                    src={getAccessorySrc(resultadoFinal.nuevoObjeto.id)}
+                    alt=""
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                  />
+                ) : (
+                  resultadoFinal.nuevoObjeto.emoji
+                )}
               </span>
               <div className="text-xs">
                 <p className="font-black text-amber-950">
                   🎉 ¡Nuevo objeto desbloqueado: {resultadoFinal.nuevoObjeto.label}!
                 </p>
                 <p className="text-amber-900/80 text-[11px]">
-                  ¡Ya podés equiparlo en tu avatar desde &quot;Mi perfil&quot;!
+                  {getAccessoryById(resultadoFinal.nuevoObjeto.id)
+                    ? "¡Ya podés equiparlo en tu avatar desde «Mi perfil»!"
+                    : "Ya es tuyo: muy pronto vas a poder ponértelo en el avatar."}
                 </p>
               </div>
             </div>

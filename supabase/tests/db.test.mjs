@@ -365,3 +365,31 @@ test("Directivo y planes (AG-12): resumen multi-aula, comparación por grado y p
   await assert.rejects(as(U.adminA, "select public.assign_school_plan($1, 'distrito')", [A]), /No autorizado/);
 });
 
+
+test("Cupos del plan (AG-15): se controlan en el servidor y por ciclo", async () => {
+  await mkUser("adminC", "admin.c@test");
+  const C = (await as(U.super, "select (public.create_school('Escuela C', 'ESC-C')).id"))[0].id;
+  await sys("insert into public.user_roles (user_id, role, school_id) values ($1,'school_admin',$2)", [U.adminC, C]);
+  const cc = (y, d) => as(U.adminC, "select (public.create_classroom($1, 3, $2, $3)).id", [C, d, y]);
+
+  // Plan piloto: 2 aulas por ciclo.
+  const c1 = (await cc(2026, "A"))[0].id;
+  await cc(2026, "B");
+  await assert.rejects(cc(2026, "C"), /cupo de 2 aulas/);
+  await cc(2027, "A"); // otro ciclo: vuelve a tener lugar
+  // El super admin no tiene límite (para resolver casos especiales).
+  await as(U.super, "select public.create_classroom($1, 3, 'S', 2026)", [C]);
+
+  // Plan piloto: 35 alumnos activos en el ciclo.
+  for (let i = 0; i < 35; i++) await as(U.adminC, "select public.enroll_new_student($1, $2)", [c1, `Alumno ${i}`]);
+  await assert.rejects(as(U.adminC, "select public.enroll_new_student($1, 'Uno más')", [c1]), /cupo de 35 alumnos/);
+
+  const [uso] = await as(U.adminC, "select * from public.school_plan_usage($1, 2026)", [C]);
+  assert.deepEqual(uso, { aulas: 3, alumnos: 35, max_aulas: 2, max_alumnos: 35 });
+  // Otra escuela no ve el uso de C.
+  await assert.rejects(as(U.adminA, "select * from public.school_plan_usage($1, 2026)", [C]), /No autorizado/);
+
+  // Con plan escuela, sigue inscribiendo.
+  await as(U.super, "select public.assign_school_plan($1, 'escuela', 500, '2027-12-31'::date)", [C]);
+  await as(U.adminC, "select public.enroll_new_student($1, 'Uno más')", [c1]);
+});

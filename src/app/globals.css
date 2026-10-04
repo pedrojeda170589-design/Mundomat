@@ -351,3 +351,16 @@ body {
     padding-top: calc(100vw * 941 / 1672 + 0.75rem) !important;
   }
 }
+
+/* Torneo de las tablas: el botón equivocado tiembla en rojo (AG-14). */
+@keyframes torneo-sacudir {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.torneo-sacudir { animation: torneo-sacudir 0.4s ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  .torneo-sacudir { animation: none; }
+}

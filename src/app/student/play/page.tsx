@@ -14,6 +14,7 @@ import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import { esSemanaDeDictado, getMundoDictado } from "@/lib/dictado/banco";
 import WorldMap from "@/components/WorldMap";
+import { tramosDelMapa, tramoActual } from "@/lib/mapa/modulos";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
@@ -267,6 +268,16 @@ export default function StudentPlayPage() {
     }
     mapWorlds = [dictWorld, ...mapWorlds];
   }
+  // Módulos de contenido: cada uno con su paisaje de Santa Cruz.
+  const tramos = tramosDelMapa(grade, subject, mapWorlds);
+  const tramoHoy = tramoActual(tramos, mapWorlds, progress.completedWorlds);
+  const pctTramo = tramoHoy
+    ? Math.round(
+        (mapWorlds.slice(tramoHoy.desde, tramoHoy.hasta + 1).filter((w) => progress.completedWorlds.includes(w.id)).length /
+          (tramoHoy.hasta - tramoHoy.desde + 1)) *
+          100
+      )
+    : 0;
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
 
@@ -496,6 +507,21 @@ export default function StudentPlayPage() {
       </div>
 
       <div className="relative z-10 max-w-md w-full mx-auto px-4 mb-3">
+        {tramoHoy ? (
+          <div className="parchment-panel rounded-xl px-3 py-2 flex items-center gap-2 text-xs" title="Al pasar de módulo, cambia el paisaje del mapa">
+            <span className="text-base">📍</span>
+            <span className="flex-1">
+              <span className="font-black">
+                Módulo {tramoHoy.numero} de {tramos.length}: {tramoHoy.modulo.titulo}
+              </span>{" "}
+              · {tramoHoy.lugar.nombre} ({tramoHoy.lugar.localidad})
+              <span className="mt-1 block h-1.5 rounded-full bg-amber-900/15 overflow-hidden">
+                <span className="block h-full rounded-full bg-emerald-500" style={{ width: `${pctTramo}%` }} />
+              </span>
+            </span>
+            <span className="font-black">{pctTramo}%</span>
+          </div>
+        ) : (
         <div
           className="parchment-panel rounded-xl px-3 py-2 flex items-center gap-2 text-xs"
           title="El paisaje cambia cuando avanzás en las 4 áreas"
@@ -513,6 +539,7 @@ export default function StudentPlayPage() {
           </span>
           <span className="font-black">{mapStage.percent}%</span>
         </div>
+        )}
       </div>
 
       <div className="relative z-10">
@@ -526,6 +553,7 @@ export default function StudentPlayPage() {
           inProgress={progress.roundsResume}
           classmateCounts={classmateCounts}
           mapStage={mapStage.stage}
+          tramos={tramos}
           showFichas={!isTrialStudent}
           lockedLabel={isTrialStudent ? "Fuera de la prueba" : undefined}
           onSelectWorld={setSelectedWorld}

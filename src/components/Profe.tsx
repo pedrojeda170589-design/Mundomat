@@ -12,7 +12,17 @@ export type PoseProfe =
   | "lupa" // problemas: buscar los datos
   | "reloj" // racha: falta para que hoy cuente
   | "mate" // fin de semana
-  | "festejo"; // cima del Camino de premios
+  | "festejo" // cima del Camino de premios
+  // Vestimentas según el mundo o el módulo del mapa:
+  | "andinista" // El Chaltén
+  | "guardaparque" // glaciar, reservas
+  | "cientifico" // laboratorio, experimentos
+  | "astronomo" // cielo, observatorio
+  | "explorador" // pasado, Cueva de las Manos
+  | "gaucho" // tradición, campo, sociales
+  | "escritor" // lengua, cuentos
+  | "matematico" // números y tablas
+  | "almacenero"; // medidas, mercado
 
 const ALT: Record<PoseProfe, string> = {
   saluda: "El profe Pedro saludando",
@@ -25,6 +35,29 @@ const ALT: Record<PoseProfe, string> = {
   reloj: "El profe Pedro mirando el reloj",
   mate: "El profe Pedro tomando mate",
   festejo: "El profe Pedro festejando",
+  andinista: "El profe Pedro vestido de andinista",
+  guardaparque: "El profe Pedro vestido de guardaparque",
+  cientifico: "El profe Pedro con guardapolvo de científico",
+  astronomo: "El profe Pedro con un telescopio",
+  explorador: "El profe Pedro vestido de explorador",
+  gaucho: "El profe Pedro vestido de gaucho",
+  escritor: "El profe Pedro con una pluma y un libro",
+  matematico: "El profe Pedro con regla y escuadra",
+  almacenero: "El profe Pedro con una balanza",
+};
+
+// Vestimentas cuyo dibujo todavía no está en public/theme/profe/: mientras
+// tanto se usa otra pose. Al agregar el PNG, sacarla de esta lista.
+const PENDIENTES: Partial<Record<PoseProfe, PoseProfe>> = {
+  andinista: "saluda",
+  guardaparque: "lupa",
+  cientifico: "explica",
+  astronomo: "lupa",
+  explorador: "lupa",
+  gaucho: "mate",
+  escritor: "lee",
+  matematico: "explica",
+  almacenero: "explica",
 };
 
 export default function Profe({
@@ -38,11 +71,12 @@ export default function Profe({
   className?: string; // tamaño del dibujo
   lado?: "derecha" | "izquierda"; // de qué lado va el globito
 }) {
+  const archivo = PENDIENTES[pose] ?? pose;
   const dibujo = (
     <span className={`relative shrink-0 ${className}`}>
       <Image
-        src={`/theme/profe/${pose}.png`}
-        alt={ALT[pose]}
+        src={`/theme/profe/${archivo}.png`}
+        alt={ALT[archivo]}
         fill
         sizes="128px"
         className="object-contain object-bottom drop-shadow-[0_4px_4px_rgba(0,0,0,0.35)]"

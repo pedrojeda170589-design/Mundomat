@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   // variable global del servidor y afectaba a todos los pedidos).
   const activeCurriculo: CurriculoId =
     curriculoParam === "santa-cruz" || curriculoParam === "nap" ? curriculoParam : getCurriculoActivo();
-  const validatedWorldIds = await getValidatedCurriculumWorldIds();
+  const validatedWorldIds = await getValidatedCurriculumWorldIds(activeCurriculo);
   const entries = getAllCurriculumEntries(activeCurriculo, validatedWorldIds);
 
   return Response.json({
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { adminPassword, worldId, validated } = body as {
+  const { adminPassword, worldId, validated, curriculo } = body as {
     adminPassword?: string;
     worldId?: number;
     validated?: boolean;
@@ -38,6 +38,8 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Falta el id de mundo." }, { status: 400 });
   }
 
-  const validatedWorldIds = await validateCurriculumWorld(worldId, validated ?? true);
+  // Cada currículo (Santa Cruz / NAP) guarda sus propias validaciones.
+  const c: CurriculoId = curriculo === "santa-cruz" || curriculo === "nap" ? curriculo : getCurriculoActivo();
+  const validatedWorldIds = await validateCurriculumWorld(worldId, validated ?? true, c);
   return Response.json({ ok: true, validatedWorldIds });
 }

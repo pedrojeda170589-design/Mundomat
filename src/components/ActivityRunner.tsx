@@ -1,6 +1,7 @@
 "use client";
 
 import Profe, { type PoseProfe } from "@/components/Profe";
+import { profeDelMundo } from "@/lib/mapa/modulos";
 import { useEffect, useRef, useState } from "react";
 import {
   AVATAR_INFO,
@@ -489,9 +490,12 @@ export default function ActivityRunner({
         {phase === "feedback" && (
           <div className="parchment-panel relative w-full max-w-md rounded-3xl p-8 text-center">
             {lastCorrect && <Burst />}
-            <span className="relative block w-28 h-28 mx-auto mb-2 wk-float">
-              <WorldIcon world={world} sizes="112px" />
-            </span>
+            <div className="flex items-end justify-center gap-2 mb-2">
+              <span className="relative block w-24 h-24 wk-float">
+                <WorldIcon world={world} sizes="96px" />
+              </span>
+              <Profe pose={lastCorrect ? profeDelMundo(world) : "animo"} className="w-16 h-24" />
+            </div>
             <p className="text-4xl mb-2">{lastCorrect ? "🎉" : "💪"}</p>
             <p className="text-xl font-bold text-amber-950 mb-1">
               {lastCorrect ? "¡Muy bien!" : "¡Seguí practicando!"}

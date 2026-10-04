@@ -1,6 +1,6 @@
 import { Student, StudentProgress } from "@/types";
 import { getWorld } from "@/lib/worlds";
-import { getMasteryThreshold } from "@/lib/courseSummary";
+import { masteryPctForWorld } from "@/lib/grades";
 import { CurriculumEntry } from "@/lib/curriculo";
 
 export function generateCourseCSV(
@@ -99,7 +99,7 @@ export function generateCourseCSV(
         p.bestWorldScore?.[wid] ?? p.lastWorldAttemptScore?.[wid];
       const completed = p.completedWorlds?.includes(wid);
       const pending = p.worldsPendingReinforcementRetry?.includes(wid);
-      const threshold = getMasteryThreshold(grade);
+      const threshold = masteryPctForWorld(wid);
 
       if (best !== undefined) {
         rowCells.push(`${best}%`);

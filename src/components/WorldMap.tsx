@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { WorldDef } from "@/types";
 import { THEMES, themeForWorld } from "@/lib/grades";
+import type { TramoMapa } from "@/lib/mapa/modulos";
+import Profe from "@/components/Profe";
 
 // Cada mundo se ve como una pequeña isla ilustrada (PNG con fondo
 // transparente) que representa su tema: una aldea, un bosque, un castillo...
@@ -15,6 +17,7 @@ import { THEMES, themeForWorld } from "@/lib/grades";
 const ZIGZAG_OFFSETS = [50, 26, 74];
 const ROW_HEIGHT = 158; // separación vertical entre islas, en px
 const ISLAND_SIZE = 124; // tamaño de cada isla, en px
+const CARTEL = 112; // alto del cartel que abre cada módulo, en px
 
 interface Props {
   worlds: WorldDef[];
@@ -35,6 +38,9 @@ interface Props {
   lockedLabel?: string;
   // Mundos que esperan a otro (1.º grado): id → nombre del mundo previo.
   lockedReasons?: Record<number, string>;
+  // Módulos de contenido (ver src/lib/mapa/modulos.ts): cada uno con su
+  // paisaje de Santa Cruz. Sin módulos, el fondo de siempre del grado.
+  tramos?: TramoMapa[];
   onSelectWorld: (world: WorldDef) => void;
 }
 
@@ -51,23 +57,71 @@ export default function WorldMap({
   showFichas = true,
   lockedLabel = "Esperando al Docente",
   lockedReasons = {},
+  tramos = [],
 }: Props) {
+  // Con módulos, antes de la primera isla de cada uno va su cartel.
+  const carteles = (i: number) => tramos.filter((t) => t.desde <= i).length;
   const points = worlds.map((_, i) => ({
     xPct: ZIGZAG_OFFSETS[i % ZIGZAG_OFFSETS.length],
-    yPx: 28 + ISLAND_SIZE / 2 + i * ROW_HEIGHT,
+    yPx: 28 + ISLAND_SIZE / 2 + i * ROW_HEIGHT + carteles(i) * CARTEL,
   }));
-  const containerHeight = 28 + ISLAND_SIZE + Math.max(0, worlds.length - 1) * ROW_HEIGHT + 64;
+  const containerHeight = 28 + ISLAND_SIZE + Math.max(0, worlds.length - 1) * ROW_HEIGHT + tramos.length * CARTEL + 64;
+  // Dónde empieza (en px) el tramo de cada módulo: arriba de su cartel.
+  // (La isla está centrada junto con su cartel de nombre: su borde de arriba
+  // queda unos 95 px por encima del centro.)
+  const arribaIsla = (i: number) => points[i].yPx - 95;
+  const inicioTramo = (t: TramoMapa) => (t.desde === 0 ? 0 : arribaIsla(t.desde) - CARTEL - 6);
 
   return (
     <div
       className="relative w-full max-w-md mx-auto px-6 rounded-[2rem] overflow-hidden border-4 border-amber-800/30 shadow-xl"
       style={{
         height: containerHeight,
-        backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.28)), url(${(worlds[0] ? themeForWorld(worlds[worlds.length - 1]) : THEMES.meseta).map(mapStage)})`,
+        backgroundImage: tramos.length
+          ? undefined
+          : `linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.28)), url(${(worlds[0] ? themeForWorld(worlds[worlds.length - 1]) : THEMES.meseta).map(mapStage)})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+      {/* Paisaje de cada módulo: al pasar de uno a otro, cambia el lugar de Santa Cruz */}
+      {tramos.map((t, k) => {
+        const top = inicioTramo(t);
+        const fin = k + 1 < tramos.length ? inicioTramo(tramos[k + 1]) + 60 : containerHeight;
+        return (
+          <div
+            key={`fondo-${t.numero}`}
+            className="absolute inset-x-0 pointer-events-none"
+            style={{
+              top,
+              height: fin - top,
+              backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.22)), url(${t.lugar.imagen})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              // Fundido suave con el paisaje anterior.
+              maskImage: k ? "linear-gradient(180deg, transparent 0, #000 60px)" : undefined,
+              WebkitMaskImage: k ? "linear-gradient(180deg, transparent 0, #000 60px)" : undefined,
+            }}
+          />
+        );
+      })}
+      {tramos.map((t) => (
+        <div
+          key={`cartel-${t.numero}`}
+          className="absolute inset-x-3 z-10 flex items-end justify-center gap-1 pointer-events-none"
+          style={{ top: arribaIsla(t.desde) - CARTEL + 6, height: CARTEL - 16 }}
+        >
+          <Profe pose={t.modulo.profe} className="w-14 h-20 -mb-1" />
+          <div className="wood-panel rounded-xl px-3 py-1.5 shadow-lg text-left max-w-[70%]">
+            <p className="text-[10px] font-black uppercase tracking-wide text-amber-200">
+              Módulo {t.numero} · {t.modulo.titulo}
+            </p>
+            <p className="text-sm font-black text-white leading-tight drop-shadow">📍 {t.lugar.nombre}</p>
+            <p className="text-[10px] font-bold text-amber-100/90">{t.lugar.localidad}, Santa Cruz</p>
+          </div>
+        </div>
+      ))}
+
       {/* Sendero punteado que conecta las islas, como en el mapa del póster */}
       {points.length > 1 && (
         <svg

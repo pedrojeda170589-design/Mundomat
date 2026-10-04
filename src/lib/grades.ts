@@ -65,13 +65,16 @@ export interface GradeDef {
   skills?: SkillDef[];
   masteryPct: number; // % para quedar "a un repaso de completar"
   unlockPct: number; // % de una vuelta que abre los mundos que siguen
+  // false mientras Claude y Pedro revisan el contenido: los alumnos de ese
+  // grado siguen viendo el de 3.º (como antes de cargarlo).
+  publicado?: boolean;
 }
 
 export const GRADES: GradeDef[] = [
   { grade: 1, label: "1.º grado", theme: THEMES.costa, worlds: GRADE1_WORLDS, skills: GRADE1_SKILLS, masteryPct: 80, unlockPct: 60 },
   { grade: 2, label: "2.º grado", theme: THEMES.bosque, worlds: GRADE2_WORLDS, skills: GRADE2_SKILLS, masteryPct: 85, unlockPct: 60 },
   { grade: 3, label: "3.º grado", theme: THEMES.meseta, worlds: WORLDS, masteryPct: 90, unlockPct: 0 },
-  { grade: 4, label: "4.º grado", theme: THEMES.meseta, worlds: GRADE4_WORLDS, skills: GRADE4_SKILLS, masteryPct: 90, unlockPct: 60 },
+  { grade: 4, label: "4.º grado", theme: THEMES.meseta, worlds: GRADE4_WORLDS, skills: GRADE4_SKILLS, masteryPct: 90, unlockPct: 60, publicado: false },
 ];
 
 export const DEFAULT_GRADE = 3;
@@ -80,8 +83,11 @@ export function gradeOf(student: Pick<Student, "grade"> | null | undefined): num
   return student?.grade ?? DEFAULT_GRADE;
 }
 
-export function getGrade(grade: number): GradeDef {
-  return GRADES.find((g) => g.grade === grade) ?? GRADES.find((g) => g.grade === DEFAULT_GRADE)!;
+export function getGrade(grade: number, { borradores = false }: { borradores?: boolean } = {}): GradeDef {
+  return (
+    GRADES.find((g) => g.grade === grade && (borradores || g.publicado !== false)) ??
+    GRADES.find((g) => g.grade === DEFAULT_GRADE)!
+  );
 }
 
 export function themeForGrade(grade: number): GradeTheme {

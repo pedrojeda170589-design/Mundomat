@@ -284,26 +284,33 @@ export function liteProgress(p: StudentProgress): StudentProgress {
 }
 
 // Progreso resumido para el panel docente y reportes (/admin, con withProgress=true).
-// Conserva métricas, resumen de actividad y las entradas recientes de activityLog
-// (para alertas tempranas y gráficos de evolución), pero descarta vueltas incompletas y
-// recorta el registro histórico no necesario para el panel.
+// Deja las últimas actividades en detalle (alertas y gráficos de evolución) y
+// SUMA las anteriores al resumen por mundo, así los totales (aciertos, tiempo,
+// mundos jugados) no cambian. Descarta las vueltas a medias.
+const PANEL_LOG_ENTRIES = 100;
 export function adminSummaryProgress(p: StudentProgress): StudentProgress {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { roundsInProgress, ...rest } = p;
-  const msInDay = 24 * 60 * 60 * 1000;
-  const cutoffMs = Date.now() - 60 * msInDay;
-  const rawLogs = p.activityLog ?? [];
-  const recentLogs = rawLogs.filter((log) => {
-    const rawDate = log.finishedAt || (log as { timestamp?: string }).timestamp;
-    const t = rawDate ? new Date(rawDate).getTime() : NaN;
-    return isNaN(t) || t >= cutoffMs;
-  });
-  const limitedLogs = recentLogs.length < 30 ? rawLogs.slice(-30) : recentLogs.slice(-100);
+  const log = p.activityLog ?? [];
+  if (log.length <= PANEL_LOG_ENTRIES) return { ...rest, activityLog: log };
+  const viejas = log.slice(0, log.length - PANEL_LOG_ENTRIES);
+  const activitySummary = { ...(p.activitySummary ?? {}) };
+  for (const r of viejas) {
+    const cur = activitySummary[r.worldId] ?? { correct: 0, incorrect: 0, timeSpentSeconds: 0 };
+    activitySummary[r.worldId] = {
+      correct: cur.correct + r.correct,
+      incorrect: cur.incorrect + r.incorrect,
+      timeSpentSeconds: cur.timeSpentSeconds + r.timeSpentSeconds,
+    };
+  }
+  return { ...rest, activityLog: log.slice(-PANEL_LOG_ENTRIES), activitySummary };
+}
 
-  return {
-    ...rest,
-    activityLog: limitedLogs,
-  };
+// Compañeros para resolver nombres repetidos («Santiago R.»): los del aula,
+// o los del aula piloto (sin classroomId), o el alumno solo (aula abierta).
+export async function companerosParaNombres(student: Student): Promise<Student[]> {
+  const lista = classmatesOf(student, await getStudents());
+  return lista.length ? lista : [student];
 }
 
 // Progreso de varios alumnos en una sola consulta.

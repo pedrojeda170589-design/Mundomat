@@ -394,11 +394,12 @@ export default function SchoolPage() {
           {/* 4. Formulario de creación de aula con control de cupos */}
           <NewClassroom
             schoolId={school.id}
-            currentCount={classrooms.length}
+            currentCount={classrooms.filter((c) => c.school_year === new Date().getFullYear()).length}
             maxAllowed={maxAulas}
             planName={planDef.name}
             onCreate={(g, d, y) => {
-              if (classrooms.length >= maxAulas) {
+              // El cupo es por ciclo lectivo (y también lo controla el servidor).
+              if (classrooms.filter((c) => c.school_year === y).length >= maxAulas) {
                 alert(`Tu escuela alcanzó el cupo máximo de ${maxAulas} aulas del ${planDef.name}. Para agregar más divisiones, consultá por la ampliación al Plan Escuela o Distrito.`);
                 return;
               }
@@ -478,7 +479,7 @@ export default function SchoolPage() {
 }
 
 // Grados que ya tienen mundos en el juego (ver GRADES en src/lib/grades.ts).
-const GRADOS_CON_MUNDOS = [1, 2, 3, 4];
+const GRADOS_CON_MUNDOS = [1, 2, 3]; // 4.º se suma cuando se publique (ver AG-17)
 
 function NewClassroom({
   currentCount,

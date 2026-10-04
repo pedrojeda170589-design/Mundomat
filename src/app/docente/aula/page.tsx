@@ -12,7 +12,7 @@ import {
   subjectEmoji,
   subjectLabel,
 } from "@/lib/platform/shared";
-import { getPlan, limiteDe } from "@/lib/planes";
+import { getPlan } from "@/lib/planes";
 
 import { grade1HasContent } from "@/lib/grade1/content";
 import { getGrade } from "@/lib/grades";
@@ -51,6 +51,7 @@ export default function ClassroomPage() {
   const [id, setId] = useState<string | null>(null);
   const [classroom, setClassroom] = useState<(Classroom & { schools: School | null }) | null>(null);
   const [schoolStudentCount, setSchoolStudentCount] = useState<number>(0);
+  const [maxAlumnos, setMaxAlumnos] = useState<number>(Infinity);
   const [mine, setMine] = useState<Classroom[]>([]);
   const [rows, setRows] = useState<StudentRow[] | null>(null);
   const [closed, setClosed] = useState(false);
@@ -70,16 +71,19 @@ export default function ClassroomPage() {
     if (e1) return setError(e1);
     if (!c) return setError(new Error("No tenés acceso a esta aula (o no existe)."));
     setClassroom(c);
-    const [{ data: cyc }, { data: ov, error: e2 }, { data: others }, { count: studentCount }] = await Promise.all([
+    const [{ data: cyc }, { data: ov, error: e2 }, { data: others }, { data: uso }] = await Promise.all([
       sb.from("school_cycles").select("status").eq("school_id", c.school_id).eq("school_year", c.school_year).maybeSingle(),
       sb.rpc("classroom_overview", { p_classroom: id }),
       sb.from("classrooms").select("*").eq("school_id", c.school_id).order("school_year", { ascending: false }),
-      sb.from("student_enrollments").select("id, classrooms!inner(school_id)", { count: "exact", head: true }).eq("classrooms.school_id", c.school_id).eq("status", "active"),
+      // Uso del plan de TODA la escuela en el ciclo (la función lo cuenta en el servidor).
+      sb.rpc("school_plan_usage", { p_school: c.school_id, p_year: c.school_year }),
     ]);
     if (e2) return setError(e2);
     setClosed(cyc?.status === "closed");
     setMine((others ?? []) as Classroom[]);
-    setSchoolStudentCount(studentCount ?? 0);
+    const u = (Array.isArray(uso) ? uso[0] : uso) as { alumnos?: number; max_alumnos?: number | null } | null;
+    setSchoolStudentCount(u?.alumnos ?? 0);
+    setMaxAlumnos(u ? (u.max_alumnos ?? Infinity) : Infinity);
     const map = new Map<string, StudentRow>();
     for (const r of (ov ?? []) as OverviewRow[]) {
       const s = map.get(r.student_id) ?? {
@@ -177,6 +181,7 @@ export default function ClassroomPage() {
               onDone={load}
               school={classroom.schools}
               schoolStudentCount={schoolStudentCount}
+              maxAlumnos={maxAlumnos}
             />
           )}
         </>
@@ -471,12 +476,14 @@ function EnrollTab({
   onDone,
   school,
   schoolStudentCount,
+  maxAlumnos = Infinity,
 }: {
   classroom: Classroom;
   closed: boolean;
   onDone: () => void;
   school?: School | null;
   schoolStudentCount?: number;
+  maxAlumnos?: number;
 }) {
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
@@ -486,7 +493,9 @@ function EnrollTab({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const maxStudents = limiteDe(school, "alumnos");
+  // El servidor manda el cupo real (y lo controla al inscribir); si no
+  // respondió, no se bloquea nada desde la pantalla.
+  const maxStudents = maxAlumnos;
   const planDef = getPlan(school?.plan);
   const atLimit = (schoolStudentCount ?? 0) >= maxStudents;
 

@@ -66,6 +66,15 @@ Cada tabla tiene **dos columnas** (4.º | 5.º, 6.º | 7.º). Usá **solo la col
   - **Palabras y oraciones:** con las reglas ortográficas del grado.
   - **Mundo del Dictado** con ids N8001, con el mismo mecanismo de premio semanal.
 
+### Módulos del mapa (pedido de Pedro)
+
+Agrupá los mundos de cada materia en **módulos de contenido** (bloques seguidos que trabajan un
+mismo tema, por ejemplo «Fracciones y decimales» o «Geometría»). Al pasar de un módulo a otro, el
+mapa cambia el paisaje de fondo (un lugar de Santa Cruz) y muestra un cartel con el profe.
+
+- Anotá en el resumen de `TAREAS.md` la lista de módulos de cada materia: título y los ids de mundos.
+- **No** edites `src/lib/mapa/modulos.ts`: Claude carga los módulos y elige los lugares y las imágenes.
+
 ## 3. Lo que NO tenés que hacer (lo hace Claude)
 
 - Imágenes: islas, mapas, ambientes y avatares.

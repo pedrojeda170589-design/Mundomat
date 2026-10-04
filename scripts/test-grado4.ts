@@ -200,7 +200,8 @@ check("Balance de longitud de opciones: la respuesta correcta es la más larga e
 // ---------------------------------------------------------------------------
 check("Integración con grades.ts, worlds.ts, data.ts, courseSummary.ts y dictado", () => {
   // getGrade(4)
-  const g4 = getGrade(4);
+  const g4 = getGrade(4, { borradores: true });
+  assert.equal(getGrade(4).grade, 3, "4.º no se publica hasta aprobar la revisión");
   assert.equal(g4.grade, 4, "getGrade(4) debe retornar registro de grado 4");
   assert.equal(g4.masteryPct, 90, "masteryPct debe ser 90%");
   assert.equal(g4.unlockPct, 60, "unlockPct debe ser 60%");

@@ -8,6 +8,20 @@ import {
 } from "@/lib/data";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { getWeekendDay } from "@/lib/weekend/plan";
+import { delKey, getJSON, setJSON } from "@/lib/store";
+import { PENALIDAD_ERROR_MS } from "@/lib/torneo/tiempos";
+
+// Cada partida se abre en el servidor cuando arranca el reloj ({action:"start"})
+// y se cierra una sola vez al terminar: así nadie puede mandar un tiempo
+// inventado, repetir el envío ni cobrar dos veces con dos pestañas.
+interface PartidaAbierta {
+  id: string;
+  tabla: number;
+  t: number; // ms del servidor al arrancar
+}
+const partidaKey = (code: string) => `torneo:partida:${code.toUpperCase()}`;
+const TOLERANCIA_MS = 2500; // red y redondeos
+const MIN_MS_POR_PASO = 250; // nadie responde 11 pasos más rápido
 
 export async function GET(request: NextRequest) {
   const ip = getClientIp(request);
@@ -61,6 +75,8 @@ export async function POST(request: NextRequest) {
   }
 
   let body: {
+    action?: "start";
+    partida?: string;
     code?: string;
     tabla?: number;
     ms?: number;
@@ -74,6 +90,22 @@ export async function POST(request: NextRequest) {
   }
 
   const { code, tabla, ms, errores } = body;
+  if (body.action === "start") {
+    if (!code || typeof tabla !== "number" || !Number.isInteger(tabla) || tabla < 2 || tabla > 10) {
+      return Response.json({ error: "Faltan parámetros (code, tabla)." }, { status: 400 });
+    }
+    const alumno = await findStudentByCode(code);
+    if (!alumno) {
+      await recordFailedLookup();
+      return Response.json({ error: "Código no encontrado." }, { status: 404 });
+    }
+    if (!getWeekendDay(new Date())) {
+      return Response.json({ error: "El torneo es solo el fin de semana." }, { status: 400 });
+    }
+    const partida: PartidaAbierta = { id: crypto.randomUUID(), tabla, t: Date.now() };
+    await setJSON(partidaKey(alumno.code), partida, { ttlSeconds: 15 * 60 });
+    return Response.json({ ok: true, partida: partida.id });
+  }
   if (!code || typeof tabla !== "number" || typeof ms !== "number") {
     return Response.json({ error: "Faltan parámetros obligatorios (code, tabla, ms)." }, { status: 400 });
   }
@@ -86,6 +118,20 @@ export async function POST(request: NextRequest) {
 
   if (isTrialExpired(student)) {
     return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
+  }
+
+  // La partida tiene que haberse abierto en el servidor, para esta tabla, y
+  // se usa una sola vez.
+  const abierta = await getJSON<PartidaAbierta | null>(partidaKey(student.code), null);
+  if (!abierta || !body.partida || abierta.id !== body.partida || abierta.tabla !== tabla) {
+    return Response.json({ error: "No encontramos tu partida. Volvé a empezar la tabla." }, { status: 400 });
+  }
+  await delKey(partidaKey(student.code));
+  const nErrores = typeof errores === "number" && Number.isInteger(errores) ? errores : -1;
+  const sinPenalidad = ms - Math.max(0, nErrores) * PENALIDAD_ERROR_MS;
+  const transcurrido = Date.now() - abierta.t;
+  if (nErrores < 0 || sinPenalidad < 11 * MIN_MS_POR_PASO || sinPenalidad < transcurrido - TOLERANCIA_MS) {
+    return Response.json({ error: "El tiempo de la partida no coincide. Volvé a intentarlo." }, { status: 400 });
   }
 
   const result = await completeTorneoTable(

@@ -24,16 +24,54 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
-| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ✅ 4.º LISTO PARA REVISAR |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
+| AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | ⏳ PENDIENTE (ahora) |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
+| CL-14 | El profe Pedro en la app: poses por momento (saluda, trofeo, aplaude, ánimo, lee, lupa, mate, reloj) y vestimentas por mundo; mapa de mundos por **módulos** con paisajes de Santa Cruz (Cerro Ventana, Fitz Roy, Glaciar, Cueva de las Manos, Bosque Petrificado, Ría Deseado) en 3.º | Claude | 🟢 UNIDA A MAIN |
 | CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
 | CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### Revisión de Claude de AG-14, AG-15 y AG-16 (4/10)
+
+**AG-14 · Torneo de las tablas.** Unida, con estos arreglos:
+- **Tiempo validado en el servidor.** Antes se podía mandar cualquier tiempo desde la consola y quedar primero en el Top 5 con todos los premios.
+  - Ahora la partida se abre en el servidor cuando arranca el reloj (`{action:"start"}`) y se cierra una sola vez.
+  - El tiempo no puede ser menor que el real.
+  - Esto también evita cobrar dos veces con doble envío o con dos pestañas.
+- **Premios ocultos hasta tener imagen.** Los 3 premios (vincha relámpago, lentes turbo, medalla del rayo) se muestran recién cuando tienen su dibujo (`IMAGENES_LISTAS`). Mientras tanto se ganan igual y se ve su emoji. Las imágenes las hace Claude.
+- **Animación del error.** El botón equivocado ahora sí tiembla (antes la clase `animate-shake` no existía). Además respeta «reducir movimiento».
+- **Ranking.** Se refresca al volver a elegir tabla.
+- **Error de envío.** Si falla, ya no muestra «¡Tu mejor tiempo!» ni «ya cobraste».
+- **Reloj.** Se redibuja cada décima, no 60 veces por segundo.
+- **Tiempo final.** Sale del momento exacto del toque.
+- **Doble toque.** Un doble toque al final ya no manda dos veces.
+- **`test-torneo`.** No corre contra la base real y restaura el progreso aunque falle.
+
+**AG-15 · Seguimiento del panel.** Unida, con estos arreglos:
+- **Cupos de aulas y alumnos en el servidor.** Antes se controlaban solo en la pantalla y se podían saltear.
+  - Nueva migración `20261004000200_limites_de_plan.sql`, con prueba en `db.test.mjs` (14/14).
+  - Los cupos son **por ciclo lectivo**: antes, con 2 aulas por año, una escuela piloto quedaba bloqueada después del primer año.
+  - Las escuelas con aula del piloto no tienen límite.
+  - El panel muestra el uso con `school_plan_usage`. Antes el conteo de un docente común salía bajo por RLS.
+- **Resumen del panel.** El recorte del registro **borraba estadísticas**. Ahora las actividades viejas se suman al resumen por mundo, así aciertos, tiempo y «mundos jugados» no cambian.
+- **Validación por currículo.** La ruta `/api/curriculum` nunca pasaba el currículo, así que NAP no se podía validar. Ahora lo pasa.
+- **Nombres repetidos.** No se resolvían en el aula piloto (sin `classroomId`); ahora sí. Además, solo se buscan si hay novedad para publicar.
+- **Planilla CSV.** Usa el % de dominio de cada mundo (`masteryPctForWorld`).
+
+**AG-16 · 4.º grado.** El código está unido pero **oculto** (`publicado: false` en `GRADES`): un aula de 4.º sigue viendo 3.º. Hay que corregir el contenido; los detalles están en **AG-17**:
+- opciones rellenadas;
+- errores de datos;
+- preguntas con dos correctas;
+- bancos fijos de 8;
+- temas del DC que faltan;
+- poca variedad.
+
 
 ### AG-16 · Contenidos de 4.º grado (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

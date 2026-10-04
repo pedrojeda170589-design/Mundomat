@@ -550,10 +550,15 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
 // Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
 export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio", fitLike: "sol-de-mayo" },
-  // Premios del torneo de tablas (AG-14)
-  { id: "vincha-relampago", slot: "headwear", label: "Vincha relámpago", emoji: "⚡", group: "premio", fitLike: "cuernitos-dragon" },
-  { id: "lentes-turbo", slot: "eyewear", label: "Lentes turbo", emoji: "🕶️", group: "premio", fitLike: "lentes-aviador" },
-  { id: "medalla-rayo", slot: "pendant", label: "Medalla del rayo", emoji: "🏅", group: "premio", fitLike: "sol-de-mayo" },
+  // Premios del torneo de tablas (AG-14). Se ganan igual (quedan en la
+  // colección), pero se muestran recién cuando su dibujo está en public/.
+  ...(
+    [
+      { id: "vincha-relampago", slot: "headwear", label: "Vincha relámpago", emoji: "⚡", group: "premio", fitLike: "cuernitos-dragon" },
+      { id: "lentes-turbo", slot: "eyewear", label: "Lentes turbo", emoji: "🕶️", group: "premio", fitLike: "lentes-aviador" },
+      { id: "medalla-rayo", slot: "pendant", label: "Medalla del rayo", emoji: "🏅", group: "premio", fitLike: "sol-de-mayo" },
+    ] satisfies AccessoryDef[]
+  ).filter((o) => IMAGENES_LISTAS.has(o.id)),
   // Legendarios de cada temporada (se ganan superando mundos durante la temporada).
   ...TEMPORADAS.filter((t) => t.legendario && IMAGENES_LISTAS.has(t.legendario.id)).map(
     (t): AccessoryDef => ({

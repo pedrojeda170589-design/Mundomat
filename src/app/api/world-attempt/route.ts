@@ -1,7 +1,7 @@
 import { NextRequest, after } from "next/server";
 import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
 import { getMedalTier } from "@/lib/medals";
-import { findStudentByCode, getProgress, saveProgress, liteProgress, isDictationWorld, applyDictationWorldAttempt, classmatesOf, getStudents } from "@/lib/data";
+import { findStudentByCode, getProgress, saveProgress, liteProgress, isDictationWorld, applyDictationWorldAttempt, companerosParaNombres } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { esSemanaDeDictado } from "@/lib/dictado/banco";
 import { terminarVuelta } from "@/lib/vuelta";
@@ -120,14 +120,14 @@ export async function POST(request: NextRequest) {
     trialFinished = true;
   }
   // Pizarrón de novedades: mundo completado / medalla nueva.
-  const classmates = student.classroomId
-    ? classmatesOf(student, await getStudents())
-    : [student];
-  const resolvedNames = resolveDisplayNames(classmates.length ? classmates : [student]);
-  await addNews(
-    newsForWorldProgress(student, progress, updated, resolvedNames.get(student.code)),
-    student.classroomId
-  );
+  // (Los nombres repetidos se resuelven solo si hay algo para publicar.)
+  if (newsForWorldProgress(student, progress, updated).length) {
+    const resolvedNames = resolveDisplayNames(await companerosParaNombres(student));
+    await addNews(
+      newsForWorldProgress(student, progress, updated, resolvedNames.get(student.code)),
+      student.classroomId
+    );
+  }
 
   // Historial académico en la plataforma.
   const total = totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD;

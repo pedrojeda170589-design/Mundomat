@@ -9,6 +9,7 @@ import { TEMPORADAS } from "../../src/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "../../src/lib/coleccion/logros";
 import { DROPS } from "../../src/lib/coleccion/drops";
 import { CAMINO } from "../../src/lib/coleccion/racha";
+import { PREMIOS_TORNEO_ITEMS } from "../../src/lib/torneo/tiempos";
 
 const root = join(__dirname, "../..");
 const png = (carpeta: string, id: string) => existsSync(join(root, "public/theme", carpeta, `${id}.png`));
@@ -24,6 +25,7 @@ for (const t of TEMPORADAS) {
 }
 for (const d of DROPS) for (const o of [...d.items, ...(d.superEspecial ? [d.superEspecial] : [])]) ver(o.id, "accessories-tienda");
 for (const n of CAMINO) if (n.premio.tipo === "objeto") ver(n.premio.id, "accessories-temporada");
+for (const p of PREMIOS_TORNEO_ITEMS) ver(p.id, "accessories-temporada");
 for (const l of AVATARES_LOGRO) {
   ver(l.id, "avatars");
   if (l.mascota) ver(l.mascota.id, "accessories-temporada");
