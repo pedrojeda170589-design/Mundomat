@@ -213,7 +213,7 @@ export default function NewsBoard({ code }: { code: string }) {
       {greeting &&
         createPortal(
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 py-6 overflow-y-auto">
-            <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 p-5 flex flex-col gap-3 my-auto">
+            <div className="w-full max-w-md rounded-3xl fondo-ilustrado fondo-novedades border-2 border-white/25 p-5 shadow-2xl flex flex-col gap-3 my-auto">
               <div className="flex items-center gap-3">
                 <AvatarDisplay
                   character={greeting.avatar}

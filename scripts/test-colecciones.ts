@@ -24,13 +24,13 @@ for (const t of TEMPORADAS.filter((x) => !x.pausada)) {
 assert.ok(enVenta("halloween", undefined, at("2026-10-04")));
 assert.ok(enVenta("halloween", undefined, at("2026-11-02")));
 assert.ok(!enVenta("halloween", undefined, at("2026-11-03")));
-assert.ok(!enVenta("halloween", undefined, at("2027-10-10")));
-assert.ok(enVenta("halloween", undefined, at("2027-10-18")));
+assert.ok(!enVenta("halloween", undefined, at("2027-10-22")));
+assert.ok(enVenta("halloween", undefined, at("2027-10-23")));
 assert.ok(!enVenta("halloween", undefined, at("2027-11-02")));
-console.log("✅ Halloween: hasta el 2/11 en 2026; desde 2027, del 18/10 al 1/11");
-// Carnaval 2027: lunes 8/2 (Pascua 28/3) → del 1/2 al 15/2.
-assert.ok(enVenta("carnaval", undefined, at("2027-02-01")) && enVenta("carnaval", undefined, at("2027-02-15")) && !enVenta("carnaval", undefined, at("2027-02-16")));
-console.log("✅ Carnaval (fecha móvil) 2027: del 1/2 al 15/2");
+console.log("✅ Halloween: hasta el 2/11 en 2026; desde 2027, del 23/10 al 1/11");
+// Carnaval 2027: lunes 8/2 (Pascua 28/3) → del 4/2 al 13/2 (10 días).
+assert.ok(!enVenta("carnaval", undefined, at("2027-02-03")) && enVenta("carnaval", undefined, at("2027-02-04")) && enVenta("carnaval", undefined, at("2027-02-13")) && !enVenta("carnaval", undefined, at("2027-02-14")));
+console.log("✅ Carnaval (fecha móvil) 2027: del 4/2 al 13/2");
 // Vuelve cada año.
 assert.ok(enVenta("tradicion", undefined, at("2026-11-10")) && enVenta("tradicion", undefined, at("2027-11-10")) && !enVenta("tradicion", undefined, at("2027-11-20")) && !enVenta("tradicion", undefined, at("2027-11-04")));
 assert.equal(ventanaDe("animales", at("2026-10-04")), null, "las temporadas en pausa no se venden ni se anuncian");

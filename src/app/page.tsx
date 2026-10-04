@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import SkyScene from "@/components/SkyScene";
+import HeroFondo from "@/components/HeroFondo";
 import LiveClock from "@/components/LiveClock";
 import { useSkyTheme } from "@/lib/useSkyTheme";
 import { SEASON_INFO } from "@/lib/skyTheme";
@@ -19,10 +20,9 @@ export default function Home() {
 
   return (
     <main
-      className={`relative flex-1 flex flex-col items-center justify-center px-6 py-12 overflow-hidden transition-colors duration-1000 ${
-        isDay ? "bg-hero-day" : "bg-hero-night"
-      }`}
+      className="hero-contenido relative flex-1 flex flex-col items-center justify-center px-6 py-12 overflow-hidden bg-slate-900"
     >
+      <HeroFondo period={isDay ? "day" : "night"} />
       <SkyScene showCelestial={false} />
 
       <div className="relative z-10 text-center mb-8">

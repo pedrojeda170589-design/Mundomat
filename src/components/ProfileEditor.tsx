@@ -213,7 +213,7 @@ export default function ProfileEditor({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 overflow-y-auto">
-      <div className="w-full max-w-sm rounded-3xl bg-slate-900 border border-slate-700 p-5 flex flex-col gap-4 my-auto">
+      <div className="w-full max-w-sm rounded-3xl fondo-ilustrado fondo-perfil border-2 border-white/25 p-5 shadow-2xl flex flex-col gap-4 my-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-white font-black text-lg">Mi perfil</h2>
           <button

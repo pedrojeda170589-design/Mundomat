@@ -40,7 +40,7 @@ function ventanaDelAnio(t: Temporada, year: number): [number, number] {
   } else {
     dia = dayNum({ year, month: t.dia[0], day: t.dia[1] });
   }
-  let inicio = dia - (t.antes ?? 7);
+  let inicio = dia - (t.antes ?? 4);
   const largo = t.dias ?? DIAS_TEMPORADA;
   // No se superpone con la temporada indicada: empieza 4 días después de que termine.
   const otra = t.despuesDe ? getTemporada(t.despuesDe) : undefined;

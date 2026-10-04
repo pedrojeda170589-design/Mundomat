@@ -149,7 +149,7 @@ export default function ListenActivity({
   const done = i === last && (reader || heard.has(last) || !reading);
 
   return (
-    <div className="w-full max-w-md rounded-3xl bg-slate-900/85 border border-slate-700 p-4 shadow-xl">
+    <div className="w-full max-w-md rounded-3xl fondo-ilustrado fondo-cuento border-2 border-white/25 p-4 shadow-xl">
       <p className="text-amber-300 text-xs font-black uppercase tracking-wide text-center">
         {label.icon} {reader ? "Leé" : "Escuchá"} {label.art}
       </p>

@@ -200,7 +200,7 @@ export default function ShopModal({
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-3 py-4 overflow-y-auto">
-      <div className="w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-700 p-4 flex flex-col gap-3 my-auto">
+      <div className="w-full max-w-lg rounded-3xl fondo-ilustrado fondo-tienda border-2 border-white/25 p-4 shadow-2xl flex flex-col gap-3 my-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-white font-black text-lg">🛍️ Tienda</h2>
           <span className="rounded-full bg-yellow-400/15 border border-yellow-400/40 text-yellow-300 font-black text-sm px-3 py-1">

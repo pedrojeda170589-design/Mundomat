@@ -1,5 +1,7 @@
 "use client";
 
+import HeroFondo from "@/components/HeroFondo";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -92,7 +94,8 @@ export default function PruebaInscripcionPage() {
   }
 
   return (
-    <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden min-h-screen">
+    <main className="hero-contenido relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-900 overflow-hidden min-h-screen">
+      <HeroFondo period="night" />
       <SkyScene showCelestial={false} />
 
       <div className="relative z-10 w-full max-w-md mx-auto">

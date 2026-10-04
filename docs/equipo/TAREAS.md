@@ -26,11 +26,25 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE (ahora) |
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
+| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
+| CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### CL-12 · Fondos, portada y Camino de premios (Claude)
+- **Colecciones de 10 días** (`DIAS_TEMPORADA = 10`, del día −4 al +5). Excepciones: Halloween del 23/10 al 1/11 (en 2026 sigue hasta el 2/11, como se anunció), Navidad del 18/12 al 27/12 y Tradición del 5/11 al 14/11. La prueba del calendario (sin superposiciones y con días libres) sigue pasando hasta 2028.
+- **Camino de premios** con estilo de mapa de niveles y la personalidad de MundoTest26:
+  - De fondo, el mapa ilustrado del grado con su sendero.
+  - Arriba, un cartel de madera y un pergamino con el avatar del alumno y su racha.
+  - Las paradas son «caramelos» numerados y el avatar marca dónde está.
+  - El camino se recorre de abajo hacia arriba y abajo hay un botón grande «¡A jugar!».
+- **Fondos ilustrados** (con velo para leer bien) en las ventanas que eran negro liso: tienda, perfil, buzón, pizarrón de novedades y lectura de cuentos (`.fondo-*` en `globals.css`).
+- **Portada e ingreso** (`HeroFondo.tsx`):
+  - La lámina se ve **entera** en cualquier pantalla. En el celular queda arriba, con el contenido debajo, y el resto se completa con la misma imagen desenfocada.
+  - De noche, la luna pintada muestra la **fase real del día** (hemisferio sur; se calcula en el navegador).
 
 ### CL-11 · Revisión de AG-07 a AG-12, drops, racha y editor de objetos (Claude)
 - **Revisión de Antigravity** (unida a main). Arreglos:

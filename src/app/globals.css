@@ -305,3 +305,49 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .slide-in, .kenburns { animation: none; }
 }
+
+/* Ventanas con fondo ilustrado (antes eran negro liso): una lámina de la
+   Patagonia con un velo oscuro para que el texto blanco se lea bien. */
+.fondo-ilustrado {
+  background-size: cover;
+  background-position: center;
+}
+.fondo-tienda {
+  background-image: linear-gradient(180deg, rgba(40, 12, 60, 0.72), rgba(15, 10, 40, 0.86)), url("/theme/backgrounds/carnaval.jpg");
+}
+.fondo-perfil {
+  background-image: linear-gradient(180deg, rgba(8, 20, 45, 0.6), rgba(8, 16, 36, 0.86)), url("/theme/backgrounds/patagonia.jpg");
+}
+.fondo-buzon {
+  background-image: linear-gradient(180deg, rgba(8, 14, 40, 0.55), rgba(8, 12, 32, 0.85)), url("/theme/backgrounds/noche-estrellada.jpg");
+}
+.fondo-novedades {
+  background-image: linear-gradient(180deg, rgba(10, 30, 18, 0.62), rgba(8, 20, 14, 0.86)), url("/theme/backgrounds/bosque.jpg");
+}
+.fondo-cuento {
+  background-image: linear-gradient(180deg, rgba(10, 16, 40, 0.7), rgba(10, 14, 34, 0.88)), url("/theme/backgrounds/glaciar.jpg");
+}
+
+/* Lámina de la portada entera: ancho completo, sin pasarse del alto. En
+   pantallas verticales queda arriba; en las anchas, centrada. */
+.hero-marco {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: min(100vw, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+}
+@media (min-aspect-ratio: 1/1) {
+  .hero-marco {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+/* En pantallas verticales el contenido arranca debajo de la lámina. */
+@media (max-aspect-ratio: 1/1) {
+  .hero-contenido {
+    justify-content: flex-start !important;
+    padding-top: calc(100vw * 941 / 1672 + 0.75rem) !important;
+  }
+}

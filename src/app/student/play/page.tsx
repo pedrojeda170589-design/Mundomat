@@ -1,5 +1,7 @@
 "use client";
 
+import HeroFondo from "@/components/HeroFondo";
+
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
@@ -148,7 +150,8 @@ export default function StudentPlayPage() {
 
   if (trialExpired) {
     return (
-      <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden min-h-screen">
+      <main className="hero-contenido relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-900 overflow-hidden min-h-screen">
+      <HeroFondo period="night" />
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col gap-4">
           <div className="parchment-panel rounded-2xl p-6 sm:p-8 flex flex-col gap-4 text-center shadow-xl border-2 border-amber-600/40">
             <span className="text-4xl">🌅</span>
@@ -394,7 +397,7 @@ export default function StudentPlayPage() {
         </div>
       </div>
 
-      {caminoOpen && <CaminoRacha progress={progress} onClose={() => setCaminoOpen(false)} />}
+      {caminoOpen && <CaminoRacha progress={progress} grade={grade} onClose={() => setCaminoOpen(false)} />}
       {shopOpen && (
         <ShopModal
           code={code}

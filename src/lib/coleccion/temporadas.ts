@@ -2,7 +2,7 @@
 //
 // Cada fecha patria, efeméride o festividad que les interesa a los chicos
 // tiene una COLECCIÓN: avatares, objetos y mascotas que se compran solo
-// durante 15 días. Después desaparecen y vuelven en la misma fecha del año
+// durante 10 días. Después desaparecen y vuelven en la misma fecha del año
 // que viene (o se renuevan con otros). Lo comprado queda para siempre.
 //
 // Además, cada colección tiene un objeto LEGENDARIO que no se vende: se gana
@@ -46,9 +46,9 @@ export interface Temporada {
   coleccion: string; // nombre de la colección: «Aventura Argentina»
   // Día de la efeméride: [mes, día], o una fecha móvil.
   dia: [number, number] | "carnaval";
-  // Días de venta antes del día (por defecto 7: del día −7 al día +7 = 15 días).
+  // Días de venta antes del día (por defecto 4: del día −4 al día +5 = 10 días).
   antes?: number;
-  dias?: number; // largo de la ventana (por defecto 15)
+  dias?: number; // largo de la ventana (por defecto 10)
   // Años con otra ventana (p. ej. Halloween 2026, ya anunciado hasta el 2/11).
   excepciones?: Record<number, { desde: [number, number]; hasta: [number, number] }>;
   // En pausa: no sale a la venta (queda guardada para rotar otro año). Pedido
@@ -64,7 +64,7 @@ export interface Temporada {
   legendario?: ItemColeccion;
 }
 
-export const DIAS_TEMPORADA = 15;
+export const DIAS_TEMPORADA = 10; // pedido de Pedro (antes 15)
 export const LEGENDARIO_MUNDOS = 3;
 
 // Precios de referencia (monedas).
@@ -161,7 +161,7 @@ export const TEMPORADAS: Temporada[] = [
     emoji: "🎃",
     coleccion: "Reino de los Monstruos",
     dia: [10, 31],
-    antes: 13, // del 18/10 al 1/11
+    antes: 8, // del 23/10 al 1/11
     // 2026: ya se anunció «hasta el 2 de noviembre».
     excepciones: { 2026: { desde: [10, 1], hasta: [11, 2] } },
     avatares: [
@@ -182,7 +182,7 @@ export const TEMPORADAS: Temporada[] = [
   // ───────────── NOVIEMBRE ─────────────
   {
     id: "tradicion",
-    antes: 5, // del 5 al 19/11: deja días libres después de Halloween
+    antes: 5, // del 5 al 14/11: deja días libres después de Halloween
     label: "Día de la Tradición",
     emoji: "🧉",
     coleccion: "Aventura Argentina",
@@ -290,7 +290,7 @@ export const TEMPORADAS: Temporada[] = [
     emoji: "🎄",
     coleccion: "El Reino de la Navidad",
     dia: [12, 25],
-    antes: 10, // del 15 al 29 de diciembre
+    antes: 7, // del 18 al 27 de diciembre
     avatares: [
       { id: "papa-noel", label: "Papá Noel", price: 220, blurb: "Con barba blanca y risa contagiosa.", comoAvatar: nene },
       { id: "elfo", label: "Elfo", price: 200, blurb: "Arma juguetes en el taller.", comoAvatar: nene },

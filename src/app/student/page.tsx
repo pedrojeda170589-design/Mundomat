@@ -1,5 +1,7 @@
 "use client";
 
+import HeroFondo from "@/components/HeroFondo";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import MusicToggle from "@/components/MusicToggle";
@@ -61,7 +63,8 @@ export default function StudentLoginPage() {
   }
 
   return (
-    <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden">
+    <main className="hero-contenido relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-900 overflow-hidden">
+      <HeroFondo period="night" />
       <MusicToggle />
       <SkyScene showCelestial={false} />
       {expiredStudent ? (
