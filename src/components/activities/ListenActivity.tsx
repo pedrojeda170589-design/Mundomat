@@ -1,5 +1,6 @@
 "use client";
 
+import Profe from "@/components/Profe";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { playClip, stopClip } from "@/lib/audio";
@@ -153,7 +154,10 @@ export default function ListenActivity({
       <p className="text-amber-300 text-xs font-black uppercase tracking-wide text-center">
         {label.icon} {reader ? "Leé" : "Escuchá"} {label.art}
       </p>
-      <h3 className="text-xl font-black text-white text-center mb-3">{title}</h3>
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <Profe pose="lee" className="w-12 h-14" />
+        <h3 className="text-xl font-black text-white text-center">{title}</h3>
+      </div>
       {/* Diapositiva: la imagen entra con un fundido y se acerca despacio. */}
       <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-4 border-amber-200/80 bg-slate-800 mb-3">
         <div key={i} className="absolute inset-0 slide-in">

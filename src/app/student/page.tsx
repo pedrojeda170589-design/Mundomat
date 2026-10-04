@@ -1,5 +1,6 @@
 "use client";
 
+import Profe from "@/components/Profe";
 import HeroFondo from "@/components/HeroFondo";
 import BannerAniversario from "@/components/BannerAniversario";
 
@@ -119,9 +120,9 @@ export default function StudentLoginPage() {
               🧭 MundoTest26
             </h1>
           </div>
-          <p className="text-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)] mb-8 mt-4">
-            Ingresá tu código de acceso
-          </p>
+          <div className="flex justify-center mt-2 mb-3">
+            <Profe pose="saluda" dice="¡Hola! Ingresá tu código de acceso y empezamos 👋" className="w-16 h-28" />
+          </div>
 
         <form
           onSubmit={handleSubmit}

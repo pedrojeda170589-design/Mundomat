@@ -1,5 +1,6 @@
 "use client";
 
+import Profe, { type PoseProfe } from "@/components/Profe";
 import { useEffect, useRef, useState } from "react";
 import {
   AVATAR_INFO,
@@ -531,15 +532,19 @@ function WorldDoneScreen({ world, outcome, premios, onBack }: WorldDoneScreenPro
   let title = `¡Completaste ${world.name}!`;
   let message = "Muy buen trabajo, seguí así.";
   let coinsNote: string | null = null;
+  // Pose del profe según cómo le fue.
+  let pose: PoseProfe = "aplaude";
 
   if (outcome?.kind === "dictation") {
     if (outcome.rewardEarned) {
       emoji = "✏️";
+      pose = "trofeo";
       title = "¡Semana de Dictado al 100%!";
       message = "¡Increíble! Lograste 100% en tu primer intento semanal.";
       coinsNote = "+20 🪙 de premio y desbloqueaste el «Lápiz dorado» ✏️";
     } else {
       emoji = outcome.scorePct === 100 ? "🌟" : "💪";
+      pose = outcome.scorePct === 100 ? "aplaude" : "animo";
       title = `¡Completaste el dictado (${outcome.scorePct}%)!`;
       message =
         outcome.scorePct === 100
@@ -557,6 +562,7 @@ function WorldDoneScreen({ world, outcome, premios, onBack }: WorldDoneScreenPro
       message = "Este mundo ya lo tenías completado — repasarlo siempre suma.";
     } else {
       emoji = "🏆";
+      pose = "trofeo";
       title = `¡Reforzaste y completaste ${world.name}!`;
       message = "Ya lo dominás. ¡Excelente trabajo!";
       coinsNote = `+${COINS_BONUS_WORLD_COMPLETE} 🪙 de bonus por completar el mundo`;
@@ -568,6 +574,7 @@ function WorldDoneScreen({ world, outcome, premios, onBack }: WorldDoneScreenPro
       "Muy bien. Repetí este mundo una vez más para terminar de dominarlo.";
   } else if (outcome?.kind === "needs-review") {
     emoji = "🌱";
+    pose = "animo";
     title = "Necesitás fortalecer este mundo";
     message = `Esta vez lograste ${outcome.scorePct}%. Practicá un poco más y volvé a intentarlo cuando quieras.`;
   }
@@ -580,7 +587,10 @@ function WorldDoneScreen({ world, outcome, premios, onBack }: WorldDoneScreenPro
         <span className="relative block w-36 h-36 mx-auto mb-2 wk-float">
           <WorldIcon world={world} sizes="144px" />
         </span>
-        <p className="text-5xl mb-3">{emoji}</p>
+        <div className="flex items-end justify-center gap-2 mb-3">
+          <Profe pose={pose} className="w-20 h-28" />
+          <p className="text-5xl mb-2">{emoji}</p>
+        </div>
         <h2 className="text-2xl font-black text-amber-800 mb-2">{title}</h2>
         <p className="text-amber-950/80 mb-2">{message}</p>
         {coinsNote && (
