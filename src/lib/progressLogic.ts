@@ -154,8 +154,10 @@ export function applyWorldAttempt(
       ),
     },
     activeDays: (() => {
-      const todayStr = new Date().toISOString().slice(0, 10);
-      const cutoff120Days = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      // Días en hora argentina (UTC−3): lo jugado a las 22 h cuenta para ese día.
+      const ar = (ms: number) => new Date(ms - 3 * 3600 * 1000).toISOString().slice(0, 10);
+      const todayStr = ar(Date.now());
+      const cutoff120Days = ar(Date.now() - 120 * 24 * 60 * 60 * 1000);
       const set = new Set((progress.activeDays ?? []).filter((d) => d >= cutoff120Days));
       set.add(todayStr);
       return Array.from(set).sort();

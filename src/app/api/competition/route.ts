@@ -46,7 +46,7 @@ function newId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 }
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 import { resolveDisplayNames } from "@/lib/studentNames";
 
 // `students` = compañeros de la misma aula (todos comparten sus mundos).
@@ -60,7 +60,7 @@ async function playersInfo(students: Student[]) {
   const worlds = { enabledWorldIds };
   const map = new Map<
     string,
-    { code: string; name: string; avatar?: string; accessories?: StudentProgress["avatarAccessories"]; background?: string; online: boolean; eligible: boolean }
+    { code: string; name: string; avatar?: string; accessories?: StudentProgress["avatarAccessories"]; tweaks?: StudentProgress["avatarTweaks"]; background?: string; online: boolean; eligible: boolean }
   >();
   students.forEach((s) => {
     const p = snapshot.progress.get(s.code) ?? { code: s.code, completedWorlds: [], activityLog: [], coins: 0 };
@@ -70,6 +70,7 @@ async function playersInfo(students: Student[]) {
       name: displayName(s, p, resolvedNames.get(s.code)),
       avatar: p.avatar,
       accessories: p.avatarAccessories,
+      tweaks: p.avatarTweaks,
       background: p.avatarBackground,
       online: isOnline(presence[s.code]),
       eligible: pending <= MAX_PENDING_WORLDS,
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
   }
 
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -139,7 +140,7 @@ export async function GET(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   // En el aula abierta de prueba no hay duelos entre desconocidos.
@@ -164,6 +165,7 @@ export async function GET(request: NextRequest) {
           fromName: s ? displayName(s, p) : "Un compañero",
           avatar: p?.avatar,
           accessories: p?.avatarAccessories,
+          tweaks: p?.avatarTweaks,
           background: p?.avatarBackground,
           presetId: d.presetId,
         };
@@ -193,6 +195,7 @@ export async function GET(request: NextRequest) {
         name: names.get(other)!.name,
         avatar: otherProgress.avatar,
         accessories: otherProgress.avatarAccessories,
+        tweaks: otherProgress.avatarTweaks,
         background: otherProgress.avatarBackground,
       },
       coinsEarned,
@@ -253,7 +256,7 @@ export async function POST(request: NextRequest) {
   }
 
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -265,7 +268,7 @@ export async function POST(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });

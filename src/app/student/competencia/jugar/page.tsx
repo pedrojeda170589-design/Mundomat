@@ -28,6 +28,7 @@ interface Opponent {
   name: string;
   avatar?: string;
   accessories?: AvatarAccessories;
+  tweaks?: import("@/types").AvatarTweaks;
   background?: string;
 }
 
@@ -217,6 +218,7 @@ export default function CompetitionPlayPage() {
     <AvatarDisplay
       character={opponent.avatar}
       accessories={opponent.accessories}
+                  tweaks={opponent.tweaks}
       background={opponent.background}
       className="w-16 h-16 rounded-2xl"
       imageSizes="64px"

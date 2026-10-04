@@ -2,6 +2,8 @@ import {
   AVATAR_OPTIONS,
   AccessorySlot,
   AvatarAccessories,
+  AvatarTweaks,
+  TWEAK_LIMITES,
   MAX_NICKNAME_LENGTH,
   Student,
   StudentProgress,
@@ -210,6 +212,8 @@ export async function syncStudentWithPlatform(code: string): Promise<Student | u
   // El grado lo da el aula de la plataforma (1.º, 3.º…); el aula piloto es 3.º.
   const grade = !entry.isLegacyPilot && entry.grade && entry.grade !== 3 ? entry.grade : undefined;
   const birthday = entry.birthDate ?? entry.birthdayMmdd ?? current?.birthday;
+  // Nombre visible confirmado por el docente en /docente (si lo cargó).
+  const displayName = entry.nickname?.trim() || current?.displayName;
   if (!current) {
     const student: Student = {
       code: entry.accessCode,
@@ -219,13 +223,14 @@ export async function syncStudentWithPlatform(code: string): Promise<Student | u
       ...(birthday ? { birthday } : {}),
       ...(classroomId ? { classroomId } : {}),
       ...(grade ? { grade } : {}),
+      ...(displayName ? { displayName } : {}),
     };
     await setJSON(STUDENTS_KEY, [...students, student]);
     classSnapshotCache = null;
     return student;
   }
-  if (current.classroomId === classroomId && current.birthday === birthday && current.grade === grade) return current;
-  const updated: Student = { ...current, classroomId, birthday, grade };
+  if (current.classroomId === classroomId && current.birthday === birthday && current.grade === grade && current.displayName === displayName) return current;
+  const updated: Student = { ...current, classroomId, birthday, grade, ...(displayName ? { displayName } : {}) };
   if (!classroomId) delete updated.classroomId;
   if (!birthday) delete updated.birthday;
   if (!grade) delete updated.grade;
@@ -321,6 +326,8 @@ function sanitizeNickname(raw: string): string {
   return noControlChars.trim().slice(0, MAX_NICKNAME_LENGTH);
 }
 
+const ALL_SLOTS_VALIDOS: AccessorySlot[] = ["headwear", "eyewear", "face", "torso", "backpack", "pendant", "pet", "prop"];
+
 export interface ProfileUpdate {
   avatar?: string;
   nickname?: string;
@@ -330,6 +337,8 @@ export interface ProfileUpdate {
   // Fondo del avatar: AUTO_BACKGROUND, uno de siempre o uno de temporada ya
   // ganado.
   background?: string;
+  // Corrimiento y tamaño de cada objeto puesto (se valida y se acota).
+  tweaks?: Partial<Record<AccessorySlot, { x?: unknown; y?: unknown; s?: unknown } | null>>;
 }
 
 // Actualiza el avatar, accesorios y/o apodo del alumno dentro de su
@@ -419,6 +428,23 @@ export async function updateStudentProfile(
   if (update.nickname !== undefined) {
     const clean = sanitizeNickname(update.nickname);
     next.nickname = clean.length > 0 ? clean : undefined;
+  }
+  if (update.tweaks !== undefined && update.tweaks && typeof update.tweaks === "object") {
+    const num = (v: unknown, min: number, max: number, def: number) =>
+      typeof v === "number" && Number.isFinite(v) ? Math.min(max, Math.max(min, Math.round(v * 10) / 10)) : def;
+    const L = TWEAK_LIMITES;
+    const out: AvatarTweaks = { ...(progress.avatarTweaks ?? {}) };
+    for (const [slot, t] of Object.entries(update.tweaks) as [AccessorySlot, { x?: unknown; y?: unknown; s?: unknown } | null][]) {
+      if (!ALL_SLOTS_VALIDOS.includes(slot)) continue;
+      if (!t) {
+        delete out[slot];
+        continue;
+      }
+      const v = { x: num(t.x, -L.pos, L.pos, 0), y: num(t.y, -L.pos, L.pos, 0), s: num(t.s, L.sMin, L.sMax, 1) };
+      if (v.x === 0 && v.y === 0 && v.s === 1) delete out[slot];
+      else out[slot] = v;
+    }
+    next.avatarTweaks = Object.keys(out).length ? out : undefined;
   }
   await saveProgress(next);
   return next;

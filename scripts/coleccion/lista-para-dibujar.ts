@@ -4,6 +4,8 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { TEMPORADAS } from "../../src/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "../../src/lib/coleccion/logros";
+import { DROPS } from "../../src/lib/coleccion/drops";
+import { CAMINO } from "../../src/lib/coleccion/racha";
 import { ventanaDe } from "../../src/lib/tiempo-limitado";
 
 const root = join(__dirname, "../..");
@@ -20,6 +22,8 @@ if (process.argv.includes("--json")) {
     for (const o of t.objetos) items[o.id] = { tipo: "objeto", slot: o.slot, molde: o.molde, carpeta: "accessories-tienda" };
     if (t.legendario) items[t.legendario.id] = { tipo: "objeto", slot: t.legendario.slot, molde: t.legendario.molde, carpeta: "accessories-temporada" };
   }
+  for (const d of DROPS) for (const o of [...d.items, ...(d.superEspecial ? [d.superEspecial] : [])]) items[o.id] = { tipo: "objeto", slot: o.slot, molde: o.molde, carpeta: "accessories-tienda" };
+  for (const n of CAMINO) if (n.premio.tipo === "objeto") items[n.premio.id] = { tipo: "objeto", slot: n.premio.slot, molde: n.premio.molde, carpeta: "accessories-temporada" };
   for (const l of AVATARES_LOGRO) {
     items[l.id] = { tipo: "avatar", comoAvatar: l.comoAvatar, carpeta: "avatars" };
     if (l.mascota) items[l.mascota.id] = { tipo: "objeto", slot: "pet", carpeta: "accessories-temporada" };
@@ -29,7 +33,7 @@ if (process.argv.includes("--json")) {
 }
 
 let out = "";
-const orden = [...TEMPORADAS].sort((a, b) => {
+const orden = [...TEMPORADAS].filter((t) => !t.pausada).sort((a, b) => {
   const va = ventanaDe(a.id)!, vb = ventanaDe(b.id)!;
   return Date.UTC(va.desde.year, va.desde.month - 1, va.desde.day) - Date.UTC(vb.desde.year, vb.desde.month - 1, vb.desde.day);
 });
@@ -40,6 +44,12 @@ for (const t of orden) {
   for (const o of t.objetos) out += `| ${marca(hecho("accessories-tienda", o.id))} | \`arte/coleccion/objetos/${o.id}.jpg\` | ${tipo(o)} | **${o.label}**: ${o.blurb} |\n`;
   if (t.legendario) out += `| ${marca(hecho("accessories-temporada", t.legendario.id))} | \`arte/coleccion/legendarios/${t.legendario.id}.jpg\` | 👑 legendario, ${tipo(t.legendario)} | **${t.legendario.label}**: ${t.legendario.blurb} |\n`;
 }
+for (const d of DROPS) {
+  out += `\n### ⚡ Drop ${d.label} (${d.desde}, ${d.dias} días)\n\n| | Archivo | Qué es | Descripción |\n|---|---|---|---|\n`;
+  for (const o of [...d.items, ...(d.superEspecial ? [d.superEspecial] : [])]) out += `| ${marca(hecho("accessories-tienda", o.id))} | \`arte/coleccion/objetos/${o.id}.jpg\` | ${tipo(o)}${o === d.superEspecial ? " 🌟 superespecial" : ""} | **${o.label}**: ${o.blurb} |\n`;
+}
+out += `\n### 🔥 Camino de premios (racha)\n\n| | Archivo | Qué es | Descripción |\n|---|---|---|---|\n`;
+for (const n of CAMINO) if (n.premio.tipo === "objeto") out += `| ${marca(hecho("accessories-temporada", n.premio.id))} | \`arte/coleccion/legendarios/${n.premio.id}.jpg\` | ${tipo(n.premio)} | **${n.premio.label}**: ${n.premio.blurb} |\n`;
 out += `\n### 🏆 Avatares de logro (uno por texto de comprensión)\n\n| | Archivo | Texto | Descripción |\n|---|---|---|---|\n`;
 for (const l of AVATARES_LOGRO) {
   out += `| ${marca(hecho("avatars", l.id))} | \`arte/coleccion/avatars/${l.id}.jpg\` | ${l.texto} | **${l.label}** (encuadre como \`${l.comoAvatar}\`): ${l.blurb} |\n`;

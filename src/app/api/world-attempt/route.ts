@@ -6,6 +6,7 @@ import { applyWorldAttempt } from "@/lib/progressLogic";
 import { esSemanaDeDictado } from "@/lib/dictado/banco";
 import { terminarVuelta } from "@/lib/vuelta";
 import { aplicarPremiosDeMundo } from "@/lib/coleccion/premios";
+import { reclamarCamino } from "@/lib/coleccion/racha";
 import { getWorld } from "@/lib/worlds";
 import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
@@ -14,7 +15,7 @@ import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShare
 import { endTrialNow, isTrialWorldBlocked, trialAllSubjectsDone } from "@/lib/openClassroom";
 import { getEnabledWorldIdsFor } from "@/lib/data";
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
 
 // POST: el alumno terminó una vuelta completa de un mundo (las 10
 // actividades respondidas). Acá se decide, según el sistema de refuerzo del
@@ -22,7 +23,7 @@ import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/
 // fortalecer" (a tratar por el docente).
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -106,7 +107,9 @@ export async function POST(request: NextRequest) {
   // avance hacia el legendario de la temporada.
   const totalVuelta = Math.max(1, totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD);
   const pct = Math.round((Math.min(correctCount, totalVuelta) / totalVuelta) * 100);
-  const { progress: updated, premios } = aplicarPremiosDeMundo(afterAttempt, worldId, pct, getWorld(worldId)?.storyId);
+  const { progress: afterPremios, premios } = aplicarPremiosDeMundo(afterAttempt, worldId, pct, getWorld(worldId)?.storyId);
+  // Mundos superados también avanzan el camino de premios (nodos 🏆).
+  const { progress: updated } = reclamarCamino(afterPremios);
   await saveProgress(updated);
   // Aula de prueba: si ya superó los mundos de todas las materias, la prueba
   // termina (al volver al mapa ve su informe final).

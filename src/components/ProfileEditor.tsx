@@ -13,6 +13,7 @@ import {
   AVATAR_INFO,
   AccessorySlot,
   AvatarAccessories,
+  AvatarTweaks,
   BACKGROUND_OPTIONS,
   MAX_NICKNAME_LENGTH,
   getAccessoryCatalogForAvatar,
@@ -24,7 +25,7 @@ import {
   isBackgroundSelectable,
   isStandardAvatar,
 } from "@/types";
-import AvatarDisplay from "@/components/AvatarDisplay";
+import AcomodarObjetos from "@/components/AcomodarObjetos";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import {
   getActiveEvents,
@@ -49,6 +50,7 @@ interface Props {
   code: string;
   currentAvatar?: string;
   currentAccessories?: AvatarAccessories;
+  currentTweaks?: AvatarTweaks;
   currentNickname?: string;
   currentBackground?: string;
   seasonalCollection?: string[];
@@ -63,6 +65,7 @@ interface Props {
     accessories?: AvatarAccessories;
     nickname?: string;
     background?: string;
+    tweaks?: AvatarTweaks;
   }) => void;
 }
 
@@ -90,6 +93,7 @@ export default function ProfileEditor({
   code,
   currentAvatar,
   currentAccessories,
+  currentTweaks,
   currentNickname,
   currentBackground,
   seasonalCollection = [],
@@ -111,6 +115,7 @@ export default function ProfileEditor({
   const [background, setBackground] = useState<string>(
     currentBackground || AUTO_BACKGROUND
   );
+  const [tweaks, setTweaks] = useState<AvatarTweaks>(currentTweaks ?? {});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -183,6 +188,8 @@ export default function ProfileEditor({
           accessories: Object.fromEntries(
             ALL_SLOTS.map((slot) => [slot, accessories[slot] ?? null])
           ),
+          // Solo se guardan ajustes de lo que está puesto.
+          tweaks: Object.fromEntries(ALL_SLOTS.map((slot) => [slot, accessories[slot] ? tweaks[slot] ?? null : null])),
         }),
       });
       const data = await res.json();
@@ -196,6 +203,7 @@ export default function ProfileEditor({
         accessories: data.progress.avatarAccessories,
         nickname: data.progress.nickname,
         background: data.progress.avatarBackground,
+        tweaks: data.progress.avatarTweaks,
       });
     } catch {
       setError("Ocurrió un error. Probá de nuevo.");
@@ -217,17 +225,14 @@ export default function ProfileEditor({
           </button>
         </div>
 
-        <div className="flex justify-center">
-          <AvatarDisplay
-            character={avatar}
-            accessories={accessories}
-            className="w-32 h-32 rounded-2xl border-2 border-amber-400/70 bg-slate-800"
-            alt="Vista previa de tu avatar"
-            imageSizes="128px"
-            background={background}
-            birthday={isBirthday}
-          />
-        </div>
+        <AcomodarObjetos
+          avatar={avatar}
+          accessories={accessories}
+          background={background}
+          birthday={isBirthday}
+          tweaks={tweaks}
+          onChange={setTweaks}
+        />
 
         <div>
           <p className="text-slate-400 text-xs mb-2">Elegí tu personaje</p>

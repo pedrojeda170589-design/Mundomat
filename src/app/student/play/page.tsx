@@ -16,6 +16,8 @@ import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
 import ShopModal from "@/components/ShopModal";
+import CaminoRacha from "@/components/CaminoRacha";
+import { estadoRacha } from "@/lib/coleccion/racha";
 import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import CloudsBackground from "@/components/CloudsBackground";
@@ -60,6 +62,7 @@ export default function StudentPlayPage() {
   const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [caminoOpen, setCaminoOpen] = useState(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
   const [oferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
@@ -195,6 +198,9 @@ export default function StudentPlayPage() {
       </main>
     );
   }
+  // Racha de estudio (botón 🔥 y camino de premios).
+  const racha = estadoRacha(progress);
+
 
   if (selectedWorld) {
     return (
@@ -304,6 +310,7 @@ export default function StudentPlayPage() {
             <AvatarDisplay
             character={progress.avatar}
             accessories={progress.avatarAccessories}
+            tweaks={progress.avatarTweaks}
             className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
             alt="Mi avatar"
             imageSizes="48px"
@@ -345,6 +352,15 @@ export default function StudentPlayPage() {
             onCoinsChange={(coins) => setProgress((p) => (p ? { ...p, coins } : p))}
           />
           <button
+            onClick={() => setCaminoOpen(true)}
+            className={`shrink-0 whitespace-nowrap rounded-full border-2 px-2 py-0.5 text-xs font-black shadow active:scale-95 ${
+              racha.hoyCuenta ? "border-orange-300 bg-orange-500 text-white" : "border-orange-300/60 bg-black/20 text-orange-200"
+            }`}
+            title="Racha de estudio y camino de premios"
+          >
+            🔥 {racha.racha}
+          </button>
+          <button
             onClick={() => setShopOpen(true)}
             className="relative rounded-full hover:brightness-110 active:scale-95 transition"
             title="Tienda: gastá tus monedas en avatares y objetos"
@@ -378,6 +394,7 @@ export default function StudentPlayPage() {
         </div>
       </div>
 
+      {caminoOpen && <CaminoRacha progress={progress} onClose={() => setCaminoOpen(false)} />}
       {shopOpen && (
         <ShopModal
           code={code}
@@ -412,6 +429,7 @@ export default function StudentPlayPage() {
           code={code}
           currentAvatar={progress.avatar}
           currentAccessories={progress.avatarAccessories}
+          currentTweaks={progress.avatarTweaks}
           currentNickname={progress.nickname}
           currentBackground={progress.avatarBackground}
           isBirthday={isBirthday}
@@ -421,7 +439,7 @@ export default function StudentPlayPage() {
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
           onClose={() => setEditingProfile(false)}
-          onSaved={({ avatar, accessories, nickname, background }) => {
+          onSaved={({ avatar, accessories, nickname, background, tweaks }) => {
             setProgress((p) =>
               p
                 ? {
@@ -430,6 +448,7 @@ export default function StudentPlayPage() {
                     avatarAccessories: accessories,
                     nickname,
                     avatarBackground: background,
+                    avatarTweaks: tweaks,
                   }
                 : p
             );

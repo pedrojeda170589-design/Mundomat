@@ -14,7 +14,9 @@ export async function GET(request: NextRequest) {
   }
 
   const config = await getTeacherAlertConfig();
-  const students = await getStudents();
+  // Solo el aula piloto (como /api/students): las aulas de la plataforma
+  // se ven en /docente con sus propios permisos.
+  const students = (await getStudents()).filter((s) => !s.classroomId);
   const progressList = await getProgressMany(students.map((s) => s.code));
 
   const progressMap: Record<string, StudentProgress> = {};

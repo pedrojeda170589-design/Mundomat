@@ -1,17 +1,16 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
 import { getValidatedCurriculumWorldIds, validateCurriculumWorld } from "@/lib/data";
-import { CurriculoId, getAllCurriculumEntries, getCurriculoActivo, setCurriculoActivo } from "@/lib/curriculo";
+import { CurriculoId, getAllCurriculumEntries, getCurriculoActivo } from "@/lib/curriculo";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const curriculoParam = url.searchParams.get("curriculo") as CurriculoId | null;
 
-  if (curriculoParam === "santa-cruz" || curriculoParam === "nap") {
-    setCurriculoActivo(curriculoParam);
-  }
-
-  const activeCurriculo = getCurriculoActivo();
+  // El currículo pedido se usa solo para esta respuesta (antes cambiaba una
+  // variable global del servidor y afectaba a todos los pedidos).
+  const activeCurriculo: CurriculoId =
+    curriculoParam === "santa-cruz" || curriculoParam === "nap" ? curriculoParam : getCurriculoActivo();
   const validatedWorldIds = await getValidatedCurriculumWorldIds();
   const entries = getAllCurriculumEntries(activeCurriculo, validatedWorldIds);
 
@@ -24,7 +23,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { adminPassword, worldId, validated, curriculo } = body as {
+  const { adminPassword, worldId, validated } = body as {
     adminPassword?: string;
     worldId?: number;
     validated?: boolean;
@@ -37,10 +36,6 @@ export async function POST(request: NextRequest) {
 
   if (typeof worldId !== "number") {
     return Response.json({ error: "Falta el id de mundo." }, { status: 400 });
-  }
-
-  if (curriculo === "santa-cruz" || curriculo === "nap") {
-    setCurriculoActivo(curriculo);
   }
 
   const validatedWorldIds = await validateCurriculumWorld(worldId, validated ?? true);

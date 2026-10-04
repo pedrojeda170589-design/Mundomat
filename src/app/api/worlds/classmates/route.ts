@@ -1,3 +1,4 @@
+import { checkCodeRateLimit, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 import { NextRequest } from "next/server";
 import { findStudentByCode, getClassmateWorldCounts } from "@/lib/data";
 import { WORLDS } from "@/lib/worlds";
@@ -26,7 +27,12 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Materia inválida." }, { status: 400 });
   }
 
+  const ip = getClientIp(request);
+  if ((await checkCodeRateLimit(ip, code)).blocked) {
+    return Response.json({ error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true }, { status: 429 });
+  }
   const student = await findStudentByCode(code);
+  if (!student) await recordFailedLookup();
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }

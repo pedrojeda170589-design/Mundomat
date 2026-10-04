@@ -17,7 +17,7 @@ import { BIRTHDAY_MESSAGES, sameArgDay } from "@/lib/messagesShared";
 
 const BIRTHDAY_GIFTS = new Set(["torta", "regalito", "globo"]);
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 import { resolveDisplayNames } from "@/lib/studentNames";
 
 // GET: novedades de la clase (últimas primero). Con ?code= también devuelve
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
 
   if (code) {
-    const rateLimit = await checkCodeRateLimit(ip);
+    const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
     if (rateLimit.blocked) {
       return Response.json(
         { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   const me = code ? snapshot!.students.find((s) => s.code.toUpperCase() === code.toUpperCase()) : undefined;
 
   if (code && !me) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
 
@@ -86,6 +86,7 @@ export async function GET(request: NextRequest) {
               age: null, // Por privacidad de menores, no se expone la edad ni el año de nacimiento
               avatar: p?.avatar,
               accessories: p?.avatarAccessories,
+              tweaks: p?.avatarTweaks,
               background: p?.avatarBackground,
               me: s.code === student.code,
               greeted: received.some((m) => m.from === student.code),

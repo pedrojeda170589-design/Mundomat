@@ -215,6 +215,7 @@ export default function ShopModal({
           <AvatarDisplay
             character={previewAvatar}
             accessories={previewAccessories}
+            tweaks={preview ? undefined : progress.avatarTweaks}
             background={progress.avatarBackground}
             className="w-24 h-24 rounded-2xl shrink-0"
             imageSizes="96px"

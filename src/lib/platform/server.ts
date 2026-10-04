@@ -36,6 +36,7 @@ export interface DirectoryEntry {
   studentId: string;
   accessCode: string;
   fullName: string;
+  nickname: string | null; // nombre visible confirmado por el docente
   birthDate: string | null;
   birthdayMmdd: string | null;
   classroomId: string | null;
@@ -55,7 +56,7 @@ export async function lookupStudent(code: string): Promise<DirectoryEntry | null
   try {
     const { data: s, error } = await db()
       .from("students")
-      .select("id, access_code, full_name, birth_date, birthday_mmdd, active")
+      .select("id, access_code, full_name, nickname, birth_date, birthday_mmdd, active")
       .eq("access_code", key)
       .maybeSingle();
     if (error) throw error;
@@ -72,6 +73,7 @@ export async function lookupStudent(code: string): Promise<DirectoryEntry | null
         studentId: s.id,
         accessCode: s.access_code,
         fullName: s.full_name,
+        nickname: s.nickname ?? null,
         birthDate: s.birth_date,
         birthdayMmdd: s.birthday_mmdd,
         classroomId: e?.classroom_id ?? null,

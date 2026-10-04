@@ -18,7 +18,7 @@ export function generateCourseCSV(
     "Precisión Global (%)",
     "Tiempo Total (min)",
     "Actividades Últimos 7 Días",
-    "Mundos con Bajo Desempeño (<50%)",
+    "Mundos a Fortalecer",
     "Mundos Pendientes de Refuerzo",
   ];
 

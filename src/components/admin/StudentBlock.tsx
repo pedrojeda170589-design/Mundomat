@@ -32,9 +32,14 @@ export default function StudentBlock({
   const [displayNames, setDisplayNames] = useState<Record<string, string>>({});
 
   // value viene del <input type="date"> como "AAAA-MM-DD" (o vacío).
-  async function handleBirthday(code: string, value: string) {
+  async function handleBirthday(code: string, raw: string) {
+    // El selector necesita un año: a los que solo tienen día y mes se les
+    // muestra 2000 como referencia, y se vuelven a guardar SIN año (no se
+    // inventa un año de nacimiento).
+    const original = students.find((x) => x.code === code)?.birthday ?? "";
+    const value = original.length === 5 && raw.startsWith("2000-") ? raw.slice(5) : raw;
     setBirthdays((b) => ({ ...b, [code]: value }));
-    const valid = /^(19|20)\d\d-\d\d-\d\d$/.test(value);
+    const valid = /^((19|20)\d\d-)?\d\d-\d\d$/.test(value);
     if (value && !valid) return;
     await fetch("/api/students", {
       method: "PATCH",
@@ -47,8 +52,17 @@ export default function StudentBlock({
     }
   }
 
-  async function handleDisplayNameChange(code: string, value: string) {
+  function handleDisplayNameChange(code: string, value: string) {
     setDisplayNames((prev) => ({ ...prev, [code]: value }));
+  }
+
+  // Se guarda al salir del campo o con Enter (antes se mandaba una petición
+  // por cada letra y podía quedar guardado un nombre a medias).
+  async function saveDisplayName(code: string) {
+    const value = displayNames[code];
+    if (value === undefined) return;
+    const s0 = students.find((x) => x.code === code);
+    if ((s0?.displayName || "") === value.trim()) return;
     await fetch("/api/students", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -123,6 +137,10 @@ export default function StudentBlock({
                     value={displayNames[s.code] ?? (s.displayName || "")}
                     placeholder={proposeDisplayName(s.name)}
                     onChange={(e) => handleDisplayNameChange(s.code, e.target.value)}
+                    onBlur={() => void saveDisplayName(s.code)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                    }}
                     title="Nombre para mostrar que ven sus compañeros"
                     className="w-28 rounded border border-amber-700/30 bg-white/80 px-1 py-0.5 text-xs text-amber-950 font-bold focus:border-amber-600 focus:bg-white"
                   />

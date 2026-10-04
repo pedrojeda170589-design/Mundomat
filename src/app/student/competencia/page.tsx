@@ -13,6 +13,7 @@ interface Player {
   name: string;
   avatar?: string;
   accessories?: AvatarAccessories;
+  tweaks?: import("@/types").AvatarTweaks;
   background?: string;
   online: boolean;
   eligible: boolean;
@@ -242,6 +243,7 @@ export default function CompetitionPage() {
                     <AvatarDisplay
                       character={r.avatar}
                       accessories={r.accessories}
+                  tweaks={r.tweaks}
                       background={r.background}
                       className="w-9 h-9 rounded-lg"
                       imageSizes="36px"
@@ -295,6 +297,7 @@ export default function CompetitionPage() {
                           <AvatarDisplay
                             character={c.avatar}
                             accessories={c.accessories}
+                  tweaks={c.tweaks}
                             background={c.background}
                             className="w-14 h-14 rounded-xl"
                             imageSizes="56px"

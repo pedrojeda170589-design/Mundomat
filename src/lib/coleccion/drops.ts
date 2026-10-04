@@ -27,8 +27,51 @@ export interface Drop {
 export const AL_DIA_MUNDOS = 3;
 export const AL_DIA_DIAS = 7;
 
-// Los ítems se definen cuando Pedro elige de las opciones (y tienen imagen).
-export const DROPS: Drop[] = [];
+// Calendario de drops: siempre en los huecos entre temporadas (ver
+// temporadas.ts), dejando días sin nada especial a la venta.
+// Opciones generadas en ChatGPT el 4/10/2026 (láminas A y B, ver
+// docs/CREDITOS-IMAGENES.md). Un ítem aparece cuando tiene imagen.
+export const DROPS: Drop[] = [
+  {
+    id: "six-seven",
+    label: "Six-Seven",
+    emoji: "6️⃣7️⃣",
+    desde: "2026-11-25", // miércoles; termina el martes 1/12
+    dias: 7,
+    mundosRequeridos: 3,
+    items: [
+      { id: "anteojos-67", label: "Anteojos 67", price: 60, slot: "eyewear", molde: "lentes-corazon", blurb: "Anteojos de fiesta con lentes 6 y 7." },
+      { id: "vincha-67", label: "Vincha 67", price: 60, slot: "headwear", molde: "cuernitos-dragon", blurb: "Vincha con un 6 y un 7 con resortes." },
+      { id: "gorra-67", label: "Gorra 67", price: 70, slot: "headwear", molde: "casco-bombero", blurb: "Gorra violeta con parche 67." },
+      { id: "monio-67", label: "Moño 67", price: 40, slot: "face", molde: "corbatin-lunares", blurb: "Moño verde con 6 y 7." },
+      { id: "medalla-67", label: "Medalla 67", price: 50, slot: "pendant", molde: "sol-de-mayo", blurb: "Medalla 67 con cinta arcoíris." },
+      { id: "squishy-6", label: "Squishy 6", price: 50, slot: "pet", blurb: "Un 6 blandito y sonriente." },
+      { id: "squishy-7", label: "Squishy 7", price: 50, slot: "pet", blurb: "Un 7 blandito y sonriente." },
+      { id: "globos-67", label: "Globos 67", price: 40, slot: "prop", blurb: "Globos metalizados 6 y 7." },
+    ],
+    // El más buscado: solo para quienes están al día con sus mundos.
+    superEspecial: { id: "cadena-67", label: "Cadena dorada 67", price: 120, slot: "pendant", molde: "collar-caracoles", blurb: "Cadena dorada con un 67 brillante." },
+  },
+  {
+    id: "squishy-fest",
+    label: "Squishy Fest",
+    emoji: "🧸",
+    desde: "2026-12-07", // lunes a viernes, antes de Navidad
+    dias: 5,
+    mundosRequeridos: 3,
+    items: [
+      { id: "squishy-tostada", label: "Tostada con manteca", price: 60, slot: "pet", blurb: "Tostada squishy con un cubito de manteca feliz." },
+      { id: "squishy-gatito", label: "Gatito bollito", price: 60, slot: "pet", blurb: "Gatito redondo y blandito." },
+      { id: "squishy-estrella", label: "Estrella squishy", price: 50, slot: "pet", blurb: "Estrella amarilla sonriente." },
+      { id: "squishy-nube", label: "Nube squishy", price: 50, slot: "pet", blurb: "Nube con cachetes rosados." },
+      { id: "squishy-leche", label: "Leche de frutilla", price: 50, slot: "prop", blurb: "Cajita de leche de frutilla con carita." },
+      { id: "squishy-palta", label: "Palta squishy", price: 50, slot: "pet", blurb: "Media palta sonriente." },
+      { id: "squishy-dumpling", label: "Dumpling squishy", price: 50, slot: "pet", blurb: "Bollito al vapor con carita." },
+      { id: "squishy-pinguino", label: "Pingüino squishy", price: 60, slot: "pet", blurb: "Pingüino bebé redondito." },
+    ],
+    superEspecial: { id: "squishy-carpincho", label: "Carpincho squishy", price: 120, slot: "pet", blurb: "Carpincho con una mandarina en la cabeza." },
+  },
+];
 
 const DAY = 86_400_000;
 // Medianoche argentina (UTC−3) del día indicado, en ms.

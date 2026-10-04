@@ -9,7 +9,9 @@ import { checkAdminPassword } from "@/lib/auth";
 // alumnos de otras aulas se ven en el panel de la plataforma (/docente).
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
-  const adminPassword = url.searchParams.get("adminPassword");
+  // La contraseña puede venir en el encabezado (preferido: no queda en el
+  // historial ni en los registros) o en la URL (pantallas de siempre).
+  const adminPassword = request.headers.get("x-admin-password") || url.searchParams.get("adminPassword");
   if (!adminPassword || !checkAdminPassword(adminPassword)) {
     return Response.json({ error: "No autorizado." }, { status: 401 });
   }

@@ -72,14 +72,28 @@ begin
       c.grade,
       c.division,
       c.school_year,
-      count(distinct e.student_id) filter (where e.status = 'active') as total_students,
-      count(distinct ar.student_id) filter (where ar.occurred_at >= now() - interval '7 days') as active_students_7d,
-      coalesce(round(sum(ar.correct)::numeric / nullif(sum(ar.correct + ar.incorrect), 0) * 100), 0)::int as avg_accuracy_pct,
-      count(ar.id) as total_activities,
-      coalesce(round(sum(ar.time_spent_seconds) / 60.0), 0)::bigint as practice_minutes
+      coalesce(en.total_students, 0)::bigint as total_students,
+      coalesce(act.active_students_7d, 0)::bigint as active_students_7d,
+      coalesce(act.avg_accuracy_pct, 0)::int as avg_accuracy_pct,
+      coalesce(act.total_activities, 0)::bigint as total_activities,
+      coalesce(act.practice_minutes, 0)::bigint as practice_minutes
     from public.classrooms c
-    left join public.student_enrollments e on e.classroom_id = c.id
-    left join public.activity_results ar on ar.classroom_id = c.id
+    -- Inscripciones y actividades se cuentan por separado (unirlas en un solo
+    -- JOIN multiplicaba las actividades por la cantidad de alumnos).
+    left join lateral (
+      select count(distinct e.student_id) filter (where e.status = 'active') as total_students
+      from public.student_enrollments e
+      where e.classroom_id = c.id
+    ) en on true
+    left join lateral (
+      select
+        count(distinct ar.student_id) filter (where ar.occurred_at >= now() - interval '7 days') as active_students_7d,
+        round(sum(ar.correct)::numeric / nullif(sum(ar.correct + ar.incorrect), 0) * 100) as avg_accuracy_pct,
+        count(ar.id) as total_activities,
+        round(sum(ar.time_spent_seconds) / 60.0) as practice_minutes
+      from public.activity_results ar
+      where ar.classroom_id = c.id
+    ) act on true
     where c.school_id = p_school
       and c.active
       and (
@@ -87,7 +101,6 @@ begin
         or public.is_school_admin(p_school)
         or public.teaches(c.id)
       )
-    group by c.id, c.name, c.grade, c.division, c.school_year
     order by c.school_year desc, c.grade, c.division;
 end $$;
 
@@ -121,19 +134,32 @@ begin
       c.name as classroom_name,
       c.division,
       c.school_year,
-      count(distinct e.student_id) filter (where e.status = 'active') as total_students,
-      count(distinct ar.student_id) filter (where ar.occurred_at >= now() - interval '7 days') as active_students_7d,
-      coalesce(round(sum(ar.correct)::numeric / nullif(sum(ar.correct + ar.incorrect), 0) * 100), 0)::int as avg_accuracy_pct,
-      count(ar.id) as total_activities,
-      coalesce(round(sum(ar.time_spent_seconds) / 60.0), 0)::bigint as practice_minutes
+      coalesce(en.total_students, 0)::bigint as total_students,
+      coalesce(act.active_students_7d, 0)::bigint as active_students_7d,
+      coalesce(act.avg_accuracy_pct, 0)::int as avg_accuracy_pct,
+      coalesce(act.total_activities, 0)::bigint as total_activities,
+      coalesce(act.practice_minutes, 0)::bigint as practice_minutes
     from public.classrooms c
-    left join public.student_enrollments e on e.classroom_id = c.id
-    left join public.activity_results ar on ar.classroom_id = c.id
+    -- Inscripciones y actividades se cuentan por separado (unirlas en un solo
+    -- JOIN multiplicaba las actividades por la cantidad de alumnos).
+    left join lateral (
+      select count(distinct e.student_id) filter (where e.status = 'active') as total_students
+      from public.student_enrollments e
+      where e.classroom_id = c.id
+    ) en on true
+    left join lateral (
+      select
+        count(distinct ar.student_id) filter (where ar.occurred_at >= now() - interval '7 days') as active_students_7d,
+        round(sum(ar.correct)::numeric / nullif(sum(ar.correct + ar.incorrect), 0) * 100) as avg_accuracy_pct,
+        count(ar.id) as total_activities,
+        round(sum(ar.time_spent_seconds) / 60.0) as practice_minutes
+      from public.activity_results ar
+      where ar.classroom_id = c.id
+    ) act on true
     where c.school_id = p_school
       and c.grade = p_grade
       and (p_year is null or c.school_year = p_year)
       and c.active
-    group by c.id, c.name, c.division, c.school_year
     order by c.division;
 end $$;
 

@@ -51,6 +51,13 @@ export interface Temporada {
   dias?: number; // largo de la ventana (por defecto 15)
   // Años con otra ventana (p. ej. Halloween 2026, ya anunciado hasta el 2/11).
   excepciones?: Record<number, { desde: [number, number]; hasta: [number, number] }>;
+  // En pausa: no sale a la venta (queda guardada para rotar otro año). Pedido
+  // de Pedro: que no cambien las cosas todo el tiempo y que haya días sin
+  // objetos especiales. Las activas nunca se superponen (ver la prueba).
+  pausada?: boolean;
+  // Si en algún año se superpone con esta otra temporada, empieza 4 días
+  // después de que termine (p. ej. el inicio de clases después del carnaval).
+  despuesDe?: string;
   avatares: ItemColeccion[];
   objetos: ItemColeccion[];
   // Se gana superando LEGENDARIO_MUNDOS mundos con 90 % o más durante la temporada.
@@ -74,6 +81,7 @@ export const TEMPORADAS: Temporada[] = [
   // ───────────── OCTUBRE ─────────────
   {
     id: "animales",
+    pausada: true,
     label: "Día Mundial de los Animales",
     emoji: "🐾",
     coleccion: "Guardianes de los Animales",
@@ -103,6 +111,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "guardaparques",
+    pausada: true,
     label: "Día de los Guardaparques",
     emoji: "🌳",
     coleccion: "Guardianes de la Naturaleza",
@@ -127,6 +136,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "diversidad",
+    pausada: true,
     label: "Día del Respeto a la Diversidad Cultural",
     emoji: "🌎",
     coleccion: "Exploradores del Mundo",
@@ -172,6 +182,7 @@ export const TEMPORADAS: Temporada[] = [
   // ───────────── NOVIEMBRE ─────────────
   {
     id: "tradicion",
+    antes: 5, // del 5 al 19/11: deja días libres después de Halloween
     label: "Día de la Tradición",
     emoji: "🧉",
     coleccion: "Aventura Argentina",
@@ -195,6 +206,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "soberania",
+    pausada: true,
     label: "Día de la Soberanía Nacional",
     emoji: "⚓",
     coleccion: "Guardianes del Río",
@@ -215,6 +227,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "yaguarete",
+    pausada: true,
     label: "Día Internacional del Yaguareté",
     emoji: "🐆",
     coleccion: "Guardianes de la Selva",
@@ -232,6 +245,7 @@ export const TEMPORADAS: Temporada[] = [
   // ───────────── DICIEMBRE ─────────────
   {
     id: "suelo",
+    pausada: true,
     label: "Día Mundial del Suelo",
     emoji: "🌱",
     coleccion: "Pequeños Guardianes de la Tierra",
@@ -252,6 +266,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "montanas",
+    pausada: true,
     label: "Día Internacional de las Montañas",
     emoji: "🏔️",
     coleccion: "Cumbres de Aventura",
@@ -296,6 +311,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "anio-nuevo",
+    pausada: true,
     label: "Año Nuevo",
     emoji: "🎆",
     coleccion: "Festival del Nuevo Año",
@@ -338,6 +354,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "educacion-ambiental",
+    pausada: true,
     label: "Día de la Educación Ambiental",
     emoji: "♻️",
     coleccion: "Ecoexploradores",
@@ -356,6 +373,7 @@ export const TEMPORADAS: Temporada[] = [
   // ───────────── FEBRERO / MARZO ─────────────
   {
     id: "humedales",
+    pausada: true,
     label: "Día Mundial de los Humedales",
     emoji: "💧",
     coleccion: "Guardianes del Agua",
@@ -395,6 +413,7 @@ export const TEMPORADAS: Temporada[] = [
   },
   {
     id: "regreso",
+    despuesDe: "carnaval",
     label: "Inicio de clases",
     emoji: "🎒",
     coleccion: "Regreso a la Aventura",

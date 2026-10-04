@@ -12,6 +12,7 @@ interface Invite {
   fromName: string;
   avatar?: string;
   accessories?: AvatarAccessories;
+  tweaks?: import("@/types").AvatarTweaks;
   background?: string;
   presetId: string;
 }
@@ -100,6 +101,7 @@ export default function CompetitionBanner({ code }: { code: string }) {
               <AvatarDisplay
                 character={invite.avatar}
                 accessories={invite.accessories}
+                  tweaks={invite.tweaks}
                 background={invite.background}
                 className="w-20 h-20 rounded-2xl"
                 imageSizes="80px"

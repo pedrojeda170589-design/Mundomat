@@ -40,8 +40,15 @@ function ventanaDelAnio(t: Temporada, year: number): [number, number] {
   } else {
     dia = dayNum({ year, month: t.dia[0], day: t.dia[1] });
   }
-  const inicio = dia - (t.antes ?? 7);
-  return [inicio, inicio + (t.dias ?? DIAS_TEMPORADA) - 1];
+  let inicio = dia - (t.antes ?? 7);
+  const largo = t.dias ?? DIAS_TEMPORADA;
+  // No se superpone con la temporada indicada: empieza 4 días después de que termine.
+  const otra = t.despuesDe ? getTemporada(t.despuesDe) : undefined;
+  if (otra && !otra.pausada) {
+    const [a, b] = ventanaDelAnio(otra, year);
+    if (inicio <= b && inicio + largo - 1 >= a) inicio = b + 4;
+  }
+  return [inicio, inicio + largo - 1];
 }
 
 export function getTemporada(id: string): Temporada | undefined {
@@ -52,6 +59,7 @@ export function getTemporada(id: string): Temporada | undefined {
 // 15 días; si no, por la festividad de siempre (src/lib/seasons.ts).
 function activaFn(eventId: string): ((n: number) => boolean) | null {
   const t = getTemporada(eventId);
+  if (t?.pausada) return null; // en pausa: no se vende ni se anuncia
   if (t) {
     return (n: number) => {
       const y = new Date(n * DAY).getUTCFullYear();

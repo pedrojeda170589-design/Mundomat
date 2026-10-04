@@ -23,7 +23,7 @@ import {
   getPresenceMap,
 } from "@/lib/messages";
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 import { resolveDisplayNames } from "@/lib/studentNames";
 
 // GET ?code=  → buzón del alumno + compañeros (con quién está conectado).
@@ -31,7 +31,7 @@ import { resolveDisplayNames } from "@/lib/studentNames";
 // GET ?adminPassword= → historial completo y estado (para el docente).
 export async function GET(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isOpenClassroomStudent(me)) {
@@ -94,6 +94,7 @@ export async function GET(request: NextRequest) {
         name: displayName(s, p, resolvedNames.get(s.code)),
         avatar: p?.avatar,
         accessories: p?.avatarAccessories,
+        tweaks: p?.avatarTweaks,
         background: p?.avatarBackground,
         online: isOnline(presence[s.code]),
         birthdayToday: isBirthdayToday(s.birthday),
@@ -121,7 +122,7 @@ export async function GET(request: NextRequest) {
 // POST { adminPassword, enabled } → el docente prende/apaga el buzón.
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
   if (!me) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });

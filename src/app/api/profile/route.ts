@@ -1,3 +1,4 @@
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
 import { NextRequest } from "next/server";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { findStudentByCode, updateStudentProfile, liteProgress } from "@/lib/data";
@@ -9,7 +10,8 @@ import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 // Panel Docente.
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, avatar, nickname, accessories, background } = body as {
+  const { code, avatar, nickname, accessories, background, tweaks } = body as {
+    tweaks?: Record<string, { x?: number; y?: number; s?: number } | null>;
     code?: string;
     avatar?: string;
     nickname?: string;
@@ -24,7 +26,8 @@ export async function POST(request: NextRequest) {
     avatar === undefined &&
     nickname === undefined &&
     accessories === undefined &&
-    background === undefined
+    background === undefined &&
+    tweaks === undefined
   ) {
     return Response.json(
       { error: "No hay nada para actualizar." },
@@ -36,7 +39,12 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "El apodo es muy largo." }, { status: 400 });
   }
 
+  const ip = getClientIp(request);
+  if ((await checkCodeRateLimit(ip, code)).blocked) {
+    return Response.json({ error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true }, { status: 429 });
+  }
   const student = await findStudentByCode(code);
+  if (!student) await recordFailedCodeAttempt(ip);
   if (!student) {
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
@@ -49,6 +57,7 @@ export async function POST(request: NextRequest) {
     nickname,
     accessories,
     background,
+    tweaks: tweaks as Partial<Record<AccessorySlot, { x?: number; y?: number; s?: number } | null>> | undefined,
   });
   if (!updated) {
     return Response.json(

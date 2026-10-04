@@ -7,13 +7,14 @@ import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShare
 import { closeTrialIfExpired, isTrialWorldBlocked } from "@/lib/openClassroom";
 import { ActivityResult } from "@/types";
 import { avanzarVuelta } from "@/lib/vuelta";
+import { reclamarCamino, registrarRespuesta } from "@/lib/coleccion/racha";
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt, recordSuccessfulCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedCodeAttempt, recordSuccessfulCodeAttempt } from "@/lib/rateLimit";
 import { proposeDisplayName } from "@/lib/studentNames";
 
 export async function GET(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
-  await recordSuccessfulCodeAttempt(ip);
+  await recordSuccessfulCodeAttempt(ip, student.code);
 
   if (isTrialExpired(student)) {
     // Primera vez después del vencimiento: se guarda el informe final y se
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
   // temporada (accesorios y fondo), que quedan para siempre.
   const { progress: afterRewards, newRewards } =
     collectActiveSeasonalRewards(afterActivity, new Date(), student.birthday);
-  const updated = avanzarVuelta(
+  const afterRound = avanzarVuelta(
     afterRewards,
     worldId,
     roundId,
@@ -122,6 +123,8 @@ export async function POST(request: NextRequest) {
     (correct ?? 0) > 0,
     typeof mistake === "string" ? mistake : undefined
   );
+  // Racha de estudio: cuenta la respuesta del día y entrega los premios del camino.
+  const { progress: updated, nuevos: camino } = reclamarCamino(registrarRespuesta(afterRound, (correct ?? 0) > 0));
   await saveProgress(updated);
   // Historial académico en la plataforma (después de responder: no demora
   // el juego). `clientId` evita duplicar la misma respuesta.
@@ -138,7 +141,7 @@ export async function POST(request: NextRequest) {
     })
   );
 
-  return Response.json({ progress: liteProgress(updated), coinsEarned, newRewards });
+  return Response.json({ progress: liteProgress(updated), coinsEarned, newRewards, camino: camino.map((n) => n.id) });
 }
 
 function validClientId(id: unknown): string | null {

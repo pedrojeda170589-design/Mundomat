@@ -17,18 +17,42 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
 | CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | CL-10 | Colecciones por temporada (15 días, calendario anual), legendarios, avatares de logro de los textos, mascotas y objetos de mano | Claude | 🟢 UNIDA A MAIN |
-| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
-| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
+| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
+| AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE (ahora) |
+| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
+| CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### CL-11 · Revisión de AG-07 a AG-12, drops, racha y editor de objetos (Claude)
+- **Revisión de Antigravity** (unida a main). Arreglos:
+  - **Límite de intentos:** cuenta solo los ingresos y guardados con códigos inexistentes. Son 20 en 10 minutos, y durante el bloqueo los códigos que ya entraron desde esa IP siguen funcionando (el aula no se corta). Un acierto no borra el contador, los registros vencen solos y se sumó el límite a `round`, `shop`, `profile`, `spend-coins` y `classmates`.
+  - **Reportes imprimibles:** `/api/students` acepta `x-admin-password`.
+  - **SQL de dirección:** subconsultas `lateral`, sin conteos multiplicados.
+  - **Prueba de la base:** restaurada (13/13).
+  - **Panel:** las alertas muestran solo el aula piloto, el umbral se lee y el currículo ya no cambia una variable global.
+  - **Datos del alumno:** el `nickname` de la plataforma llega como nombre visible; las fechas de nacimiento sin año se guardan sin año; el nombre visible se guarda al salir del campo.
+  - **Varios:** días activos en hora argentina y CSV con «Mundos a Fortalecer».
+  - Lo menor quedó en AG-15.
+- **Calendario sin cambios constantes:** nunca hay dos cosas especiales a la vez y siempre quedan días libres. Hay temporadas `pausada` (se guardan para rotar) y `despuesDe` (el inicio de clases se corre si choca con carnaval). Prueba hasta 2028 en `test-colecciones.ts`.
+- **Drops** (`src/lib/coleccion/drops.ts`):
+  - Six-Seven: del 25/11 al 1/12, 7 días. Superespecial: Cadena dorada 67.
+  - Squishy Fest: del 7/12 al 11/12, 5 días. Superespecial: Carpincho squishy.
+  - Para comprar hay que superar antes 3 mundos con 90 %. El superespecial solo lo ve quien está al día (3 mundos en 7 días y nada a fortalecer).
+- **Racha y Camino de premios** (`src/lib/coleccion/racha.ts`, `CaminoRacha.tsx`, botón 🔥 en el mapa):
+  - Un día de estudio son 5 o más actividades con 60 % o más bien.
+  - Sábados, domingos y vacaciones no cortan la racha. Cada 5 días se gana un escudo 🛡️ (máximo 2).
+  - El camino tiene 21 paradas por racha (🔥) y por mundos superados (🏆): monedas, las vinchas y los anteojos de las láminas C y D, y la vincha de mate y termo como premio mayor. Se entregan en el servidor.
+- **Acomodar objetos** (`AcomodarObjetos.tsx` en el perfil): vista grande del avatar, se elige un objeto y se arrastra con el dedo. Se agranda o achica con − / + y tiene «A su lugar». Se guarda en `avatarTweaks` (validado y acotado) y se ve igual en todas las pantallas (buzón, pizarrón, competencia).
+- Pendiente de Pedro: descargar las láminas de ChatGPT (los objetos aparecen cuando tienen imagen) y avatares de cuerpo entero.
 
 ### AG-12 · Vista de directivo y modelo de planes (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

@@ -9,7 +9,7 @@
 import assert from "node:assert";
 import { proposeDisplayName, getSurnameInitial, resolveDisplayNames } from "../src/lib/studentNames";
 import { displayName } from "../src/lib/news";
-import { checkCodeRateLimit, recordFailedCodeAttempt, resetCodeRateLimit } from "../src/lib/rateLimit";
+import { MAX_FAILED_ATTEMPTS, checkCodeRateLimit, recordFailedCodeAttempt, recordSuccessfulCodeAttempt, resetCodeRateLimit } from "../src/lib/rateLimit";
 import { sameClassroom } from "../src/lib/data";
 import { OPEN_CLASSROOM_ID } from "../src/lib/openClassroomShared";
 import { Student, StudentProgress } from "../src/types";
@@ -152,30 +152,34 @@ async function runTests() {
   const testIp = "192.168.100.250";
   await resetCodeRateLimit(testIp);
 
-  // Intentos 1 a 7: no deben bloquear
-  for (let i = 1; i <= 7; i++) {
+  // Un chico entra bien desde la escuela: su código queda «conocido».
+  await recordSuccessfulCodeAttempt(testIp, "AAA111");
+
+  // Intentos 1 a 19 con códigos inexistentes: no bloquean (la escuela comparte IP).
+  for (let i = 1; i < MAX_FAILED_ATTEMPTS; i++) {
     const res = await recordFailedCodeAttempt(testIp);
     assert.strictEqual(res.blocked, false, `Intento ${i} no debe estar bloqueado`);
-    assert.strictEqual(res.remainingAttempts, 8 - i);
+    assert.strictEqual(res.remainingAttempts, MAX_FAILED_ATTEMPTS - i);
   }
-  console.log("✅ Intentos 1 a 7 fallidos: se decrementan los intentos restantes sin bloquear");
+  console.log(`✅ Intentos 1 a ${MAX_FAILED_ATTEMPTS - 1} fallidos: sin bloqueo`);
 
-  // Intento 8: debe bloquear
-  const res8 = await recordFailedCodeAttempt(testIp);
-  assert.strictEqual(res8.blocked, true, "Intento 8 debe bloquear la IP");
-  assert.strictEqual(res8.remainingAttempts, 0);
-  assert.ok(res8.remainingSeconds && res8.remainingSeconds > 0, "Debe tener tiempo de bloqueo restante");
-  console.log("✅ Intento 8 fallido: IP bloqueada por 10 minutos (600s)");
+  const resN = await recordFailedCodeAttempt(testIp);
+  assert.strictEqual(resN.blocked, true, `Intento ${MAX_FAILED_ATTEMPTS} debe bloquear los códigos desconocidos`);
+  assert.ok(resN.remainingSeconds && resN.remainingSeconds > 0);
+  console.log(`✅ Intento ${MAX_FAILED_ATTEMPTS}: se bloquean los códigos desconocidos desde esa IP`);
 
-  // Chequeo posterior
-  const check = await checkCodeRateLimit(testIp);
-  assert.strictEqual(check.blocked, true, "checkCodeRateLimit debe reportar bloqueado");
-  console.log("✅ checkCodeRateLimit() confirma el bloqueo");
+  assert.strictEqual((await checkCodeRateLimit(testIp, "ZZZ999")).blocked, true, "código desconocido: bloqueado");
+  assert.strictEqual((await checkCodeRateLimit(testIp)).blocked, true, "sin código: bloqueado");
+  assert.strictEqual((await checkCodeRateLimit(testIp, "aaa111")).blocked, false, "el que ya entró sigue jugando");
+  console.log("✅ Durante el bloqueo, los chicos que ya entraron desde esa IP siguen jugando");
 
-  // Limpieza
+  // Un ingreso correcto NO borra el contador (no se puede usar para seguir probando).
+  await recordSuccessfulCodeAttempt(testIp, "AAA111");
+  assert.strictEqual((await checkCodeRateLimit(testIp, "ZZZ999")).blocked, true);
+  console.log("✅ Un ingreso correcto no levanta el bloqueo para códigos ajenos");
+
   await resetCodeRateLimit(testIp);
-  const checkAfterReset = await checkCodeRateLimit(testIp);
-  assert.strictEqual(checkAfterReset.blocked, false, "Tras resetear no debe estar bloqueado");
+  assert.strictEqual((await checkCodeRateLimit(testIp, "ZZZ999")).blocked, false, "Tras resetear no debe estar bloqueado");
   console.log("✅ resetCodeRateLimit() restablece el acceso");
 
   // -------------------------------------------------------------

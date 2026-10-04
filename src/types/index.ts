@@ -2,6 +2,7 @@ import { TEMPORADAS } from "@/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
 import { DROPS } from "@/lib/coleccion/drops";
+import { CAMINO } from "@/lib/coleccion/racha";
 // Tipos compartidos de MundoMat
 
 export type StudentType = "aula" | "agregado" | "prueba";
@@ -112,6 +113,14 @@ export interface StudentProgress {
   // Últimos mundos superados con 90 %+ (id y fecha), para los drops y para
   // saber si está «al día». Se guardan los últimos 40.
   pasesRecientes?: { w: number; at: string }[];
+  // Racha de estudio (ver src/lib/coleccion/racha.ts): respuestas por día
+  // (hora argentina), mejor racha y premios del camino ya entregados.
+  diasEstudio?: Record<string, { c: number; i: number }>;
+  mejorRacha?: number;
+  caminoReclamados?: string[];
+  // Ajustes del alumno a cada objeto puesto: corrimiento (en % del retrato)
+  // y tamaño. Ver AvatarDisplay y el editor del perfil.
+  avatarTweaks?: AvatarTweaks;
   // Vueltas empezadas y no terminadas, por mundo: si el alumno sale del
   // mundo, al volver sigue desde la primera actividad que le falta (con las
   // mismas actividades). Se borra al terminar la vuelta. Ver src/lib/vuelta.ts.
@@ -338,6 +347,11 @@ export type AccessorySlot =
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
 
+// Corrimiento x/y en % del retrato (−35 a 35) y escala (0,5 a 1,8).
+export type AvatarTweak = { x: number; y: number; s: number };
+export type AvatarTweaks = Partial<Record<AccessorySlot, AvatarTweak>>;
+export const TWEAK_LIMITES = { pos: 35, sMin: 0.5, sMax: 1.8 };
+
 export type AccessoryGroup = "legacy" | "estandar" | "temporada" | "tienda" | "premio";
 
 export interface AccessoryDef {
@@ -532,6 +546,10 @@ export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
       legendarioDe: t.id,
       ...(t.legendario!.molde ? { fitLike: t.legendario!.molde } : {}),
     })
+  ),
+  // Premios del camino de racha (ver src/lib/coleccion/racha.ts).
+  ...CAMINO.flatMap((n) => (n.premio.tipo === "objeto" && IMAGENES_LISTAS.has(n.premio.id) ? [n.premio] : [])).map(
+    (o): AccessoryDef => ({ id: o.id, slot: o.slot, label: o.label, emoji: "🔥", group: "premio", fitLike: o.molde })
   ),
   // Mascotas de logro (vienen con el avatar de un texto de comprensión).
   ...AVATARES_LOGRO.filter((l) => l.mascota && IMAGENES_LISTAS.has(l.mascota.id)).map(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Student, StudentProgress } from "@/types";
 import {
   computeTeacherAlerts,
@@ -27,6 +27,25 @@ export default function TeacherAlertsBanner({
   const [editingThreshold, setEditingThreshold] = useState<boolean>(false);
   const [inputVal, setInputVal] = useState<string>(String(initialThreshold));
   const [saving, setSaving] = useState<boolean>(false);
+
+  // Umbral guardado por el docente (antes se guardaba pero no se volvía a leer).
+  useEffect(() => {
+    if (!adminPassword) return;
+    let alive = true;
+    fetch("/api/alerts", { headers: { "x-admin-password": adminPassword } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { config?: { inactiveDaysThreshold?: number } } | null) => {
+        const v = d?.config?.inactiveDaysThreshold;
+        if (alive && typeof v === "number" && v > 0) {
+          setThreshold(v);
+          setInputVal(String(v));
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [adminPassword]);
 
   const alerts: TeacherAlert[] = computeTeacherAlerts(students, progressMap, threshold);
 

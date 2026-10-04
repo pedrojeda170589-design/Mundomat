@@ -50,14 +50,14 @@ async function kvGetRaw(key: string): Promise<string | null> {
   return data.result;
 }
 
-async function kvSetRaw(key: string, value: string): Promise<void> {
+async function kvSetRaw(key: string, value: string, ttlSeconds?: number): Promise<void> {
   if (!KV_URL || !KV_TOKEN) {
     const db = readLocalDb();
     db[key] = value;
     writeLocalDb(db);
     return;
   }
-  await fetch(`${KV_URL}/set/${encodeURIComponent(key)}`, {
+  await fetch(`${KV_URL}/set/${encodeURIComponent(key)}${ttlSeconds ? `?EX=${Math.round(ttlSeconds)}` : ""}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${KV_TOKEN}` },
     body: value,
@@ -122,8 +122,9 @@ export async function getJSONMany<T>(keys: string[], fallback: (key: string) => 
   });
 }
 
-export async function setJSON<T>(key: string, value: T): Promise<void> {
-  await kvSetRaw(key, JSON.stringify(value));
+// ttlSeconds (opcional): en Upstash la clave vence sola.
+export async function setJSON<T>(key: string, value: T, opts?: { ttlSeconds?: number }): Promise<void> {
+  await kvSetRaw(key, JSON.stringify(value), opts?.ttlSeconds);
 }
 
 export async function delKey(key: string): Promise<void> {

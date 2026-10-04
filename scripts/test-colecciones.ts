@@ -12,7 +12,7 @@ const at = (iso: string) => new Date(`${iso}T15:00:00Z`);
 
 // 1. Cada temporada dura 15 días (salvo excepciones) y el calendario 2026-27.
 console.log("Calendario de la tienda (desde el 4/10/2026):");
-for (const t of TEMPORADAS) {
+for (const t of TEMPORADAS.filter((x) => !x.pausada)) {
   const v = ventanaDe(t.id, at("2026-10-04"))!;
   assert.ok(v, t.id);
   const largo = Math.round((Date.UTC(v.hasta.year, v.hasta.month - 1, v.hasta.day) - Date.UTC(v.desde.year, v.desde.month - 1, v.desde.day)) / 86400000) + 1;
@@ -32,7 +32,8 @@ console.log("✅ Halloween: hasta el 2/11 en 2026; desde 2027, del 18/10 al 1/11
 assert.ok(enVenta("carnaval", undefined, at("2027-02-01")) && enVenta("carnaval", undefined, at("2027-02-15")) && !enVenta("carnaval", undefined, at("2027-02-16")));
 console.log("✅ Carnaval (fecha móvil) 2027: del 1/2 al 15/2");
 // Vuelve cada año.
-assert.ok(enVenta("tradicion", undefined, at("2026-11-10")) && enVenta("tradicion", undefined, at("2027-11-10")) && !enVenta("tradicion", undefined, at("2027-11-18")));
+assert.ok(enVenta("tradicion", undefined, at("2026-11-10")) && enVenta("tradicion", undefined, at("2027-11-10")) && !enVenta("tradicion", undefined, at("2027-11-20")) && !enVenta("tradicion", undefined, at("2027-11-04")));
+assert.equal(ventanaDe("animales", at("2026-10-04")), null, "las temporadas en pausa no se venden ni se anuncian");
 // Única vez.
 assert.ok(enVenta("tradicion", 2026, at("2026-11-10")) && !enVenta("tradicion", 2026, at("2027-11-10")));
 console.log("✅ Vuelven cada año; los exclusivos solo el año indicado");
@@ -80,3 +81,65 @@ assert.ok(!estaAlDia({ ...a, worldsNeedingTeacherReview: [7] }, t(5)), "con mund
 assert.ok(!estaAlDia(a, new Date(Date.UTC(2026, 9, 20))), "a los 10 días ya no");
 console.log("✅ «Al día»: 3 mundos en 7 días y nada a fortalecer (ve el superespecial)");
 console.log("🎉 Drops OK.");
+
+// 5. Calendario sin superposiciones y con días libres entre ventanas.
+import { DROPS as TODOS_DROPS, ventanaDrop } from "../src/lib/coleccion/drops";
+{
+  const DAY = 86400000;
+  const tramos: { id: string; a: number; b: number }[] = [];
+  for (let d = Date.UTC(2026, 9, 4); d < Date.UTC(2028, 11, 31); d += DAY) {
+    const now = new Date(d + 15 * 3600 * 1000);
+    const activos = TEMPORADAS.filter((t) => enVenta(t.id, undefined, now)).map((t) => t.id).concat(TODOS_DROPS.filter((x) => dropActivo(x, now)).map((x) => `drop:${x.id}`));
+    assert.ok(activos.length <= 1, `${new Date(d).toISOString().slice(0, 10)}: ${activos.join(", ")}`);
+    const id = activos[0];
+    const last = tramos[tramos.length - 1];
+    if (id && last && last.id === id && last.b === d - DAY) last.b = d;
+    else if (id) tramos.push({ id, a: d, b: d });
+  }
+  for (let i = 1; i < tramos.length; i++) {
+    const libres = (tramos[i].a - tramos[i - 1].b) / DAY - 1;
+    assert.ok(libres >= 2, `entre ${tramos[i - 1].id} y ${tramos[i].id} hay ${libres} días libres`);
+  }
+  console.log("✅ Nunca hay dos cosas especiales a la vez y siempre quedan 2+ días libres entre una y otra (2026–2028):");
+  for (const t of tramos.filter((x) => x.a < Date.UTC(2027, 3, 1))) console.log(`   ${new Date(t.a).toISOString().slice(5, 10)} → ${new Date(t.b).toISOString().slice(5, 10)}  ${t.id}`);
+  void ventanaDrop;
+}
+
+// 6. Racha y camino de premios.
+import { estadoRacha, registrarRespuesta, reclamarCamino, CAMINO } from "../src/lib/coleccion/racha";
+{
+  let r: StudentProgress = { ...base };
+  const dia = (iso: string, c: number, i: number) => {
+    for (let k = 0; k < c; k++) r = registrarRespuesta(r, true, new Date(`${iso}T15:00:00Z`));
+    for (let k = 0; k < i; k++) r = registrarRespuesta(r, false, new Date(`${iso}T15:00:00Z`));
+  };
+  // lun 5/10 a vie 9/10 bien; finde nada; lun 12 bien.
+  for (const d of ["2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09", "2026-10-12"]) dia(d, 5, 1);
+  let e = estadoRacha(r, new Date("2026-10-12T20:00:00Z"));
+  assert.equal(e.racha, 6, "el fin de semana no corta");
+  assert.equal(e.escudos, 1);
+  console.log("✅ Racha: 6 días (el finde no la corta) y 1 escudo a los 5 días");
+  // mar 13 falta: usa el escudo; mié 14 vuelve.
+  dia("2026-10-14", 5, 0);
+  e = estadoRacha(r, new Date("2026-10-14T20:00:00Z"));
+  assert.equal(e.racha, 7);
+  assert.equal(e.escudos, 0);
+  console.log("✅ Un día de escuela sin estudiar usa el escudo 🛡️ y la racha sigue");
+  // jue 15 y vie 16 faltan: se corta.
+  e = estadoRacha(r, new Date("2026-10-19T20:00:00Z"));
+  assert.equal(e.racha, 0);
+  assert.equal(e.mejor, 7);
+  console.log("✅ Sin escudos, faltar corta la racha (la mejor queda: 7)");
+  // Día con pocas actividades o muchos errores no cuenta.
+  dia("2026-10-20", 3, 0);
+  dia("2026-10-21", 3, 3);
+  assert.equal(estadoRacha(r, new Date("2026-10-21T20:00:00Z")).hoyCuenta, false);
+  console.log("✅ Un día cuenta solo con 5+ actividades y 60 % bien");
+  const { progress: pr, nuevos } = reclamarCamino({ ...r, completedWorlds: [1, 2, 3] }, new Date("2026-10-21T20:00:00Z"));
+  assert.deepEqual(nuevos.map((n) => n.id), ["r2", "r3", "m3", "r5", "r7"]);
+  assert.equal(pr.coins, base.coins + 10 + 25);
+  assert.ok(pr.seasonalCollection?.includes("vincha-estrellas"));
+  assert.deepEqual(reclamarCamino(pr, new Date("2026-10-21T20:00:00Z")).nuevos, [], "no se entrega dos veces");
+  console.log(`✅ Camino: ${CAMINO.length} paradas; con mejor racha 7 y 3 mundos se entregan r2, r3, m3, r5 y r7 (una sola vez)`);
+}
+console.log("🎉 Calendario y racha OK.");

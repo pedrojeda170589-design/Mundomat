@@ -23,6 +23,7 @@ interface BirthdayInfo {
   age: number | null;
   avatar?: string;
   accessories?: AvatarAccessories;
+  tweaks?: import("@/types").AvatarTweaks;
   background?: string;
   me: boolean;
   greeted: boolean;
@@ -140,6 +141,7 @@ export default function NewsBoard({ code }: { code: string }) {
                 <AvatarDisplay
                   character={b.avatar}
                   accessories={b.accessories}
+                  tweaks={b.tweaks}
                   background={b.background}
                   birthday
                   className="w-14 h-14 rounded-xl shrink-0"
@@ -216,6 +218,7 @@ export default function NewsBoard({ code }: { code: string }) {
                 <AvatarDisplay
                   character={greeting.avatar}
                   accessories={greeting.accessories}
+                  tweaks={greeting.tweaks}
                   background={greeting.background}
                   birthday
                   className="w-14 h-14 rounded-xl"

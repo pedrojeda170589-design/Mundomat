@@ -330,6 +330,7 @@ test("Legajo: trayectoria y resumen de aula respetan los permisos", async () => 
   // Destinos de promoción: solo aulas de la misma escuela, ciclo igual o posterior.
   const targets = await as(U.maria, "select school_year, grade, division from public.promotion_targets($1)", [A3A]);
   assert.ok(targets.every((t) => t.school_year >= 2026));
+  assert.ok(targets.some((t) => t.school_year === 2027 && t.grade === 4));
   await assert.rejects(as(U.docenteB, "select * from public.promotion_targets($1)", [A3A]), /No autorizado/);
 });
 

@@ -21,7 +21,7 @@ import { WEEKEND_REWARD_IDS } from "@/types";
 import { addNews, displayName } from "@/lib/news";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 
-import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 
 // GET: plan de la Aventura de fin de semana de hoy (10 actividades, iguales
 // para todos los alumnos ese día) y el avance del alumno. Entre semana
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Falta el código." }, { status: 400 });
   }
 
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
   const student = await findStudentByCode(code);
   if (!student) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   const progress = await getProgress(student.code);
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
 // intentos equivocados.
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
-  const rateLimit = await checkCodeRateLimit(ip);
+  const rateLimit = await checkCodeRateLimit(ip, await codigoDe(request));
   if (rateLimit.blocked) {
     return Response.json(
       { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
   }
   const student = await findStudentByCode(code);
   if (!student) {
-    await recordFailedCodeAttempt(ip);
+    await recordFailedLookup();
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(student)) {
