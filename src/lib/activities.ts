@@ -2,6 +2,7 @@ import { WorldDef } from "@/types";
 import { buildGrade1Activities } from "@/lib/grade1/content";
 import { buildGrade2Activities } from "@/lib/grade2/content";
 import { buildStoryActivities } from "@/lib/cuentos/actividades";
+import { generarSetMundoDictado } from "@/lib/dictado/banco";
 
 export type ShapeKind = "circulo" | "cuadrado" | "rectangulo" | "triangulo";
 
@@ -186,6 +187,18 @@ export type ActivitySpec = (
       answerIndex: number;
       correctAnswer?: string;
       hint: string;
+    }
+  | {
+      type: "dictation";
+      id: string;
+      title: string;
+      prompt: string;
+      say?: string;
+      answer: string;
+      kind: "numero" | "palabra" | "oracion";
+      strictAccents?: boolean;
+      hint: string;
+      skills?: string[];
     }) & ActivityCommon;
 
 function shuffle<T>(arr: T[]): T[] {
@@ -344,20 +357,18 @@ function buildNumerosActivities(): ActivitySpec[] {
     hint: "Pista: compará primero la cifra de las centenas del precio con el 5.",
   });
 
-  // 5: práctica — palabras a cifras
+  // 5: práctica — dictado de números
   const [numA, wordsA] = pick(NUMEROS_EN_PALABRAS);
-  const distractoresA = shuffle(
-    NUMEROS_EN_PALABRAS.filter(([n]) => n !== numA)
-  ).slice(0, 3);
-  const choicesA = shuffle([numA, ...distractoresA.map(([n]) => n)]);
   acts.push({
-    type: "mc",
-    id: "numeros-palabras-1",
-    title: "Actividad 5",
-    prompt: `¿Cómo se escribe en cifras el número "${wordsA}"?`,
-    choices: choicesA.map(String),
-    answerIndex: choicesA.indexOf(numA),
-    hint: "Pista: pensá primero cuántas centenas tiene.",
+    type: "dictation",
+    id: "numeros-dictado-1",
+    title: "Actividad 5: dictado",
+    prompt: "Escuchá con atención y escribí el número.",
+    say: wordsA,
+    answer: String(numA),
+    kind: "numero",
+    hint: `Pista: el número es «${wordsA}».`,
+    skills: ["m3-numeros-1000", "m3-num-dictado"],
   });
 
   // 6: práctica — cifras a palabras
@@ -3066,13 +3077,16 @@ function buildFormacionPalabrasActivities(): ActivitySpec[] {
   });
 
   acts.push({
-    type: "mc",
-    id: "formacion-plural-z-2",
-    title: "Actividad 8",
-    prompt: "El plural de 'nariz' es...",
-    choices: ["Narices", "Narizes", "Narizs"],
-    answerIndex: 0,
-    hint: "Pista: recordá la regla: z → ces en plural.",
+    type: "dictation",
+    id: "formacion-dictado-plural",
+    title: "Actividad 8: dictado",
+    prompt: "Escuchá y escribí el plural de la palabra.",
+    say: "narices",
+    answer: "narices",
+    kind: "palabra",
+    strictAccents: true,
+    hint: "Pista: el plural de nariz termina en -ces: narices.",
+    skills: ["l3-ortografia-reglas", "l3-dictado-palabra"],
   });
 
   // 9: situación — corregir un cartel real antes de colgarlo, en vez de
@@ -6839,7 +6853,31 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
 // Dispatch
 // ---------------------------------------------------------------------------
 
+export function buildDictationWorldActivities(world: WorldDef): ActivitySpec[] {
+  const items = generarSetMundoDictado(world.grade ?? (world.id === 38001 ? 3 : 2));
+  return items.map((it, idx) => ({
+    type: "dictation" as const,
+    id: `dict-${world.id}-${idx}`,
+    title: "Mundo del Dictado",
+    prompt:
+      it.kind === "numero"
+        ? "Escuchá y escribí el número."
+        : it.kind === "oracion"
+          ? "Escuchá y escribí la oración."
+          : "Escuchá y escribí la palabra.",
+    say: it.say,
+    answer: it.answer,
+    kind: it.kind,
+    strictAccents: it.strictAccents,
+    hint: it.hint,
+    skills: it.skills,
+  }));
+}
+
 export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
+  if (world.id === 28001 || world.id === 38001 || world.category === "dictado") {
+    return buildDictationWorldActivities(world);
+  }
   if (world.storyId) return buildStoryActivities(world);
   if (world.grade === 1) return buildGrade1Activities(world);
   if (world.grade === 2) return buildGrade2Activities(world);

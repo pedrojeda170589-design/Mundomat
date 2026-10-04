@@ -10,11 +10,13 @@ import { grade1HasContent } from "@/lib/grade1/content";
 import { practiceZonesFor } from "@/lib/grade1/practice";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
+import { esSemanaDeDictado, getMundoDictado } from "@/lib/dictado/banco";
 import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
 import ShopModal from "@/components/ShopModal";
+import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
@@ -24,7 +26,7 @@ import SeasonalBanner from "@/components/SeasonalBanner";
 import NewsBoard from "@/components/NewsBoard";
 import CompetitionBanner from "@/components/competition/CompetitionBanner";
 import ClassMailbox from "@/components/ClassMailbox";
-import { isBirthdayToday } from "@/lib/seasons";
+import { getSeasonalEventById, isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 import Link from "next/link";
 import MusicToggle from "@/components/MusicToggle";
@@ -58,6 +60,8 @@ export default function StudentPlayPage() {
   const [classmateCounts, setClassmateCounts] = useState<Record<number, number>>({});
   const [editingProfile, setEditingProfile] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
+  const [oferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
   const [isTrialStudent, setIsTrialStudent] = useState(false);
   const [trialEndsAt, setTrialEndsAt] = useState<string | undefined>(undefined);
@@ -202,7 +206,18 @@ export default function StudentPlayPage() {
           onCoinsChange={(coins) =>
             setProgress((p) => (p ? { ...p, coins } : p))
           }
-          onExit={() => setSelectedWorld(null)}
+          onExit={() => {
+            setSelectedWorld(null);
+            // Para que el mapa muestre «Seguí 3/10» en el mundo que dejó
+            // (sin pantalla de carga; espera un momento a que se guarde la
+            // última respuesta).
+            setTimeout(() => {
+              void fetch(`/api/progress?code=${encodeURIComponent(code)}&lite=1`)
+                .then((r) => (r.ok ? r.json() : null))
+                .then((d) => d?.progress && setProgress(d.progress))
+                .catch(() => undefined);
+            }, 800);
+          }}
           onWorldCompleted={() => {
             setSelectedWorld(null);
             void refresh(code);
@@ -231,6 +246,17 @@ export default function StudentPlayPage() {
     });
     playableIds = [...playableIds, ...zones.map((z) => z.id)];
     mapWorlds = [...zones, ...mapWorlds];
+  }
+  // Mundo del Dictado (2.º y 3.º grado): aparece en Lengua y Matemática
+  if ((grade === 2 || grade === 3) && (subject === "lengua" || subject === "matematica")) {
+    const dictWorld = getMundoDictado(grade);
+    const activa = esSemanaDeDictado();
+    if (activa) {
+      playableIds = [dictWorld.id, ...playableIds];
+    } else {
+      lockedReasons[dictWorld.id] = "Vuelve el lunes de la semana que viene";
+    }
+    mapWorlds = [dictWorld, ...mapWorlds];
   }
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];
@@ -327,7 +353,18 @@ export default function StudentPlayPage() {
             <span className="absolute -top-2 -right-1.5 text-base drop-shadow" aria-hidden>
               🛍️
             </span>
+            {oferta && (
+              <span
+                className={`absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border px-1.5 text-[10px] font-black text-white shadow ${
+                  oferta.dias <= 3 ? "border-red-200 bg-red-500 animate-pulse" : "border-orange-200 bg-orange-500"
+                }`}
+                title="Hay avatares y objetos por tiempo limitado en la tienda"
+              >
+                ⏳{getSeasonalEventById(oferta.eventId)?.emoji} {oferta.dias <= 1 ? "¡último día!" : `${oferta.dias} días`}
+              </span>
+            )}
           </button>
+
           <div
             className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border bg-black/15 text-sm font-bold"
             style={{
@@ -463,6 +500,7 @@ export default function StudentPlayPage() {
           completedWorlds={progress.completedWorlds}
           worldsPendingRetry={progress.worldsPendingReinforcementRetry}
           worldsNeedingReview={progress.worldsNeedingTeacherReview}
+          inProgress={progress.roundsResume}
           classmateCounts={classmateCounts}
           mapStage={mapStage.stage}
           showFichas={!isTrialStudent}

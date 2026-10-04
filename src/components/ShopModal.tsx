@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
-import { isEventActiveNow } from "@/lib/seasons";
+import { getSeasonalEventById } from "@/lib/seasons";
+import { AVISO_PREVIO_DIAS, textoContador, ventanaDe, type Ventana } from "@/lib/tiempo-limitado";
 import {
   ACCESSORY_CATALOG_TIENDA,
   AVATAR_INFO,
@@ -40,12 +41,22 @@ export default function ShopModal({
   const [status, setStatus] = useState<string | null>(null);
   const owned = useMemo(() => new Set(progress.shopCollection ?? []), [progress.shopCollection]);
   const coins = progress.coins;
-  // Avatares de temporada: se ven mientras su festividad está activa (o si
-  // ya los compró).
-  const seasonal = useMemo(
-    () => SHOP_AVATARS.filter((a) => a.season && (isEventActiveNow(a.season) || owned.has(a.id))),
-    [owned]
-  );
+  // Tiempo limitado: cada festividad con cosas en la tienda, con su ventana
+  // (activa o próxima). Se muestran las activas y las que llegan dentro de
+  // AVISO_PREVIO_DIAS días; lo ya comprado se sigue viendo siempre.
+  const ventanas = useMemo(() => {
+    const ids = new Set<string>();
+    for (const a of SHOP_AVATARS) if (a.season) ids.add(a.season);
+    for (const a of ACCESSORY_CATALOG_TIENDA) if (a.season) ids.add(a.season);
+    const out: Record<string, Ventana> = {};
+    for (const id of ids) {
+      const v = ventanaDe(id);
+      if (v && (v.activa || v.dias <= AVISO_PREVIO_DIAS)) out[id] = v;
+    }
+    return out;
+  }, []);
+  const ordenVentanas = Object.values(ventanas).sort((a, b) => Number(b.activa) - Number(a.activa) || a.dias - b.dias);
+  const aLaVenta = (season?: string) => !season || !!ventanas[season]?.activa;
 
   const previewAvatar = preview?.avatar ?? progress.avatar;
   const previewAccessories: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
@@ -106,7 +117,12 @@ export default function ShopModal({
     }
   }
 
-  function PriceButton({ price, id, label, onUse }: { price: number; id: string; label: string; onUse: () => void }) {
+  function PriceButton({ price, id, label, onUse, season }: { price: number; id: string; label: string; onUse: () => void; season?: string }) {
+    if (!owned.has(id) && !aLaVenta(season)) {
+      return (
+        <p className="w-full rounded-lg bg-slate-700 text-slate-300 text-[11px] font-bold py-1.5 text-center">🔒 Próximamente · 🪙 {price}</p>
+      );
+    }
     if (owned.has(id)) {
       return (
         <button disabled={busy} onClick={onUse} className="w-full rounded-lg bg-emerald-500 text-white text-xs font-black py-1.5">
@@ -144,7 +160,26 @@ export default function ShopModal({
         {using ? (
           <p className="text-center text-emerald-300 text-xs font-bold py-1.5">Lo estás usando</p>
         ) : (
-          <PriceButton price={a.price} id={a.id} label={label} onUse={() => void use({ avatar: a.id })} />
+          <PriceButton price={a.price} id={a.id} label={label} season={a.season} onUse={() => void use({ avatar: a.id })} />
+        )}
+      </li>
+    );
+  };
+
+  const accessoryCard = (acc: AccessoryDef) => {
+    const using = progress.avatarAccessories?.[acc.slot] === acc.id;
+    const soon = !owned.has(acc.id) && !aLaVenta(acc.season);
+    return (
+      <li key={acc.id} className={`rounded-2xl bg-slate-800 p-2 flex flex-col gap-1.5 ${preview?.accessory?.id === acc.id ? "ring-2 ring-amber-400" : ""}`}>
+        <button onClick={() => setPreview({ accessory: acc })} className="relative aspect-square rounded-xl bg-slate-700/60" title="Probar">
+          <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="100px" className={`object-contain p-2 ${soon ? "opacity-60" : ""}`} />
+          {owned.has(acc.id) && <span className="absolute top-1 right-1 rounded-full bg-emerald-500 text-white text-[10px] font-black px-1.5">TUYO</span>}
+        </button>
+        <p className="text-white text-xs font-bold leading-tight min-h-[2rem]">{acc.label}</p>
+        {using ? (
+          <p className="text-center text-emerald-300 text-xs font-bold py-1.5">Lo tenés puesto</p>
+        ) : (
+          <PriceButton price={acc.price ?? 0} id={acc.id} label={acc.label} season={acc.season} onUse={() => void use({ accessory: acc })} />
         )}
       </li>
     );
@@ -199,32 +234,37 @@ export default function ShopModal({
         <div className="max-h-[52vh] overflow-y-auto pr-1">
           {tab === "avatares" && (
             <>
-              {seasonal.length > 0 && (
-                <p className="text-xs font-bold text-orange-300 mb-2">🎃 ¡Temporada de Halloween! Estos avatares se pueden comprar hasta el 2 de noviembre.</p>
-              )}
-              <ul className="grid grid-cols-3 gap-2">{[...seasonal, ...SHOP_AVATARS.filter((a) => !a.season)].map(avatarCard)}</ul>
+              {ordenVentanas.map((v) => {
+                const items = SHOP_AVATARS.filter((a) => a.season === v.eventId);
+                if (!items.length) return null;
+                return (
+                  <section key={v.eventId} className="mb-3">
+                    <LimitedHeader v={v} />
+                    <ul className="grid grid-cols-3 gap-2">{items.map(avatarCard)}</ul>
+                  </section>
+                );
+              })}
+              <ul className="grid grid-cols-3 gap-2">
+                {SHOP_AVATARS.filter((a) => !a.season || (!ventanas[a.season] && owned.has(a.id))).map(avatarCard)}
+              </ul>
             </>
           )}
           {tab === "objetos" && (
-            <ul className="grid grid-cols-3 gap-2">
-              {ACCESSORY_CATALOG_TIENDA.map((acc) => {
-                const using = progress.avatarAccessories?.[acc.slot] === acc.id;
+            <>
+              {ordenVentanas.map((v) => {
+                const items = ACCESSORY_CATALOG_TIENDA.filter((a) => a.season === v.eventId);
+                if (!items.length) return null;
                 return (
-                  <li key={acc.id} className={`rounded-2xl bg-slate-800 p-2 flex flex-col gap-1.5 ${preview?.accessory?.id === acc.id ? "ring-2 ring-amber-400" : ""}`}>
-                    <button onClick={() => setPreview({ accessory: acc })} className="relative aspect-square rounded-xl bg-slate-700/60" title="Probar">
-                      <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="100px" className="object-contain p-2" />
-                      {owned.has(acc.id) && <span className="absolute top-1 right-1 rounded-full bg-emerald-500 text-white text-[10px] font-black px-1.5">TUYO</span>}
-                    </button>
-                    <p className="text-white text-xs font-bold leading-tight min-h-[2rem]">{acc.label}</p>
-                    {using ? (
-                      <p className="text-center text-emerald-300 text-xs font-bold py-1.5">Lo tenés puesto</p>
-                    ) : (
-                      <PriceButton price={acc.price ?? 0} id={acc.id} label={acc.label} onUse={() => void use({ accessory: acc })} />
-                    )}
-                  </li>
+                  <section key={v.eventId} className="mb-3">
+                    <LimitedHeader v={v} />
+                    <ul className="grid grid-cols-3 gap-2">{items.map(accessoryCard)}</ul>
+                  </section>
                 );
               })}
-            </ul>
+              <ul className="grid grid-cols-3 gap-2">
+                {ACCESSORY_CATALOG_TIENDA.filter((a) => !a.season || (!ventanas[a.season] && owned.has(a.id))).map(accessoryCard)}
+              </ul>
+            </>
           )}
         </div>
         <p className="text-slate-500 text-[11px] text-center">
@@ -233,5 +273,26 @@ export default function ShopModal({
       </div>
     </div>,
     document.body
+  );
+}
+
+// Cartel de una festividad con cosas por tiempo limitado: cuánto falta para
+// que se vayan (o para que lleguen).
+function LimitedHeader({ v }: { v: Ventana }) {
+  const ev = getSeasonalEventById(v.eventId);
+  const urgente = v.activa && v.dias <= 3;
+  return (
+    <div
+      className={`mb-2 flex flex-col gap-0.5 rounded-xl border px-3 py-1.5 ${
+        v.activa ? (urgente ? "border-red-400 bg-red-500/15" : "border-orange-400 bg-orange-500/15") : "border-sky-400 bg-sky-500/10"
+      }`}
+    >
+      <p className="text-xs font-black text-white">
+        {ev?.emoji} {ev?.label} · {v.activa ? "por tiempo limitado" : "próximamente"}
+      </p>
+      <p className={`text-[11px] font-black ${v.activa ? (urgente ? "text-red-300" : "text-orange-200") : "text-sky-200"}`}>
+        ⏳ {textoContador(v)}
+      </p>
+    </div>
   );
 }

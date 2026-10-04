@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
+  ACCESSORY_CATALOG_PREMIO,
   ACCESSORY_CATALOG_TEMPORADA,
   ACCESSORY_CATALOG_TIENDA,
   getShopAvatar,
@@ -349,7 +350,7 @@ export default function ProfileEditor({
             para siempre.
           </p>
           <div className="grid grid-cols-4 gap-2">
-            {ACCESSORY_CATALOG_TEMPORADA.map((acc) => {
+            {[...ACCESSORY_CATALOG_TEMPORADA, ...ACCESSORY_CATALOG_PREMIO.filter((a) => owned.has(a.id))].map((acc) => {
               const earned = owned.has(acc.id);
               const selected = accessories[acc.slot] === acc.id;
               const event = acc.eventId ? getSeasonalEventById(acc.eventId) : undefined;

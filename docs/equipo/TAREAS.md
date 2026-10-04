@@ -13,8 +13,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | 🟢 UNIDA A MAIN |
-| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🔨 EN CURSO |
+| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
+| CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
@@ -25,6 +26,39 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### CL-09 · Retomar mundos, tienda por tiempo limitado y revisión de AG-06 (Claude)
+- **Retomar donde se dejó** (`src/lib/vuelta.ts`, `/api/round`): al empezar una vuelta se guardan sus actividades en el servidor (`roundsInProgress`, fuera de la versión liviana) y cada respuesta avanza el índice (`roundId` en `/api/progress`). Si el alumno sale y vuelve, sigue desde la primera que le falta, con las mismas actividades, en cualquier dispositivo. En el mapa: «👣 Seguí 3/10». Sin «empezar de nuevo» (no se puede borrar una vuelta mala). Vence a los 14 días; la del dictado, al cambiar la semana; máximo 8 mundos a medias. Pruebas: `scripts/test-vuelta.ts`.
+- **Tienda por tiempo limitado** (`src/lib/tiempo-limitado.ts`): avatares y objetos con `season` se compran solo durante su festividad (validado en el servidor). La tienda muestra cada festividad con contador («Quedan 30 días (hasta el 2/11)», «¡Último día!») y lo que llega en los próximos 21 días como «Próximamente». Junto a las monedas, aviso «⏳🎃 30 días». Lo comprado queda para siempre.
+- 8 objetos nuevos: Halloween (sombrero de brujita, antifaz de murciélago, corbatín de calabaza), Tradición (sombrero de paisano, vincha tejida pampa), Navidad (vincha de reno, lentes de copos, corbatín navideño). `fitLike` en `AccessoryDef`: se ubican como un objeto de la misma forma (sin regenerar `avatarFit.ts`).
+- Lápiz dorado ✏️ (imagen y ubicación) y visible en «Colección de temporada» del perfil cuando se gana. Arreglados los agujeros transparentes del corbatín a lunares.
+- **Revisión AG-06**: unida a main. Ajustes: el premio del dictado solo se acredita en semana de dictado, la vuelta siempre cuenta 10 (no se confía en el total del navegador), errores acotados; la semana y el nivel del dictado se calculan en hora argentina (servidor en UTC y navegador cambian juntos).
+- Pendiente: islas propias del Mundo del Dictado (por ahora usa la de práctica) y voces Kokoro de los textos largos de 2.º y 3.º.
+
+### AG-06 · Textos más largos por grado y dictados de números y palabras (Antigravity)
+- **Parte A: Textos más largos por grado:**
+  - 2.º grado (`src/lib/cuentos/textos-g2.ts`): los 19 cuentos y leyendas adaptados a 40–60 palabras por escena (~300 palabras totales por cuento), promedio 49.4 palabras/escena, respetando las 6 escenas ilustradas canónicas y desenlaces tiernos.
+  - 3.º grado (`src/lib/cuentos/textos-g3.ts`): los 6 cuentos ampliados a 60–90 palabras por escena (~450 palabras totales por cuento), promedio 70.2 palabras/escena, con oraciones subordinadas accesibles, descripciones de época y mayor desarrollo narrativo.
+  - Validado en `scripts/test-cuentos.ts`: 100% de las escenas en rango exacto en ambos grados.
+- **Parte B: Actividad de dictado y presencia en mundos comunes:**
+  - Nuevo tipo `type: "dictation"` en `ActivitySpec` (`src/lib/activities.ts`).
+  - Componente `src/components/activities/DictationActivity.tsx`: botón grande de audio `🔊 Escuchar` (gratuito, autoplay al montar, rate 0.85 con SpeechSynthesis y fallback TTS), input numérico sin solución a la vista para números e input de texto para palabras y oraciones.
+  - Módulo de conversión en letras `src/lib/dictado/numero-letras.ts`: conversión precisa de 0 a 99.999 en español rioplatense («doscientos», «mil veinticuatro», «veintiuno», etc.).
+  - Evaluación pedagógica en `src/lib/dictado/evaluacion.ts`: números toleran puntos de mil y espacios; en 2.º grado tildes opcionales con aviso formativo («¡Bien! Te faltó la tilde...»), en 3.º tildes obligatorias; oraciones exigen mayúscula inicial y punto final en 2.º, y signos dobles (`¿?`, `¡!`) y comas en 3.º, indicando la posición exacta del error.
+  - Banco progresivo por mes escolar (mes 1, 2, 3) en `src/lib/dictado/banco.ts`.
+  - Inclusión de 1–2 dictados por ronda en mundos comunes de 2.º grado (Matemática mundos 1 y 5; Lengua mundos 15 a 23 con habilidades `m2-num-dictado`, `l2-dictado-palabra`, `l2-dictado-oracion`) y 3.º grado (`buildNumerosActivities` y `buildFormacionPalabrasActivities`).
+- **Parte C: Mundo especial del Dictado (semana por medio) y reportes docentes:**
+  - Mundos especiales 28001 (2.º grado) y 38001 (3.º grado) generados dinámicamente con `getMundoDictado`: 10 dictados por ronda (5 números + 5 palabras/oraciones balanceadas y sin repetición).
+  - Activo únicamente en semanas ISO pares (`esSemanaDeDictado`). En semanas impares, la isla permanece deshabilitada con el mensaje «Vuelve el lunes de la semana que viene».
+  - Acreditación en servidor (`src/lib/data.ts` y `/api/world-attempt`): recompensa de +20 🪙 y accesorio exclusivo «Lápiz dorado» ✏️ (`lapiz-dorado` en catálogo `premio`) si el estudiante alcanza 100% de aciertos en su **primer intento** de la semana.
+  - Reporte pedagógico docente en `/admin` (dashboard) y `/docente/alumno`: visualización del rendimiento semanal (puntaje %, estado del premio Lápiz Dorado y lista detallada de errores cometidos) para intervención personalizada.
+- **Verificación integral:**
+  - `scripts/test-dictado.ts`: 100% superado (500 números aleatorios, casos borde ortográficos, evaluaciones pedagógicas, generación de rondas sin repeticiones, semanas ISO y lógica de recompensas).
+  - `scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `scripts/test-cuentos.ts`: 100% superado.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias y 0 errores de linting.
+  - `npm run build`: compilación de producción Next.js 16.3.5 Turbopack exitosa.
 
 ### AG-05 · Ajustes de comprensión: lenguaje de 3.º y opciones parejas (Antigravity)
 - **Lenguaje accesible y adaptado a 3.º grado (8 años):**

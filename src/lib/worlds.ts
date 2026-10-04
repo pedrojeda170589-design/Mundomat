@@ -2,6 +2,7 @@ import { WorldDef } from "@/types";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
 import { withStories } from "@/lib/cuentos/recorrido";
+import { getMundoDictado, isDictationWorldId } from "@/lib/dictado/banco";
 
 // 14 mundos organizados según la Planificación Anual de Matemática de 3º
 // grado, en progresión real por trimestre:
@@ -594,8 +595,9 @@ export const WORLDS: WorldDef[] = (() => {
   return out;
 })();
 
-// Busca en todos los grados.
+// Busca en todos los grados y mundos especiales de dictado.
 export function getWorld(id: number): WorldDef | undefined {
+  if (isDictationWorldId(id)) return getMundoDictado(id === 28001 ? 2 : 3);
   return WORLDS.find((w) => w.id === id) ?? GRADE1_WORLDS.find((w) => w.id === id) ?? GRADE2_WORLDS.find((w) => w.id === id);
 }
 

@@ -27,7 +27,7 @@ export const THEMES: Record<string, GradeTheme> = {
   meseta: {
     id: "meseta",
     label: "Meseta y montaña",
-    island: (id) => `/theme/islands/mundo-${id}.png`,
+    island: (id) => (id === 38001 ? "/theme/grados/2/islas/practica.png" : `/theme/islands/mundo-${id}.png`),
     map: (stage) => `/theme/map/etapa-${stage}.jpg`,
     scenery: "mountains",
     dayBg: "bg-explorer-day",
@@ -46,8 +46,8 @@ export const THEMES: Record<string, GradeTheme> = {
   bosque: {
     id: "bosque",
     label: "Bosque de lengas",
-    // Las zonas de práctica de 2.º (ids 29000+) comparten su propia isla.
-    island: (id) => (id >= 29000 && id < 30000 ? "/theme/grados/2/islas/practica.png" : `/theme/grados/2/islas/mundo-${id}.png`),
+    // Las zonas de práctica de 2.º (ids 29000+) y dictado (28001) comparten su propia isla.
+    island: (id) => ((id >= 29000 && id < 30000) || id === 28001 ? "/theme/grados/2/islas/practica.png" : `/theme/grados/2/islas/mundo-${id}.png`),
     map: (stage) => `/theme/grados/2/mapa/etapa-${stage}.jpg`,
     scenery: "forest",
     dayBg: "bg-bosque-day",

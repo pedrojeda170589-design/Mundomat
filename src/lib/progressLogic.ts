@@ -65,7 +65,9 @@ export type WorldMasteryOutcome =
   | { kind: "pending-retry"; scorePct: number }
   | { kind: "needs-review"; scorePct: number }
   // Zona de práctica (1.º): no cambia el avance del mundo.
-  | { kind: "practice"; scorePct: number };
+  | { kind: "practice"; scorePct: number }
+  // Mundo del Dictado (semana por medio)
+  | { kind: "dictation"; scorePct: number; rewardEarned: boolean; lapizUnlocked: boolean };
 
 export interface ApplyWorldAttemptOutcome {
   progress: StudentProgress;

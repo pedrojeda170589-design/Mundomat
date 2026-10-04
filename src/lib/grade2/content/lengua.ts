@@ -709,6 +709,32 @@ export function buildLenguaActivities(world: WorldDef): ActivitySpec[] {
         };
       }
 
+      const dictWords: Record<number, { w: string; h: string }> = {
+        15: { w: "queso", h: "Pista: alimento con qu que le gusta al ratón." },
+        16: { w: "cine", h: "Pista: lugar con pantalla grande donde vemos películas (con ci)." },
+        17: { w: "guitarra", h: "Pista: instrumento de cuerdas (con gu)." },
+        18: { w: "girasol", h: "Pista: flor amarilla que gira hacia el sol (con gi)." },
+        19: { w: "pingüino", h: "Pista: ave marina patagónica (con güi)." },
+        20: { w: "cigarra", h: "Pista: insecto cantarín del verano (con rr)." },
+        21: { w: "bombero", h: "Pista: persona que apaga los incendios (con mb)." },
+        22: { w: "helado", h: "Pista: postre frío dulce (comienza con h)." },
+        23: { w: "choique", h: "Pista: ave corredora patagónica (con ch)." },
+      };
+
+      if (i === 7 && dictWords[n]) {
+        return {
+          type: "dictation" as const,
+          id: actId,
+          title: "Dictado de palabra",
+          prompt: "Escuchá con atención y escribí la palabra.",
+          say: dictWords[n].w,
+          answer: dictWords[n].w,
+          kind: "palabra",
+          hint: dictWords[n].h,
+          skills: [...itemSkills, "l2-dictado-palabra"],
+        };
+      }
+
       return {
         type: "pick" as const,
         id: actId,
