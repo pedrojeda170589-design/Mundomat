@@ -26,6 +26,7 @@ import { isEventActiveNow } from "@/lib/seasons";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { claveSemanaDictado } from "@/lib/dictado/banco";
+import { resumenVueltas } from "@/lib/vuelta";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -260,8 +261,9 @@ export async function getProgress(code: string): Promise<StudentProgress> {
 // alumno, que no lo usan).
 export function liteProgress(p: StudentProgress): StudentProgress {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { activityLog, activitySummary, ...rest } = p;
-  return { ...rest, activityLog: [] };
+  const { activityLog, activitySummary, roundsInProgress, ...rest } = p;
+  const roundsResume = roundsInProgress ? resumenVueltas(p) : undefined;
+  return { ...rest, activityLog: [], ...(roundsResume && Object.keys(roundsResume).length ? { roundsResume } : {}) };
 }
 
 // Progreso de varios alumnos en una sola consulta.
@@ -610,6 +612,9 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
   if (owned.includes(itemId)) return { ok: false, error: "¡Ya lo tenés!" };
   if (avatar?.season && !isEventActiveNow(avatar.season)) {
     return { ok: false, error: "Este avatar solo se consigue durante su temporada." };
+  }
+  if (accessory?.season && !isEventActiveNow(accessory.season)) {
+    return { ok: false, error: "Este objeto es por tiempo limitado y ahora no está a la venta." };
   }
   if (progress.coins < price) {
     return { ok: false, error: `Te faltan ${price - progress.coins} monedas.` };

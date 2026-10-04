@@ -3,6 +3,8 @@ import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
 import { getMedalTier } from "@/lib/medals";
 import { findStudentByCode, getProgress, saveProgress, liteProgress, isDictationWorld, applyDictationWorldAttempt } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
+import { esSemanaDeDictado } from "@/lib/dictado/banco";
+import { terminarVuelta } from "@/lib/vuelta";
 import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
@@ -49,23 +51,34 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
-  const progress = await getProgress(student.code);
+  // La vuelta terminó: ya no hay nada que retomar en este mundo.
+  const progress = terminarVuelta(await getProgress(student.code), worldId);
   const isTrial = isOpenClassroomStudent(student);
   if (isTrial && isTrialWorldBlocked(progress, worldId)) {
     return Response.json({ error: "En la prueba se pueden superar hasta 5 mundos por materia.", trialLimit: true }, { status: 403 });
   }
 
   if (isDictationWorld(worldId)) {
-    const total = totalActivities ?? 10;
+    // Fuera de la semana de dictado el mundo está apagado: no se acredita nada.
+    if (!esSemanaDeDictado()) {
+      return Response.json({ error: "El Mundo del Dictado vuelve la semana que viene." }, { status: 403 });
+    }
+    // La vuelta siempre tiene 10 dictados: no se confía en el total que manda el navegador.
+    const total = 10;
+    const ok = Math.max(0, Math.min(total, Math.floor(Number(correctCount) || 0)));
+    const errores = (Array.isArray(mistakes) ? mistakes : [])
+      .filter((m): m is string => typeof m === "string")
+      .slice(0, total)
+      .map((m) => m.slice(0, 80));
     const { progress: updated, rewardEarned, bonusCoins, lapizUnlocked } = applyDictationWorldAttempt(
       progress,
       worldId,
-      correctCount,
+      ok,
       total,
-      mistakes ?? []
+      errores
     );
     await saveProgress(updated);
-    const scorePct = Math.round((Math.min(correctCount, total) / Math.max(1, total)) * 100);
+    const scorePct = Math.round((ok / total) * 100);
     const outcome = {
       kind: "dictation" as const,
       scorePct,

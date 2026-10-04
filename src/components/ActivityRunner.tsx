@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COINS_BONUS_WORLD_COMPLETE, COINS_PER_CORRECT_ANSWER, WorldDef } from "@/types";
 import { ActivitySpec, buildActivitiesForWorld } from "@/lib/activities";
 import { WorldMasteryOutcome } from "@/lib/progressLogic";
@@ -77,7 +77,12 @@ export default function ActivityRunner({
   onExit,
   onWorldCompleted,
 }: Props) {
-  const activities = useMemo(() => buildActivitiesForWorld(world), [world]);
+  // Vuelta del mundo: si quedó una a medias, se retoma desde la primera
+  // actividad que falta (mismas actividades); si no, se arma una nueva y se
+  // guarda en el servidor. Ver src/lib/vuelta.ts.
+  const [activities, setActivities] = useState<ActivitySpec[] | null>(null);
+  const [resumedAt, setResumedAt] = useState<number | null>(null);
+  const roundId = useRef<string>("");
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<
     "question" | "feedback" | "finishing" | "world-done"
@@ -94,10 +99,58 @@ export default function ActivityRunner({
   const saveQueue = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
-    startTimeRef.current = Date.now();
-  }, []);
+    let alive = true;
+    const startNew = () => {
+      const fresh = buildActivitiesForWorld(world);
+      roundId.current = newClientId();
+      const body = JSON.stringify({ code: studentCode, worldId: world.id, roundId: roundId.current, activities: fresh });
+      saveQueue.current = saveQueue.current.then(() =>
+        fetch("/api/round", { method: "POST", headers: { "Content-Type": "application/json" }, body }).then(
+          () => undefined,
+          () => undefined
+        )
+      );
+      return fresh;
+    };
+    (async () => {
+      let list: ActivitySpec[] | null = null;
+      try {
+        const r = await fetch(`/api/round?code=${encodeURIComponent(studentCode)}&worldId=${world.id}`);
+        const d = r.ok ? ((await r.json()) as { round: { id: string; activities: ActivitySpec[]; index: number; correctCount: number; mistakes?: string[] } | null }) : null;
+        const round = d?.round;
+        if (round && alive) {
+          roundId.current = round.id;
+          list = round.activities;
+          setIndex(round.index);
+          setCorrectCount(round.correctCount);
+          setDictationMistakes(round.mistakes ?? []);
+          setResumedAt(round.activities.slice(0, round.index + 1).filter((a) => a.type !== "listen").length);
+        }
+      } catch {
+        // sin red: se empieza una vuelta nueva
+      }
+      if (!alive) return;
+      setActivities(list ?? startNew());
+      startTimeRef.current = Date.now();
+    })();
+    return () => {
+      alive = false;
+    };
+    // Una vez por mundo.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [world.id]);
 
-  const activity = activities[index];
+  if (!activities) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <p className="text-4xl mb-3 animate-pulse">{world.emoji}</p>
+        <p className="text-slate-400">Preparando el mundo...</p>
+      </div>
+    );
+  }
+
+  const list = activities;
+  const activity = list[index];
   // El cuento (listen) no cuenta como actividad: el contador muestra solo las preguntas.
   const shownTotal = activities.filter((a) => a.type !== "listen").length;
   const shownIndex = activities.slice(0, index + 1).filter((a) => a.type !== "listen").length;
@@ -118,6 +171,8 @@ export default function ActivityRunner({
       code: studentCode,
       worldId: world.id,
       activityIndex: index,
+      roundId: roundId.current,
+      ...(!correct && activity.type === "dictation" ? { mistake: activity.answer } : {}),
       correct: correct ? 1 : 0,
       incorrect: correct ? 0 : 1,
       timeSpentSeconds,
@@ -147,7 +202,7 @@ export default function ActivityRunner({
     // Zona de práctica: no es un mundo, no cambia el avance.
     if (world.kind === "refuerzo") {
       await saveQueue.current;
-      setAttemptOutcome({ kind: "practice", scorePct: Math.round((finalCorrectCount / Math.max(1, activities.length)) * 100) });
+      setAttemptOutcome({ kind: "practice", scorePct: Math.round((finalCorrectCount / Math.max(1, list.length)) * 100) });
       setPhase("world-done");
       return;
     }
@@ -163,7 +218,7 @@ export default function ActivityRunner({
           worldId: world.id,
           correctCount: finalCorrectCount,
           // El cuento para escuchar no cuenta como actividad con puntaje.
-          totalActivities: activities.filter((a) => a.type !== "listen").length,
+          totalActivities: list.filter((a) => a.type !== "listen").length,
           mistakes: dictationMistakes,
         }),
       });
@@ -185,6 +240,18 @@ export default function ActivityRunner({
   }
 
   function handleNext() {
+    if (!activities) return;
+    setResumedAt(null);
+    // El cuento no se responde: igual se anota que ya lo vio, para retomar después de él.
+    if (activity.type === "listen") {
+      const body = JSON.stringify({ code: studentCode, worldId: world.id, roundId: roundId.current, skipIndex: index });
+      saveQueue.current = saveQueue.current.then(() =>
+        fetch("/api/round", { method: "POST", headers: { "Content-Type": "application/json" }, body }).then(
+          () => undefined,
+          () => undefined
+        )
+      );
+    }
     if (index + 1 >= activities.length) {
       void finishWorldAttempt(correctCount);
     } else {
@@ -241,6 +308,11 @@ export default function ActivityRunner({
           ))}
         </span>
       </div>
+      {resumedAt !== null && phase === "question" && (
+        <div className="relative z-10 max-w-md w-full mx-auto mb-2 text-center bg-emerald-500/20 border border-emerald-400 text-emerald-100 text-sm font-bold rounded-xl px-3 py-1.5 shadow">
+          👣 ¡Seguís donde dejaste! Vas por la actividad {resumedAt} de {shownTotal}.
+        </div>
+      )}
       {(world.id === 28001 || world.id === 38001 || world.category === "dictado") && (
         <div className="relative z-10 max-w-md w-full mx-auto mb-2 text-center bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold rounded-xl px-3 py-1.5 shadow">
           ✍️ ¡Semana de dictado! Si hacés todo bien en el primer intento, ganás 20 🪙 y el Lápiz dorado.

@@ -6,6 +6,7 @@ import { collectActiveSeasonalRewards } from "@/lib/seasons";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
 import { closeTrialIfExpired, isTrialWorldBlocked } from "@/lib/openClassroom";
 import { ActivityResult } from "@/types";
+import { avanzarVuelta } from "@/lib/vuelta";
 
 import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt, recordSuccessfulCodeAttempt } from "@/lib/rateLimit";
 import { proposeDisplayName } from "@/lib/studentNames";
@@ -64,8 +65,10 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { code, worldId, activityIndex, correct, incorrect, timeSpentSeconds, clientId } =
+  const { code, worldId, activityIndex, correct, incorrect, timeSpentSeconds, clientId, roundId, mistake } =
     body as {
+      roundId?: string; // vuelta en curso (para retomar el mundo donde se dejó)
+      mistake?: string; // en dictados: lo que había que escribir
       clientId?: string;
       code?: string;
       worldId?: number;
@@ -109,8 +112,16 @@ export async function POST(request: NextRequest) {
   );
   // Jugar durante una estación o festividad entrega sus premios de
   // temporada (accesorios y fondo), que quedan para siempre.
-  const { progress: updated, newRewards } =
+  const { progress: afterRewards, newRewards } =
     collectActiveSeasonalRewards(afterActivity, new Date(), student.birthday);
+  const updated = avanzarVuelta(
+    afterRewards,
+    worldId,
+    roundId,
+    activityIndex,
+    (correct ?? 0) > 0,
+    typeof mistake === "string" ? mistake : undefined
+  );
   await saveProgress(updated);
   // Historial académico en la plataforma (después de responder: no demora
   // el juego). `clientId` evita duplicar la misma respuesta.

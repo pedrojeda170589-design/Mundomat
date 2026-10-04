@@ -96,6 +96,12 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+  // Vueltas empezadas y no terminadas, por mundo: si el alumno sale del
+  // mundo, al volver sigue desde la primera actividad que le falta (con las
+  // mismas actividades). Se borra al terminar la vuelta. Ver src/lib/vuelta.ts.
+  roundsInProgress?: Record<number, RoundInProgress>;
+  // Solo en la versión liviana para el alumno: cuánto lleva de cada mundo a medias.
+  roundsResume?: Record<number, { hechas: number; total: number }>;
   // Semanas del Mundo del Dictado jugadas (semanas ISO pares): registro por clave "AAAA-Www"
   dictationWeeks?: Record<
     string,
@@ -106,6 +112,16 @@ export interface StudentProgress {
       completedAt?: string;
     }
   >;
+}
+
+export interface RoundInProgress {
+  id: string; // identifica la vuelta (lo genera el navegador al empezarla)
+  activities: unknown[]; // las actividades de la vuelta, tal como se generaron
+  index: number; // próxima actividad a hacer
+  correctCount: number;
+  mistakes?: string[]; // dictados equivocados (para el informe docente)
+  startedAt: string;
+  updatedAt: string;
 }
 
 export interface WeekendRecord {
@@ -289,6 +305,12 @@ export interface AccessoryDef {
   eventId?: string;
   // Solo para "tienda": precio en monedas.
   price?: number;
+  // Solo para "tienda": se compra únicamente mientras dura esa festividad
+  // (tiempo limitado, ver src/lib/tiempo-limitado.ts). Lo comprado queda.
+  season?: string;
+  // Se ubica sobre el personaje igual que este otro accesorio (misma forma
+  // y mismo tamaño de imagen). Ver AvatarDisplay.
+  fitLike?: string;
 }
 
 // Catálogo "de siempre": accesorios simples (íconos planos) para los 14
@@ -391,11 +413,20 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
   { id: "corbatin-lunares", slot: "face", label: "Corbatín a lunares", emoji: "🎀", group: "tienda", price: 30 },
   { id: "sol-de-mayo", slot: "pendant", label: "Colgante Sol de Mayo", emoji: "🌞", group: "tienda", price: 60 },
   { id: "collar-caracoles", slot: "pendant", label: "Collar de caracoles", emoji: "🐚", group: "tienda", price: 40 },
+  // --- Por tiempo limitado (solo durante su festividad) ---
+  { id: "sombrero-bruja", slot: "headwear", label: "Sombrero de brujita", emoji: "🧙", group: "tienda", price: 70, season: "halloween", fitLike: "galera" },
+  { id: "antifaz-murcielago", slot: "eyewear", label: "Antifaz de murciélago", emoji: "🦇", group: "tienda", price: 50, season: "halloween", fitLike: "lentes-corazon" },
+  { id: "corbatin-calabaza", slot: "face", label: "Corbatín de calabaza", emoji: "🎃", group: "tienda", price: 40, season: "halloween", fitLike: "corbatin-lunares" },
+  { id: "sombrero-paisano", slot: "headwear", label: "Sombrero de paisano", emoji: "🤠", group: "tienda", price: 60, season: "tradicion", fitLike: "sombrero-guardaparque" },
+  { id: "vincha-pampa", slot: "headwear", label: "Vincha tejida pampa", emoji: "🧶", group: "tienda", price: 45, season: "tradicion", fitLike: "cuernitos-dragon" },
+  { id: "vincha-reno", slot: "headwear", label: "Vincha de reno", emoji: "🦌", group: "tienda", price: 65, season: "navidad", fitLike: "cuernitos-dragon" },
+  { id: "lentes-copos", slot: "eyewear", label: "Lentes de copos de nieve", emoji: "❄️", group: "tienda", price: 45, season: "navidad", fitLike: "lentes-corazon" },
+  { id: "corbatin-navidad", slot: "face", label: "Corbatín navideño", emoji: "🎄", group: "tienda", price: 35, season: "navidad", fitLike: "corbatin-lunares" },
 ];
 
 // Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
 export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
-  { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio" },
+  { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio", fitLike: "sol-de-mayo" },
 ];
 
 export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(

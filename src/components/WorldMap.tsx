@@ -22,6 +22,8 @@ interface Props {
   completedWorlds: number[];
   worldsPendingRetry?: number[];
   worldsNeedingReview?: number[];
+  // Mundos con una vuelta a medias: cuántas actividades lleva de cuántas.
+  inProgress?: Record<number, { hechas: number; total: number }>;
   // Cuántos compañeros de clase están actualmente en cada mundo (por id),
   // sin identificar quiénes son. Ver getClassmateWorldCounts.
   classmateCounts?: Record<number, number>;
@@ -42,6 +44,7 @@ export default function WorldMap({
   completedWorlds,
   worldsPendingRetry = [],
   worldsNeedingReview = [],
+  inProgress = {},
   classmateCounts = {},
   mapStage = 1,
   onSelectWorld,
@@ -144,6 +147,14 @@ export default function WorldMap({
                     title="Necesitás fortalecer este mundo"
                   >
                     🌱
+                  </span>
+                )}
+                {enabled && inProgress[world.id] && (
+                  <span
+                    className="absolute bottom-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-full bg-emerald-500 border-2 border-white px-2 py-0.5 text-[11px] font-black text-white shadow"
+                    title="Tenés una vuelta a medias: seguís donde dejaste"
+                  >
+                    👣 Seguí {inProgress[world.id].hechas}/{inProgress[world.id].total}
                   </span>
                 )}
                 {classmatesHere > 0 && (

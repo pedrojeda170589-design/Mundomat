@@ -18,8 +18,14 @@ export interface DictadoItem {
 // Nivel 2: mayo – agosto (meses 4 a 7)
 // Nivel 3: septiembre – diciembre (meses 8 a 11)
 // Enero y febrero: nivel 1 (o de diagnóstico)
+// Hora argentina (UTC−3, sin horario de verano): así el servidor (en UTC) y el
+// navegador de los chicos cambian de semana y de mes al mismo tiempo.
+function enArgentina(fecha: Date): Date {
+  return new Date(fecha.getTime() - 3 * 3600 * 1000);
+}
+
 export function nivelDeDictado(grade: number, fecha: Date = new Date()): 1 | 2 | 3 {
-  const m = fecha.getMonth(); // 0 a 11
+  const m = enArgentina(fecha).getUTCMonth(); // 0 a 11
   if (m >= 8 && m <= 11) return 3;
   if (m >= 4 && m <= 7) return 2;
   return 1;
@@ -27,7 +33,8 @@ export function nivelDeDictado(grade: number, fecha: Date = new Date()): 1 | 2 |
 
 // Cálculo de semana ISO (lunes a domingo)
 export function getISOWeek(date: Date): number {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const a = enArgentina(date);
+  const d = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()));
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
@@ -41,7 +48,8 @@ export function esSemanaDeDictado(fecha: Date = new Date()): boolean {
 
 // Clave única de la semana de dictado para registrar intentos y premios: "2026-W40"
 export function claveSemanaDictado(fecha: Date = new Date()): string {
-  const d = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
+  const a = enArgentina(fecha);
+  const d = new Date(Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate()));
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   return `${d.getUTCFullYear()}-W${String(getISOWeek(fecha)).padStart(2, "0")}`;

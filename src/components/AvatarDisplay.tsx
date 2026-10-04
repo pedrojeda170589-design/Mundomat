@@ -49,10 +49,13 @@ function AccessoryLayer({
   back: boolean;
   imageSizes: string;
 }) {
-  const fit = AVATAR_FIT[character]?.[id];
+  // Los objetos nuevos pueden ubicarse "como" otro de la misma forma (fitLike).
+  const like = getAccessoryById(id)?.fitLike;
+  const fit = AVATAR_FIT[character]?.[id] ?? (like ? AVATAR_FIT[character]?.[like] : undefined);
   if (!fit) return null;
   const [left, top, width, height, rot, ox, oy] = fit;
-  const src = getAccessorySrc(id);
+  // La parte de atrás (patillas, elástico) se toma del modelo si el objeto no tiene la suya.
+  const src = back && like && !ACCESSORIES_WITH_BACK.has(id) ? getAccessorySrc(like) : getAccessorySrc(id);
   return (
     <span
       className="absolute pointer-events-none"
@@ -114,7 +117,7 @@ export default function AvatarDisplay({
         }}
       >
         {ids
-          .filter((id) => ACCESSORIES_WITH_BACK.has(id))
+          .filter((id) => ACCESSORIES_WITH_BACK.has(id) || ACCESSORIES_WITH_BACK.has(getAccessoryById(id)?.fitLike ?? ""))
           .map((id) => (
             <AccessoryLayer key={`${id}-back`} id={id} character={characterId} back imageSizes={imageSizes} />
           ))}

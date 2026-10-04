@@ -13,8 +13,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | 🟢 UNIDA A MAIN |
-| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
+| CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
@@ -25,6 +26,14 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### CL-09 · Retomar mundos, tienda por tiempo limitado y revisión de AG-06 (Claude)
+- **Retomar donde se dejó** (`src/lib/vuelta.ts`, `/api/round`): al empezar una vuelta se guardan sus actividades en el servidor (`roundsInProgress`, fuera de la versión liviana) y cada respuesta avanza el índice (`roundId` en `/api/progress`). Si el alumno sale y vuelve, sigue desde la primera que le falta, con las mismas actividades, en cualquier dispositivo. En el mapa: «👣 Seguí 3/10». Sin «empezar de nuevo» (no se puede borrar una vuelta mala). Vence a los 14 días; la del dictado, al cambiar la semana; máximo 8 mundos a medias. Pruebas: `scripts/test-vuelta.ts`.
+- **Tienda por tiempo limitado** (`src/lib/tiempo-limitado.ts`): avatares y objetos con `season` se compran solo durante su festividad (validado en el servidor). La tienda muestra cada festividad con contador («Quedan 30 días (hasta el 2/11)», «¡Último día!») y lo que llega en los próximos 21 días como «Próximamente». Junto a las monedas, aviso «⏳🎃 30 días». Lo comprado queda para siempre.
+- 8 objetos nuevos: Halloween (sombrero de brujita, antifaz de murciélago, corbatín de calabaza), Tradición (sombrero de paisano, vincha tejida pampa), Navidad (vincha de reno, lentes de copos, corbatín navideño). `fitLike` en `AccessoryDef`: se ubican como un objeto de la misma forma (sin regenerar `avatarFit.ts`).
+- Lápiz dorado ✏️ (imagen y ubicación) y visible en «Colección de temporada» del perfil cuando se gana. Arreglados los agujeros transparentes del corbatín a lunares.
+- **Revisión AG-06**: unida a main. Ajustes: el premio del dictado solo se acredita en semana de dictado, la vuelta siempre cuenta 10 (no se confía en el total del navegador), errores acotados; la semana y el nivel del dictado se calculan en hora argentina (servidor en UTC y navegador cambian juntos).
+- Pendiente: islas propias del Mundo del Dictado (por ahora usa la de práctica) y voces Kokoro de los textos largos de 2.º y 3.º.
 
 ### AG-07 · Privacidad de menores: nombre visible, datos sensibles y límite de intentos (Antigravity)
 - **1. Qué se cambió y archivos modificados:**
