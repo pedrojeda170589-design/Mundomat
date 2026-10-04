@@ -685,9 +685,18 @@ export default function AdminDashboardPage() {
               <div className="parchment-panel rounded-2xl p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div>
-                    <p className="text-amber-950 font-bold text-lg">
-                      {selectedStudent.name}
-                    </p>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <p className="text-amber-950 font-bold text-lg">
+                        {selectedStudent.name}
+                      </p>
+                      <Link
+                        href={`/admin/reporte/alumno?code=${encodeURIComponent(selectedStudent.code)}`}
+                        target="_blank"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5"
+                      >
+                        🖨️ Reporte para la familia
+                      </Link>
+                    </div>
                     <p className="text-amber-800/60 text-xs font-mono">
                       Código: {selectedStudent.code}
                     </p>

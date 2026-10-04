@@ -20,15 +20,59 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-10, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-10, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-10 · Reportes imprimibles para familias y planilla CSV del curso (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Módulo de generación de informes familiares (`src/lib/familyReport.ts`):**
+    - Función `computeFamilyReportData(student, progress, curriculumEntries, period)`:
+      - Admite selector de período: `"mes"` (últimos 30 días), `"trimestre"` (últimos 90 días) y `"ano"` (ciclo lectivo completo).
+      - Resumen pedagógico en lenguaje cálido, positivo y accesible para las familias (sin tecnicismos fríos ni porcentajes aislados sin contexto).
+      - Identificación de **Fortalezas Destacadas** vinculadas al diseño curricular (`area` y `eje`) destacando soltura y autonomía.
+      - **Orientaciones para el Hogar**: sugerencias concretas para la familia (ej. lectura compartida de 10 min, juegos de cálculo en compras cotidianas, observación dialogada del entorno) vinculadas a los contenidos a reforzar.
+      - **Evolución Semanal**: serie de las últimas 6 semanas con porcentaje de aciertos y volumen de actividades.
+      - Espacio formal para observaciones docentes y firma del equipo pedagógico.
+  - **Página imprimible por alumno (`src/app/admin/reporte/alumno/page.tsx`):**
+    - Ruta `/admin/reporte/alumno?code=...` protegida con sesión docente.
+    - Estilos `@media print` en tamaño A4 vertical con márgenes limpios, sin botones de navegación ni cabeceras web extrañas.
+    - Selector interactivo de período en pantalla y botón «🖨️ Imprimir / Guardar como PDF» que dispara `window.print()`.
+    - **Aislamiento absoluto de privacidad:** no muestra datos, nombres ni referencias a ningún otro estudiante.
+  - **Módulo y exportación a CSV del curso (`src/lib/courseExport.ts`):**
+    - Función `generateCourseCSV(students, progressMap, worldIds, curriculumEntries)`:
+      - Exporta con **BOM UTF-8 (`\uFEFF`)** y **separador punto y coma (`;`)** para apertura perfecta en Excel en español (sin caracteres corruptos ni problemas de columnas).
+      - Columnas detalladas: Alumno, Código, Grado, Mundos Completados, Precisión Global (%), Tiempo Total (min), Actividades Últimos 7 Días, Mundos con Bajo Desempeño (<50%), Mundos Pendientes de Refuerzo, y columnas por cada mundo habilitado con su mejor puntaje registrado.
+      - Función `downloadCourseCSV` que genera la descarga directa en el navegador.
+  - **Página imprimible del curso completo (`src/app/admin/reporte/curso/page.tsx`):**
+    - Ruta `/admin/reporte/curso` (con soporte `?grade=1`, `?grade=2`, `?grade=3` o todos).
+    - Formato A4 horizontal para impresión: incluye métricas globales del aula, tabla priorizada de «A quién ayudar primero», y grilla compacta de desempeño por mundo.
+    - Botones en barra superior para imprimir y descargar CSV directamente.
+  - **Integración con el Panel Docente (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`):**
+    - En el detalle de cada alumno (pestaña «Registro y Fortalezas»): botón destacado **«🖨️ Reporte para la familia»**.
+    - En el «Resumen del curso» (`CourseSummary.tsx`):
+      - Botones superiores **«🖨️ Reporte del curso»** y **«📥 Descargar CSV»**.
+      - En la columna fija de alumnos de la grilla: icono de acceso rápido **«🖨️»** para abrir el informe familiar individual en una pestaña nueva con un clic.
+- **2. Cómo se probó:**
+  - `scripts/test-reportes.ts`: suite automatizada integral que:
+    - Carga los 21 alumnos reales del aula piloto de `.data/db.json`.
+    - Genera el reporte familiar para 3 alumnos reales en los 3 períodos ("mes", "trimestre", "ano").
+    - **Verifica estricta privacidad**: comprueba que ningún nombre ni código de otro compañero aparezca en el contenido del informe.
+    - Verifica el CSV generado: validación de BOM `\uFEFF`, separador `;`, 22 filas exactas (cabecera + 21 alumnos), 0 valores `NaN` y 0 valores `undefined`.
+  - `scripts/test-curriculo.ts`: 100% aprobado.
+  - `scripts/test-resumen.ts`: 100% aprobado.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 errores y 0 advertencias.
+  - `npm run build`: compilación de producción exitosa con 39 rutas optimizadas.
+- **3. Decisiones pendientes para Pedro:**
+  - Si desea incluir el logo oficial de su escuela o membrete institucional en la cabecera de la hoja imprimible de las familias.
 
 ### CL-10 · Colecciones por temporada y avatares de logro (Claude)
 - **Calendario de la tienda** (`src/lib/coleccion/temporadas.ts`): 16 colecciones de octubre a marzo (Animales, Guardaparques, Diversidad Cultural, Halloween, Tradición, Soberanía, Yaguareté, Suelo, Montañas, Navidad, Año Nuevo, Verano, Educación Ambiental, Humedales, Carnaval, Regreso a clases) y la lista de fechas de abril a septiembre para la segunda tanda. Cada una se vende **15 días** (del día −7 al +7, con ajustes: Halloween 18/10–1/11, Navidad 15–29/12; Carnaval es fecha móvil) y **vuelve cada año**; fuera de su fecha queda **oculta** (lo comprado se sigue viendo). Halloween 2026 respeta el 2/11 ya anunciado. `unicaVez` para exclusivos de un solo año.

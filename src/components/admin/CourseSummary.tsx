@@ -10,6 +10,7 @@ import {
   getWorldsForGrade,
 } from "@/lib/courseSummary";
 import { CurriculumEntry } from "@/lib/curriculo";
+import { generateCourseCSV, downloadCourseCSV } from "@/lib/courseExport";
 import SubjectBadge from "@/components/SubjectBadge";
 
 interface CourseSummaryProps {
@@ -254,22 +255,50 @@ export default function CourseSummary({
             </p>
           </div>
 
-          {/* Selector de grado si hay alumnos de varios grados */}
-          <div className="flex items-center gap-1.5 text-xs font-semibold">
-            <span className="text-amber-900/70">Grado:</span>
-            {[3, 2, 1, "todos" as const].map((g) => (
+          {/* Selector de grado y acciones de exportación */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs font-semibold">
+              <span className="text-amber-900/70">Grado:</span>
+              {[3, 2, 1, "todos" as const].map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setGradeFilter(g)}
+                  className={`rounded-lg px-2.5 py-1 transition border ${
+                    gradeFilter === g
+                      ? "bg-amber-600 text-white border-amber-700"
+                      : "bg-white/70 text-amber-900 border-amber-700/20 hover:bg-white"
+                  }`}
+                >
+                  {typeof g === "number" ? `${g}.º` : "Todos"}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
               <button
-                key={g}
-                onClick={() => setGradeFilter(g)}
-                className={`rounded-lg px-2.5 py-1 transition border ${
-                  gradeFilter === g
-                    ? "bg-amber-600 text-white border-amber-700"
-                    : "bg-white/70 text-amber-900 border-amber-700/20 hover:bg-white"
-                }`}
+                onClick={() => {
+                  const gradeParam = typeof gradeFilter === "number" ? `?grade=${gradeFilter}` : "";
+                  window.open(`/admin/reporte/curso${gradeParam}`, "_blank");
+                }}
+                className="rounded-xl bg-white/90 hover:bg-white text-indigo-900 border border-indigo-300 px-3 py-1.5 text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                title="Abrir vista imprimible del curso completo"
               >
-                {typeof g === "number" ? `${g}.º` : "Todos"}
+                🖨️ Reporte del curso
               </button>
-            ))}
+              <button
+                onClick={() => {
+                  const worldIdsToExport = gridWorlds.map((w) => w.id);
+                  const csv = generateCourseCSV(filteredStudents, progressMap, worldIdsToExport, curriculumEntries);
+                  const gradeName = typeof gradeFilter === "number" ? `${gradeFilter}grado` : "todos";
+                  const dateStr = new Date().toISOString().slice(0, 10);
+                  downloadCourseCSV(`mundomat-curso-${gradeName}-${dateStr}.csv`, csv);
+                }}
+                className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                title="Descargar planilla CSV compatible con Excel"
+              >
+                📥 Descargar CSV
+              </button>
+            </div>
           </div>
         </div>
 
@@ -388,15 +417,27 @@ export default function CourseSummary({
                   <tr key={student.code} className="hover:bg-amber-50/40 transition">
                     {/* Columna fija: Nombre del alumno */}
                     <td className="sticky left-0 bg-white hover:bg-amber-50/40 border-r border-amber-800/20 px-3 py-2 z-10">
-                      <button
-                        onClick={() => onSelectStudent(student.code)}
-                        className="text-left font-bold text-amber-950 hover:text-amber-700 hover:underline flex flex-col"
-                      >
-                        <span className="truncate max-w-[155px]">{student.name}</span>
-                        <span className="text-[10px] text-amber-900/50 font-normal">
-                          {student.grade ? `${student.grade}.º grado` : "3.º grado"} · {student.code}
-                        </span>
-                      </button>
+                      <div className="flex items-center justify-between gap-1.5">
+                        <button
+                          onClick={() => onSelectStudent(student.code)}
+                          className="text-left font-bold text-amber-950 hover:text-amber-700 hover:underline flex flex-col min-w-0"
+                        >
+                          <span className="truncate max-w-[135px]">{student.name}</span>
+                          <span className="text-[10px] text-amber-900/50 font-normal">
+                            {student.grade ? `${student.grade}.º grado` : "3.º grado"} · {student.code}
+                          </span>
+                        </button>
+                        <a
+                          href={`/admin/reporte/alumno?code=${encodeURIComponent(student.code)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 p-1 rounded-md text-slate-400 hover:text-indigo-700 hover:bg-indigo-50 text-xs transition"
+                          title={`Abrir reporte para la familia de ${student.name}`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          🖨️
+                        </a>
+                      </div>
                     </td>
 
                     {/* Celdas de mundos */}
