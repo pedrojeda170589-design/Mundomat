@@ -17,6 +17,7 @@ import {
 } from "@/lib/platform/shared";
 import { getWorld } from "@/lib/worlds";
 import SkillReportByCode from "@/components/admin/SkillReportByCode";
+import DictationReportByCode from "@/components/admin/DictationReportByCode";
 import { AvatarAccessories } from "@/types";
 
 interface Student {
@@ -247,6 +248,13 @@ export default function StudentRecordPage() {
               </Panel>
             );
           })()}
+
+          {student && steps.some((st) => st.status === "active" && (st.grade === 2 || st.grade === 3)) && (
+            <Panel>
+              <p className="font-black mb-2">✍️ Mundo del Dictado (semanal)</p>
+              <DictationReportByCode code={student.access_code} />
+            </Panel>
+          )}
 
           <Panel>
             <p className="font-black mb-1">🎯 Fortalezas y aspectos a reforzar {skills.year ? `(${skills.year})` : ""}</p>

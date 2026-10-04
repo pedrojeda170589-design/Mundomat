@@ -4,6 +4,7 @@
 // tablas 2, 5, 10, reparto, geometría 2D y 3D, medidas y reloj).
 import type { ActivityCard, ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
+import { numeroEnLetras } from "@/lib/dictado/numero-letras";
 import {
   makeOrder,
   numberChoices,
@@ -33,6 +34,21 @@ function numCards(nums: number[], say = true): ActivityCard[] {
 function buildMundo1(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   for (let i = 0; i < 8; i++) {
+    if (i === 7) {
+      const target = randInt(11, 99);
+      acts.push({
+        type: "dictation",
+        id: `m1-dict-${i}`,
+        title: "Dictado de número",
+        prompt: "Escuchá con atención y escribí el número.",
+        say: numeroEnLetras(target),
+        answer: String(target),
+        kind: "numero",
+        hint: `Pista: el número es «${numeroEnLetras(target)}».`,
+        skills: ["m2-numeros-100", "m2-num-dictado"],
+      });
+      continue;
+    }
     const target = randInt(10, 99);
     const d = Math.floor(target / 10) * 10;
     const u = target % 10;
@@ -160,6 +176,20 @@ function buildMundo5(): ActivitySpec[] {
   for (let i = 0; i < 8; i++) {
     const base = randInt(500, 950);
     const target = randInt(base, Math.min(base + 40, 999));
+    if (i === 7) {
+      acts.push({
+        type: "dictation",
+        id: `m5-dict-${i}`,
+        title: "Dictado de número",
+        prompt: "Escuchá con atención y escribí el número.",
+        say: numeroEnLetras(target),
+        answer: String(target),
+        kind: "numero",
+        hint: `Pista: el número es «${numeroEnLetras(target)}».`,
+        skills: ["m2-numeros-1000", "m2-num-dictado"],
+      });
+      continue;
+    }
     const choices = numberChoices(target, 3, 500, 1000);
     acts.push({
       type: "pick",

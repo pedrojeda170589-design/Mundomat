@@ -10,6 +10,7 @@ import { grade1HasContent } from "@/lib/grade1/content";
 import { practiceZonesFor } from "@/lib/grade1/practice";
 import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
+import { esSemanaDeDictado, getMundoDictado } from "@/lib/dictado/banco";
 import WorldMap from "@/components/WorldMap";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
@@ -217,6 +218,17 @@ export default function StudentPlayPage() {
     });
     playableIds = [...playableIds, ...zones.map((z) => z.id)];
     mapWorlds = [...zones, ...mapWorlds];
+  }
+  // Mundo del Dictado (2.º y 3.º grado): aparece en Lengua y Matemática
+  if ((grade === 2 || grade === 3) && (subject === "lengua" || subject === "matematica")) {
+    const dictWorld = getMundoDictado(grade);
+    const activa = esSemanaDeDictado();
+    if (activa) {
+      playableIds = [dictWorld.id, ...playableIds];
+    } else {
+      lockedReasons[dictWorld.id] = "Vuelve el lunes de la semana que viene";
+    }
+    mapWorlds = [dictWorld, ...mapWorlds];
   }
   const medal = getMedalTier(progress.completedWorlds.length);
   const medalInfo = MEDAL_INFO[medal];

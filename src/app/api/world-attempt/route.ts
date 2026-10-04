@@ -1,7 +1,7 @@
 import { NextRequest, after } from "next/server";
 import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
 import { getMedalTier } from "@/lib/medals";
-import { findStudentByCode, getProgress, saveProgress, liteProgress } from "@/lib/data";
+import { findStudentByCode, getProgress, saveProgress, liteProgress, isDictationWorld, applyDictationWorldAttempt } from "@/lib/data";
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
@@ -16,12 +16,13 @@ import { getEnabledWorldIdsFor } from "@/lib/data";
 // fortalecer" (a tratar por el docente).
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, worldId, correctCount, totalActivities, clientId } = body as {
+  const { code, worldId, correctCount, totalActivities, clientId, mistakes } = body as {
     clientId?: string;
     code?: string;
     worldId?: number;
     correctCount?: number;
     totalActivities?: number;
+    mistakes?: string[];
   };
 
   if (!code || worldId === undefined || correctCount === undefined) {
@@ -41,6 +42,32 @@ export async function POST(request: NextRequest) {
   if (isTrial && isTrialWorldBlocked(progress, worldId)) {
     return Response.json({ error: "En la prueba se pueden superar hasta 5 mundos por materia.", trialLimit: true }, { status: 403 });
   }
+
+  if (isDictationWorld(worldId)) {
+    const total = totalActivities ?? 10;
+    const { progress: updated, rewardEarned, bonusCoins, lapizUnlocked } = applyDictationWorldAttempt(
+      progress,
+      worldId,
+      correctCount,
+      total,
+      mistakes ?? []
+    );
+    await saveProgress(updated);
+    const scorePct = Math.round((Math.min(correctCount, total) / Math.max(1, total)) * 100);
+    const outcome = {
+      kind: "dictation" as const,
+      scorePct,
+      rewardEarned,
+      lapizUnlocked,
+    };
+    return Response.json({
+      progress: liteProgress(updated),
+      outcome,
+      coinsEarned: bonusCoins,
+      trialFinished: false,
+    });
+  }
+
   const { progress: updated, outcome, coinsEarned } = applyWorldAttempt(
     progress,
     worldId,

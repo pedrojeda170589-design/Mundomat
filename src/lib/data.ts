@@ -25,6 +25,7 @@ import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
 import { isEventActiveNow } from "@/lib/seasons";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
 import { grade1HasContent } from "@/lib/grade1/content";
+import { claveSemanaDictado } from "@/lib/dictado/banco";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -568,4 +569,81 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
   };
   await saveProgress(next);
   return { ok: true, progress: next };
+}
+
+export function isDictationWorld(worldId: number): boolean {
+  return worldId === 28001 || worldId === 38001;
+}
+
+// Acredita el resultado del Mundo del Dictado semanal en el servidor:
+// - +20 monedas y accesorio «Lápiz dorado» si hace la primera vuelta de la semana al 100%
+// - Registra errores cometidos para el informe docente
+export function applyDictationWorldAttempt(
+  progress: StudentProgress,
+  worldId: number,
+  correctCount: number,
+  totalActivities: number,
+  mistakes: string[] = [],
+  fecha: Date = new Date()
+): {
+  progress: StudentProgress;
+  rewardEarned: boolean;
+  bonusCoins: number;
+  lapizUnlocked: boolean;
+} {
+  const weekKey = claveSemanaDictado(fecha);
+  const total = Math.max(1, totalActivities);
+  const scorePct = Math.round((correctCount / total) * 100);
+  const is100 = correctCount === total;
+
+  const dictationWeeks = { ...(progress.dictationWeeks ?? {}) };
+  const existingWeek = dictationWeeks[weekKey];
+
+  let rewardEarned = false;
+  let bonusCoins = 0;
+  let lapizUnlocked = false;
+  const seasonal = new Set(progress.seasonalCollection ?? []);
+
+  if (!existingWeek) {
+    // Primera vuelta de la semana
+    if (is100) {
+      rewardEarned = true;
+      bonusCoins = 20;
+      if (!seasonal.has("lapiz-dorado")) {
+        seasonal.add("lapiz-dorado");
+        lapizUnlocked = true;
+      }
+    }
+    dictationWeeks[weekKey] = {
+      firstScore: scorePct,
+      rewarded: rewardEarned,
+      mistakes: mistakes.length ? mistakes : undefined,
+      completedAt: fecha.toISOString(),
+    };
+  } else {
+    // Ya jugó en esta semana: no se duplica el premio de primera vuelta, pero se acumulan errores para el docente
+    if (mistakes.length) {
+      const existingMistakes = new Set(existingWeek.mistakes ?? []);
+      mistakes.forEach((m) => existingMistakes.add(m));
+      dictationWeeks[weekKey] = {
+        ...existingWeek,
+        mistakes: Array.from(existingMistakes),
+      };
+    }
+  }
+
+  const updated: StudentProgress = {
+    ...progress,
+    coins: progress.coins + bonusCoins,
+    seasonalCollection: Array.from(seasonal),
+    dictationWeeks,
+    lastPlayedAt: fecha.toISOString(),
+  };
+
+  return {
+    progress: updated,
+    rewardEarned,
+    bonusCoins,
+    lapizUnlocked,
+  };
 }

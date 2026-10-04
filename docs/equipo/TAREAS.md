@@ -13,12 +13,37 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🔨 EN CURSO |
+| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🔨 EN CURSO |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-06 · Textos más largos por grado y dictados de números y palabras (Antigravity)
+- **Parte A: Textos más largos por grado:**
+  - 2.º grado (`src/lib/cuentos/textos-g2.ts`): los 19 cuentos y leyendas adaptados a 40–60 palabras por escena (~300 palabras totales por cuento), promedio 49.4 palabras/escena, respetando las 6 escenas ilustradas canónicas y desenlaces tiernos.
+  - 3.º grado (`src/lib/cuentos/textos-g3.ts`): los 6 cuentos ampliados a 60–90 palabras por escena (~450 palabras totales por cuento), promedio 70.2 palabras/escena, con oraciones subordinadas accesibles, descripciones de época y mayor desarrollo narrativo.
+  - Validado en `scripts/test-cuentos.ts`: 100% de las escenas en rango exacto en ambos grados.
+- **Parte B: Actividad de dictado y presencia en mundos comunes:**
+  - Nuevo tipo `type: "dictation"` en `ActivitySpec` (`src/lib/activities.ts`).
+  - Componente `src/components/activities/DictationActivity.tsx`: botón grande de audio `🔊 Escuchar` (gratuito, autoplay al montar, rate 0.85 con SpeechSynthesis y fallback TTS), input numérico sin solución a la vista para números e input de texto para palabras y oraciones.
+  - Módulo de conversión en letras `src/lib/dictado/numero-letras.ts`: conversión precisa de 0 a 99.999 en español rioplatense («doscientos», «mil veinticuatro», «veintiuno», etc.).
+  - Evaluación pedagógica en `src/lib/dictado/evaluacion.ts`: números toleran puntos de mil y espacios; en 2.º grado tildes opcionales con aviso formativo («¡Bien! Te faltó la tilde...»), en 3.º tildes obligatorias; oraciones exigen mayúscula inicial y punto final en 2.º, y signos dobles (`¿?`, `¡!`) y comas en 3.º, indicando la posición exacta del error.
+  - Banco progresivo por mes escolar (mes 1, 2, 3) en `src/lib/dictado/banco.ts`.
+  - Inclusión de 1–2 dictados por ronda en mundos comunes de 2.º grado (Matemática mundos 1 y 5; Lengua mundos 15 a 23 con habilidades `m2-num-dictado`, `l2-dictado-palabra`, `l2-dictado-oracion`) y 3.º grado (`buildNumerosActivities` y `buildFormacionPalabrasActivities`).
+- **Parte C: Mundo especial del Dictado (semana por medio) y reportes docentes:**
+  - Mundos especiales 28001 (2.º grado) y 38001 (3.º grado) generados dinámicamente con `getMundoDictado`: 10 dictados por ronda (5 números + 5 palabras/oraciones balanceadas y sin repetición).
+  - Activo únicamente en semanas ISO pares (`esSemanaDeDictado`). En semanas impares, la isla permanece deshabilitada con el mensaje «Vuelve el lunes de la semana que viene».
+  - Acreditación en servidor (`src/lib/data.ts` y `/api/world-attempt`): recompensa de +20 🪙 y accesorio exclusivo «Lápiz dorado» ✏️ (`lapiz-dorado` en catálogo `premio`) si el estudiante alcanza 100% de aciertos en su **primer intento** de la semana.
+  - Reporte pedagógico docente en `/admin` (dashboard) y `/docente/alumno`: visualización del rendimiento semanal (puntaje %, estado del premio Lápiz Dorado y lista detallada de errores cometidos) para intervención personalizada.
+- **Verificación integral:**
+  - `scripts/test-dictado.ts`: 100% superado (500 números aleatorios, casos borde ortográficos, evaluaciones pedagógicas, generación de rondas sin repeticiones, semanas ISO y lógica de recompensas).
+  - `scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `scripts/test-cuentos.ts`: 100% superado.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias y 0 errores de linting.
+  - `npm run build`: compilación de producción Next.js 16.3.5 Turbopack exitosa.
 
 ### AG-05 · Ajustes de comprensión: lenguaje de 3.º y opciones parejas (Antigravity)
 - **Lenguaje accesible y adaptado a 3.º grado (8 años):**

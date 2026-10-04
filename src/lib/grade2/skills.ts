@@ -589,6 +589,31 @@ export const GRADE2_SKILLS: SkillDef[] = [
     description: "Identifica lluvia, nieve, escarcha, viento y tipos de nubes en el clima local.",
     practice: "Registrar el estado del tiempo patagónico durante una semana completa.",
   },
+  // ---------- Dictado (Lengua y Matemática) ----------
+  {
+    id: "l2-dictado-palabra",
+    subject: "lengua",
+    axis: "Sistema de escritura",
+    label: "Dictado de palabras",
+    description: "Escribe palabras al dictado respetando la correspondencia fonema-grafema y reglas ortográficas.",
+    practice: "Dictados breves de palabras cotidianas y del entorno patagónico.",
+  },
+  {
+    id: "l2-dictado-oracion",
+    subject: "lengua",
+    axis: "Sistema de escritura",
+    label: "Dictado de oraciones",
+    description: "Escribe oraciones al dictado usando mayúscula inicial y punto final.",
+    practice: "Escritura de oraciones breves al dictado con revisión guiada.",
+  },
+  {
+    id: "m2-num-dictado",
+    subject: "matematica",
+    axis: "Número y operaciones",
+    label: "Dictado de números",
+    description: "Escribe en cifras números dictados en palabras identificando su valor posicional.",
+    practice: "Dictado de números en la grilla y con billetes.",
+  },
 ];
 
 export function getGrade2Skill(id: string): SkillDef | undefined {

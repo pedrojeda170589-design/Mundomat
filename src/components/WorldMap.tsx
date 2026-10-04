@@ -169,11 +169,15 @@ export default function WorldMap({
               )}
               {!enabled && (
                 <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
-                  {lockedReasons[world.id] ? `Primero: ${lockedReasons[world.id]}` : lockedLabel}
+                  {lockedReasons[world.id]?.startsWith("Vuelve")
+                    ? lockedReasons[world.id]
+                    : lockedReasons[world.id]
+                      ? `Primero: ${lockedReasons[world.id]}`
+                      : lockedLabel}
                 </span>
               )}
             </button>
-            {showFichas && (
+            {showFichas && world.kind !== "dictado" && world.id !== 28001 && world.id !== 38001 && (
             <a
               href={`/familias#mundo-${world.id}`}
               className="absolute right-0 rounded-full bg-white border-2 border-sky-500 w-8 h-8 flex items-center justify-center text-sm shadow hover:scale-110 transition"

@@ -19,6 +19,7 @@ import CountActivity from "@/components/activities/CountActivity";
 import BuildActivity from "@/components/activities/BuildActivity";
 import TraceActivity from "@/components/activities/TraceActivity";
 import ListenActivity from "@/components/activities/ListenActivity";
+import DictationActivity from "@/components/activities/DictationActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
@@ -62,6 +63,8 @@ function speakTextFor(activity: ActivitySpec): string {
     case "build":
     case "trace":
       return activity.say ?? activity.prompt;
+    case "dictation":
+      return activity.say ?? activity.prompt;
   }
 }
 
@@ -81,6 +84,7 @@ export default function ActivityRunner({
   const [lastCorrect, setLastCorrect] = useState(false);
   const [lastCoinsEarned, setLastCoinsEarned] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [dictationMistakes, setDictationMistakes] = useState<string[]>([]);
   const [attemptOutcome, setAttemptOutcome] =
     useState<WorldMasteryOutcome | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -98,6 +102,9 @@ export default function ActivityRunner({
   const shownIndex = activities.slice(0, index + 1).filter((a) => a.type !== "listen").length;
 
   function submitResult(correct: boolean) {
+    if (!correct && activity.type === "dictation") {
+      setDictationMistakes((prev) => [...prev, activity.answer]);
+    }
     const timeSpentSeconds = Math.round(
       (Date.now() - startTimeRef.current) / 1000
     );
@@ -156,6 +163,7 @@ export default function ActivityRunner({
           correctCount: finalCorrectCount,
           // El cuento para escuchar no cuenta como actividad con puntaje.
           totalActivities: activities.filter((a) => a.type !== "listen").length,
+          mistakes: dictationMistakes,
         }),
       });
       const data = await res.json();
@@ -231,6 +239,11 @@ export default function ActivityRunner({
           ))}
         </span>
       </div>
+      {(world.id === 28001 || world.id === 38001 || world.category === "dictado") && (
+        <div className="relative z-10 max-w-md w-full mx-auto mb-2 text-center bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold rounded-xl px-3 py-1.5 shadow">
+          ✍️ ¡Semana de dictado! Si hacés todo bien en el primer intento, ganás 20 🪙 y el Lápiz dorado.
+        </div>
+      )}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
@@ -357,8 +370,20 @@ export default function ActivityRunner({
                 onDone={submitResult}
               />
             )}
+            {activity.type === "dictation" && (
+              <DictationActivity
+                key={`dict-${index}`}
+                prompt={activity.prompt}
+                say={activity.say}
+                answer={activity.answer}
+                kind={activity.kind}
+                strictAccents={activity.strictAccents}
+                grade={world.grade ?? 2}
+                onDone={submitResult}
+              />
+            )}
 
-            {activity.type !== "listen" && (
+            {activity.type !== "listen" && activity.type !== "dictation" && (
               <div className="w-full max-w-md">
                 <AssistControls
                   speakText={speakTextFor(activity)}
@@ -419,7 +444,21 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
   let message = "Muy buen trabajo, seguí así.";
   let coinsNote: string | null = null;
 
-  if (outcome?.kind === "practice") {
+  if (outcome?.kind === "dictation") {
+    if (outcome.rewardEarned) {
+      emoji = "✏️";
+      title = "¡Semana de Dictado al 100%!";
+      message = "¡Increíble! Lograste 100% en tu primer intento semanal.";
+      coinsNote = "+20 🪙 de premio y desbloqueaste el «Lápiz dorado» ✏️";
+    } else {
+      emoji = outcome.scorePct === 100 ? "🌟" : "💪";
+      title = `¡Completaste el dictado (${outcome.scorePct}%)!`;
+      message =
+        outcome.scorePct === 100
+          ? "¡Excelente práctica con todas las respuestas correctas!"
+          : "¡Buen intento! Repasá las palabras y números para la próxima.";
+    }
+  } else if (outcome?.kind === "practice") {
     emoji = "🎯";
     title = "¡Buena práctica!";
     message = `Acertaste ${outcome.scorePct}%. Cada práctica te hace más fuerte.`;

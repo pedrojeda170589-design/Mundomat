@@ -9,6 +9,7 @@ import { computeStudentStats } from "@/lib/progressLogic";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import StudentBlock from "@/components/admin/StudentBlock";
 import SkillReport from "@/components/admin/SkillReport";
+import DictationReport from "@/components/admin/DictationReport";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
@@ -591,6 +592,13 @@ export default function AdminDashboardPage() {
                   <div>
                     <p className="text-amber-950 font-black mb-2">📚 Habilidades de {selectedStudent.grade}.º grado</p>
                     <SkillReport progress={selectedProgress} grade={selectedStudent.grade} />
+                  </div>
+                )}
+
+                {(selectedStudent.grade === 2 || selectedStudent.grade === 3) && (
+                  <div>
+                    <p className="text-amber-950 font-black mb-2">✍️ Mundo del Dictado (semanal)</p>
+                    <DictationReport dictationWeeks={selectedProgress.dictationWeeks} />
                   </div>
                 )}
 

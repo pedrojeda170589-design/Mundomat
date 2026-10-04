@@ -94,6 +94,16 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+  // Semanas del Mundo del Dictado jugadas (semanas ISO pares): registro por clave "AAAA-Www"
+  dictationWeeks?: Record<
+    string,
+    {
+      firstScore: number;
+      rewarded: boolean;
+      mistakes?: string[];
+      completedAt?: string;
+    }
+  >;
 }
 
 export interface WeekendRecord {
@@ -261,7 +271,7 @@ export type AccessorySlot =
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
 
-export type AccessoryGroup = "legacy" | "estandar" | "temporada" | "tienda";
+export type AccessoryGroup = "legacy" | "estandar" | "temporada" | "tienda" | "premio";
 
 export interface AccessoryDef {
   id: string;
@@ -381,6 +391,11 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
   { id: "collar-caracoles", slot: "pendant", label: "Collar de caracoles", emoji: "🐚", group: "tienda", price: 40 },
 ];
 
+// Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
+export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
+  { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio" },
+];
+
 export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(
   (a) => a.eventId === "fin-de-semana"
 ).map((a) => a.id);
@@ -390,6 +405,7 @@ export const ALL_ACCESSORIES: AccessoryDef[] = [
   ...ACCESSORY_CATALOG_ESTANDAR,
   ...ACCESSORY_CATALOG_TEMPORADA,
   ...ACCESSORY_CATALOG_TIENDA,
+  ...ACCESSORY_CATALOG_PREMIO,
 ];
 
 // Qué catálogo de accesorios corresponde según el personaje elegido.
@@ -412,12 +428,13 @@ export function getUnlockedAccessoryIds(
 }
 
 // Todos los accesorios que este personaje puede tener equipados en
-// principio (su catálogo + los de temporada), sin mirar si ya los ganó.
+// principio (su catálogo + los de temporada + premios), sin mirar si ya los ganó.
 export function getValidAccessoryIdsForAvatar(avatar?: string): Set<string> {
   return new Set([
     ...getAccessoryCatalogForAvatar(avatar).map((a) => a.id),
     ...ACCESSORY_CATALOG_TEMPORADA.map((a) => a.id),
     ...ACCESSORY_CATALOG_TIENDA.map((a) => a.id),
+    ...ACCESSORY_CATALOG_PREMIO.map((a) => a.id),
   ]);
 }
 
@@ -435,6 +452,7 @@ export function getEquippableAccessoryIds(
     ...getUnlockedAccessoryIds(completedWorldsCount, avatar),
     ...ACCESSORY_CATALOG_TEMPORADA.filter((a) => earned.has(a.id)).map((a) => a.id),
     ...ACCESSORY_CATALOG_TIENDA.filter((a) => bought.has(a.id)).map((a) => a.id),
+    ...ACCESSORY_CATALOG_PREMIO.filter((a) => earned.has(a.id)).map((a) => a.id),
   ]);
 }
 
@@ -447,6 +465,7 @@ const ACCESSORY_FOLDER: Record<AccessoryGroup, string> = {
   estandar: "accessories-estandar",
   temporada: "accessories-temporada",
   tienda: "accessories-tienda",
+  premio: "accessories-temporada",
 };
 
 export function getAccessorySrc(id: string): string {
@@ -571,7 +590,9 @@ export type WorldCategory =
   | "gobierno-municipal" // Intendente, Concejo Deliberante, ordenanzas, deberes y derechos
   | "transporte-ambiente" // transporte, recursos naturales y problemáticas ambientales
   | "linea-tiempo-historica" // nociones temporales, procesos históricos, conmemoraciones
-  | "diversidad-ciudadania"; // diversidad cultural, derechos, proyectos colectivos
+  | "diversidad-ciudadania" // diversidad cultural, derechos, proyectos colectivos
+  // Dictado semanal
+  | "dictado";
 
 export type WorldDifficulty = "basico" | "avanzado";
 
@@ -607,7 +628,7 @@ export interface WorldDef {
   // Variables pedagógicas de dificultad (ver WorldDifficultyVars).
   difficultyVars?: WorldDifficultyVars;
   // Tipo de mundo: normal, de refuerzo (zona de práctica) o de integración.
-  kind?: "normal" | "refuerzo" | "integracion";
+  kind?: "normal" | "refuerzo" | "integracion" | "dictado";
   // Cómo se evalúa / criterio de dominio, en palabras para el docente.
   assessment?: string;
   // Cantidad de actividades por vuelta (por defecto 10).
