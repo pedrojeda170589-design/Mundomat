@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import { torneoHabilitado } from "../src/lib/torneo/tiempos";
 import { isUsingRemoteStore } from "../src/lib/store";
 import { generarPasosTabla, obtenerDistractores } from "../src/lib/torneo/opciones";
 import {
@@ -165,6 +166,14 @@ async function main() {
   assert.ok("error" in resMiercoles);
   assert.ok(resMiercoles.error.includes("fin de semana"));
   console.log("  ✅ Partida rechazada correctamente fuera del fin de semana.");
+
+  // 7b. Desde 3.º grado y después de junio (pedido de Pedro)
+  assert.equal(torneoHabilitado(3, new Date("2026-07-04T15:00:00-03:00")), true);
+  assert.equal(torneoHabilitado(4, new Date("2026-12-05T15:00:00-03:00")), true);
+  assert.equal(torneoHabilitado(2, new Date("2026-10-10T15:00:00-03:00")), false, "2.º no tiene torneo");
+  assert.equal(torneoHabilitado(3, new Date("2026-06-27T15:00:00-03:00")), false, "en junio todavía no");
+  assert.equal(torneoHabilitado(3, new Date("2026-07-01T01:00:00Z")), false, "30/6 a la noche en Argentina sigue siendo junio");
+  console.log("  ✅ Torneo solo desde 3.º y de julio en adelante.");
 
   // 8. Flujo completo con alumno real en sábado y domingo simulados
   console.log("8. Probando flujo de torneo en fin de semana...");

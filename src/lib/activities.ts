@@ -190,6 +190,29 @@ export type ActivitySpec = (
       hint: string;
     }
   | {
+      // Tabla pitagórica interactiva: cruce de fila y columna (a × b) o
+      // búsqueda inversa para dividir (fila del divisor → dividendo → arriba).
+      type: "pitagorica";
+      id: string;
+      title: string;
+      prompt: string;
+      modo: "cruce" | "inversa";
+      fila: number;
+      columna: number;
+      hint: string;
+    }
+  | {
+      // Reparto con cajitas y tapitas, de a una, con cociente y resto.
+      type: "reparto";
+      id: string;
+      title: string;
+      prompt: string;
+      total: number;
+      cajas: number;
+      objeto?: string;
+      hint: string;
+    }
+  | {
       type: "dictation";
       id: string;
       title: string;
@@ -933,13 +956,67 @@ function buildEspacioActivities(): ActivitySpec[] {
 // Mundos 5-7: tablas de multiplicar agrupadas por dificultad
 // ---------------------------------------------------------------------------
 
+// Regularidades de la tabla pitagórica (clases 1 y 2 de Pedro).
+function regularidadDeTabla(id: string, title: string, t: number): ActivitySpec {
+  const m = randInt(3, 9);
+  if (t === 9 && Math.random() < 0.6) {
+    const prod = 9 * m;
+    return mcFromAnswer(id, title,
+      `En la tabla del 9, si sumás las dos cifras del resultado siempre da 9 (18 → 1 + 8 = 9). ¿Cuál de estos números es de la tabla del 9?`,
+      prod, "Pista: sumá las cifras de cada número: el que da 9 es de la tabla del 9.", 4);
+  }
+  if ((t === 5 || t === 10) && Math.random() < 0.6) {
+    const prod = t * m;
+    const opciones = shuffle([prod, prod + (t === 5 ? 2 : 3), prod + (t === 5 ? 3 : 4)]);
+    return {
+      type: "mc", id, title,
+      prompt: t === 5
+        ? "Los resultados de la tabla del 5 siempre terminan en 0 o en 5. ¿Cuál es de la tabla del 5?"
+        : "Los resultados de la tabla del 10 siempre terminan en 0. ¿Cuál es de la tabla del 10?",
+      choices: opciones.map(String),
+      answerIndex: opciones.indexOf(prod),
+      hint: `Pista: mirá en qué cifra termina cada número.`,
+    };
+  }
+  if ((t === 4 || t === 8) && Math.random() < 0.6) {
+    const mitad = t / 2;
+    return mcFromAnswer(id, title,
+      `La fila del ${t} es el doble de la fila del ${mitad}. Si ${mitad} × ${m} = ${mitad * m}, ¿cuánto es ${t} × ${m}?`,
+      t * m, `Pista: el doble de ${mitad * m} es ${mitad * m} + ${mitad * m}.`, mitad);
+  }
+  // Conmutativa: la diagonal mágica divide la tabla en dos mitades iguales.
+  return mcFromAnswer(id, title,
+    `En la tabla pitagórica, ${m} × ${t} = ${m * t}. ¿Cuánto es ${t} × ${m}?`,
+    t * m, "Pista: el orden de los factores no cambia el resultado (están a los dos lados de la diagonal).", t);
+}
+
 function buildTablaGroupActivities(tables: number[]): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const [t1, t2, t3] = tables;
 
-  // 1-3: reconocimiento/práctica, una por cada tabla del grupo
+  // 1-3: una por cada tabla del grupo, con la metodología de Pedro: la 1.ª
+  // en la tabla pitagórica (cruce de fila y columna), la 3.ª con una
+  // regularidad (conmutativa, dobles, terminaciones del 5 y del 10, la
+  // tabla del 9). La 2.ª, cálculo directo.
   [t1, t2, t3].forEach((t, idx) => {
     const m = randInt(2, 9);
+    if (idx === 0) {
+      acts.push({
+        type: "pitagorica",
+        id: `tabla-${tables.join("-")}-pitagorica`,
+        title: "Actividad 1",
+        prompt: `¿Cuánto es ${t} × ${m}? Encontralo en la tabla pitagórica.`,
+        modo: "cruce",
+        fila: t,
+        columna: m,
+        hint: `Pista: andá por la fila del ${t} hasta la columna del ${m}.`,
+      });
+      return;
+    }
+    if (idx === 2) {
+      acts.push(regularidadDeTabla(`tabla-${tables.join("-")}-regla`, "Actividad 3", t));
+      return;
+    }
     acts.push(
       mcFromAnswer(
         `tabla-${tables.join("-")}-${idx}`,
@@ -1101,63 +1178,138 @@ function buildTablaGroupActivities(tables: number[]): ActivitySpec[] {
 // Mundo 8: reparto / división
 // ---------------------------------------------------------------------------
 
+// Secuencia de Pedro (Google Doc «3er T. 001 – Plan. Matemática»): tabla
+// pitagórica (cruce, dobles) → reparto con cajitas y tapitas (con resto) →
+// partes de la división → búsqueda inversa en la tabla → familias de
+// operaciones → partición («de a cuántos») → datos innecesarios.
 function buildRepartoActivities(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
-  const plans: [number, number][] = [
-    [6, 2],
-    [8, 2],
-    [9, 3],
-    [10, 2],
-    [12, 3],
-    [12, 4],
-    [15, 3],
-    [16, 4],
+  const n = () => `Actividad ${acts.length + 1}`;
+
+  // 1. Tabla pitagórica: cruce de fila y columna.
+  const a1 = randInt(2, 9), b1 = randInt(2, 9);
+  acts.push({
+    type: "pitagorica", id: "rep-cruce", title: n(), modo: "cruce", fila: a1, columna: b1,
+    prompt: `¿Cuánto es ${a1} × ${b1}? Encontralo en la tabla pitagórica.`,
+    hint: `Pista: con el dedo, andá por la fila del ${a1} hasta la columna del ${b1}.`,
+  });
+
+  // 2. Dobles: la fila del 4 es el doble de la del 2 (y la del 8, de la del 4).
+  const [chica, grande] = pick([[2, 4], [4, 8]] as [number, number][]);
+  const k2 = randInt(3, 9);
+  acts.push(
+    mcFromAnswer(
+      "rep-dobles", n(),
+      `En la tabla pitagórica, ${chica} × ${k2} = ${chica * k2}. La fila del ${grande} es el doble de la del ${chica}. ¿Cuánto es ${grande} × ${k2}?`,
+      grande * k2,
+      `Pista: el doble de ${chica * k2} es ${chica * k2} + ${chica * k2}.`,
+      chica
+    )
+  );
+
+  // 3. Reparto exacto con 2 cajitas (como José y su hermano con las naranjas).
+  const q3 = randInt(4, 9);
+  const objetos: [string, string][] = [["🍊", "naranjas"], ["🍬", "caramelos"], ["🌰", "nueces"], ["🍪", "galletitas"], ["🥟", "empanadas"]];
+  const [emo3, cosa3] = pick(objetos);
+  acts.push({
+    type: "reparto", id: "rep-cajitas", title: n(), total: q3 * 2, cajas: 2, objeto: emo3,
+    prompt: `Repartí ${q3 * 2} ${cosa3} en 2 cajitas, en partes iguales.`,
+    hint: "Pista: poné una tapita en cada cajita, por turnos, hasta que no quede ninguna.",
+  });
+
+  // 4. Reparto con sobrante (resto).
+  const cajas4 = pick([2, 3]);
+  const q4 = randInt(3, 6);
+  const r4 = randInt(1, cajas4 - 1);
+  const [emo4, cosa4] = pick(objetos.filter(([e]) => e !== emo3));
+  acts.push({
+    type: "reparto", id: "rep-sobra", title: n(), total: q4 * cajas4 + r4, cajas: cajas4, objeto: emo4,
+    prompt: `La abuela reparte ${q4 * cajas4 + r4} ${cosa4} entre sus ${cajas4} nietos, en partes iguales. ¿Sobra alguna?`,
+    hint: "Pista: si ya no alcanza para darle una más a cada uno, lo que queda es lo que sobra (el resto).",
+  });
+
+  // 5. Partes de la división.
+  const d5 = randInt(2, 9), q5 = randInt(2, 9), D5 = d5 * q5;
+  const partes = [
+    { nombre: "dividendo", valor: D5, que: "el total que se reparte" },
+    { nombre: "divisor", valor: d5, que: "entre cuántos se reparte" },
+    { nombre: "cociente", valor: q5, que: "lo que le toca a cada uno" },
   ];
-  plans.forEach(([total, groups], idx) => {
-    acts.push({
-      type: "input",
-      id: `reparto-${idx}`,
-      title: `Actividad ${idx + 1}`,
-      prompt: `Tenés ${total} caramelos para repartir en partes iguales entre ${groups} amigos. ¿Cuántos caramelos le tocan a cada uno?`,
-      answer: total / groups,
-      hint: `Pista: dividí ${total} entre ${groups}.`,
-    });
+  const parte = pick(partes);
+  const opciones5 = shuffle(["dividendo", "divisor", "cociente", "resto"]);
+  acts.push({
+    type: "mc", id: "rep-partes", title: n(),
+    prompt: `En ${D5} ÷ ${d5} = ${q5}, el ${parte.valor} es ${parte.que}. ¿Cómo se llama esa parte?`,
+    choices: opciones5.map((o) => o[0].toUpperCase() + o.slice(1)),
+    answerIndex: opciones5.indexOf(parte.nombre),
+    hint: "Pista: dividendo = el total; divisor = entre cuántos; cociente = cuánto le toca a cada uno; resto = lo que sobra.",
   });
 
-  // 9: problema — verdadero/falso sobre el resto
+  // 6. Dividir con la tabla pitagórica (búsqueda inversa).
+  const d6 = randInt(2, 9), q6 = randInt(2, 9);
   acts.push({
-    type: "true-false",
-    id: "reparto-vf",
-    title: "Actividad 9",
-    statement:
-      "Si reparto 10 caramelos entre 3 amigos en partes iguales, no sobra ninguno.",
-    isTrue: false,
-    justification: {
-      prompt: "¿Por qué?",
-      choices: [
-        "Porque 10 no se puede dividir en partes iguales entre 3, sobra 1",
-        "Porque 10 siempre se puede repartir exacto",
-      ],
-      answerIndex: 0,
-    },
-    hint: "Pista: probá repartir de a uno por vez y contá cuántos quedan sueltos al final.",
+    type: "pitagorica", id: "rep-inversa", title: n(), modo: "inversa", fila: d6, columna: q6,
+    prompt: `¿Cuánto es ${d6 * q6} ÷ ${d6}? Usá la tabla pitagórica.`,
+    hint: `Pista: buscá el ${d6 * q6} en la fila del ${d6} y mirá qué número hay arriba de esa columna.`,
   });
 
-  // 10: desafío final — detectar el error en un reparto
+  // 7. Familias de operaciones.
+  const a7 = randInt(3, 9);
+  let b7 = randInt(3, 9);
+  if (a7 === b7) b7 = a7 === 9 ? 8 : a7 + 1;
+  const c7 = a7 * b7;
+  const buena = `${c7} ÷ ${b7} = ${a7}`;
+  const malas = [`${c7} ÷ ${a7} = ${a7}`, `${c7} ÷ ${b7} = ${b7}`, `${a7} ÷ ${b7} = ${c7}`];
+  const opc7 = shuffle([buena, ...malas.slice(0, 2)]);
   acts.push({
-    type: "find-error",
-    id: "reparto-error",
-    title: "Actividad 10: desafío final",
+    type: "mc", id: "rep-familia", title: n(),
+    prompt: `Si ${a7} × ${b7} = ${c7}, ¿qué división también es correcta?`,
+    choices: opc7, answerIndex: opc7.indexOf(buena),
+    hint: `Pista: multiplicar y dividir son operaciones inversas. Con ${a7}, ${b7} y ${c7} se arma una familia de 4 cuentas.`,
+  });
+
+  // 8. Partición: «de a cuántos» (cuántos grupos se arman).
+  const g8 = pick([3, 4, 5, 6]), k8 = randInt(4, 9);
+  acts.push({
+    type: "input", id: "rep-particion", title: n(),
+    prompt: `Tengo ${g8 * k8} cartas españolas y armo montoncitos de ${g8} cartas. ¿Cuántos montoncitos se forman?`,
+    answer: k8,
+    hint: `Pista: ¿qué número multiplicado por ${g8} da ${g8 * k8}? Buscalo en la fila del ${g8}.`,
+  });
+
+  // 9. Datos que no sirven (detectives de problemas).
+  const cajones = pick([3, 4, 5, 6]), porCajon = randInt(4, 9);
+  const innecesario = pick([
+    { dato: "El día estaba muy soleado", texto: "El día estaba muy soleado." },
+    { dato: "El perro ovejero tiene 4 años", texto: "El perro ovejero tiene 4 años." },
+    { dato: "Abrieron la huerta a las 8 de la mañana", texto: "Abrieron la huerta a las 8 de la mañana." },
+  ]);
+  const opc9 = shuffle([
+    innecesario.dato,
+    `Cosecharon ${cajones * porCajon} lechugas`,
+    `Las acomodan en ${cajones} cajones iguales`,
+  ]);
+  acts.push({
+    type: "mc", id: "rep-dato", title: n(),
+    prompt: `En la huerta de Gobernador Gregores cosecharon ${cajones * porCajon} lechugas y las acomodan en ${cajones} cajones iguales. ${innecesario.texto} ¿Cuántas lechugas van en cada cajón? Antes de calcular: ¿qué dato NO sirve para responder?`,
+    choices: opc9, answerIndex: opc9.indexOf(innecesario.dato),
+    hint: "Pista: no todos los números o datos de un problema entran en la cuenta.",
+  });
+
+  // 10. Desafío final: encontrar el error de un reparto.
+  const amigos = pick([3, 4, 5]), cada = randInt(4, 8), mal = cada + pick([1, -1]);
+  const total10 = amigos * cada;
+  acts.push({
+    type: "find-error", id: "rep-error", title: "Actividad 10: desafío final",
     prompt: "Julián repartió así. Encontrá el error:",
-    resolution: "Repartió 20 figuritas entre 4 amigos y dijo que le tocaban 6 a cada uno.",
-    choices: [
-      "Está mal: le tocan 5 a cada uno (20 ÷ 4 = 5)",
-      "Está bien, le tocan 6 a cada uno",
-    ],
+    resolution: `Repartió ${total10} figuritas entre ${amigos} amigos y dijo que le tocaban ${mal} a cada uno.`,
+    choices: shuffle([`Está mal: le tocan ${cada} a cada uno (${total10} ÷ ${amigos} = ${cada})`, `Está bien, le tocan ${mal} a cada uno`]),
     answerIndex: 0,
-    correctAnswer: "20 ÷ 4 = 5",
-    hint: "Pista: repartí de a una figurita por vez entre los 4 amigos y contá.",
+    correctAnswer: `${total10} ÷ ${amigos} = ${cada}`,
+    hint: `Pista: comprobalo con la multiplicación: ¿${amigos} × ${mal} da ${total10}?`,
   });
+  const fe = acts[acts.length - 1] as Extract<ActivitySpec, { type: "find-error" }>;
+  fe.answerIndex = fe.choices.findIndex((c) => c.startsWith("Está mal"));
 
   return acts;
 }

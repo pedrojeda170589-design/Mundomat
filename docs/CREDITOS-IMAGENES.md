@@ -63,3 +63,19 @@ poder comercializarse; hacé una auditoría para prevenir conflictos de autoría
 | 04/10/2026 | ChatGPT (cuenta de Pedro) | Opciones de drops B: squishies (capibara, tostada con manteca, gato bollito, estrella, nube, leche de frutilla, palta, dumpling, pingüino) | Referencia, a elegir |
 | 04/10/2026 | ChatGPT (cuenta de Pedro) | Opciones de drops C: vinchas con resortes | Referencia, a elegir |
 | 04/10/2026 | ChatGPT (cuenta de Pedro) | Opciones de drops D: anteojos de fiesta | Referencia, a elegir |
+
+## Agregadas el 4/10/2026 (Claude, en el ChatGPT de Pedro)
+
+Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos.
+
+- **Fondos de Santa Cruz** (`public/theme/santa-cruz/*.jpg`). Paisajes reales pintados de nuevo, sin fotos de terceros:
+  - Cerro Ventana
+  - Fitz Roy / El Chaltén
+  - Glaciar Perito Moreno
+  - Cueva de las Manos (arte rupestre genérico, tratado con respeto)
+  - Bosque Petrificado de Jaramillo
+  - Ría Deseado
+- **El profe Pedro con vestimentas** (`public/theme/profe/*.png`). Hechas a partir de su foto, con su autorización:
+  - andinista, guardaparque, científico, astrónomo
+  - explorador, gaucho, escritor, matemático, almacenero
+- **Premios del torneo de las tablas** (`public/theme/accessories-temporada/`): vincha relámpago, lentes turbo y medalla del rayo.

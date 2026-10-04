@@ -110,3 +110,14 @@ export const PREMIOS_TORNEO_ITEMS: PremioGrupoItem[] = [
 export function premioGrupoParaTabla(tabla: number): PremioGrupoItem | undefined {
   return PREMIOS_TORNEO_ITEMS.find((p) => p.tablas.includes(tabla));
 }
+
+/**
+ * Pedido de Pedro: el torneo de las tablas aparece desde 3.º grado y recién
+ * después de junio (de julio a diciembre), cuando ya se trabajaron las tablas.
+ */
+export const TORNEO_GRADO_MINIMO = 3;
+export const TORNEO_DESDE_MES = 7; // julio
+export function torneoHabilitado(grade: number, now: Date = new Date()): boolean {
+  const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
+  return grade >= TORNEO_GRADO_MINIMO && mesAR >= TORNEO_DESDE_MES;
+}
