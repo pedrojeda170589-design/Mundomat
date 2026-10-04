@@ -6,6 +6,7 @@ import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import { AVISO_PREVIO_DIAS, getTemporada, nombreTemporada, textoContador, ventanaDe, type Ventana } from "@/lib/tiempo-limitado";
 import { LEGENDARIO_MUNDOS } from "@/lib/coleccion/temporadas";
+import { DROPS, dropActivo, estaAlDia, mundosEnDrop, textoDrop } from "@/lib/coleccion/drops";
 import {
   ACCESSORY_CATALOG_TIENDA,
   AVATAR_INFO,
@@ -58,6 +59,9 @@ export default function ShopModal({
   }, []);
   const ordenVentanas = Object.values(ventanas).sort((a, b) => Number(b.activa) - Number(a.activa) || a.dias - b.dias);
   const aLaVenta = (season?: string) => !season || !!ventanas[season]?.activa;
+  // Drops activos, y si el alumno está «al día» (ve el superespecial).
+  const dropsActivos = useMemo(() => DROPS.filter((d) => dropActivo(d)), []);
+  const alDia = estaAlDia(progress);
 
   const previewAvatar = preview?.avatar ?? progress.avatar;
   const previewAccessories: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
@@ -118,7 +122,13 @@ export default function ShopModal({
     }
   }
 
-  function PriceButton({ price, id, label, onUse, season }: { price: number; id: string; label: string; onUse: () => void; season?: string }) {
+  function PriceButton({ price, id, label, onUse, season, dropId }: { price: number; id: string; label: string; onUse: () => void; season?: string; dropId?: string }) {
+    const drop = dropId ? DROPS.find((d) => d.id === dropId) : undefined;
+    if (!owned.has(id) && drop && mundosEnDrop(progress, drop) < drop.mundosRequeridos) {
+      return (
+        <p className="w-full rounded-lg bg-slate-700 text-slate-300 text-[11px] font-bold py-1.5 text-center">🔒 {mundosEnDrop(progress, drop)}/{drop.mundosRequeridos} mundos · 🪙 {price}</p>
+      );
+    }
     if (!owned.has(id) && !aLaVenta(season)) {
       return (
         <p className="w-full rounded-lg bg-slate-700 text-slate-300 text-[11px] font-bold py-1.5 text-center">🔒 Próximamente · 🪙 {price}</p>
@@ -176,12 +186,13 @@ export default function ShopModal({
           <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="100px" className={`object-contain p-2 ${soon ? "opacity-60" : ""}`} />
           {owned.has(acc.id) && <span className="absolute top-1 right-1 rounded-full bg-emerald-500 text-white text-[10px] font-black px-1.5">TUYO</span>}
           {acc.unicaVez && <span className="absolute bottom-1 left-1 rounded-full bg-fuchsia-600 text-white text-[9px] font-black px-1.5">🔐 EXCLUSIVO</span>}
+          {acc.superEspecial && <span className="absolute bottom-1 left-1 rounded-full bg-amber-400 text-slate-900 text-[9px] font-black px-1.5">🌟 SÚPER ESPECIAL</span>}
         </button>
         <p className="text-white text-xs font-bold leading-tight min-h-[2rem]">{acc.label}</p>
         {using ? (
           <p className="text-center text-emerald-300 text-xs font-bold py-1.5">Lo tenés puesto</p>
         ) : (
-          <PriceButton price={acc.price ?? 0} id={acc.id} label={acc.label} season={acc.season} onUse={() => void use({ accessory: acc })} />
+          <PriceButton price={acc.price ?? 0} id={acc.id} label={acc.label} season={acc.season} dropId={acc.drop} onUse={() => void use({ accessory: acc })} />
         )}
       </li>
     );
@@ -253,6 +264,27 @@ export default function ShopModal({
           )}
           {tab === "objetos" && (
             <>
+              {dropsActivos.map((d) => {
+                const items = ACCESSORY_CATALOG_TIENDA.filter((a) => a.drop === d.id && (!a.superEspecial || alDia || owned.has(a.id)));
+                if (!items.length) return null;
+                const hechos = mundosEnDrop(progress, d);
+                return (
+                  <section key={d.id} className="mb-3">
+                    <div className="mb-2 flex flex-col gap-0.5 rounded-xl border border-fuchsia-400 bg-fuchsia-500/15 px-3 py-1.5">
+                      <p className="text-xs font-black text-white">
+                        ⚡ DROP {d.emoji} {d.label} · exclusivo
+                      </p>
+                      <p className="text-[11px] font-black text-fuchsia-200">⏳ {textoDrop(d)} · después no vuelve</p>
+                      <p className="text-[10px] text-slate-200">
+                        {hechos >= d.mundosRequeridos
+                          ? "✅ ¡Desbloqueado! Ya podés comprar."
+                          : `🔒 Para comprar, superá ${d.mundosRequeridos} mundos con 90 % o más (${hechos}/${d.mundosRequeridos}).`}
+                      </p>
+                    </div>
+                    <ul className="grid grid-cols-3 gap-2">{items.map(accessoryCard)}</ul>
+                  </section>
+                );
+              })}
               {ordenVentanas.map((v) => {
                 const items = ACCESSORY_CATALOG_TIENDA.filter((a) => a.season === v.eventId);
                 if (!items.length) return null;
@@ -265,7 +297,9 @@ export default function ShopModal({
                 );
               })}
               <ul className="grid grid-cols-3 gap-2">
-                {ACCESSORY_CATALOG_TIENDA.filter((a) => !a.season || (!ventanas[a.season] && owned.has(a.id))).map(accessoryCard)}
+                {ACCESSORY_CATALOG_TIENDA.filter((a) =>
+                  a.drop ? owned.has(a.id) && !dropsActivos.some((d) => d.id === a.drop) : !a.season || (!ventanas[a.season] && owned.has(a.id))
+                ).map(accessoryCard)}
               </ul>
             </>
           )}
