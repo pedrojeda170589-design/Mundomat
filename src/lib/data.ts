@@ -22,6 +22,8 @@ import {
 import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
+import { CurriculoId, getCurriculoActivo } from "@/lib/curriculo";
+import { resolveDisplayNames } from "@/lib/studentNames";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import { OPEN_CLASSROOM_ID, isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
@@ -279,6 +281,29 @@ export function liteProgress(p: StudentProgress): StudentProgress {
   const { activityLog, activitySummary, roundsInProgress, ...rest } = p;
   const roundsResume = roundsInProgress ? resumenVueltas(p) : undefined;
   return { ...rest, activityLog: [], ...(roundsResume && Object.keys(roundsResume).length ? { roundsResume } : {}) };
+}
+
+// Progreso resumido para el panel docente y reportes (/admin, con withProgress=true).
+// Conserva métricas, resumen de actividad y las entradas recientes de activityLog
+// (para alertas tempranas y gráficos de evolución), pero descarta vueltas incompletas y
+// recorta el registro histórico no necesario para el panel.
+export function adminSummaryProgress(p: StudentProgress): StudentProgress {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { roundsInProgress, ...rest } = p;
+  const msInDay = 24 * 60 * 60 * 1000;
+  const cutoffMs = Date.now() - 60 * msInDay;
+  const rawLogs = p.activityLog ?? [];
+  const recentLogs = rawLogs.filter((log) => {
+    const rawDate = log.finishedAt || (log as { timestamp?: string }).timestamp;
+    const t = rawDate ? new Date(rawDate).getTime() : NaN;
+    return isNaN(t) || t >= cutoffMs;
+  });
+  const limitedLogs = recentLogs.length < 30 ? rawLogs.slice(-30) : recentLogs.slice(-100);
+
+  return {
+    ...rest,
+    activityLog: limitedLogs,
+  };
 }
 
 // Progreso de varios alumnos en una sola consulta.
@@ -600,12 +625,29 @@ export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {
 
 const CURRICULUM_VALIDATED_KEY = "curriculum_validated_worlds";
 
-export async function getValidatedCurriculumWorldIds(): Promise<number[]> {
-  return getJSON<number[]>(CURRICULUM_VALIDATED_KEY, []);
+export function curriculumValidatedKey(curriculo: CurriculoId | string = "santa-cruz"): string {
+  return `curriculumValidated:${curriculo}`;
 }
 
-export async function validateCurriculumWorld(worldId: number, validated = true): Promise<number[]> {
-  const current = await getValidatedCurriculumWorldIds();
+export async function getValidatedCurriculumWorldIds(curriculo?: CurriculoId | string): Promise<number[]> {
+  const c = (curriculo as CurriculoId) || getCurriculoActivo();
+  const key = curriculumValidatedKey(c);
+  const ids = await getJSON<number[] | null>(key, null);
+  if (ids !== null) return ids;
+  // Conservar las validaciones que ya existen para Santa Cruz
+  if (c === "santa-cruz") {
+    return getJSON<number[]>(CURRICULUM_VALIDATED_KEY, []);
+  }
+  return [];
+}
+
+export async function validateCurriculumWorld(
+  worldId: number,
+  validated = true,
+  curriculo?: CurriculoId | string
+): Promise<number[]> {
+  const c = (curriculo as CurriculoId) || getCurriculoActivo();
+  const current = await getValidatedCurriculumWorldIds(c);
   const set = new Set(current);
   if (validated) {
     set.add(worldId);
@@ -613,7 +655,10 @@ export async function validateCurriculumWorld(worldId: number, validated = true)
     set.delete(worldId);
   }
   const next = Array.from(set).sort((a, b) => a - b);
-  await setJSON(CURRICULUM_VALIDATED_KEY, next);
+  await setJSON(curriculumValidatedKey(c), next);
+  if (c === "santa-cruz") {
+    await setJSON(CURRICULUM_VALIDATED_KEY, next);
+  }
   return next;
 }
 
@@ -949,6 +994,7 @@ export async function getClassroomTorneoRanking(
   const satKey = weekendSaturdayKey(now);
   const allStudents = await getStudents();
   const classmates = classmatesOf(me, allStudents);
+  const resolvedNames = resolveDisplayNames(classmates);
 
   const progresses = await getProgressMany(classmates.map((c) => c.code));
   const progressMap = new Map<string, StudentProgress>(progresses.map((p) => [p.code, p]));
@@ -960,7 +1006,7 @@ export async function getClassroomTorneoRanking(
     const rec = p?.tablasTorneo?.[satKey]?.[tabla];
     if (rec && typeof rec.mejorMs === "number") {
       entries.push({
-        displayName: displayName(classmate, p),
+        displayName: displayName(classmate, p, resolvedNames.get(classmate.code)),
         mejorMs: rec.mejorMs,
         medalla: rec.medalla,
       });

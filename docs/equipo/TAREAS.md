@@ -25,7 +25,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
+| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
@@ -34,6 +34,54 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-15 · Seguimiento de AG-07 a AG-12: detalles menores (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **1. Nombres repetidos en competencia, fin de semana, novedades y torneo (`src/lib/news.ts`, `src/app/api/competition/route.ts`, `src/app/api/weekend/route.ts`, `src/app/api/world-attempt/route.ts`, `src/lib/data.ts`):**
+    - Se integró `resolveDisplayNames` en todas las rutas de actividad pública para resolver homónimos dinámicamente con la inicial del apellido (ej. «Santiago S.» y «Santiago R.»), idéntico al comportamiento del buzón.
+    - `newsForWorldProgress` ahora acepta `resolvedDisambiguation?: string` y la pasa a `displayName`.
+    - En `/api/competition`: se resolvió en invitaciones de duelo en vivo (~164), detalle de sala de duelo (~189), publicación de ganador/empate en pizarrón (~401), pantalla final de duelo (~418) y torneo semanal de memoria (~435).
+    - En `/api/weekend`: la publicación de finalización de aventura de fin de semana en el pizarrón resuelve los nombres con `resolveDisplayNames`.
+    - En `/api/world-attempt`: la publicación de mundos superados o completados en el pizarrón resuelve los nombres con `resolveDisplayNames`.
+    - En `getClassroomTorneoRanking` (`src/lib/data.ts`): el ranking de los 5 mejores tiempos del torneo de tablas resuelve los nombres con `resolveDisplayNames`.
+  - **2. Rendimiento del panel docente (`src/lib/data.ts`, `src/app/api/students/route.ts`):**
+    - Se implementó `adminSummaryProgress(p: StudentProgress)`: descarta `roundsInProgress` (árboles pesados de rondas incompletas) y recorta `activityLog` a los últimos 60 días (máximo 100 entradas o 30 si tiene pocas), conservando `activitySummary`, `activeDays`, `completedWorlds`, `tablasTorneo` y las métricas necesarias para las alertas tempranas y las series de evolución temporal.
+    - `GET /api/students?withProgress=true` ahora procesa cada progreso con `adminSummaryProgress`, aliviando significativamente el payload de red y el consumo de memoria en `/admin/dashboard` y `/admin/reporte/curso`.
+  - **3. Porcentaje de dominio centralizado (`src/lib/grades.ts`, `src/lib/courseSummary.ts`, `src/components/admin/CourseSummary.tsx`, `src/app/admin/dashboard/page.tsx`):**
+    - Se eliminó el 80/85/90 escrito a mano.
+    - `getMasteryThreshold(grade)` en `courseSummary.ts` delega en `getGrade(grade ?? DEFAULT_GRADE).masteryPct`.
+    - En `getStudentWorldSummary(student, progress, worldId)` se utiliza `masteryPctForWorld(worldId)`.
+    - En `src/components/admin/CourseSummary.tsx`: la leyenda del estado «Dominado» se genera dinámicamente mapeando `GRADES.map(g => ≥ ${g.masteryPct}% en ${g.grade}.º)`.
+    - En `src/app/admin/dashboard/page.tsx`: se reemplazaron los valores fijos por `getGrade(2).masteryPct` y `getGrade(selectedStudent.grade ?? 3).masteryPct`.
+  - **4. Cumplimiento de límites de planes en la plataforma (`src/app/docente/escuela/page.tsx`, `src/app/docente/aula/page.tsx`):**
+    - En `/docente/escuela`: la creación de aulas verifica `classrooms.length >= maxAulas` antes de invocar el RPC `create_classroom`.
+    - En `/docente/aula`: `EnrollTab` ahora recibe los datos de la escuela y el conteo de alumnos activos matriculados en toda la institución. Si `schoolStudentCount >= maxStudents` (35 en piloto_gratuito, 750 en escuela):
+      - Muestra un cartel de advertencia de cupo alcanzado con indicación cordial de consultar ampliación.
+      - Deshabilita los campos del formulario y el botón de inscripción.
+      - Bloquea el envío en el manejador `submit` con mensaje amable.
+    - **Propuesta de negocio para Pedro:** Establecer que las escuelas existentes en la base de datos queden configuradas con el plan `"escuela"` (25 aulas, 750 alumnos, 40 docentes) en lugar de `"piloto_gratuito"`, para que mantengan todas las funcionalidades habilitadas sin requerir mutación directa de datos en esta tarea.
+  - **5. Separación del almacenamiento de validaciones curriculares (`src/lib/data.ts`, `scripts/test-curriculo.ts`):**
+    - `getValidatedCurriculumWorldIds(curriculo)` y `validateCurriculumWorld(worldId, validated, curriculo)` ahora guardan bajo la clave `curriculumValidated:${curriculo}` (`santa-cruz` o `nap`).
+    - Para Santa Cruz (`santa-cruz`), se mantiene retrocompatibilidad total leyendo y sincronizando con la clave histórica `curriculum_validated_worlds`.
+    - Validar o desvalidar un mundo en Santa Cruz no altera el estado de ese mundo en NAP, y viceversa.
+    - Se respetó estrictamente la restricción de **no tocar** `src/app/api/curriculum/route.ts`.
+
+- **2. Cómo se probó:**
+  - `scripts/test-curriculo.ts`: se agregaron pruebas específicas para verificar la independencia de validaciones entre Santa Cruz y NAP y la persistencia de la clave histórica. Pasó 100%.
+  - `scripts/test-privacidad.ts`: pasó 100% (resolución de homónimos, apodos y aislamiento).
+  - `scripts/test-actividad.ts`: pasó 100% (evolución temporal de 6 y 8 semanas, alertas tempranas).
+  - `scripts/test-planes.ts`: pasó 100% (verificación de límites y excepciones).
+  - `scripts/test-resumen.ts`: pasó 100% (umbrales de dominio por grado, métricas del aula).
+  - `scripts/test-torneo.ts`: pasó 100% (tiempos, medallas, ranking).
+  - `scripts/test-reportes.ts`: pasó 100% (reportes individuales y CSV).
+  - `scripts/test-simulation.ts`: 38.840 actividades simuladas sin errores (0 regresiones).
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 advertencias o errores.
+  - `npm run build`: compilación de producción de Next.js exitosa para las 41 rutas.
+
+- **3. Decisiones pendientes para Pedro:**
+  - **Configuración de escuelas existentes:** Aprobar la propuesta de que las escuelas preexistentes en la plataforma pasen al plan `"escuela"` (para que cuenten con panel directivo, reportes consolidados y límite de 750 alumnos en vez de los 35 del piloto gratuito).
+  - **Valores provisorios de límites de planes:** Revisar si los límites provisorios definidos en `src/lib/planes.ts` (Piloto: 2 aulas / 35 alumnos / 2 docentes; Escuela: 25 aulas / 750 alumnos / 40 docentes) se ajustan a las necesidades de los convenios escolares.
 
 ### AG-14 · Torneo de velocidad con las tablas (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

@@ -104,9 +104,10 @@ export async function clearNews(): Promise<void> {
 export function newsForWorldProgress(
   student: Student,
   before: StudentProgress,
-  after: StudentProgress
+  after: StudentProgress,
+  resolvedDisambiguation?: string
 ): Omit<NewsItem, "id" | "at">[] {
-  const who = displayName(student, after);
+  const who = displayName(student, after, resolvedDisambiguation);
   const out: Omit<NewsItem, "id" | "at">[] = [];
   const newly = after.completedWorlds.filter((id) => !before.completedWorlds.includes(id));
   for (const id of newly) {

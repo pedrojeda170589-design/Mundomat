@@ -397,12 +397,16 @@ export default function SchoolPage() {
             currentCount={classrooms.length}
             maxAllowed={maxAulas}
             planName={planDef.name}
-            onCreate={(g, d, y) =>
+            onCreate={(g, d, y) => {
+              if (classrooms.length >= maxAulas) {
+                alert(`Tu escuela alcanzó el cupo máximo de ${maxAulas} aulas del ${planDef.name}. Para agregar más divisiones, consultá por la ampliación al Plan Escuela o Distrito.`);
+                return;
+              }
               act(
                 () => platform().rpc("create_classroom", { p_school: school.id, p_grade: g, p_division: d, p_year: y }),
                 "Aula creada."
-              )
-            }
+              );
+            }}
           />
 
           {/* 5. Aulas por ciclo */}

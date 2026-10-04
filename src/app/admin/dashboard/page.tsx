@@ -14,6 +14,7 @@ import TorneoReport from "@/components/admin/TorneoReport";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+import { getGrade } from "@/lib/grades";
 
 import CourseSummary from "@/components/admin/CourseSummary";
 import NewsAdmin from "@/components/admin/NewsAdmin";
@@ -546,7 +547,7 @@ export default function AdminDashboardPage() {
         {tab === "mundos" && worldsGrade === 2 && (
           <div className="flex flex-col gap-8">
             <p className="text-amber-950/80 text-sm parchment-panel rounded-xl p-3">
-              En 2.º los mundos se abren con 60% en el mundo anterior y maestría al 85%. Acá elegís cuáles están disponibles para tus alumnos de 2.º (por defecto, todos).
+              En 2.º los mundos se abren con 60% en el mundo anterior y maestría al {getGrade(2).masteryPct}%. Acá elegís cuáles están disponibles para tus alumnos de 2.º (por defecto, todos).
             </p>
             {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
               const ws = GRADE2_WORLDS.filter((w) => w.subject === subject);
@@ -813,7 +814,7 @@ export default function AdminDashboardPage() {
                       🌱 Mundos jugados con bajo desempeño
                     </p>
                     <p className="text-xs text-orange-900/70 mb-1">
-                      Mundos que el alumno ya jugó pero todavía no llegó al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%. Conviene repasarlos.
+                      Mundos que el alumno ya jugó pero todavía no llegó al {getGrade(selectedStudent.grade ?? 3).masteryPct}%. Conviene repasarlos.
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsNeedingTeacherReview

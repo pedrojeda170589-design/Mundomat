@@ -83,18 +83,36 @@ async function runTests() {
   }
   console.log("✓ Todos los campos en JSON tienen strictly validado: false por defecto.");
 
-  // 5. Verificar persistencia de validación en store (sin mutar los JSONs)
+  // 5. Verificar persistencia de validación en store (sin mutar los JSONs) y separación por currículo (AG-15)
   const testWorldId = 999999;
   const initialValidations = await getValidatedCurriculumWorldIds();
-  await validateCurriculumWorld(testWorldId, true);
-  const afterValidation = await getValidatedCurriculumWorldIds();
-  assert(afterValidation.includes(testWorldId), "El mundo de prueba debe estar validado en el store");
+  await validateCurriculumWorld(testWorldId, true, "santa-cruz");
+  const afterValidation = await getValidatedCurriculumWorldIds("santa-cruz");
+  assert(afterValidation.includes(testWorldId), "El mundo de prueba debe estar validado en Santa Cruz");
 
-  // Limpiar el mundo de prueba
-  await validateCurriculumWorld(testWorldId, false);
-  const afterCleanup = await getValidatedCurriculumWorldIds();
-  assert(!afterCleanup.includes(testWorldId), "El mundo de prueba debe haberse desvalidado");
-  console.log("✓ Flujo de validación en store verificado correctamente.");
+  // Verificar que NO se haya validado automáticamente para NAP
+  const napValidations = await getValidatedCurriculumWorldIds("nap");
+  assert(!napValidations.includes(testWorldId), "El mundo de prueba NO debe estar validado en NAP tras validar en Santa Cruz");
+
+  // Validar en NAP
+  await validateCurriculumWorld(testWorldId, true, "nap");
+  const napValidationsAfter = await getValidatedCurriculumWorldIds("nap");
+  assert(napValidationsAfter.includes(testWorldId), "El mundo de prueba debe estar validado en NAP");
+
+  // Limpiar Santa Cruz
+  await validateCurriculumWorld(testWorldId, false, "santa-cruz");
+  const scAfterCleanup = await getValidatedCurriculumWorldIds("santa-cruz");
+  assert(!scAfterCleanup.includes(testWorldId), "El mundo de prueba debe haberse desvalidado de Santa Cruz");
+
+  // NAP debe seguir validado
+  const napStillValid = await getValidatedCurriculumWorldIds("nap");
+  assert(napStillValid.includes(testWorldId), "El mundo de prueba debe seguir validado en NAP");
+
+  // Limpiar NAP
+  await validateCurriculumWorld(testWorldId, false, "nap");
+  const napCleaned = await getValidatedCurriculumWorldIds("nap");
+  assert(!napCleaned.includes(testWorldId), "El mundo de prueba debe haberse desvalidado de NAP");
+  console.log("✓ Flujo de validación en store y separación por currículo (Santa Cruz / NAP) verificado correctamente.");
 
   // 6. Cambio de currículo activo
   setCurriculoActivo("nap");

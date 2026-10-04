@@ -4,6 +4,8 @@ import {
   findStudentByCode,
   getProgress,
   getTodayWeekendRecord,
+  classmatesOf,
+  getStudents,
 } from "@/lib/data";
 import {
   computeNextStreak,
@@ -20,6 +22,7 @@ import {
 import { WEEKEND_REWARD_IDS } from "@/types";
 import { addNews, displayName } from "@/lib/news";
 import { isTrialExpired } from "@/lib/openClassroomShared";
+import { resolveDisplayNames } from "@/lib/studentNames";
 
 import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 
@@ -114,7 +117,11 @@ export async function POST(request: NextRequest) {
     );
   }
   if (result.record.finished) {
-    const who = displayName(student, result.progress);
+    const classmates = student.classroomId
+      ? classmatesOf(student, await getStudents())
+      : [student];
+    const resolvedNames = resolveDisplayNames(classmates.length ? classmates : [student]);
+    const who = displayName(student, result.progress, resolvedNames.get(student.code));
     const items: Parameters<typeof addNews>[0] = [
       { code: student.code, who, kind: "finde", emoji: "🃏", text: `completó la Aventura de fin de semana con ${result.record.points} puntos` },
     ];

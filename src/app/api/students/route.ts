@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { addStudent, deleteStudent, getProgressMany, getStudents, setMultipleStudentDisplayNames, setStudentBirthday, setStudentDisplayName, setStudentGrade } from "@/lib/data";
+import { addStudent, deleteStudent, getProgressMany, getStudents, setMultipleStudentDisplayNames, setStudentBirthday, setStudentDisplayName, setStudentGrade, adminSummaryProgress } from "@/lib/data";
 import { StudentProgress } from "@/types";
 import { GRADES } from "@/lib/grades";
 import { checkAdminPassword } from "@/lib/auth";
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const progressList = await getProgressMany(students.map((s) => s.code));
     const progressMap: Record<string, StudentProgress> = {};
     for (const p of progressList) {
-      progressMap[p.code] = p;
+      progressMap[p.code] = adminSummaryProgress(p);
     }
     return Response.json({ students, progressMap });
   }
