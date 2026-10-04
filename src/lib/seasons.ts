@@ -188,6 +188,15 @@ export const SEASONAL_EVENTS: SeasonalEvent[] = [
     },
   },
   {
+    id: "aniversario",
+    label: "Cumpleaños de la Escuela",
+    emoji: "🏫",
+    kind: "festividad",
+    description: "¡Feliz cumpleaños a nuestra Escuela Hogar N.º 2 «Héroes de Malvinas»! Tu avatar festeja con el gorrito celeste y blanco.",
+    // 4 de octubre, y toda esa semana para que lo reciban también en clase.
+    isActive: (d) => inRange(d, 1004, 1010),
+  },
+  {
     id: "halloween",
     label: "Halloween",
     emoji: "🎃",

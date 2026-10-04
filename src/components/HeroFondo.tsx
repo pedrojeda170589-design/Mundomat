@@ -2,6 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { getMoonPhase } from "@/lib/skyTheme";
+import { isEventActiveNow } from "@/lib/seasons";
+
+// ¿Es la semana del cumpleaños de la Escuela? (se mira en el navegador)
+export function useAniversario(): boolean {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setOn(isEventActiveNow("aniversario")), 0);
+    return () => clearTimeout(t);
+  }, []);
+  return on;
+}
 
 // Fondo ilustrado de la portada y del ingreso, que se ve COMPLETO en
 // cualquier pantalla (antes, en el celular, «cover» recortaba la lámina y
@@ -17,7 +28,9 @@ const ALTO = 941;
 const LUNA = { x: 1503, y: 149, r: 63 };
 
 export default function HeroFondo({ period }: { period: "day" | "night" }) {
-  const src = period === "day" ? "/theme/hero-landscape-day.jpg" : "/theme/hero-landscape-night.jpg";
+  // En el cumpleaños de la Escuela, la portada es la escuela de fiesta.
+  const fiesta = useAniversario();
+  const src = fiesta ? "/theme/hero-aniversario.jpg" : period === "day" ? "/theme/hero-landscape-day.jpg" : "/theme/hero-landscape-night.jpg";
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden z-0">
       <div
@@ -28,7 +41,7 @@ export default function HeroFondo({ period }: { period: "day" | "night" }) {
       <div className="hero-marco">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt="" className="absolute inset-0 w-full h-full object-contain" />
-        {period === "night" && <SombraLunar />}
+        {period === "night" && !fiesta && <SombraLunar />}
       </div>
     </div>
   );
