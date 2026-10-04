@@ -21,7 +21,7 @@ import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
-import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
+import { OPEN_CLASSROOM_ID, isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { isEventActiveNow } from "@/lib/seasons";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
 import { grade1HasContent } from "@/lib/grade1/content";
@@ -95,7 +95,8 @@ function seedRoster(): Student[] {
 export async function addStudent(
   name: string,
   type: StudentType = "agregado",
-  grade?: number
+  grade?: number,
+  displayName?: string
 ): Promise<Student> {
   const students = await getStudents();
   const existingCodes = new Set(students.map((s) => s.code));
@@ -105,6 +106,7 @@ export async function addStudent(
     name,
     type,
     createdAt: new Date().toISOString(),
+    ...(displayName?.trim() ? { displayName: displayName.trim() } : {}),
     ...(grade && grade !== DEFAULT_GRADE ? { grade } : {}),
   };
   const updated = [...students, student];
@@ -133,6 +135,52 @@ export async function setStudentBirthday(
   await setJSON(STUDENTS_KEY, updated);
   classSnapshotCache = null;
   return true;
+}
+
+export async function setStudentDisplayName(
+  code: string,
+  displayName: string | undefined
+): Promise<boolean> {
+  const students = await getStudents();
+  const idx = students.findIndex((s) => s.code.toUpperCase() === code.toUpperCase());
+  if (idx === -1) return false;
+  const updated = [...students];
+  const trimmed = displayName?.trim();
+  if (trimmed) {
+    updated[idx] = { ...updated[idx], displayName: trimmed };
+  } else {
+    const copy = { ...updated[idx] };
+    delete copy.displayName;
+    updated[idx] = copy;
+  }
+  await setJSON(STUDENTS_KEY, updated);
+  classSnapshotCache = null;
+  return true;
+}
+
+export async function setMultipleStudentDisplayNames(
+  entries: Array<{ code: string; displayName?: string }>
+): Promise<number> {
+  const students = await getStudents();
+  const map = new Map(entries.map((e) => [e.code.toUpperCase(), e.displayName?.trim()]));
+  let changed = 0;
+  const updated = students.map((s) => {
+    const code = s.code.toUpperCase();
+    if (map.has(code)) {
+      changed++;
+      const val = map.get(code);
+      const copy = { ...s };
+      if (val) copy.displayName = val;
+      else delete copy.displayName;
+      return copy;
+    }
+    return s;
+  });
+  if (changed > 0) {
+    await setJSON(STUDENTS_KEY, updated);
+    classSnapshotCache = null;
+  }
+  return changed;
 }
 
 export async function findStudentByCode(
@@ -187,8 +235,12 @@ export async function syncStudentWithPlatform(code: string): Promise<Student | u
 }
 
 // Compañeros de aula: los alumnos con la misma aula actual (los del aula
-// piloto no tienen aula asignada y siguen juntos como siempre).
+// piloto no tienen aula asignada y siguen juntos como siempre). Los del aula
+// abierta de prueba pública no son compañeros entre sí (familias independientes).
 export function sameClassroom(a: Student, b: Student): boolean {
+  if (isOpenClassroomStudent(a) || isOpenClassroomStudent(b)) {
+    return false;
+  }
   return (a.classroomId ?? null) === (b.classroomId ?? null);
 }
 

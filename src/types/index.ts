@@ -5,6 +5,8 @@ export type StudentType = "aula" | "agregado" | "prueba";
 export interface Student {
   code: string;
   name: string;
+  // Nombre para mostrar en el juego (confirmado por el docente para proteger la privacidad).
+  displayName?: string;
   type: StudentType;
   createdAt: string;
   // Fecha de nacimiento "AAAA-MM-DD" (los cargados antes: "MM-DD", sin año).

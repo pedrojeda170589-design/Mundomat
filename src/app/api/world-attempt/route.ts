@@ -10,11 +10,22 @@ import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShare
 import { endTrialNow, isTrialWorldBlocked, trialAllSubjectsDone } from "@/lib/openClassroom";
 import { getEnabledWorldIdsFor } from "@/lib/data";
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+
 // POST: el alumno terminó una vuelta completa de un mundo (las 10
 // actividades respondidas). Acá se decide, según el sistema de refuerzo del
 // 90%, si el mundo queda completado, "a un repaso de completar" o "a
 // fortalecer" (a tratar por el docente).
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const body = await request.json();
   const { code, worldId, correctCount, totalActivities, clientId, mistakes } = body as {
     clientId?: string;
@@ -31,6 +42,7 @@ export async function POST(request: NextRequest) {
 
   const student = await findStudentByCode(code);
   if (!student) {
+    await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(student)) {

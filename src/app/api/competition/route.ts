@@ -46,8 +46,12 @@ function newId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 }
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+import { resolveDisplayNames } from "@/lib/studentNames";
+
 // `students` = compañeros de la misma aula (todos comparten sus mundos).
 async function playersInfo(students: Student[]) {
+  const resolvedNames = resolveDisplayNames(students);
   const [presence, enabledWorldIds, snapshot] = await Promise.all([
     getPresenceMap(students.map((s) => s.code)),
     getEnabledWorldIdsFor(students[0]),
@@ -63,7 +67,7 @@ async function playersInfo(students: Student[]) {
     const pending = worlds.enabledWorldIds.filter((id) => !p.completedWorlds.includes(id)).length;
     map.set(s.code, {
       code: s.code,
-      name: displayName(s, p),
+      name: displayName(s, p, resolvedNames.get(s.code)),
       avatar: p.avatar,
       accessories: p.avatarAccessories,
       background: p.avatarBackground,
@@ -122,10 +126,22 @@ export async function GET(request: NextRequest) {
     return Response.json({ config: await getCompetitionConfig() });
   }
 
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const code = searchParams.get("code");
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
-  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  if (!me) {
+    await recordFailedCodeAttempt(ip);
+    return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
   // En el aula abierta de prueba no hay duelos entre desconocidos.
   const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
   const canPlayToday = config.enabled && (config.anyDay || isWeekendNow());
@@ -236,10 +252,22 @@ export async function POST(request: NextRequest) {
     return Response.json({ ok: true, config: next });
   }
 
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const { code, action } = body as { code?: string; action?: string };
   if (!code) return Response.json({ error: "Falta el código." }, { status: 400 });
   const me = await findStudentByCode(code);
-  if (!me) return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  if (!me) {
+    await recordFailedCodeAttempt(ip);
+    return Response.json({ error: "Código no encontrado." }, { status: 404 });
+  }
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
   if (!config.enabled) return Response.json({ error: "La competencia está apagada por el docente." }, { status: 403 });

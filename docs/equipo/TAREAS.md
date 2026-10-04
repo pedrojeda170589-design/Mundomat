@@ -15,7 +15,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
-| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
@@ -25,6 +25,46 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-07 · Privacidad de menores: nombre visible, datos sensibles y límite de intentos (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Nombre para mostrar y desambiguación (`src/lib/studentNames.ts`, `src/types/index.ts`):**
+    - Se agregó el campo opcional `displayName?: string` a la interfaz `Student`.
+    - Se implementó `proposeDisplayName(fullName)`: deduce el nombre de pila contemplando partículas compuestas («De Urquiza Iñaki» → «Iñaki», «Garcia Maite» → «Maite», «Lorenzo Daniel Perez Veron» → «Lorenzo»).
+    - Se implementó `resolveDisplayNames(students)`: calcula al vuelo la desambiguación con inicial de apellido si hay colisiones en el mismo curso (ej. «Santiago S.» y «Santiago R.»; «Agustina A.» y «Agustina R.»). No pisa ni altera el valor original almacenado.
+  - **Privacidad en todas las vistas y APIs de alumnos:**
+    - `src/lib/news.ts`: `displayName()` nunca devuelve el nombre completo ni apellido. Usa el apodo de juego si existe, luego el `displayName` confirmado o la propuesta segura.
+    - `/api/messages`, `/api/news`, `/api/competition`: emplean `resolveDisplayNames` y filtran el objeto compañero para no exponer apellidos completos ni datos sensibles (`name` contiene solo el nombre visible resuelto; en `/api/news`, `age: null` para no revelar la edad/año a compañeros).
+    - `/api/progress`: en modo `lite=1` (usado por el cliente del alumno) anonimiza el nombre completo devolviendo solo el `displayName` o propuesta.
+    - `src/components/NewsBoard.tsx`: eliminado el renderizado de la edad `(age)`. Solo muestra «🎂 {name} cumple años hoy. ¡Saludalo!».
+  - **Gestión docente y migración de existentes:**
+    - `src/app/admin/dashboard/page.tsx`:
+      - Formulario de alta con campo de «Visible:» auto-propuesto y editable.
+      - Cartel interactivo de migración «Confirmá cómo se muestra el nombre de cada alumno» para revisar y confirmar en lote los nombres propuestos de alumnos existentes vía `PATCH /api/students` (`updates: [...]`).
+    - `src/components/admin/StudentBlock.tsx`: editor en línea de `displayName` para cada alumno. Corrección del selector de fecha: eliminado el valor hardcodeado `2018-` que anteponía el año 2018 a fechas `MM-DD`.
+    - `src/app/docente/aula/page.tsx`: formulario de inscripción con propuesta y edición de `nickname` (columna nativa de Supabase).
+    - `src/app/docente/alumno/page.tsx`: detalle del alumno con visualización y edición en vivo del nombre visible en el juego.
+  - **Control de intentos y rate limiting (`src/lib/rateLimit.ts`):**
+    - Sistema de rate limiting por IP: máximo 8 intentos fallidos de código en una ventana de 10 minutos. Al 8.º fallo, la IP queda bloqueada por 10 minutos con mensaje amable («Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.»).
+    - Integrado en `/api/progress`, `/api/messages`, `/api/competition`, `/api/world-attempt`, `/api/worlds` y `/api/weekend`.
+  - **Aislamiento de aulas y aula abierta (`src/lib/data.ts`):**
+    - `sameClassroom(a, b)`: garantiza que los alumnos del aula abierta pública (`OPEN_CLASSROOM_ID`) nunca sean considerados compañeros entre sí ni de otras aulas, asegurando aislamiento total entre familias independientes.
+  - **Script de limpieza de fechas (`scripts/privacidad/limpiar-fechas.ts`):**
+    - Inspecciona el store, reporta fechas anómalas (como `2018-10-04` o fechas idénticas repetidas en ≥3 alumnos) y permite limpiarlas con `--aplicar`.
+
+- **2. Cómo se probó:**
+  - `scripts/test-privacidad.ts`: suite completa de 5 bloques probando `proposeDisplayName`, resolución de duplicados con iniciales de apellido, anonimización en `displayName()`, bloqueo de IP al 8.º intento fallido con reset, y aislamiento de `sameClassroom`.
+  - `scripts/privacidad/limpiar-fechas.ts`: ejecutado en simulación sobre los 22 alumnos reales del aula piloto.
+  - `npx tsx scripts/test-dictado.ts`: 100% aprobado.
+  - `npx tsx scripts/test-cuentos.ts`: 100% aprobado.
+  - `npx tsx scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción Next.js 16.3.5 Turbopack exitosa.
+
+- **3. Decisiones pendientes para que revise Pedro:**
+  - **¿Fecha completa o solo día y mes?:** Actualmente el sistema tolera tanto `AAAA-MM-DD` como `MM-DD`. En las vistas de alumnos ya no se expone el año ni la edad (solo «🎂 hoy cumple años»). Queda a decisión de Pedro si prefiere que el docente cargue únicamente día y mes (`MM-DD`) en el formulario para no almacenar el año de nacimiento de los menores.
+  - **Texto del aviso de confirmación de nombres:** Se implementó «Confirmá cómo se muestra el nombre de cada alumno» con explicación de privacidad. Pedro puede ajustar la redacción final si prefiere otro tono.
 
 ### AG-06 · Textos más largos por grado y dictados de números y palabras (Antigravity)
 - **Parte A: Textos más largos por grado:**

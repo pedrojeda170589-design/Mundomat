@@ -23,12 +23,19 @@ export interface NewsItem {
   text: string; // "completó La Aldea de los Números"
 }
 
-export function displayName(student: Student, progress?: StudentProgress): string {
+import { proposeDisplayName } from "@/lib/studentNames";
+
+export function displayName(
+  student: Student,
+  progress?: StudentProgress,
+  resolvedDisambiguation?: string
+): string {
   const nick = progress?.nickname?.trim();
   if (nick) return nick;
-  // Sin apodo: el nombre como lo cargó el docente (en la lista del aula a
-  // veces va primero el apellido, así que no se recorta).
-  return student.name.trim() || "Un compañero";
+  if (resolvedDisambiguation) return resolvedDisambiguation;
+  // Sin apodo: se muestra el nombre para mostrar configurado por el docente,
+  // o la propuesta segura (nunca el apellido completo por privacidad).
+  return student.displayName?.trim() || proposeDisplayName(student.name) || "Un compañero";
 }
 
 // Cada aula tiene su pizarrón (el aula piloto usa el de siempre).

@@ -157,8 +157,7 @@ export default function NewsBoard({ code }: { code: string }) {
                     </>
                   ) : (
                     <>
-                      🎂 <b className="text-yellow-200">{b.name}</b> cumple años hoy
-                      {b.age ? ` (${b.age})` : ""}. ¡Saludalo!
+                      🎂 <b className="text-yellow-200">{b.name}</b> cumple años hoy. ¡Saludalo!
                       {b.greetings > 0 && (
                         <span className="block text-white/80 text-xs">
                           Ya {b.greetings === 1 ? "lo saludó 1 compañero" : `lo saludaron ${b.greetings} compañeros`}

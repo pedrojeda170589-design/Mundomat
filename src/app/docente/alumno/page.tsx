@@ -18,6 +18,7 @@ import {
 import { getWorld } from "@/lib/worlds";
 import SkillReportByCode from "@/components/admin/SkillReportByCode";
 import DictationReportByCode from "@/components/admin/DictationReportByCode";
+import { proposeDisplayName } from "@/lib/studentNames";
 import { AvatarAccessories } from "@/types";
 
 interface Student {
@@ -83,7 +84,24 @@ export default function StudentRecordPage() {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [achievements, setAchievements] = useState<{ kind: string; code: string; school_year: number | null }[]>([]);
   const [teachers, setTeachers] = useState<string[]>([]);
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nickVal, setNickVal] = useState("");
+  const [savingNick, setSavingNick] = useState(false);
   const [error, setError] = useState<unknown>(null);
+
+  async function saveNickname() {
+    if (!student) return;
+    setSavingNick(true);
+    try {
+      const sb = platform();
+      const clean = nickVal.trim() || null;
+      await sb.from("students").update({ nickname: clean }).eq("id", student.id);
+      setStudent({ ...student, nickname: clean });
+      setEditingNickname(false);
+    } finally {
+      setSavingNick(false);
+    }
+  }
 
   useEffect(() => {
     if (state === "anon") router.replace("/docente");
@@ -181,7 +199,48 @@ export default function StudentRecordPage() {
             />
             <div className="min-w-0 text-sm">
               <p className="text-xl font-black">{student.full_name}</p>
-              {student.nickname && <p>Apodo en el juego: {student.nickname}</p>}
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-xs text-amber-900/80 font-bold">Nombre visible:</span>
+                {editingNickname ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      value={nickVal}
+                      onChange={(e) => setNickVal(e.target.value)}
+                      placeholder={proposeDisplayName(student.full_name)}
+                      className="rounded border border-amber-700/40 bg-white px-2 py-0.5 text-xs font-bold"
+                    />
+                    <button
+                      onClick={saveNickname}
+                      disabled={savingNick}
+                      className="rounded bg-emerald-600 px-2 py-0.5 text-xs text-white font-bold disabled:opacity-50"
+                    >
+                      {savingNick ? "…" : "Guardar"}
+                    </button>
+                    <button
+                      onClick={() => setEditingNickname(false)}
+                      className="rounded bg-slate-200 px-2 py-0.5 text-xs text-slate-700"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <span className="font-bold text-amber-950">
+                      {student.nickname || proposeDisplayName(student.full_name)}
+                    </span>
+                    {!student.nickname && <span className="text-xs text-amber-600 italic">(propuesta)</span>}
+                    <button
+                      onClick={() => {
+                        setNickVal(student.nickname || proposeDisplayName(student.full_name));
+                        setEditingNickname(true);
+                      }}
+                      className="text-xs text-amber-700 hover:underline ml-1"
+                    >
+                      ✏️ Editar
+                    </button>
+                  </div>
+                )}
+              </div>
               {current ? (
                 <p>
                   <b>{current.classroom_name}</b> · Ciclo {current.school_year} · {current.school_name}

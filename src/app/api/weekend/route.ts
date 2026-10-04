@@ -21,17 +21,30 @@ import { WEEKEND_REWARD_IDS } from "@/types";
 import { addNews, displayName } from "@/lib/news";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 
+import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
+
 // GET: plan de la Aventura de fin de semana de hoy (10 actividades, iguales
 // para todos los alumnos ese día) y el avance del alumno. Entre semana
 // devuelve available: false y la racha vigente.
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   if (!code) {
     return Response.json({ error: "Falta el código." }, { status: 400 });
   }
+
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const student = await findStudentByCode(code);
   if (!student) {
+    await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   const progress = await getProgress(student.code);
@@ -64,6 +77,15 @@ export async function GET(request: NextRequest) {
 // POST: el alumno resolvió la actividad `activityIndex` con `errors`
 // intentos equivocados.
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rateLimit = await checkCodeRateLimit(ip);
+  if (rateLimit.blocked) {
+    return Response.json(
+      { error: "Demasiados intentos fallidos. Esperá unos minutos y probá de nuevo.", blocked: true },
+      { status: 429 }
+    );
+  }
+
   const { code, activityIndex, errors } = (await request.json()) as {
     code?: string;
     activityIndex?: number;
@@ -74,6 +96,7 @@ export async function POST(request: NextRequest) {
   }
   const student = await findStudentByCode(code);
   if (!student) {
+    await recordFailedCodeAttempt(ip);
     return Response.json({ error: "Código no encontrado." }, { status: 404 });
   }
   if (isTrialExpired(student)) {

@@ -20,6 +20,7 @@ import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
 import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
+import { proposeDisplayName } from "@/lib/studentNames";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -28,6 +29,10 @@ export default function AdminDashboardPage() {
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [displayNameTouched, setDisplayNameTouched] = useState(false);
+  const [confirmingNames, setConfirmingNames] = useState(false);
+  const [proposedEdits, setProposedEdits] = useState<Record<string, string>>({});
   const [newGrade, setNewGrade] = useState(3);
   // Pestaña de mundos: grado que se está configurando y sus mundos habilitados.
   const [worldsGrade, setWorldsGrade] = useState(3);
@@ -84,6 +89,7 @@ export default function AdminDashboardPage() {
   );
   const primero = useMemo(() => students.filter((s) => s.grade === 1), [students]);
   const segundo = useMemo(() => students.filter((s) => s.grade === 2), [students]);
+  const unconfirmedStudents = useMemo(() => students.filter((s) => !s.displayName), [students]);
 
   async function handleAddStudent(e: React.FormEvent) {
     e.preventDefault();
@@ -93,15 +99,48 @@ export default function AdminDashboardPage() {
       const res = await fetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newName.trim(), adminPassword, grade: newGrade }),
+        body: JSON.stringify({
+          name: newName.trim(),
+          displayName: (newDisplayName.trim() || proposeDisplayName(newName.trim())) || undefined,
+          adminPassword,
+          grade: newGrade,
+        }),
       });
       const data = await res.json();
       if (data.student) {
         setStudents((prev) => [...prev, data.student]);
         setNewName("");
+        setNewDisplayName("");
+        setDisplayNameTouched(false);
       }
     } finally {
       setAdding(false);
+    }
+  }
+
+  async function handleConfirmAllProposed() {
+    if (!adminPassword || unconfirmedStudents.length === 0) return;
+    setConfirmingNames(true);
+    try {
+      const updates = unconfirmedStudents.map((s) => ({
+        code: s.code,
+        displayName: proposedEdits[s.code]?.trim() || proposeDisplayName(s.name),
+      }));
+      const res = await fetch("/api/students", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updates, adminPassword }),
+      });
+      if (res.ok) {
+        setStudents((prev) =>
+          prev.map((s) => {
+            const upd = updates.find((u) => u.code === s.code);
+            return upd ? { ...s, displayName: upd.displayName } : s;
+          })
+        );
+      }
+    } finally {
+      setConfirmingNames(false);
     }
   }
 
@@ -239,16 +278,70 @@ export default function AdminDashboardPage() {
 
         {tab === "alumnos" && (
           <div className="flex flex-col gap-4">
+            {unconfirmedStudents.length > 0 && (
+              <div className="rounded-2xl border-2 border-amber-600 bg-amber-50 p-4 shadow-sm flex flex-col gap-3">
+                <div className="flex items-start justify-between gap-2 flex-wrap">
+                  <div>
+                    <h4 className="font-bold text-amber-950 text-base flex items-center gap-2">
+                      <span>🔒</span> Confirmá cómo se muestra el nombre de cada alumno
+                    </h4>
+                    <p className="text-xs text-amber-900/80 mt-1">
+                      Por privacidad de menores, sus compañeros solo ven este nombre (nunca el apellido completo ni datos sensibles). Revisá las propuestas sugeridas y confirmá:
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleConfirmAllProposed}
+                    disabled={confirmingNames}
+                    className="shrink-0 rounded-xl bg-emerald-600 text-white font-bold px-4 py-2 text-sm shadow hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    {confirmingNames ? "Guardando…" : `✅ Confirmar todos (${unconfirmedStudents.length})`}
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-1">
+                  {unconfirmedStudents.map((s) => (
+                    <div key={s.code} className="flex items-center justify-between gap-2 rounded-xl bg-white/80 p-2 border border-amber-700/20 text-xs">
+                      <span className="font-medium text-amber-950 truncate flex-1" title={s.name}>{s.name}</span>
+                      <span className="text-amber-800/40">→</span>
+                      <input
+                        value={proposedEdits[s.code] ?? proposeDisplayName(s.name)}
+                        onChange={(e) => setProposedEdits((prev) => ({ ...prev, [s.code]: e.target.value }))}
+                        className="w-28 rounded border border-amber-700/30 px-1.5 py-0.5 font-bold text-amber-950 bg-white"
+                        title="Nombre para mostrar"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <form
               onSubmit={handleAddStudent}
-              className="parchment-panel flex gap-2 rounded-2xl p-3"
+              className="parchment-panel flex flex-col sm:flex-row gap-2 rounded-2xl p-3"
             >
               <input
                 value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Nombre del nuevo estudiante"
+                onChange={(e) => {
+                  setNewName(e.target.value);
+                  if (!displayNameTouched) {
+                    setNewDisplayName(proposeDisplayName(e.target.value));
+                  }
+                }}
+                placeholder="Nombre completo del estudiante"
                 className="flex-1 min-w-0 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-2 text-amber-950 outline-none focus:border-amber-500 placeholder:text-amber-800/40"
               />
+              <div className="flex items-center gap-1.5 rounded-xl bg-white/70 border-2 border-amber-700/30 px-3 py-1 text-xs">
+                <span className="text-amber-950/70 font-semibold shrink-0">Visible:</span>
+                <input
+                  value={newDisplayName}
+                  onChange={(e) => {
+                    setDisplayNameTouched(true);
+                    setNewDisplayName(e.target.value);
+                  }}
+                  placeholder="Nombre para mostrar"
+                  className="w-32 bg-transparent text-amber-950 font-bold outline-none"
+                  title="Nombre que ven sus compañeros en el juego"
+                />
+              </div>
               <select
                 value={newGrade}
                 onChange={(e) => setNewGrade(Number(e.target.value))}
@@ -275,6 +368,7 @@ export default function AdminDashboardPage() {
               adminPassword={adminPassword}
               onDeleted={handleDeleted}
               onViewStats={handleViewStats}
+              onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
               selectedCode={selectedCode}
             />
             <StudentBlock
@@ -284,6 +378,7 @@ export default function AdminDashboardPage() {
               adminPassword={adminPassword}
               onDeleted={handleDeleted}
               onViewStats={handleViewStats}
+              onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
               selectedCode={selectedCode}
             />
             {segundo.length > 0 && (
@@ -294,17 +389,19 @@ export default function AdminDashboardPage() {
                 adminPassword={adminPassword}
                 onDeleted={handleDeleted}
                 onViewStats={handleViewStats}
+                onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
                 selectedCode={selectedCode}
               />
             )}
             {primero.length > 0 && (
               <StudentBlock
                 title="Alumnos de 1.º grado"
-                emoji="🌱"
+                emoji="🐧"
                 students={primero}
                 adminPassword={adminPassword}
                 onDeleted={handleDeleted}
                 onViewStats={handleViewStats}
+                onStudentUpdated={(updated) => setStudents((prev) => prev.map((s) => (s.code === updated.code ? updated : s)))}
                 selectedCode={selectedCode}
               />
             )}
