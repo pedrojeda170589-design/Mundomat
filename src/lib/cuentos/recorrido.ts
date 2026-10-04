@@ -11,6 +11,8 @@ import { getCuento } from "./catalogo";
 import { PREGUNTAS_G1 } from "./preguntas-g1";
 import { PREGUNTAS_G2 } from "./preguntas-g2";
 import { PREGUNTAS_G3 } from "./preguntas-g3";
+import { TEXTOS_G2 } from "./textos-g2";
+import { TEXTOS_G3 } from "./textos-g3";
 
 // Orden de los textos en el recorrido de cada grado. Se alternan los géneros
 // narrativos del Diseño Curricular: cuento → leyenda → fábula (y vuelta a
@@ -87,6 +89,21 @@ export const SKILL_BY_KIND: Record<number, Record<ComprehensionKind, string>> = 
   },
 };
 export const BASE_SKILL: Record<number, string> = { 1: "l-comprension-oral", 2: "l2-comprension-cuento", 3: "l3-comprension-lectora" };
+
+// Texto del grado: cada grado lee una versión más larga del mismo relato
+// (1.º la de catalogo.ts; 2.º y 3.º las suyas). Siempre 6 escenas, una por
+// ilustración; si falta o no tiene 6, se usa la del grado anterior.
+export function escenasDe(grade: number, storyId: string): string[] {
+  const base = getCuento(storyId)?.scenes ?? [];
+  const g2 = TEXTOS_G2[storyId]?.length === base.length ? TEXTOS_G2[storyId] : base;
+  if (grade >= 3) return TEXTOS_G3[storyId]?.length === base.length ? TEXTOS_G3[storyId] : g2;
+  if (grade === 2) return g2;
+  return base;
+}
+
+// Lectura en voz alta del texto: gratis en 1.º y 2.º; desde 3.º es una
+// ayuda opcional que cuesta monedas (se paga una vez por texto).
+export const COSTO_NARRACION: Record<number, number> = { 1: 0, 2: 0, 3: 5 };
 
 // Preguntas del grado. Mientras un grado no tenga las suyas para un cuento,
 // usa las de 1.º (así el mundo funciona igual).

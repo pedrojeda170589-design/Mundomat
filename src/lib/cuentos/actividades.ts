@@ -4,7 +4,7 @@
 import type { ActivitySpec } from "@/lib/activities";
 import type { WorldDef } from "@/types";
 import { cuentoImage, getCuento } from "./catalogo";
-import { BASE_SKILL, preguntasDe, SKILL_BY_KIND } from "./recorrido";
+import { BASE_SKILL, COSTO_NARRACION, escenasDe, preguntasDe, SKILL_BY_KIND } from "./recorrido";
 
 function shuffle<T>(arr: readonly T[]): T[] {
   const a = [...arr];
@@ -22,7 +22,8 @@ export function buildStoryActivities(world: WorldDef): ActivitySpec[] {
   if (!c) return [];
   const grade = world.grade ?? 3;
   const mode = grade >= 2 ? "read" : "listen";
-  const story = { title: c.title, text: c.scenes.join(" ") };
+  const escenas = escenasDe(grade, c.id);
+  const story = { title: c.title, text: escenas.join(" ") };
   const acts: ActivitySpec[] = [
     {
       type: "listen",
@@ -32,7 +33,8 @@ export function buildStoryActivities(world: WorldDef): ActivitySpec[] {
       storyId: c.id,
       mode,
       genre: c.genre,
-      scenes: c.scenes.map((text, i) => ({ text, image: cuentoImage(c.id, i + 1) })),
+      scenes: escenas.map((text, i) => ({ text, image: cuentoImage(c.id, i + 1) })),
+      voiceCost: COSTO_NARRACION[grade] ?? 5,
       hint: mode === "read" ? "Leé con atención: después vienen preguntas." : "Escuchá con atención: después vienen preguntas.",
       skills: [],
     },

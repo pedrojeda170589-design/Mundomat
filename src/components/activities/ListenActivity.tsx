@@ -16,6 +16,11 @@ interface Props {
   mode?: "listen" | "read";
   genre?: Genre;
   scenes: { text: string; image: string }[];
+  // Desde 3.º la lectura en voz alta es opcional y cuesta monedas (una vez por texto).
+  voiceCost?: number;
+  coins?: number;
+  studentCode?: string;
+  onCoinsChange?: (coins: number) => void;
   onFinish: () => void;
 }
 
@@ -37,8 +42,21 @@ function sentences(text: string): string[] {
 // (/audio/cuentos/<id>-<n>.mp3) se usa ese; si no, la voz del navegador
 // lee oración por oración. Al final se habilitan las preguntas. No suma
 // ni resta puntos.
-export default function ListenActivity({ title, storyId, mode = "listen", genre = "cuento", scenes, onFinish }: Props) {
+export default function ListenActivity({
+  title,
+  storyId,
+  mode = "listen",
+  genre = "cuento",
+  scenes,
+  voiceCost = 0,
+  coins = 0,
+  studentCode,
+  onCoinsChange,
+  onFinish,
+}: Props) {
   const reader = mode === "read";
+  const [paid, setPaid] = useState(voiceCost <= 0);
+  const [notice, setNotice] = useState<string | null>(null);
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(!reader);
   const [heard, setHeard] = useState<Set<number>>(new Set());
@@ -98,6 +116,26 @@ export default function ListenActivity({ title, storyId, mode = "listen", genre 
     setI(Math.max(0, Math.min(last, k)));
   }
 
+  // 🔊: gratis en 1.º y 2.º; en 3.º se paga una vez y queda habilitado para todo el texto.
+  async function listen() {
+    if (!paid) {
+      if (!studentCode) return;
+      const res = await fetch("/api/spend-coins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: studentCode, amount: voiceCost }),
+      }).then((r) => r.json() as Promise<{ ok: boolean; coins: number }>);
+      if (!res.ok) {
+        setNotice(`Necesitás ${voiceCost} 🪙 para escuchar el texto. ¡Podés leerlo vos!`);
+        return;
+      }
+      onCoinsChange?.(res.coins);
+      setPaid(true);
+      setNotice(null);
+    }
+    read(i, false);
+  }
+
   const scene = scenes[i];
   const done = i === last && (reader || heard.has(last) || !reading);
 
@@ -146,8 +184,13 @@ export default function ListenActivity({ title, storyId, mode = "listen", genre 
         <button type="button" onClick={() => go(i - 1)} disabled={i === 0} className="rounded-2xl bg-slate-700 text-white font-bold py-3 disabled:opacity-30">
           ⏮ Atrás
         </button>
-        <button type="button" onClick={() => read(i, false)} className="rounded-2xl bg-sky-500 text-white font-bold py-3">
-          {reader ? "🔊 Escuchar" : "🔊 Repetir"}
+        <button
+          type="button"
+          onClick={() => void listen()}
+          disabled={!paid && coins < voiceCost}
+          className="rounded-2xl bg-sky-500 text-white font-bold py-3 disabled:opacity-40"
+        >
+          {!reader ? "🔊 Repetir" : paid ? "🔊 Escuchar" : `🔊 ${voiceCost} 🪙`}
         </button>
         {i < last ? (
           <button type="button" onClick={() => go(i + 1)} className="rounded-2xl bg-amber-400 text-slate-900 font-black py-3">
@@ -168,6 +211,10 @@ export default function ListenActivity({ title, storyId, mode = "listen", genre 
           </button>
         )}
       </div>
+      {notice && <p className="mt-2 text-center text-sm font-bold text-amber-300">{notice}</p>}
+      {reader && !paid && !notice && (
+        <p className="mt-2 text-center text-xs text-slate-300">Si necesitás ayuda, podés escucharlo por {voiceCost} 🪙 (todo el texto).</p>
+      )}
       {!reader && (
         <label className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-300">
           <input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} />

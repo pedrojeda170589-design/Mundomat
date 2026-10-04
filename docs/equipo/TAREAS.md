@@ -12,8 +12,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
-| CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🟢 UNIDA A MAIN (falta conectar Supabase: ver docs/plataforma/CONFIGURAR.md) |
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🔨 EN CURSO |
+| CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🔨 EN CURSO |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
