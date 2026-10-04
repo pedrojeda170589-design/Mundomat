@@ -15,6 +15,12 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🔨 EN CURSO |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
+| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
