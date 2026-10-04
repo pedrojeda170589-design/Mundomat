@@ -139,6 +139,36 @@ for (const sid of ORDEN_G3) {
   );
 }
 
+console.log("=== Validando balance de longitud de opciones (máximo 35% la más larga) ===");
+function checkOptionLengths(grade: number, map: Record<string, CuentoQuestion[]>, maxRatio: number = 0.35) {
+  let total = 0;
+  let strictLongest = 0;
+  for (const [, qs] of Object.entries(map)) {
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i];
+      total++;
+      const ansLen = q.options[q.answer][1].trim().length;
+      const otherLens = q.options
+        .filter((_, idx) => idx !== q.answer)
+        .map((opt) => opt[1].trim().length);
+      const maxOther = Math.max(...otherLens);
+      if (ansLen > maxOther) {
+        strictLongest++;
+      }
+    }
+  }
+  const ratio = total > 0 ? strictLongest / total : 0;
+  const pct = (ratio * 100).toFixed(1);
+  console.log(`[G${grade}] Total: ${total} preguntas, la correcta es la más larga en: ${strictLongest} (${pct}%)`);
+  if (ratio > maxRatio) {
+    err(`[G${grade}] El porcentaje de preguntas donde la respuesta correcta es la más larga (${pct}%) supera el máximo permitido (${(maxRatio * 100).toFixed(0)}%)`);
+  }
+}
+
+checkOptionLengths(1, PREGUNTAS_G1, 0.35);
+checkOptionLengths(2, PREGUNTAS_G2, 0.35);
+checkOptionLengths(3, PREGUNTAS_G3, 0.35);
+
 console.log("=== Validando buildStoryActivities en Mundos de Cuentos ===");
 const grades = [1, 2, 3] as const;
 for (const g of grades) {

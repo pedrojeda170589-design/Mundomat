@@ -1149,21 +1149,21 @@ CUENTOS_FICHAS = {
     ],
     "selfCheck": [
       "Puedo escribir un texto de gratitud con emoción y claridad de ideas.",
-      "Puedo registrar palabras tradicionales y sus significados contextuales.",
-      "Puedo explicar el sentido social de la hospitalidad y la generosidad."
+      "Puedo registrar palabras tradicionales y sus significados en el relato.",
+      "Puedo explicar el valor de compartir con generosidad y recibir a los demás."
     ]
   }],
 
   "21112": [{
-    "title": "El tribunal de la honestidad",
-    "purpose": "Reflexionar sobre el impacto de la mentira en la convivencia social y redactar cartas de desagravio.",
+    "title": "La importancia de la verdad",
+    "purpose": "Reflexionar sobre las consecuencias de la mentira y escribir un mensaje pidiendo disculpas.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "Carta de desagravio a la comunidad",
+        "title": "Carta para pedir disculpas",
         "steps": [
-          "Escribí la carta de compromiso que el pastorcito presentó ante los pobladores de la comarca.",
-          "Pedí disculpas por haberlos hecho correr en vano y prometé cumplir con fidelidad tu tarea de vigía."
+          "Escribí una carta del pastorcito a los vecinos del pueblo.",
+          "Pedí disculpas por haber mentido y prometé cuidar las ovejas con responsabilidad."
         ],
         "lines": 5
       },
@@ -1226,9 +1226,9 @@ CUENTOS_FICHAS = {
       }
     ],
     "selfCheck": [
-      "Puedo escribir un parlamento reflexivo reconociendo un error propio de conducta.",
+      "Puedo escribir un texto reconociendo un error y proponiendo una solución.",
       "Puedo registrar datos sobre el funcionamiento de los telares artesanales.",
-      "Puedo valorar la valentía moral de sostener la verdad frente a las presiones del entorno."
+      "Puedo valorar el coraje de decir la verdad aunque los demás tengan miedo."
     ]
   }],
 
@@ -1462,9 +1462,9 @@ CUENTOS_FICHAS = {
       }
     ],
     "selfCheck": [
-      "Puedo redactar un texto conmemorativo formal reconociendo virtudes morales.",
-      "Puedo sintetizar en un cuadro la reciprocidad solidaria entre dos personajes.",
-      "Puedo reflexionar sobre la importancia del cuidado afectuoso en los momentos de vulnerabilidad."
+      "Puedo escribir un texto de homenaje reconociendo las buenas acciones de un amigo.",
+      "Puedo sintetizar en un cuadro cómo se ayudaron el hombre y la tortuga.",
+      "Puedo reflexionar sobre la importancia del cuidado y el afecto en momentos difíciles."
     ]
   }],
 
@@ -1472,234 +1472,234 @@ CUENTOS_FICHAS = {
   # 3.º GRADO (31101 - 31106)
   # =========================================================================
   "31101": [{
-    "title": "Diario íntimo de una travesía heroica",
-    "purpose": "Ejercitar la narrativa en primera persona adoptando la voz de un personaje clásico y analizar la lealtad ética.",
+    "title": "El diario de viaje de la tortuga",
+    "purpose": "Escribir en primera persona poniéndote en el lugar de la tortuga y reflexionar sobre la amistad y la gratitud.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "La bitácora de la tortuga gigante",
+        "title": "Una noche en el camino",
         "steps": [
-          "Escribí una página del diario personal de la tortuga durante la noche más agotadora de su marcha.",
-          "Describí la fatiga en tus extremidades, el peso del enfermo sobre tu caparazón y la convicción interior que te impidió claudicar."
+          "Escribí una página del diario de la tortuga durante una noche del viaje hacia Buenos Aires.",
+          "Contá qué sentías al caminar tan cansada, qué pensabas al mirar a tu amigo enfermo y por qué decidiste no rendirte."
         ],
         "lines": 6
       },
       {
         "kind": "investigo",
-        "title": "Horacio Quiroga y la selva misionera",
+        "title": "Animales y selva de Horacio Quiroga",
         "steps": [
-          "Investigá datos biográficos sobre Horacio Quiroga y su experiencia pionera viviendo en la selva de Misiones.",
-          "Anotá dos razones por las cuales ambientaba sus relatos infantiles en la naturaleza agreste."
+          "Averiguá dónde queda la provincia de Misiones en el mapa de nuestro país y qué animales viven en su selva.",
+          "Anotá dos animales autóctonos del monte misionero que te gustaría conocer."
         ],
         "lines": 3
       },
       {
         "kind": "converso",
-        "title": "El deber de reciprocidad",
+        "title": "Amigos que se ayudan",
         "steps": [
-          "Debatan en familia: ¿por qué la tortuga sintió una deuda moral irrevocable hacia el hombre?",
-          "¿Qué compromisos éticos asumimos cuando alguien nos ayuda desinteresadamente en una crisis?"
+          "Conversen en familia: ¿por qué la tortuga ayudó tanto al hombre cuando estuvo enfermo?",
+          "¿Alguna vez alguien te ayudó cuando lo necesitabas? ¿Cómo le diste las gracias?"
         ]
       }
     ],
     "selfCheck": [
-      "Puedo construir una voz narrativa en primera persona transmitiendo reflexiones profundas de un personaje.",
-      "Puedo recopilar y sintetizar datos biográficos del autor y su entorno literario.",
-      "Puedo argumentar en un debate familiar sobre el principio ético de la reciprocidad solidaria."
+      "Pude escribir poniéndome en el lugar de la tortuga y contando sus sentimientos.",
+      "Averigüé sobre la selva misionera y anoté dos animales de la región.",
+      "Conversé en familia sobre el valor de la amistad y la ayuda mutua."
     ]
   }],
 
   "31102": [{
-    "title": "Crónica periodística del orden patagónico",
-    "purpose": "Aprender a redactar una noticia periodística completa y analizar la función cosmogónica de las leyendas nativas.",
+    "title": "Una noticia en la costa patagónica",
+    "purpose": "Escribir una noticia periodística breve con sus partes principales y conocer una leyenda del pueblo tehuelche.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "Noticia de la costa patagónica",
+        "title": "Escribí una noticia",
         "steps": [
-          "Redactá una noticia completa para un periódico regional informando el traslado definitivo de Góos hacia el mar.",
-          "Incluí un titular llamativo, volanta, copete y un párrafo narrando la hazaña de Elal al transformarse en tábano."
+          "Escribí una noticia corta para el diario de la costa contando la llegada de la ballena Góos al mar.",
+          "Poné un título que llame la atención, una oración con lo más importante (qué pasó y dónde) y contá cómo Elal ayudó a todos."
         ],
         "lines": 6
       },
       {
         "kind": "hacer",
-        "title": "Contraste de fuerzas y propósitos",
+        "title": "La ballena y el héroe Elal",
         "steps": [
-          "Completá el cuadro analizando las características antitéticas entre la ballena y el héroe tehuelche."
+          "Completá el cuadro comparando a la ballena Góos con el héroe Elal:"
         ],
         "table": {
-          "cols": ["Criterio", "Ballena Góos", "Héroe Elal"],
-          "rows": 4
+          "cols": ["Pregunta", "Ballena Góos", "Héroe Elal"],
+          "rows": 3
         }
       },
       {
         "kind": "converso",
-        "title": "El equilibrio ecológico en el mito",
+        "title": "Las leyendas de nuestro país",
         "steps": [
-          "Conversen sobre cómo la leyenda explica la armonización territorial entre la fauna terrestre y la marina.",
-          "¿Por qué el héroe no aniquila a la fiera sino que le asigna un medio ambiente propicio para su desarrollo?"
+          "Conversen en familia: ¿qué intenta explicar esta hermosa leyenda de los tehuelches?",
+          "¿Por qué es importante recordar las historias de los pueblos originarios de nuestra Patagonia?"
         ]
       }
     ],
     "selfCheck": [
-      "Puedo elaborar un texto informativo con la estructura formal de una crónica periodística.",
-      "Puedo establecer comparaciones conceptuales sistemáticas en una tabla analítica.",
-      "Puedo interpretar la función mitológica de ordenamiento ambiental en los relatos orales."
+      "Escribí una noticia clara con su título y los hechos principales.",
+      "Completé el cuadro comparando a los dos personajes de la leyenda.",
+      "Conversé sobre la importancia de las leyendas de los pueblos originarios."
     ]
   }],
 
   "31103": [{
-    "title": "Reescritura crítica de la ambición",
-    "purpose": "Explorar finales alternativos fundamentados éticamente y profundizar en la estructura de la fábula moral.",
+    "title": "Un nuevo final para el granjero",
+    "purpose": "Imaginar y escribir otro final para la fábula, y reflexionar sobre la importancia de valorar lo que tenemos.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "Un final con aprendizaje y reconciliación",
+        "title": "Un final con cuidado y respeto",
         "steps": [
-          "Reescribí el desenlace de la fábula imaginando que el granjero recapacita a tiempo antes de que la gallina huya.",
-          "Relatá el diálogo donde el hombre reconoce su insensatez y establece una relación respetuosa con el animal."
+          "Inventá y escribí otro final para el cuento: imaginá que el granjero se da cuenta a tiempo de su error.",
+          "Contá qué le dice a la gallina para cuidarla mejor y cómo viven juntos y contentos en la granja."
         ],
         "lines": 6
       },
       {
         "kind": "converso",
-        "title": "La sociedad de la inmediatez",
+        "title": "Cuidar lo que tenemos",
         "steps": [
-          "Debatan en familia sobre el mensaje: 'por querer todo de golpe, había perdido lo que tenía'.",
-          "¿Qué consecuencias perjudiciales produce en la actualidad la impaciencia por obtener recompensas sin esfuerzo sostenido?"
+          "Conversen en familia sobre lo que le pasó al granjero por querer todo de golpe.",
+          "¿Qué cosas valiosas tenemos todos los días (la familia, los amigos, la salud) que no se compran con dinero?"
         ]
       },
       {
         "kind": "investigo",
-        "title": "El legado de Esopo",
+        "title": "Las fábulas y sus moralejas",
         "steps": [
-          "Averiguá en qué consistía el propósito didáctico de las fábulas en la Grecia antigua.",
-          "Anotá dos características estilísticas que diferencian una fábula moral de una novela de aventuras."
+          "Las fábulas son historias breves que nos dejan una moraleja o enseñanza para la vida.",
+          "Anotá el nombre de otra fábula que conozcas (o que te cuenten en casa) y qué enseñanza nos deja."
         ],
         "lines": 3
       }
     ],
     "selfCheck": [
-      "Puedo reescribir creativamente el desenlace de una obra clásica manteniendo verosimilitud.",
-      "Puedo reflexionar críticamente sobre los perjuicios individuales y sociales de la codicia.",
-      "Puedo identificar los rasgos discursivos que definen al género fabulístico universal."
+      "Escribí un final diferente donde el granjero aprende a cuidar a su gallina.",
+      "Conversé en familia sobre valorar las cosas importantes de la vida.",
+      "Anoté otra fábula conocida y expliqué su moraleja."
     ]
   }],
 
   "31104": [{
-    "title": "Alegato y naturaleza en el trópico",
-    "purpose": "Abordar la prosa dramática y contraponer explicaciones biológicas con recreaciones literarias de autor.",
+    "title": "Una carta para el tatú",
+    "purpose": "Escribir una carta expresando emociones y comparar el relato fantástico con la vida real de los flamencos.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "El alegato del tatú ante la selva",
+        "title": "La carta de los flamencos",
         "steps": [
-          "Escribí el discurso de defensa del tatú al ser convocado por los animales para explicar su pesada broma.",
-          "Hacé que intente justificar su trampa o bien que exprese un arrepentimiento genuino por el trágico destino de los flamencos."
+          "Escribí una carta de los flamencos al tatú después de la noche del baile.",
+          "Contale cómo quedaron sus patas, el ardor que sienten en el agua fresca y qué piensan sobre su pesada broma."
         ],
         "lines": 6
       },
       {
         "kind": "investigo",
-        "title": "Ciencia versus fantasía literaria",
+        "title": "¿Por qué son rosados los flamencos?",
         "steps": [
-          "Investigá por qué la ornitología explica que los flamencos tienen patas y plumas rojizas (pigmentos carotenoides en su dieta).",
-          "Escribí una comparación breve entre la explicación científica y la ficción poética de Horacio Quiroga."
+          "En la naturaleza, las patas y plumas de los flamencos son rosadas por los pequeños crustáceos y algas que comen en lagunas.",
+          "Escribí una oración explicando la diferencia entre lo que dice la ciencia y lo que cuenta la fantasía del cuento."
         ],
         "lines": 3
       },
       {
         "kind": "converso",
-        "title": "La alienación por las apariencias",
+        "title": "Las burlas y el respeto",
         "steps": [
-          "Conversen sobre cómo el anhelo de reconocimiento social condujo a los flamencos a vestir atuendos criminales.",
-          "¿En qué situaciones de la vida moderna las personas incurren en conductas desmedidas con tal de aparentar prestigio?"
+          "Conversen en familia: ¿estuvo bien la broma que les hizo el tatú a los flamencos? ¿Por qué?",
+          "¿Por qué es importante no burlarse de los demás ni engañarlos para que pasen vergüenza?"
         ]
       }
     ],
     "selfCheck": [
-      "Puedo redactar un texto argumentativo con voz propia y fundamentación de actos polémicos.",
-      "Puedo cotejar una teoría biológica verificada con una narración ficcional maravillosa.",
-      "Puedo analizar con madurez el impacto negativo de la vanidad en el juicio racional."
+      "Escribí una carta con saludo, mensaje claro y despedida.",
+      "Averigüé por qué los flamencos tienen color rosado en la naturaleza.",
+      "Reflexioné en familia sobre el respeto y las consecuencias de las burlas."
     ]
   }],
 
   "31105": [{
-    "title": "El puente eterno de la memoria",
-    "purpose": "Desarrollar la sensibilidad poética y comprender el vínculo entre la toponimia y los mitos fluviales del litoral.",
+    "title": "El arcoíris sobre las cataratas",
+    "purpose": "Describir un paisaje natural con palabras expresivas y conocer más sobre las Cataratas del Iguazú.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "Prosa lírica sobre el arcoíris",
+        "title": "Un puente de colores en el agua",
         "steps": [
-          "Escribí un texto de prosa poética describiendo el instante en que el sol ilumina el rocío de los saltos y forma el arcoíris.",
-          "Evocá la mirada inmóvil de Tarobá desde la palmera hacia la roca de Naipí en medio de la corriente infinita."
+          "Describí con tus palabras cómo se ven las Cataratas del Iguazú cuando sale el arcoíris sobre el agua que cae.",
+          "Contá lo que sienten Naipí y Tarobá al mirarse a través de ese puente de colores."
         ],
         "lines": 6
       },
       {
         "kind": "investigo",
-        "title": "Patrimonio de la Humanidad: Iguazú",
+        "title": "Parque Nacional Iguazú",
         "steps": [
-          "Buscá datos sobre el Parque Nacional Iguazú en Misiones: fecha de creación, flora selvática y volumen de agua de sus caídas.",
-          "Anotá dos razones que fundamentan su condición de maravilla natural del mundo contemporáneo."
+          "Buscá información sobre las Cataratas del Iguazú: ¿en qué provincia argentina están y qué animales viven en su selva?",
+          "Anotá dos animales protegidos que habiten en ese hermoso parque nacional (como el yaguareté o el tucán)."
         ],
         "lines": 3
       },
       {
         "kind": "converso",
-        "title": "El heroísmo trágico en la tradición oral",
+        "title": "Historias de amor y naturaleza",
         "steps": [
-          "Conversen sobre por qué muchas leyendas de amor concluyen con transformaciones geológicas o botánicas.",
-          "¿Cómo logra el arte popular convertir una derrota física en una victoria espiritual inmortal?"
+          "Conversen en familia: ¿por qué los pueblos antiguos inventaban relatos mágicos para explicar lugares asombrosos?",
+          "¿Qué lugares de la naturaleza de nuestro país te gustaría visitar algún día?"
         ]
       }
     ],
     "selfCheck": [
-      "Puedo producir textos literarios con recursos poéticos, ritmo y densidad expresiva.",
-      "Puedo registrar información institucional y geográfica sobre parques nacionales argentinos.",
-      "Puedo interpretar el sentido trascendente de las metamorfosis míticas en el folclore guaraní."
+      "Escribí una descripción linda del arcoíris y los personajes de la leyenda.",
+      "Anoté datos sobre las Cataratas del Iguazú y los animales de su selva.",
+      "Conversé sobre cómo las leyendas explican los paisajes de nuestra tierra."
     ]
   }],
 
   "31106": [{
-    "title": "Ensayo sobre la serenidad y la opulencia",
-    "purpose": "Aprender a redactar un texto argumentativo de opinión fundamentada confrontando estilos de vida antagónicos.",
+    "title": "¿Vida en el campo o en la ciudad?",
+    "purpose": "Expresar tu opinión personal con ejemplos del cuento y comparar dos formas de vivir.",
     "blocks": [
       {
         "kind": "creo",
-        "title": "Mi postura fundamentada",
+        "title": "Mi opinión sobre el cuento",
         "steps": [
-          "Escribí un ensayo breve de opinión tomando partido por la decisión del ratón campesino o justificando las tentaciones de la urbe.",
-          "Desarrollá dos argumentos sólidos extraídos del texto y cerrá con una conclusión personal sobre qué significa vivir en paz."
+          "Escribí tu opinión: ¿preferís la vida tranquila del ratón de campo o las comidas ricas y aventuras del ratón de ciudad?",
+          "Escribí dos razones claras para explicar tu elección, recordando lo que les pasó a los dos primos en el cuento."
         ],
         "lines": 6
       },
       {
         "kind": "hacer",
-        "title": "Matriz de confrontación axiológica",
+        "title": "Campo y ciudad",
         "steps": [
-          "Completá la matriz evaluando las ventajas y los costos de cada modelo de existencia."
+          "Completá el cuadro comparando la casa, la comida y los peligros en el campo y en la ciudad:"
         ],
         "table": {
-          "cols": ["Dimensión", "Entorno campestre", "Entorno metropolitano"],
-          "rows": 4
+          "cols": ["Lugar", "Comida de los ratones", "Peligros que encontraron"],
+          "rows": 2
         }
       },
       {
         "kind": "converso",
-        "title": "La serenidad como bien supremo",
+        "title": "La tranquilidad y la seguridad",
         "steps": [
-          "Debatan en familia sobre la clásica sentencia: 'prefiero mi comida simple y tranquila a tus tortas con sustos'.",
-          "¿De qué maneras podemos preservar en nuestro hogar un clima de calma frente a las urgencias de la sociedad actual?"
+          "Conversen sobre la frase del ratón: 'Prefiero mi comida simple y tranquila a tus tortas con sustos'.",
+          "¿Qué cosas les dan tranquilidad y alegría en casa todos los días?"
         ]
       }
     ],
     "selfCheck": [
-      "Puedo redactar un texto de opinión estructurado con tesis, argumentos y conclusión fundada.",
-      "Puedo confeccionar una matriz comparativa profunda de costos y beneficios existenciales.",
-      "Puedo sostener una argumentación reflexiva sobre las condiciones esenciales de la felicidad humana."
+      "Escribí mi opinión personal fundamentando mi elección con dos razones.",
+      "Completé el cuadro comparando el campo y la ciudad según el cuento.",
+      "Conversé en familia sobre el valor de vivir con calma y sin peligros."
     ]
   }]
 }

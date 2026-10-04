@@ -1,5 +1,5 @@
 // Preguntas de comprensión LECTORA de 3.º grado (los chicos leen el cuento).
-// 10 preguntas por cuento, SIEMPRE 4 opciones.
+// 10 preguntas por cuento, SIEMPRE 4 opciones de longitud pareja.
 // Distribución: 2 literal, 2 secuencia, 3 inferencial, 1 vocabulario, 1 estructura, 1 valoración.
 // Incluye preguntas de causa-consecuencia, comparación entre personajes,
 // evolución de personajes y «qué parte del texto muestra que...».
@@ -25,684 +25,684 @@ export const PREGUNTAS_G3: Record<string, CuentoQuestion[]> = {
   // 1. La tortuga gigante (cuento de Horacio Quiroga)
   "tortuga-gigante": [
     L(
-      "¿Por qué razón médica debió mudarse el hombre desde Buenos Aires hacia el monte?",
+      "¿Por qué el hombre tuvo que irse a vivir al monte?",
       [
-        ["🩺", "Porque padecía una grave enfermedad y el médico le indicó vivir al aire libre"],
-        ["💼", "Porque consiguió un nuevo empleo como cuidador de animales silvestres"],
-        ["🏕️", "Porque deseaba pasar unas vacaciones de descanso en la naturaleza"],
-        ["🐢", "Porque buscaba ejemplares de fauna exótica para donar al zoológico"],
+        ["🩺", "Porque estaba enfermo y necesitaba aire libre"],
+        ["🏹", "Porque el médico le recomendó cazar animales"],
+        ["🚣", "Porque quería viajar en canoa por los ríos"],
+        ["💼", "Porque buscaba un nuevo trabajo en la selva"],
       ],
       0,
-      "Pista: releé la indicación que le da el médico en la primera escena."
+      "Pista: releé lo que le aconseja el médico en la primera escena."
     ),
     L(
-      "¿Qué alimentos y cuidados le proporcionó la tortuga al hombre cuando este cayó con fiebre?",
+      "¿Qué hizo el hombre al encontrar a la tortuga lastimada?",
       [
-        ["🍎", "Le arrimó agua fresca y frutas para hidratarlo y alimentarlo"],
-        ["🍵", "Le preparó infusiones calientes con hierbas medicinales"],
-        ["🩹", "Le curó las heridas con vendas que guardaba en el refugio"],
-        ["🔥", "Le encendió una fogata con ramas secas para abrigarlo"],
+        ["🩹", "La llevó a su refugio y la curó con paciencia"],
+        ["🌲", "La dejó sola entre los árboles altos del monte"],
+        ["🏃", "Fue corriendo a buscar al médico del pueblo"],
+        ["🏙️", "La llevó al zoológico de la gran ciudad"],
       ],
       0,
-      "Pista: mirá con qué atendió la tortuga al enfermo en la tercera escena."
+      "Pista: mirá cómo atendió el hombre a la tortuga en la escena 2."
     ),
     S(
-      "¿Qué hecho determinante impulsó a la tortuga a cargar al hombre y caminar hacia la gran ciudad?",
+      "¿Qué ocurrió después de que el hombre curó a la tortuga?",
       [
-        ["💭", "Comprendió que si permanecían en el monte aislado, su amigo no lograría curarse y moriría"],
-        ["🌧️", "Una feroz tormenta destruyó por completo el refugio de ramas en la selva"],
-        ["🐯", "La presencia cercana de fieras peligrosas amenazaba la seguridad de ambos"],
-        ["🩺", "El médico de Buenos Aires le envió una carta ordenándole trasladar al paciente"],
+        ["🤒", "El hombre volvió a enfermarse con mucha fiebre"],
+        ["🏹", "Llegaron otros cazadores al refugio del monte"],
+        ["🌊", "La tortuga se fue a nadar sola por el río hondo"],
+        ["🚂", "El hombre volvió a trabajar a Buenos Aires"],
       ],
       0,
-      "Pista: leé el pensamiento y la decisión de la tortuga en la cuarta escena."
+      "Pista: leé qué problema surge en la escena 3."
     ),
     S(
-      "¿Qué ocurrió inmediatamente después de que arribaron a Buenos Aires y el hombre recuperó la salud?",
+      "¿Qué decisión tomó la tortuga al ver a su amigo muy grave?",
       [
-        ["🐢", "El hombre llevó a la tortuga al zoológico para que viviera protegida y la visitaba a diario"],
-        ["🌲", "La tortuga emprendió sola el viaje de regreso a su hábitat natural en el monte"],
-        ["🏠", "Ambos se quedaron a vivir juntos para siempre en una casa céntrica de la ciudad"],
-        ["🩺", "El hombre abrió un consultorio médico para atender a animales silvestres"],
+        ["🐢", "Cargarlo en su caparazón para llevarlo a curar"],
+        ["⛺", "Esperar en el refugio a que la fiebre bajara"],
+        ["🍎", "Ir a buscar frutas y agua fresca a la laguna"],
+        ["🐾", "Pedirle ayuda a los otros animales del monte"],
       ],
       0,
-      "Pista: fijate en la resolución final y el destino de ambos en la escena 6."
+      "Pista: fijate en el plan de la tortuga en la escena 4."
     ),
     I(
-      "¿Qué motivó a la tortuga gigante a realizar un sacrificio físico tan extremo por el hombre?",
+      "¿Por qué la tortuga se esforzó tanto por salvar al hombre?",
       [
-        ["❤️", "El profundo agradecimiento, ya que el hombre le había salvado la vida cuando estaba herida"],
-        ["🏙️", "La curiosidad por conocer cómo eran las calles y edificios de Buenos Aires"],
-        ["🐢", "El deseo de demostrar que las tortugas pueden caminar más rápido que otros animales"],
-        ["🍎", "El temor a quedarse sola en el monte sin nadie que le consiguiera frutas"],
+        ["❤️", "Estaba agradecida porque él le había salvado la vida"],
+        ["🚗", "Tenía curiosidad por conocer los autos de la ciudad"],
+        ["🌲", "Tenía miedo de quedarse sola y sin comida en el monte"],
+        ["🎁", "El médico le había prometido una hermosa recompensa"],
       ],
       0,
-      "Pista: pensá en la correspondencia entre los cuidados de la segunda y de la quinta escena."
+      "Pista: pensá en lo que el hombre había hecho por ella antes."
     ),
     I(
-      "¿Qué pasaje del texto demuestra que la tortuga jamás se dio por vencida pese al agotamiento?",
+      "¿Qué parte del texto muestra que la tortuga no se rindió?",
       [
-        ["💪", "Caminó días y noches por el monte y los caminos, muy cansada, sin rendirse"],
-        ["💭", "Pensó que si se quedaban en el monte su amigo no iba a recuperarse"],
-        ["🍎", "Lo cuidaba con esmero y le acercaba agua fresca y frutas silvestres"],
-        ["🩹", "Aceptó ser curada con paciencia en el refugio cuando estaba lastimada"],
+        ["💪", "Caminó días y noches por los caminos, sin rendirse"],
+        ["🩺", "Un hombre que vivía en Buenos Aires estaba enfermo"],
+        ["🩹", "La llevó a su refugio y la curó con mucha paciencia"],
+        ["🐢", "La llevó al zoológico, donde vivió muy tranquila"],
       ],
       0,
-      "Pista: buscá las palabras exactas que describen su marcha en la escena 5."
+      "Pista: buscá la frase sobre su caminata en la escena 5."
     ),
     I(
-      "¿Qué rasgo en común define las actitudes del hombre y de la tortuga a lo largo del relato?",
+      "¿En qué se parecen las actitudes del hombre y de la tortuga?",
       [
-        ["🤝", "La solidaridad desinteresada y el empeño en cuidar al otro en su momento de mayor fragilidad"],
-        ["🩺", "El amplio conocimiento médico para sanar cualquier enfermedad"],
-        ["🏙️", "La preferencia absoluta por la vida bulliciosa de las grandes urbes"],
-        ["🌲", "El rechazo hacia el contacto con otras personas de la sociedad"],
+        ["🤝", "Los dos cuidaron al otro cuando estuvo en peligro"],
+        ["🏙️", "Los dos preferían vivir en medio de la gran ciudad"],
+        ["🌿", "Los dos sabían preparar medicinas con las plantas"],
+        ["🚂", "Los dos querían viajar en tren a Buenos Aires"],
       ],
       0,
-      "Pista: compará cómo actuó el hombre en la escena 2 con cómo actuó la tortuga en las escenas 3 a 5."
+      "Pista: pensá en cómo actúa cada uno frente a la enfermedad del otro."
     ),
     V(
-      "En la escena 2 se menciona que el hombre la llevó a su «refugio». ¿Qué significa «refugio» en este contexto?",
+      "En el cuento, ¿qué significa la palabra «refugio»?",
       [
-        ["🏠", "Una vivienda precaria o espacio acondicionado que brinda resguardo y amparo en la naturaleza"],
-        ["🕳️", "Una cueva subterránea inundada donde hibernan los animales anfibios"],
-        ["🏥", "Un hospital de campaña provisto de medicamentos y médicos de guardia"],
-        ["🌳", "La copa frondosa de un árbol donde esconderse de los depredadores"],
+        ["🏠", "Un lugar seguro donde protegerse y descansar"],
+        ["🛤️", "Un camino de tierra largo entre los árboles"],
+        ["🚪", "Una jaula de hierro con rejas muy pesadas"],
+        ["💧", "Una laguna grande con agua fresca y limpia"],
       ],
       0,
-      "Pista: pensá en el lugar donde el hombre habitaba de forma rústica en el monte."
+      "Pista: es el lugar techado donde el hombre llevó a la tortuga."
     ),
     E(
-      "¿Cómo está estructurado este relato y qué rol cumple quien narra la historia?",
+      "¿Cuál es el conflicto o problema principal de esta historia?",
       [
-        ["📖", "Es un cuento narrado en tercera persona con inicio (curación de la tortuga), nudo (enfermedad del hombre) y desenlace (salvación)"],
-        ["🗣️", "Es una fábula narrada en primera persona por la tortuga protagonista que relata sus recuerdos"],
-        ["📰", "Es una crónica informativa con datos estadísticos sobre la fauna del litoral argentino"],
-        ["📜", "Es una leyenda mitológica que busca explicar el origen del caparazón de las tortugas"],
+        ["⚡", "El hombre enferma y la tortuga debe cargarlo para salvarlo"],
+        ["🏹", "Los cazadores persiguen a los animales silvestres del monte"],
+        ["🩺", "El médico de Buenos Aires no quiere atender a los enfermos"],
+        ["🍎", "La tortuga no encuentra agua fresca ni frutas en el bosque"],
       ],
       0,
-      "Pista: fijate quién cuenta los hechos y cómo se encadenan inicio, conflicto y resolución."
+      "Pista: pensá en el gran desafío que enfrentan en el camino."
     ),
     VAL(
-      "¿Por qué puede afirmarse que esta historia ofrece una valiosa enseñanza sobre la verdadera amistad?",
+      "¿Qué enseñanza sobre la amistad nos deja este cuento?",
       [
-        ["✨", "Porque demuestra que el afecto sincero se manifiesta con actos de entrega mutua cuando el otro más lo necesita"],
-        ["🐢", "Porque enseña que los animales silvestres siempre deben vivir encerrados en zoológicos"],
-        ["🩺", "Porque aconseja no salir nunca de las ciudades para evitar contraer fiebres en el campo"],
-        ["🏙️", "Porque comprueba que los viajes a pie son el medio más rápido para trasladar enfermos"],
+        ["💛", "Quien ayuda de corazón recibe ayuda cuando la necesita"],
+        ["🌲", "Es mejor no acercarse a los animales que viven en el monte"],
+        ["🏙️", "Conviene vivir siempre en la ciudad antes que en el campo"],
+        ["🐾", "Los animales salvajes pueden curar cualquier enfermedad"],
       ],
       0,
-      "Pista: fundamentá tu juicio en la reciprocidad de la ayuda entre los protagonistas."
+      "Pista: mirá cómo la bondad del hombre volvió hacia él."
     ),
   ],
 
   // 2. Cómo llegó la ballena al mar (leyenda tehuelche)
   "leyenda-ballena": [
     L(
-      "¿Cómo se desplazaba la ballena Góos en los tiempos remotos según el relato tehuelche?",
+      "Según los tehuelches, ¿cómo era Góos en el pasado?",
       [
-        ["🐋", "Caminaba por la tierra firme apoyándose en unas patitas cortas"],
-        ["🌊", "Nadaba velozmente sumergida en las aguas profundas del océano"],
-        ["🪽", "Se arrastraba como una serpiente entre los pajonales de la meseta"],
-        ["🏔️", "Saltaba de roca en roca por los cerros escarpados de la costa"],
+        ["🐋", "Una ballena enorme con patitas que caminaba en tierra"],
+        ["🦅", "Un pájaro gigante que volaba sobre los cerros altos"],
+        ["🐟", "Un pez dorado que nadaba rápido en los ríos patagónicos"],
+        ["🦊", "Un zorro astuto que cazaba de noche en los cañadones"],
       ],
       0,
-      "Pista: buscá en la primera escena cómo era el cuerpo de Góos al principio."
+      "Pista: leé cómo describen a Góos en la escena 1."
     ),
     L(
-      "¿En qué pequeño insecto volador se transformó Elal para ingresar al estómago de Góos?",
+      "¿Dónde vivía Góos y qué hacía con todo lo que pasaba?",
       [
-        ["🪰", "En un tábano, un bichito volador muy chiquito"],
-        ["🐝", "En una abeja zumbadora de la estepa"],
-        ["🦗", "En un grillo cantor de las cavernas"],
-        ["🦟", "En un mosquito diminuto de la laguna"],
+        ["🏜️", "Vivía en un cañadón y se tragaba animales y cazadores"],
+        ["🕳️", "Vivía en una cueva honda y dormía durante todo el día"],
+        ["🏖️", "Vivía en la playa marina y ayudaba a los pescadores"],
+        ["⛰️", "Vivía arriba de un cerro y no dejaba soplar al viento"],
       ],
       0,
-      "Pista: mirá qué estrategia utilizó Elal en la cuarta escena."
+      "Pista: mirá qué pasaba con el hambre de Góos en la escena 2."
     ),
     S(
-      "¿Qué procedimiento ingenioso utilizó Elal para lograr que la ballena abriera sus fauces y liberara a las víctimas?",
+      "¿Cómo logró entrar Elal en la panza de la ballena?",
       [
-        ["😄", "Le provocó tantas cosquillas por dentro que Góos abrió la boca desmesuradamente"],
-        ["🔥", "Encendió una fogata dentro de su panza para obligarla a toser"],
-        ["🏹", "Le clavó una flecha de pedernal en la lengua para hacerle daño"],
-        ["💧", "Arrojó agua salada en su garganta para que se atragantara"],
+        ["🪰", "Se convirtió en un tábano chiquito y se dejó tragar"],
+        ["🌙", "Esperó que Góos se durmiera para abrirle la boca"],
+        ["⛏️", "Cavó un túnel largo por debajo de la tierra seca"],
+        ["🪜", "Armó una escalera con ramas de lenga y piedras"],
       ],
       0,
-      "Pista: leé cómo hizo reaccionar al gigante en la quinta escena."
+      "Pista: fijate en qué insecto se convirtió Elal en la escena 4."
     ),
     S(
-      "¿Qué destino definitivo le dio el héroe Elal a la ballena Góos tras desalojar a los cautivos?",
+      "¿Qué hizo Elal una vez que todos salieron de la ballena?",
       [
-        ["🌊", "La empujó con fuerza hasta el mar y le ordenó que habitara allí para siempre"],
-        ["🕳️", "La encerró en una caverna profunda en medio de la meseta"],
-        ["🏔️", "La convirtió en una montaña rocosa cerca de la costa"],
-        ["🏹", "La castigó quitándole para siempre la capacidad de alimentarse"],
+        ["🌊", "La empujó hasta el mar y le dijo que viviera allí"],
+        ["🏔️", "La llevó a caminar hacia la cordillera con nieve"],
+        ["🧱", "Construyó un corral de piedras alrededor de Góos"],
+        ["🏃", "Se convirtió en un guanaco veloz y escapó al monte"],
       ],
       0,
-      "Pista: revisá la acción final de Elal en la escena 6."
+      "Pista: leé el final de la leyenda en la escena 6."
     ),
     I(
-      "¿Por qué Elal consideró imperioso intervenir frente a la conducta de Góos?",
+      "¿Por qué Elal se transformó en un insecto tan pequeño?",
       [
-        ["🏹", "Porque la voracidad insaciable de la ballena estaba haciendo desaparecer a personas y animales"],
-        ["🌊", "Porque deseaba demostrar a los cazadores que el mar era más seguro que la tierra"],
-        ["🐋", "Porque quería arrebatarle a Góos el dominio del cañadón costero"],
-        ["🪰", "Porque buscaba probar sus poderes de transformación en insectos"],
+        ["💡", "Para entrar sin que la ballena notara su presencia"],
+        ["✨", "Porque los tábanos podían volar más alto que nadie"],
+        ["🏹", "Porque tenía miedo de que los cazadores lo atraparan"],
+        ["💧", "Porque los insectos sabían nadar mejor en el cañadón"],
       ],
       0,
-      "Pista: fijate en la preocupación de la comunidad que se menciona en la tercera escena."
+      "Pista: pensá en el plan secreto de Elal para que se lo tragara."
     ),
     I(
-      "¿Qué pasaje del texto demuestra que los seres devorados no habían sufrido daños físicos irreparables?",
+      "¿Qué parte del texto explica cómo salieron los atrapados?",
       [
-        ["✨", "Adentro encontró a todos, asustados pero sanos, y salieron corriendo"],
-        ["🐋", "Tenía tanta hambre que se tragaba todo lo que pasaba a su alrededor"],
-        ["🪰", "Se convirtió en un tábano muy chiquito y se dejó tragar voluntariamente"],
-        ["🌊", "Por eso, dicen, hoy las ballenas nadan en las aguas del mar patagónico"],
+        ["😄", "Le hizo tantas cosquillas por dentro que abrió la boca"],
+        ["🍽️", "Tenía tanta hambre que se tragaba todo lo que pasaba"],
+        ["🫂", "Adentro encontró a todos, asustados pero sanos y salvos"],
+        ["🌊", "Elal empujó a Góos hasta el mar para que viviera allí"],
       ],
       0,
-      "Pista: leé cómo halló Elal a las víctimas en la quinta escena."
+      "Pista: buscá la acción graciosa de Elal en la escena 5."
     ),
     I(
-      "¿En qué se diferencian el poder de Góos y el poder de Elal en la historia?",
+      "¿En qué cambió la vida de Góos al final de la leyenda?",
       [
-        ["⚖️", "Góos usaba su inmenso tamaño para devorar sin control, mientras Elal usaba su astucia para proteger a la comunidad"],
-        ["🐋", "Góos era un ser sabio y pacífico, mientras Elal buscaba venganza violenta"],
-        ["🌊", "Góos dominaba los secretos del océano y Elal desconocía las costas patagónicas"],
-        ["🏹", "Ambos personajes poseían la misma fuerza física pero carecían de ingenio"],
+        ["🐋", "Pasó de comer animales en tierra a nadar en el mar"],
+        ["🦅", "Aprendió a volar sobre los cerros junto a los cóndores"],
+        ["🤝", "Se hizo amiga inseparable de los cazadores de la costa"],
+        ["🕳️", "Se quedó a vivir para siempre escondida en una cueva"],
       ],
       0,
-      "Pista: contrastá las motivaciones destructivas de la ballena con el accionar generoso del héroe."
+      "Pista: compará la primera escena con la última."
     ),
     V(
-      "En la escena 2 se sitúa a Góos viviendo en un «cañadón». ¿Qué es un «cañadón»?",
+      "En esta leyenda tehuelche, ¿qué es un «cañadón»?",
       [
-        ["🏜️", "Un valle o paso estrecho y profundo entre lomas o mesetas, característico del relieve patagónico"],
-        ["🌊", "Una isla de arena en medio del océano abierto"],
-        ["🌲", "Un bosque tupido de coníferas en alta montaña"],
-        ["🏠", "Un puerto artificial donde amarran embarcaciones"],
+        ["⛰️", "Un paso hondo y estrecho entre cerros o mesetas"],
+        ["🌳", "Un árbol muy alto que crece cerca de los ríos"],
+        ["⛵", "Un barco grande que usan los pescadores del sur"],
+        ["🦩", "Una laguna de agua salada con flamencos rosados"],
       ],
       0,
-      "Pista: pensá en el terreno costero y las hondonadas típicas de Santa Cruz."
+      "Pista: es el lugar de la tierra patagónica donde vivía Góos."
     ),
     E(
-      "¿Por qué este texto es considerado una leyenda mitológica y no un cuento realista ni una noticia?",
+      "¿Por qué este relato es una leyenda y no una noticia?",
       [
-        ["🫐", "Porque es un relato tradicional tehuelche que explica mediante elementos míticos el hábitat actual de la ballena"],
-        ["📰", "Porque informa con rigor científico sobre las características anatómicas de los cetáceos"],
-        ["🦊", "Porque incluye una moraleja final que aconseja a los niños cómo nadar en el mar"],
-        ["📖", "Porque es una novela de aventuras basada en hechos históricos contemporáneos"],
+        ["📜", "Porque explica el origen del mundo con elementos mágicos"],
+        ["📰", "Porque cuenta hechos reales que ocurrieron ayer en el pueblo"],
+        ["📋", "Porque da instrucciones numeradas para realizar un trabajo"],
+        ["🎵", "Porque tiene rimas cortas para cantar en una fiesta patria"],
       ],
       0,
-      "Pista: pensá en qué fenómeno de la naturaleza patagónica fundamenta la narración."
+      "Pista: las leyendas son relatos tradicionales sobre la naturaleza."
     ),
     VAL(
-      "¿Por qué la resolución que toma Elal con respecto a Góos resulta justa y armoniosa?",
+      "¿Por qué Elal es un personaje valioso para los tehuelches?",
       [
-        ["💡", "Porque en vez de destruir a la criatura, le asignó un hábitat propicio donde vivir sin dañar a los habitantes terrestres"],
-        ["🌊", "Porque obligó a todos los cazadores a abandonar sus tierras para pescar"],
-        ["🐋", "Porque demostró que los animales gigantes deben someterse a la voluntad de los más débiles"],
-        ["🪰", "Porque comprobó que las cosquillas son la mejor defensa en cualquier circunstancia"],
+        ["⭐", "Usó su ingenio y valentía para proteger a los demás"],
+        ["🏹", "Cazó a todos los animales que habitaban en la estepa"],
+        ["🪙", "Encontró un tesoro de oro escondido bajo las piedras"],
+        ["🏠", "Construyó casas de ladrillo para pasar el invierno"],
       ],
       0,
-      "Pista: valorá la decisión de ordenar el mundo natural sin aniquilar al animal."
+      "Pista: pensá en cómo ayudó a las personas y animales en peligro."
     ),
   ],
 
   // 3. La gallina de los huevos de oro (fábula de Esopo)
   "gallina-huevos-oro": [
     L(
-      "¿Con qué frecuencia y en qué momento la gallina ponía su extraordinario huevo de oro?",
+      "¿Qué cualidad maravillosa tenía la gallina del granjero?",
       [
-        ["🥚", "Puntualmente cada mañana al comenzar el día"],
-        ["🌙", "Únicamente en las noches de luna llena"],
-        ["📅", "Una sola vez por semana los días de mercado"],
-        ["🪙", "Cada vez que el granjero le daba maíz tostado"],
+        ["🥚", "Cada mañana ponía un huevo brillante de oro"],
+        ["🌅", "Cantaba melodías hermosas al salir el sol"],
+        ["🪶", "Tenía plumas suaves de muchos colores vivos"],
+        ["⛰️", "Volaba alto por encima de los cerros verdes"],
       ],
       0,
-      "Pista: verificá la rutina de la gallina en la primera escena."
+      "Pista: leé lo que pasaba cada mañana en la escena 1."
     ),
     L(
-      "¿A qué lugar huyó la gallina para protegerse del maltrato y las exigencias del dueño?",
+      "¿Qué lograron el granjero y su esposa con los primeros huevos?",
       [
-        ["🌲", "Se escapó del gallinero y se marchó lejos, hacia el bosque"],
-        ["🏘️", "Fue a refugiarse a la casa de los vecinos en el pueblo"],
-        ["🏰", "Se ocultó en el establo de un castillo cercano"],
-        ["🌾", "Se escondió bajo un trigal junto al camino vecinal"],
+        ["🏡", "Tuvieron una casa linda y todo lo que necesitaban"],
+        ["🐄", "Compraron cien vacas lecheras en la feria grande"],
+        ["⛵", "Viajaron en barco para conocer ciudades lejanas"],
+        ["🏬", "Abrieron un negocio de ropa fina en el pueblo"],
       ],
       0,
-      "Pista: mirá el sitio adonde escapó en la quinta escena."
+      "Pista: mirá cómo vivían gracias a los huevos en la escena 2."
     ),
     S(
-      "¿Qué transformaciones experimentó la vida material del granjero gracias a la venta inicial de los huevos?",
+      "¿Qué hizo el granjero al pensar que un huevo por día era poco?",
       [
-        ["🏡", "Prosperaron poco a poco hasta tener una vivienda confortable y lo necesario para vivir"],
-        ["👑", "Se convirtieron de la noche a la mañana en los gobernantes de toda la comarca"],
-        ["🪙", "Acumularon tanto oro que compraron todas las granjas y campos vecinos"],
-        ["⛵", "Abandonaron las tareas rurales para dedicarse a navegar en un barco propio"],
+        ["😠", "La apuraba, la despertaba de noche y no la dejaba descansar"],
+        ["🌾", "Le preparó un nido más tibio con paja fresca y maíz dorado"],
+        ["🛒", "Fue a la feria del pueblo a comprar comida especial para aves"],
+        ["🎉", "Llamó a sus vecinos para festejar la buena suerte de su granja"],
       ],
       0,
-      "Pista: leé cómo mejoró su bienestar cotidiano en la escena 2."
+      "Pista: revisá la mala actitud del granjero en la escena 4."
     ),
     S(
-      "¿Qué conductas invasivas comenzó a ejercer el granjero cuando su ambición se desbordó?",
+      "¿Qué ocurrió inmediatamente después del maltrato del granjero?",
       [
-        ["😡", "Despertaba al animal de noche, lo hostigaba y no le permitía tener descanso"],
-        ["🌾", "Le mezquinó la comida diaria para forzarla a poner más huevos"],
-        ["🔒", "La encerró en una caja oscura sin ventilación ni luz"],
-        ["🤝", "Contrató a cuidadores expertos para que la vigilaran día y noche"],
+        ["🌲", "La gallina se escapó asustada y se fue al bosque"],
+        ["🪙", "La gallina puso diez huevos dorados en una tarde"],
+        ["🏙️", "El granjero vendió su casa y se mudó a la ciudad"],
+        ["🍲", "La esposa del granjero preparó una rica comida"],
       ],
       0,
-      "Pista: revisá los abusos cometidos por el hombre en la escena 4."
+      "Pista: leé la reacción del animal en la escena 5."
     ),
     I(
-      "¿Cuál fue la causa directa de que cesara para siempre la obtención de riqueza en la granja?",
+      "¿Por qué el granjero actuó con tanta impaciencia y enojo?",
       [
-        ["🏃", "La huida irremediable de la gallina al bosque a causa del agobio y el asedio constante"],
-        ["🪙", "La caída del valor comercial del oro en las ferias del pueblo"],
-        ["🦊", "El ataque sorpresivo de un depredador silvestre que ingresó al corral"],
-        ["👵", "La decisión de la esposa de regalar el animal a una familia necesitada"],
+        ["💰", "Porque se volvió ambicioso y quería riquezas de golpe"],
+        ["🦊", "Porque tenía miedo de que los zorros entraran al corral"],
+        ["⏰", "Porque la gallina hacía mucho ruido durante la madrugada"],
+        ["📜", "Porque necesitaba pagar deudas urgentes en el mercado"],
       ],
       0,
-      "Pista: relacioná el trato despiadado del granjero con la partida de la gallina en las escenas 5 y 6."
+      "Pista: pensá en su queja de querer más y más en la escena 3."
     ),
     I(
-      "¿Cómo evolucionó la actitud del granjero desde el inicio de la historia hasta el desenlace?",
+      "¿Qué parte del texto resume la lección que recibió el hombre?",
       [
-        ["📉", "Pasó de disfrutar con tranquilidad de su bienestar a cegarse por la codicia y terminar en el lamento"],
-        ["📈", "Comenzó siendo un hombre avaro y se convirtió al final en un modelo de generosidad comunitaria"],
-        ["🤝", "Se mantuvo paciente y tolerante durante todo el relato sin alterar su conducta habitual"],
-        ["🌲", "Descubrió que prefería la vida solitaria en los bosques antes que tener bienes materiales"],
+        ["💡", "Por querer todo de golpe, había perdido lo que tenía"],
+        ["🏡", "Vendían cada huevo y tuvieron todo lo que necesitaban"],
+        ["🐔", "Un granjero y su esposa tenían una gallina especial"],
+        ["🌲", "La gallina, cansada y asustada, se fue hacia el bosque"],
       ],
       0,
-      "Pista: observá el contraste entre su vida en la escena 2 y su amargo balance en la escena 6."
+      "Pista: leé la última frase de la fábula en la escena 6."
     ),
     I(
-      "¿Qué expresión textual pone de manifiesto que el granjero era incapaz de valorar lo que ya poseía?",
+      "¿Cómo cambia la situación del granjero a lo largo de la fábula?",
       [
-        ["🗣️", "¡Un huevo por día es muy poco! —se quejaba queriendo más y más"],
-        ["🏡", "Poco a poco tuvieron una casa linda y todo lo que necesitaban"],
-        ["🥚", "Cada mañana la gallina muy especial ponía un huevo de oro"],
-        ["🌾", "Vendían cada huevo en el pueblo para sustentar su hogar"],
+        ["📉", "Pasa de tener una vida próspera a quedarse sin nada por codicia"],
+        ["👑", "Pasa de ser muy pobre a convertirse en el rey más rico del país"],
+        ["🌾", "Aprende a cuidar animales y abre una granja modelo en el pueblo"],
+        ["🎁", "Consigue muchas gallinas mágicas y reparte su riqueza a todos"],
       ],
       0,
-      "Pista: buscá la queja explícita del granjero en la tercera escena."
+      "Pista: compará su bienestar al inicio con su pérdida final."
     ),
     V(
-      "En el texto se califica la conducta de pretender «todo de golpe». ¿Qué significa la expresión «de golpe» en este contexto?",
+      "En el texto, ¿qué significa la palabra «gallinero»?",
       [
-        ["⚡", "De forma inmediata y apresurada, sin respetar los tiempos naturales ni los procesos"],
-        ["💥", "Recibiendo un impacto o golpe físico contra un objeto pesado"],
-        ["🚪", "Cerrando con violencia una puerta o ventana de la casa"],
-        ["🤕", "Provocando una lastimadura o moretón en el cuerpo"],
+        ["🏠", "El lugar cerrado donde duermen y se cuidan las gallinas"],
+        ["🧺", "Un canasto tejido donde se guardan las frutas maduras"],
+        ["⚙️", "Una máquina antigua que sirve para moler granos de trigo"],
+        ["🛤️", "Un camino de tierra que une la granja con el bosque alto"],
       ],
       0,
-      "Pista: pensá en la impaciencia por conseguir ganancias instantáneas."
+      "Pista: es el sitio de donde se escapó la gallina."
     ),
     E(
-      "¿Qué elementos característicos sitúan a este relato dentro del género de las fábulas?",
+      "¿Qué característica demuestra que este relato es una fábula?",
       [
-        ["🦊", "Su brevedad, el contraste de actitudes morales y una conclusión con enseñanza o moraleja explícita"],
-        ["🫐", "La presencia de seres mitológicos que explican los accidentes geográficos de una región"],
-        ["🎭", "La división en actos teatrales y la abundancia de canciones en rima"],
-        ["📰", "El relato cronológico de noticias reales sucedidas en granjas agropecuarias"],
+        ["📖", "Deja una enseñanza moral clara sobre la conducta humana"],
+        ["🔬", "Describe con precisión científica la vida de las aves"],
+        ["🌋", "Explica el origen mágico de las montañas y los volcanes"],
+        ["📅", "Relata un hecho histórico con fechas y nombres reales"],
       ],
       0,
-      "Pista: analizá la función didáctica y la estructura clásica de Esopo."
+      "Pista: las fábulas son historias breves con moraleja."
     ),
     VAL(
-      "¿Por qué el mensaje de esta historia conserva plena actualidad en la vida de las personas?",
+      "¿Qué consejo le darías al granjero para evitar su pérdida?",
       [
-        ["💡", "Porque advierte que la avaricia desmedida y la falta de gratitud conducen a arruinar las oportunidades valiosas"],
-        ["🐔", "Porque enseña las técnicas de cuidado adecuadas para aumentar la producción de una granja"],
-        ["🪙", "Porque demuestra que comerciar con metales preciosos es la única actividad redituable"],
-        ["🌲", "Porque demuestra que todos los animales domésticos tarde o temprano huyen a los montes"],
+        ["❤️", "Agradecer lo que recibía cada día y cuidar a su gallina"],
+        ["⏰", "Despertar a la gallina más temprano para que ponga más"],
+        ["🚢", "Vender la granja para dedicarse al comercio en el puerto"],
+        ["🪺", "Buscar huevos de oro en los nidos de los pájaros libres"],
       ],
       0,
-      "Pista: reflexioná sobre las consecuencias del egoísmo y el exceso de ambición en los vínculos humanos."
+      "Pista: pensá en la importancia de cuidar lo que uno ya tiene."
     ),
   ],
 
   // 4. Las medias de los flamencos (cuento de Horacio Quiroga)
   "medias-flamencos": [
     L(
-      "¿Quiénes fueron las anfitrionas que organizaron la gran fiesta a la orilla del río?",
+      "¿Quiénes organizaron el gran baile a la orilla del río?",
       [
-        ["🐍", "Las víboras, que invitaron a todos los animales de la selva"],
-        ["🦩", "Los flamencos, que deseaban exhibir sus trajes de fiesta"],
-        ["🦔", "El tatú, que preparó una serie de bromas para divertirse"],
-        ["🐟", "Los peces, que convocaron a celebrar en la orilla del agua"],
+        ["🐍", "Las víboras, que invitaron a todos los animales"],
+        ["🦩", "Los flamencos, que querían lucir patas blancas"],
+        ["🐟", "Los peces plateados que saltaban sobre el agua"],
+        ["🦔", "El tatú pícaro que fabricaba ropa de fiesta"],
       ],
       0,
-      "Pista: verificá quiénes extendieron la invitación en la primera escena."
+      "Pista: leé quiénes hicieron la fiesta en la escena 1."
     ),
     L(
-      "¿Qué apariencia original tenían las patas de los flamencos antes de que sucedieran los hechos?",
+      "¿De qué color eran las patas de los flamencos al principio?",
       [
-        ["⚪", "Eran enteramente blancas"],
-        ["🔴", "Eran de un color rojo brillante"],
-        ["🖤", "Tenían rayas negras y amarillas"],
-        ["🟤", "Eran marrones y escamosas"],
+        ["⚪", "Eran blancas y querían adornarlas para la fiesta"],
+        ["🔴", "Eran coloradas y les dolían mucho por el ardor"],
+        ["🟡", "Eran amarillas como las de los patos del bañado"],
+        ["⚫", "Eran negras como las plumas de los cuervos viejos"],
       ],
       0,
-      "Pista: buscá la descripción del aspecto inicial en la segunda escena."
+      "Pista: fijate cómo eran sus patas en la escena 2."
     ),
     S(
-      "¿Qué ocurrió en el baile mientras los flamencos danzaban sin detenerse con sus llamativas medias?",
+      "¿Quién les entregó a los flamencos las supuestas medias?",
       [
-        ["👀", "Las víboras de coral observaron con detenimiento y descubrieron que eran cueros de sus hermanas"],
-        ["🎉", "Los otros animales los premiaron como los mejores bailarines de la noche"],
-        ["🦔", "El tatú confesó públicamente ante todos que les había jugado una trampa"],
-        ["🌧️", "Una lluvia torrencial disolvió la tintura de las supuestas medias rayadas"],
+        ["🦔", "Un tatú bromista que les dio cueros de víboras"],
+        ["🦉", "Una lechuza que tenía un almacén en el monte"],
+        ["🐸", "Un sapo que cosía trajes de baile en la orilla"],
+        ["🐍", "Las mismas víboras de coral antes del festejo"],
       ],
       0,
-      "Pista: leé cómo se desencadena el conflicto en la cuarta escena."
+      "Pista: mirá qué animal los engañó en la escena 3."
     ),
     S(
-      "¿Qué hicieron los flamencos de inmediato tras recibir el violento ataque en sus extremidades?",
+      "¿Qué hicieron las víboras al descubrir el engaño de las medias?",
       [
-        ["🌊", "Corrieron desesperados a sumergir sus patas en las aguas frescas del río"],
-        ["🦔", "Fueron a buscar al tatú bromista para reclamarle por su engaño"],
-        ["🌲", "Se refugiaron en las copas de los árboles de la selva para escapar"],
-        ["🩹", "Se vendaron las heridas con hojas de plantas medicinales"],
+        ["😡", "Se enojaron mucho y les mordieron las patas con furia"],
+        ["🎉", "Se pusieron a reír y felicitaron a las aves por bailar"],
+        ["🌳", "Fueron a esconderse en los árboles más altos del monte"],
+        ["🪡", "Le pidieron al tatú que les confeccione trajes iguales"],
       ],
       0,
-      "Pista: mirá adónde acudieron para calmar el dolor en la quinta escena."
+      "Pista: leé la reacción furiosa de las víboras en la escena 5."
     ),
     I(
-      "¿Por qué la reacción de las víboras de coral fue tan furiosa e implacable contra los flamencos?",
+      "¿Por qué los flamencos aceptaron las medias sin sospechar nada?",
       [
-        ["😡", "Porque consideraron una ofensa atroz y una burla trágica que vistieran los cueros de víboras muertas"],
-        ["💃", "Porque tenían envidia del éxito que los flamencos cosechaban en la pista de baile"],
-        ["🐍", "Porque los flamencos les pisaron la cola mientras ejecutaban sus coreografías"],
-        ["🌊", "Porque creían que los flamencos pretendían robarles el agua fresca del río"],
+        ["✨", "Eran vanidosos y solo pensaban en verse elegantes"],
+        ["🏆", "Sabían que las víboras iban a premiar el mejor disfraz"],
+        ["🧶", "El tatú les aseguró que las medias eran de lana tejida"],
+        ["❄️", "Tenían mucho frío en las patas y querían abrigarse"],
       ],
       0,
-      "Pista: pensá en el significado de bailar llevando puestas las pieles de sus congéneres."
+      "Pista: pensá en sus ganas desesperadas de lucirse ante todos."
     ),
     I(
-      "¿Qué pasaje del texto pone de manifiesto el afán de lucimiento y distinción de los flamencos?",
+      "¿Qué parte del texto muestra la consecuencia que sufren hoy?",
       [
-        ["🦩", "Querían ir muy elegantes y salieron a buscar medias para deslumbrar en el baile"],
-        ["⚪", "Sus patas eran blancas y se sentían conformes con su plumaje habitual"],
-        ["🦔", "Aceptaron las prendas sin hacer preguntas por pereza de buscar otra vestimenta"],
-        ["🌊", "Preferían quedarse en el río antes que asistir a reuniones sociales"],
+        ["💧", "Pasan el día en el agua para que se les calme el ardor"],
+        ["🎶", "Una vez las víboras dieron un gran baile en el río"],
+        ["💃", "Bailaron toda la noche con sus medias de tres colores"],
+        ["🦩", "Los flamencos tenían las patas blancas y salieron a buscar"],
       ],
       0,
-      "Pista: leé los motivos por los que recorrieron la selva buscando medias en la escena 2."
+      "Pista: mirá qué hacen parados en el agua en la escena 6."
     ),
     I(
-      "¿Qué diferencia de conducta se observa entre la ingenuidad de los flamencos y la picardía del tatú?",
+      "¿En qué se diferencia el inicio del final para los flamencos?",
       [
-        ["🎭", "Los flamencos actuaron con inocencia y vanidad ciega, mientras el tatú planeó una burla pesada conociendo el riesgo"],
-        ["🦔", "El tatú intentaba ayudarlos con sincera bondad y los flamencos pretendían estafarlo"],
-        ["🐍", "Ambos personajes estaban confabulados en secreto para arruinar el festejo de las víboras"],
-        ["🌊", "Los flamencos conocían el origen de los cueros pero el tatú ignoraba de qué se trataba"],
+        ["🩹", "Al inicio tenían patas blancas y al final sufren ardor"],
+        ["🐟", "Al inicio volaban alto y al final nadan como los peces"],
+        ["🎉", "Al inicio eran tímidos y al final organizan los bailes"],
+        ["🪶", "Al inicio no tenían plumas y al final consiguen alas"],
       ],
       0,
-      "Pista: analizá la intención maliciosa del dador frente a la credulidad de las aves."
+      "Pista: compará el color y la salud de sus patas."
     ),
     V(
-      "En la escena 6 se explica que permanecen en el agua para calmar el «ardor». ¿Qué significa «ardor»?",
+      "En el cuento, ¿qué significa la palabra «ardor»?",
       [
-        ["🔥", "Una intensa sensación de quemazón, irritación punzante o dolor en la piel"],
-        ["❄️", "Un adormecimiento frío provocado por la baja temperatura del agua"],
-        ["🩸", "El peso agobiante de los músculos fatigados tras horas de esfuerzo"],
-        ["💧", "La picazón suave que provocan las algas y el fango ribereño"],
+        ["🔥", "Una sensación de calor o quemazón que molesta y duele"],
+        ["😄", "Un cosquilleo suave y agradable en la punta de los dedos"],
+        ["❄️", "Un frío intenso que congela el agua fresca de la laguna"],
+        ["😴", "Un cansancio pesado en las alas después de volar lejos"],
       ],
       0,
-      "Pista: pensá en el efecto inflamatorio y doloroso del veneno de las víboras."
+      "Pista: es lo que sienten en las patas mordidas por las víboras."
     ),
     E(
-      "¿Qué particularidad distingue a este relato escrito por Horacio Quiroga?",
+      "¿Qué momento marca el desenlace o resolución de la historia?",
       [
-        ["📖", "Es un cuento de autor de la selva misionera que recrea con fantasía poética un rasgo físico y biológico de los animales"],
-        ["📜", "Es una fábula griega antigua destinada a enseñar pautas sobre confección de indumentaria"],
-        ["🫐", "Es una leyenda sagrada de origen guaraní transmitida exclusivamente de manera oral"],
-        ["📰", "Es un informe ornitológico que documenta los hábitos alimenticios de las aves acuáticas"],
+        ["🌊", "Cuando los flamencos corren a meter sus patas al agua"],
+        ["💌", "Cuando los animales reciben la invitación de las víboras"],
+        ["🦔", "Cuando el tatú se burla de ellos detrás de los arbustos"],
+        ["👔", "Cuando los flamencos eligen qué ropa ponerse para bailar"],
       ],
       0,
-      "Pista: recordá que forma parte de la obra consagrada 'Cuentos de la selva'."
+      "Pista: es la escena final que explica cómo viven hoy."
     ),
     VAL(
-      "¿Por qué puede afirmarse que la obsesión por aparentar lo que no se es condujo a los flamencos a su desgracia?",
+      "¿Qué nos enseña este cuento sobre la vanidad desmedida?",
       [
-        ["✨", "Porque su afán por impresionar a los demás los llevó a usar atuendos engañosos sin medir las graves consecuencias"],
-        ["🐍", "Porque acudir a un baile de gala es una actividad prohibida para las aves silvestres"],
-        ["💃", "Porque debieron haber practicado danzas complejas antes de exhibirse en público"],
-        ["⚪", "Porque el color blanco de sus extremidades era considerado un defecto insalvable"],
+        ["💡", "Querer impresionar sin medir consecuencias trae problemas"],
+        ["👗", "Es buena idea usar ropa de otros sin pedirles permiso antes"],
+        ["🌙", "Los animales con plumas no deben asistir a bailes de noche"],
+        ["😂", "Las bromas pesadas siempre terminan en fiestas divertidas"],
       ],
       0,
-      "Pista: evaluá cómo su vanidad les impidió razonar sobre el peligro que implicaba usar pieles ajenas."
+      "Pista: pensá en por qué los flamencos terminaron lastimados."
     ),
   ],
 
   // 5. La leyenda de las Cataratas del Iguazú (leyenda guaraní)
   "leyenda-iguazu": [
     L(
-      "¿Quién era Mboi y qué rol desempeñaba según las creencias tradicionales guaraníes?",
+      "¿Quién era Mboi en la selva misionera?",
       [
-        ["🐍", "Una serpiente gigante venerada que habitaba en la selva y cuidaba las aguas del río Iguazú"],
-        ["👑", "El cacique supremo de la aldea encargado de designar a las parejas del pueblo"],
-        ["🌊", "Un espíritu benévolo que ayudaba a los pescadores guiando sus canoas"],
-        ["🌈", "Una divinidad del cielo que pintaba los arcoíris sobre las copas de los árboles"],
+        ["🐍", "Una serpiente gigante que cuidaba las aguas del río"],
+        ["👑", "Un cacique anciano que gobernaba una aldea tranquila"],
+        ["🚣", "Un guerrero joven que sabía remar muy rápido en canoa"],
+        ["🦜", "Un pájaro de plumas azules que cantaba sobre la roca"],
       ],
       0,
-      "Pista: revisá la presentación del personaje en la primera escena."
+      "Pista: mirá a quién cuidaba y respetaba el pueblo en la escena 1."
     ),
     L(
-      "¿En qué elementos de la naturaleza quedaron transformados Naipí y Tarobá tras la furia de Mboi?",
+      "¿Qué hicieron Naipí y Tarobá para evitar la separación?",
       [
-        ["⛰️", "Naipí en una gran roca en medio de las cataratas y Tarobá en una palmera en la orilla"],
-        ["🌊", "Ambos en dos corrientes de agua que se unen en el fondo del cañón"],
-        ["🐦", "Naipí en un hornero cantor y Tarobá en un árbol de yerba mate"],
-        ["🛶", "En dos canoas de piedra que navegan eternamente en el río"],
+        ["🚣", "Escaparon juntos en una canoa navegando por el río"],
+        ["⛰️", "Se escondieron en una cueva profunda de la montaña"],
+        ["🤝", "Fueron a pedirle ayuda a las tribus vecinas del sur"],
+        ["🌺", "Le llevaron regalos de frutas y flores a la serpiente"],
       ],
       0,
-      "Pista: buscá en la quinta escena la metamorfosis de los enamorados."
+      "Pista: leé cómo huyeron juntos en la escena 3."
     ),
     S(
-      "¿Qué osado plan ideó Tarobá al enterarse de que Naipí había sido elegida para servir a la serpiente?",
+      "¿Cómo reaccionó Mboi cuando descubrió la fuga de los jóvenes?",
       [
-        ["🛶", "Preparó en secreto una canoa para huir juntos navegando por las aguas del río"],
-        ["🏹", "Organizó a los cazadores del pueblo para combatir cuerpo a cuerpo contra Mboi"],
-        ["🔥", "Prendió fuego a la selva para distraer la vigilancia del monstruo fluvial"],
-        ["👑", "Le suplicó al cacique que designara a otra joven de la comunidad"],
+        ["🌊", "Se metió en la tierra, se retorció y partió el río en dos"],
+        ["🛶", "Nadó detrás de ellos muy rápido y les quitó los remos de madera"],
+        ["🏹", "Llamó a los cazadores de la selva para que los atraparan vivos"],
+        ["🔥", "Lanzó fuego por la boca e incendió los árboles de la orilla"],
       ],
       0,
-      "Pista: mirá qué preparativos ejecutó Tarobá en la tercera escena."
+      "Pista: fijate en la tremenda furia de Mboi en la escena 4."
     ),
     S(
-      "¿Qué cataclismo desató la serpiente Mboi al advertir la fuga de los amantes?",
+      "¿En qué se transformaron Naipí y Tarobá al caer las aguas?",
       [
-        ["💥", "Se metió en la tierra, se retorció con fuerza y partió el río en dos formando las cataratas"],
-        ["🌧️", "Hizo caer una tormenta de rayos que incendió las orillas selváticas"],
-        ["🐍", "Se tragó toda el agua del cauce dejando el lecho completamente seco"],
-        ["🌪️", "Levantó un torbellino de viento que arrastró la canoa hacia la selva"],
+        ["🌴", "Naipí en una roca y Tarobá en una palmera de la orilla"],
+        ["🌺", "Naipí en una flor roja y Tarobá en un árbol de ceibo"],
+        ["🦋", "Naipí en una mariposa y Tarobá en un pez del arroyo"],
+        ["⭐", "Naipí en una estrella y Tarobá en una nube de lluvia"],
       ],
       0,
-      "Pista: leé cómo se originaron las caídas de agua en la escena 4."
+      "Pista: leé la transformación mágica en la escena 5."
     ),
     I(
-      "¿Por qué los enamorados desafiaron una tradición tan arraigada y peligrosa?",
+      "¿Por qué Tarobá desafió a la temible serpiente Mboi?",
       [
-        ["❤️", "Por el profundo amor que se tenían, el cual los impulsó a buscar un destino compartido en libertad"],
-        ["🛶", "Porque Tarobá quería demostrar su destreza como timonel de canoas veloces"],
-        ["🐍", "Porque desconocían el inmenso poder sobrenatural que tenía la serpiente Mboi"],
-        ["🌊", "Porque deseaban descubrir nuevas tierras más allá de los confines de la selva"],
+        ["❤️", "Porque amaba a Naipí y no quería que se la llevaran"],
+        ["💪", "Porque quería demostrar que era el más fuerte de todos"],
+        ["🪙", "Porque buscaba encontrar oro en el fondo de las cascadas"],
+        ["🏹", "Porque los ancianos de la tribu le ordenaron luchar"],
       ],
       0,
-      "Pista: pensá en los sentimientos que unían a la pareja descritos en la tercera escena."
+      "Pista: pensá en los sentimientos de los dos jóvenes."
     ),
     I(
-      "¿Qué interpretación simbólica le otorga la leyenda a la presencia constante del arcoíris sobre las aguas?",
+      "¿Qué parte del texto muestra que su unión sigue presente?",
       [
-        ["🌈", "Representa un puente que une a Naipí y Tarobá, quienes se siguen queriendo"],
-        ["☀️", "Simboliza el perdón que Mboi concedió finalmente a los pobladores de la región"],
-        ["🌧️", "Indica el cese de las lluvias tropicales en la cuenca del río Misiones"],
-        ["💧", "Muestra el reflejo de las escamas brillantes de la serpiente gigante oculta"],
+        ["🌈", "El arcoíris sobre las cataratas une a Naipí y a Tarobá"],
+        ["🐍", "Los guaraníes respetaban mucho a la serpiente gigante"],
+        ["🌊", "Cada año una joven del pueblo debía servir a Mboi en el río"],
+        ["🛶", "Tarobá preparó una canoa de madera para navegar juntos"],
       ],
       0,
-      "Pista: leé la conmovedora explicación de la sexta escena."
+      "Pista: leé el final con el puente de colores en la escena 6."
     ),
     I(
-      "¿Cómo contrasta el poder destructivo de Mboi con la fuerza del lazo entre Naipí y Tarobá?",
+      "¿Qué accidente geográfico de la Argentina explica esta leyenda?",
       [
-        ["✨", "Mboi logró separar físicamente sus cuerpos partiendo el río, pero no pudo disolver el vínculo afectivo que aún los une"],
-        ["🐍", "Mboi se arrepintió de su furia y decidió unirlos nuevamente en la orilla del río"],
-        ["🛶", "Los enamorados lograron derrotar físicamente a la serpiente gracias a su canoa"],
-        ["⛰️", "El amor de los jóvenes fue olvidado con el tiempo al quedar convertidos en roca y palmera"],
+        ["🌊", "El origen de las Cataratas del Iguazú en Misiones"],
+        ["🧊", "La formación de los grandes glaciares en el sur"],
+        ["🏔️", "El nacimiento de la cordillera nevada de los Andes"],
+        ["🧂", "La creación de las salinas grandes del norte árido"],
       ],
       0,
-      "Pista: contrastá la inmovilidad física impuesta con el puente perpetuo del arcoíris."
+      "Pista: está en el título y en el escenario del relato."
     ),
     V(
-      "En la escena 1 se afirma que los guaraníes «respetaban» mucho a Mboi. ¿Qué implicaba este respeto?",
+      "En el texto, ¿qué significa la palabra «cataratas»?",
       [
-        ["🙏", "Una mezcla de reverencia profunda, temor a su poder y acatamiento de sus exigencias"],
-        ["🗣️", "Un trato amistoso y cotidiano de conversación en las orillas del agua"],
-        ["🏹", "El desafío militar permanente para desalojarla de sus dominios selváticos"],
-        ["📜", "La firma de acuerdos escritos sobre los límites territoriales de la aldea"],
+        ["💦", "Grandes caídas de agua desde alturas considerables"],
+        ["🏜️", "Ríos angostos y secos que no tienen corriente de agua"],
+        ["🕳️", "Cuevas oscuras y húmedas debajo de las piedras grandes"],
+        ["🛤️", "Caminos de tierra que cruzan por el medio de la selva"],
       ],
       0,
-      "Pista: pensá en las obligaciones y ofrendas anuales consagradas a la serpiente."
+      "Pista: es la enorme caída de agua del río partido en dos."
     ),
     E(
-      "¿Qué función cumple esta narración tradicional dentro del patrimonio cultural del litoral argentino?",
+      "¿Cuál es el momento de mayor suspenso o clímax del relato?",
       [
-        ["🫐", "Es una leyenda del pueblo guaraní que dota de sentido poético y espiritual a una maravilla natural"],
-        ["📖", "Es un relato de ciencia ficción ambientado en los ríos tropicales del continente"],
-        ["🦊", "Es una fábula moral que aconseja no emprender viajes fluviales en canoa"],
-        ["📰", "Es una guía turística que detalla los circuitos peatonales de los parques nacionales"],
+        ["⚡", "Cuando la serpiente enfurecida sacude la tierra y quiebra el río"],
+        ["👥", "Cuando los pobladores eligen a Naipí para servir en la orilla"],
+        ["🛶", "Cuando Tarobá talla la madera para construir la canoa ligera"],
+        ["🌅", "Cuando sale el sol y los pájaros cantan sobre las palmeras"],
       ],
       0,
-      "Pista: relacioná la tradición oral autóctona con el imponente paisaje de las cataratas misioneras."
+      "Pista: es el momento más emocionante y dramático en la escena 4."
     ),
     VAL(
-      "¿Por qué el desenlace de esta leyenda resulta conmovedor para el lector?",
+      "¿Qué mensaje sobre la naturaleza nos transmite esta historia?",
       [
-        ["💡", "Porque transforma una separación trágica en un homenaje a la fidelidad eterna a través del paisaje"],
-        ["🌊", "Porque celebra el triunfo indiscutido de las fuerzas destructivas del río"],
-        ["⛰️", "Porque convence de que las rocas y palmeras tienen capacidad de desplazamiento"],
-        ["🛶", "Porque demuestra que todas las fugas en canoa concluyen en naufragios inevitables"],
+        ["✨", "El amor puede transformar el paisaje en algo eterno y bello"],
+        ["⚠️", "Los ríos caudalosos son peligrosos y nadie debe navegar en ellos"],
+        ["🚪", "Es mejor no rebelarse nunca ante las dificultades del destino"],
+        ["🐍", "Los monstruos gigantes siempre consiguen ganar todas las batallas"],
       ],
       0,
-      "Pista: fundamentá tu apreciación en cómo el relato resignifica el arcoíris como lazo de afecto."
+      "Pista: mirá cómo el arcoíris recuerda el amor de los protagonistas."
     ),
   ],
 
   // 6. El ratón de campo y el ratón de ciudad (fábula de Esopo)
   "raton-campo-ciudad": [
     L(
-      "¿Qué alimentos integraban el almuerzo que el anfitrión campestre le convidó a su pariente urbano?",
+      "¿Dónde vivía el ratón de campo y qué comida ofreció a su primo?",
       [
-        ["🌾", "Granos de trigo, raíces y agua fresca"],
-        ["🧀", "Porciones abundantes de quesos curados, panes y tortas"],
-        ["🍎", "Manzanas asadas y pasteles horneados en la granja"],
-        ["🌽", "Choclos hervidos y semillas de girasol tostadas"],
+        ["🌾", "Vivía junto al trigal y sirvió granos, raíces y agua"],
+        ["🛖", "Vivía en un viejo galpón y preparó una sopa caliente"],
+        ["🏭", "Vivía adentro de un molino y convidó harina blanca"],
+        ["🌉", "Vivía bajo un puente y comieron restos de pan duro"],
       ],
       0,
-      "Pista: leé el menú modesto detallado en la segunda escena."
+      "Pista: leé cómo vivía y qué comía en las escenas 1 y 2."
     ),
     L(
-      "¿Qué amenaza irrumpió en primer lugar cuando ambos ratones se disponían a degustar el banquete citadino?",
+      "¿Qué platos apetitosos había en la mesa de la casa de la ciudad?",
       [
-        ["🐱", "Un gato que apareció de repente y los obligó a esconderse"],
-        ["🧹", "Un grupo de personas que blandía escobas contra el piso"],
-        ["🐕", "Un perro guardián que derribó la mesa de un salto"],
-        ["🪤", "Una trampa mecánica colocada junto a las tortas"],
+        ["🧀", "Había ricos quesos, panes frescos y deliciosas tortas"],
+        ["🍎", "Había frutas maduras recolectadas del bosque cercano"],
+        ["🌽", "Había semillas tostadas y granos de maíz cosechados"],
+        ["🍖", "Había carne asada que sobró del almuerzo familiar"],
       ],
       0,
-      "Pista: buscá qué depredador provocó la primera huida en la cuarta escena."
+      "Pista: mirá qué encontró el ratón al llegar en la escena 3."
     ),
     S(
-      "¿Qué contratiempo sobrevino de inmediato apenas intentaron salir de su escondite para retomar la comida?",
+      "¿Qué peligro apareció primero mientras los dos ratones comían?",
       [
-        ["🧹", "Entraron unas personas haciendo ruido con escobas y tuvieron que escapar con miedo"],
-        ["🐱", "El gato derribó la puerta del refugio donde se hallaban agazapados"],
-        ["🍽️", "Los dueños de la casa retiraron todos los platos de la mesa y la dejaron vacía"],
-        ["🚪", "Se apagaron las luces de la sala y quedaron en tinieblas"],
+        ["🐱", "Apareció un gato y tuvieron que esconderse en un agujero"],
+        ["🌪️", "Se desató una tormenta de viento que abrió las ventanas"],
+        ["🐕", "Entró un perro guardián que comenzó a ladrar con fuerza"],
+        ["🚪", "Se cayó un mueble de la cocina y los dejó atrapados"],
       ],
       0,
-      "Pista: revisá la segunda interrupción que sufrieron en la escena 5."
+      "Pista: leé quién interrumpió la comida en la escena 4."
     ),
     S(
-      "¿Qué determinación irrevocable tomó el ratón campesino tras constatar la sucesión de peligros?",
+      "¿Qué decidió hacer el ratón de campo tras el susto con las escobas?",
       [
-        ["🌾", "Agradeció la hospitalidad de su primo y volvió feliz a su campo tranquilo"],
-        ["🐭", "Decidió mudarse a la ciudad para acostumbrarse a convivir con el gato"],
-        ["🧀", "Intentó cargar un trozo de queso para llevarlo a su cueva"],
-        ["🤝", "Le propuso al primo construir un refugio secreto debajo del piso de la gran casa"],
+        ["🌾", "Agradecer a su primo y volver feliz a su campo tranquilo"],
+        ["📦", "Quedarse a vivir para siempre escondido en la alacena"],
+        ["🏙️", "Convencer al primo de mudarse juntos a otra ciudad grande"],
+        ["🧹", "Buscar un palo de madera para enfrentar al gato de la casa"],
       ],
       0,
-      "Pista: mirá las palabras y la partida del protagonista en la escena 6."
+      "Pista: mirá su despedida y regreso en la escena 6."
     ),
     I(
-      "¿Qué razón fundamental impulsó al ratón de campo a rechazar las comodidades de la ciudad?",
+      "¿Por qué el ratón de campo prefirió su vida humilde?",
       [
-        ["😌", "La convicción de que la paz y la tranquilidad valen más que cualquier banquete lleno de sustos"],
-        ["😋", "El desagrado por el sabor de los panes y las tortas refinadas"],
-        ["🌾", "La preocupación por el estado en que habían quedado sus sembrados de trigo"],
-        ["🏃", "El cansancio por haber tenido que correr distancias largas dentro de la casa"],
+        ["☮️", "Valoraba la paz y la seguridad más que el lujo con miedo"],
+        ["🧀", "No le gustaba el sabor de los quesos ni de las tortas"],
+        ["🚜", "Extrañaba levantarse temprano para trabajar la tierra"],
+        ["👋", "Su primo le pidió que se fuera rápido de la casa grande"],
       ],
       0,
-      "Pista: meditá sobre la sabia reflexión que resume su postura en la sexta escena."
+      "Pista: pensá en lo que sintió con los ruidos y sustos de la ciudad."
     ),
     I(
-      "¿Qué frase textual sintetiza con claridad la contraposición entre ambos estilos de vida?",
+      "¿Qué frase del texto resume la conclusión del ratón de campo?",
       [
-        ["🗣️", "Prefiero mi comida simple y tranquila a tus tortas con sustos"],
-        ["🧀", "¡Qué comida tan simple! Vení a mi casa y vas a ver"],
-        ["🍽️", "¡Cuánta comida! —dijo admirado el ratón de campo"],
-        ["🌾", "Un ratón de campo vivía tranquilo en una cueva junto al trigal"],
+        ["💬", "Prefiero mi comida simple y tranquila a tus tortas con sustos"],
+        ["🍽️", "En la ciudad vivía en una casa enorme con mucha comida en la mesa"],
+        ["🏡", "Vení a mi casa y vas a ver cuántas cosas ricas tengo para convidar"],
+        ["🏃", "Los dos ratones corrieron asustados a meterse en un agujero chico"],
       ],
       0,
-      "Pista: identificá la frase de despedida en la última escena."
+      "Pista: buscá las palabras finales del ratón en la escena 6."
     ),
     I(
-      "¿Qué contraste de valores encarnan el ratón de ciudad y el ratón de campo en la narración?",
+      "¿En qué se diferencian las formas de pensar de ambos primos?",
       [
-        ["⚖️", "El de ciudad prioriza el lujo aceptando el miedo continuo, mientras el de campo privilegia la paz y la libertad"],
-        ["🧀", "El de campo es generoso y solidario, mientras el de ciudad carece de modales y no sabe recibir visitas"],
-        ["🐱", "El de ciudad es temeroso y cobarde, mientras el de campo sabe defenderse con astucia frente a los gatos"],
-        ["🌾", "Ambos personajes persiguen idénticos objetivos de vida pero en escenarios geográficos diversos"],
+        ["⚖️", "Uno prefiere la calma sencilla y el otro busca lujos peligrosos"],
+        ["🏊", "Uno sabe nadar en los ríos y el otro prefiere trepar a los techos"],
+        ["🌙", "Uno come solamente de noche y el otro busca comida durante el día"],
+        ["🐾", "Uno es amigo de los gatos y el otro prefiere jugar con los perros"],
       ],
       0,
-      "Pista: compará lo que cada uno considera indispensable para ser dichoso."
+      "Pista: compará lo que cada uno necesita para sentirse feliz."
     ),
     V(
-      "En la escena 1 se sitúa la morada del ratón de campo junto al «trigal». ¿Qué es un «trigal»?",
+      "En el relato, ¿qué es un «trigal»?",
       [
-        ["🌾", "Un terreno o campo sembrado de trigo"],
-        ["🪵", "Un montón de leña apilada en el bosque"],
-        ["🥖", "Una panadería donde hornean panes"],
-        ["🏡", "Un corral cerrado para animales del campo"],
+        ["🌾", "Un campo sembrado con plantas de trigo"],
+        ["🌲", "Un bosque espeso de lengas y pinos"],
+        ["🐑", "Un corral de madera para guardar ovejas"],
+        ["⚙️", "Un molino antiguo para fabricar harina"],
       ],
       0,
-      "Pista: pensá en las espigas de las que se alimentaba el ratón campestre."
+      "Pista: es el lugar donde crecen los granos de trigo que come el ratón."
     ),
     E(
-      "¿Cuál es el propósito discursivo esencial de esta obra atribuida a Esopo?",
+      "¿Cómo está organizada esta fábula para transmitir su enseñanza?",
       [
-        ["🦊", "Transmitir una lección ética universal confrontando actitudes para que el lector reflexione sobre sus elecciones"],
-        ["🫐", "Narrar una leyenda folclórica sobre el surgimiento de las diferentes especies de roedores"],
-        ["📖", "Entretener mediante una novela de intriga policial ambientada en recintos residenciales"],
-        ["📰", "Publicar un reportaje comparativo sobre los costos de alimentación en el campo y la metrópolis"],
+        ["📖", "Compara dos formas de vida enfrentándolas a situaciones similares"],
+        ["🚢", "Narra una expedición marítima con fechas históricas comprobadas"],
+        ["🧩", "Presenta una serie de adivinanzas con rimas al final de cada parte"],
+        ["🚜", "Da instrucciones sobre cómo cuidar roedores en una granja modelo"],
       ],
       0,
-      "Pista: analizá la función moralizadora clásica del género fabulístico."
+      "Pista: muestra primero la comida del campo y luego la de la ciudad."
     ),
     VAL(
-      "¿Por qué la elección que realiza el ratón de campo resulta sumamente acertada y sensata?",
+      "¿Qué enseñanza importante nos deja esta fábula para el día a día?",
       [
-        ["💡", "Porque ningún placer suntuoso compensa vivir bajo la angustia permanente de perder la propia vida"],
-        ["🌾", "Porque demuestra que los productos agrícolas crudos son más nutritivos que las tortas horneadas"],
-        ["🐱", "Porque comprueba que los animales campestres no están capacitados para eludir las trampas de la ciudad"],
-        ["🏃", "Porque escapar de los felinos es un ejercicio agotador que perjudica la salud de los roedores"],
+        ["💛", "La tranquilidad y la seguridad valen más que las riquezas con sustos"],
+        ["🚫", "Conviene no invitar nunca a familiares a compartir la mesa de casa"],
+        ["🏙️", "En las grandes ciudades no existe ningún peligro para los pequeños"],
+        ["🍰", "Los alimentos dulces son mucho más nutritivos que los granos secos"],
       ],
       0,
-      "Pista: fundamentá tu juicio en la primacía de la tranquilidad y la preservación de la vida por sobre la opulencia."
+      "Pista: pensá en por qué el ratón de campo volvió contento a su hogar."
     ),
   ],
 };

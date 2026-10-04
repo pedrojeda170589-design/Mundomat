@@ -13,11 +13,36 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-05 | Escuelas, aulas y docentes: cada docente ve solo su aula; administración general para Pedro | Claude | 🟢 UNIDA A MAIN (falta conectar Supabase: ver docs/plataforma/CONFIGURAR.md) |
-| AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | ⏳ PENDIENTE |
+| AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-05 · Ajustes de comprensión: lenguaje de 3.º y opciones parejas (Antigravity)
+- **Lenguaje accesible y adaptado a 3.º grado (8 años):**
+  - Reescritura completa de las 60 preguntas de `src/lib/cuentos/preguntas-g3.ts` para los 6 cuentos (`tortuga-gigante`, `leyenda-ballena`, `gallina-huevos-oro`, `medias-flamencos`, `leyenda-iguazu`, `raton-campo-ciudad`).
+  - Oraciones de hasta ~14 palabras, vocabulario cercano y comprensible (sin tecnicismos adultos como «fauces», «desmesuradamente», «imperioso», «voracidad insaciable», «función cosmogónica», «volanta/copete»). Exigencia centrada en el razonamiento: causa-consecuencia, comparar personajes, evidencia textual («¿Qué parte del texto muestra que...?»).
+  - Vocabulario contextual extraído del texto con definiciones sencillas (cañadón, tábano, gallinero, ardor, cataratas, trigal).
+  - Pistas pedagógicas que orientan la relectura comenzando con `"Pista: "`.
+- **Fichas complementarias de 3.º grado (31101–31106) y revisión en 2.º grado:**
+  - Reescritura pedagógica en `scripts/fichas/data_cuentos.py` para 3.º grado: noticia escolar simple (título, lugar y qué ocurrió sin términos de secundaria como «volanta» o «copete»), entrada de diario en primera persona, final alternativo, carta de agradecimiento/consejo, descripción sensorial del arcoíris sobre las cataratas, y opinión fundamentada con razones.
+  - Revisión y simplificación de giros adultos residuales en 2.º grado en `preguntas-g2.ts` y `data_cuentos.py` (ej. «¿Qué nos enseña este cuento?» en lugar de «¿Qué lección social y ética contiene...?»).
+  - 334 fichas generadas en `private/fichas/`, todas en `[1, 2]` páginas exactas (0 desbordes).
+- **Equilibrio de longitud de opciones (la correcta es la más larga en ≤ 35% en cada grado):**
+  - En `preguntas-g1.ts`: se redujo la tasa de respuesta más larga de 70.9% a **14.3% (25/175)** enriqueciendo distractores con elementos plausibles del relato.
+  - En `preguntas-g2.ts`: se redujo de 70.4% a **12.5% (19/152)** acortando enunciados correctos extensos y balanceando alternativas.
+  - En `preguntas-g3.ts`: se redujo de 81.7% a **20.0% (12/60)**.
+  - En los tres grados la respuesta correcta no es predecible por extensión visual, manteniendo alternativas plausibles y coherentes con la narración.
+- **Chequeo automático en suite de pruebas:**
+  - Incorporada la función `checkOptionLengths` en `scripts/test-cuentos.ts`: valida que el porcentaje de preguntas donde la correcta es estrictamente la más larga sea ≤ 35% en 1.º, 2.º y 3.º grado, fallando con código de error 1 ante cualquier regresión.
+- **Verificación completa:**
+  - `python scripts/fichas/generar_fichas.py`: 334 fichas en [1, 2] páginas, 0 desbordes.
+  - `npx tsx scripts/test-cuentos.ts`: 100% aprobado (G1: 14.3%, G2: 12.5%, G3: 20.0%).
+  - `npx tsx scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 advertencias / errores.
+  - `npm run build`: compilación de producción Next.js 16.3.5 Turbopack exitosa.
 
 ### AG-04 · Comprensión lectora 2.º y 3.º, fichas de cuentos y variedad en 2.º (Antigravity)
 - **Preguntas de comprensión lectora por grado:**
