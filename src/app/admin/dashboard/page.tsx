@@ -14,6 +14,7 @@ import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
 
+import CourseSummary from "@/components/admin/CourseSummary";
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
@@ -26,6 +27,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
   const [adminPassword, setAdminPassword] = useState<string | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
+  const [progressMap, setProgressMap] = useState<Record<string, StudentProgress>>({});
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
@@ -42,14 +44,14 @@ export default function AdminDashboardPage() {
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedProgress, setSelectedProgress] =
     useState<StudentProgress | null>(null);
-  const [tab, setTab] = useState<"alumnos" | "mundos" | "registro">(
-    "alumnos"
+  const [tab, setTab] = useState<"resumen" | "alumnos" | "mundos" | "registro">(
+    "resumen"
   );
 
   const loadAll = useCallback(async (pw: string) => {
     setLoading(true);
     const [studentsRes, worldsRes] = await Promise.all([
-      fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}`),
+      fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}&withProgress=true`),
       fetch("/api/worlds"),
     ]);
     const studentsData = await studentsRes.json();
@@ -63,6 +65,7 @@ export default function AdminDashboardPage() {
       .then((d) => setG2Enabled(d.config?.enabledWorldIds ?? []))
       .catch(() => {});
     setStudents(studentsData.students ?? []);
+    setProgressMap(studentsData.progressMap ?? {});
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
     setLoading(false);
   }, []);
@@ -210,9 +213,15 @@ export default function AdminDashboardPage() {
   async function handleViewStats(code: string) {
     setSelectedCode(code);
     setTab("registro");
+    if (progressMap[code]) {
+      setSelectedProgress(progressMap[code]);
+    }
     const res = await fetch(`/api/progress?code=${encodeURIComponent(code)}`);
     const data = await res.json();
-    setSelectedProgress(data.progress ?? null);
+    if (data.progress) {
+      setSelectedProgress(data.progress);
+      setProgressMap((prev) => ({ ...prev, [code]: data.progress }));
+    }
   }
 
   function handleLogout() {
@@ -258,6 +267,7 @@ export default function AdminDashboardPage() {
 
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
+            { id: "resumen", label: "📋 Resumen del curso" },
             { id: "alumnos", label: "👥 Alumnos" },
             { id: "mundos", label: "🗺️ Habilitar Mundos" },
             { id: "registro", label: "📊 Registro y Fortalezas" },
@@ -275,6 +285,17 @@ export default function AdminDashboardPage() {
             </button>
           ))}
         </div>
+
+        {tab === "resumen" && (
+          <CourseSummary
+            students={students}
+            progressMap={progressMap}
+            enabledWorldIds={enabledWorldIds}
+            g2Enabled={g2Enabled}
+            g1Enabled={g1Enabled}
+            onSelectStudent={handleViewStats}
+          />
+        )}
 
         {tab === "alumnos" && (
           <div className="flex flex-col gap-4">
@@ -654,8 +675,11 @@ export default function AdminDashboardPage() {
 
                 {!!selectedProgress.worldsNeedingTeacherReview?.length && (
                   <div>
-                    <p className="text-orange-700 font-semibold text-sm mb-1">
-                      🌱 Mundos a tratar (no llegaron al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%)
+                    <p className="text-orange-700 font-semibold text-sm mb-0.5">
+                      🌱 Mundos jugados con bajo desempeño
+                    </p>
+                    <p className="text-xs text-orange-900/70 mb-1">
+                      Mundos que el alumno ya jugó pero todavía no llegó al {selectedStudent.grade === 1 ? 80 : selectedStudent.grade === 2 ? 85 : 90}%. Conviene repasarlos.
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsNeedingTeacherReview
@@ -701,7 +725,7 @@ export default function AdminDashboardPage() {
 
                 <div>
                   <p className="text-emerald-700 font-semibold text-sm mb-1">
-                    💪 Fortalezas
+                    💪 Fortalezas (precisión ≥ 80%)
                   </p>
                   {stats.strengths.length ? (
                     <p className="text-amber-950/80 text-sm">
@@ -713,20 +737,60 @@ export default function AdminDashboardPage() {
                     </p>
                   )}
                 </div>
+
                 <div>
-                  <p className="text-amber-700 font-semibold text-sm mb-1">
-                    📌 Contenidos a fortalecer
+                  <p className="text-amber-700 font-semibold text-sm mb-0.5">
+                    📌 Contenidos todavía no trabajados
                   </p>
-                  {stats.toImprove.length ? (
+                  <p className="text-xs text-amber-900/70 mb-1">
+                    Mundos habilitados del programa que el alumno todavía no empezó a jugar.
+                  </p>
+                  {(() => {
+                    const grade = selectedStudent.grade ?? 3;
+                    const enabled = grade === 1 ? g1Enabled : grade === 2 ? g2Enabled : enabledWorldIds;
+                    const unworked = enabled
+                      .filter((id) => {
+                        const completed = selectedProgress.completedWorlds.includes(id);
+                        const pending = selectedProgress.worldsPendingReinforcementRetry?.includes(id);
+                        const needing = selectedProgress.worldsNeedingTeacherReview?.includes(id);
+                        const inSummary =
+                          selectedProgress.activitySummary?.[id] &&
+                          (selectedProgress.activitySummary[id].correct > 0 ||
+                            selectedProgress.activitySummary[id].incorrect > 0);
+                        const inLog = selectedProgress.activityLog.some((a) => a.worldId === id);
+                        const hasScore = selectedProgress.lastWorldAttemptScore?.[id] !== undefined;
+                        return !completed && !pending && !needing && !inSummary && !inLog && !hasScore;
+                      })
+                      .map((id) => getWorld(id)?.name ?? `Mundo ${id}`);
+
+                    if (unworked.length > 0) {
+                      return (
+                        <p className="text-amber-950/80 text-sm">
+                          {unworked.join(", ")}
+                        </p>
+                      );
+                    }
+                    return (
+                      <p className="text-emerald-700 font-semibold text-sm">
+                        ✨ ¡Ya comenzó o completó todos los mundos habilitados!
+                      </p>
+                    );
+                  })()}
+                </div>
+
+                {stats.toImprove.length > 0 && (
+                  <div>
+                    <p className="text-rose-700 font-semibold text-sm mb-0.5">
+                      ⚠️ Contenidos con precisión menor al 50%
+                    </p>
+                    <p className="text-xs text-rose-900/70 mb-1">
+                      Mundos con bajo porcentaje de respuestas correctas acumuladas.
+                    </p>
                     <p className="text-amber-950/80 text-sm">
                       {stats.toImprove.join(", ")}
                     </p>
-                  ) : (
-                    <p className="text-amber-800/50 text-sm">
-                      Todavía no hay suficientes datos.
-                    </p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

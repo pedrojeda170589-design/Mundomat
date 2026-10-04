@@ -96,6 +96,8 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+  // Mejor puntaje (0-100) histórico alcanzado en cada mundo.
+  bestWorldScore?: Record<number, number>;
   // Vueltas empezadas y no terminadas, por mundo: si el alumno sale del
   // mundo, al volver sigue desde la primera actividad que le falta (con las
   // mismas actividades). Se borra al terminar la vuelta. Ver src/lib/vuelta.ts.

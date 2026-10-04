@@ -17,7 +17,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
 | CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
@@ -26,6 +26,54 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-08 · Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero» (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Pestaña nueva «📋 Resumen del curso» en `/admin` (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`, `src/lib/courseSummary.ts`):**
+    - **Grilla de desempeño integral:**
+      - Filas: todos los alumnos del curso en orden alfabético mostrando su **nombre completo** (regla de privacidad: en el panel docente se usa el nombre completo). La columna del alumno es fija (`sticky`) para navegación fluida en dispositivos móviles.
+      - Columnas: agrupadas por materia (con `SubjectBadge`, emoji y etiqueta), mostrando cada mundo habilitado con su emoji y número/nombre corto.
+      - Estados y colores: 🟩 Dominado (≥ 90% en 3.º, ≥ 85% en 2.º, ≥ 80% en 1.º) · 🟨 En progreso (50–89%) · 🟥 Requiere ayuda (< 50%) · ⬜ No jugado.
+      - Cada celda muestra el mejor puntaje obtenido y cuenta con `title` detallado (ej. «Ana: 72 % en 2 vueltas (umbral de dominio: 90%)»).
+      - Filtros integrados: selector por materia («Todas las materias», «Matemática», «Lengua», etc.) y filtro por grado (3.º, 2.º, 1.º o Todos).
+      - Scroll horizontal responsivo para celulares y pantallas pequeñas.
+      - Al hacer clic en un alumno se abre directamente su registro y estadísticas completas.
+    - **Métricas globales arriba:**
+      - Precisión global: promedio real de respuestas correctas del aula en base al total de actividades resueltas.
+      - Actividad semanal: cantidad y porcentaje de alumnos con al menos una actividad registrada en los últimos 7 días.
+      - Mundos más difíciles: ranking de los 3 mundos con menor puntaje promedio (exigiendo un mínimo representativo de 3 alumnos).
+    - **Indicador pedagógico «🎯 A quién ayudar primero»:**
+      - Lista priorizada y ordenada de alumnos que requieren intervención urgente, calculada por cantidad de mundos con puntaje < 50% y días de inactividad (≥ 7 días o sin ingresos).
+      - Muestra el motivo exacto («3 mundos en rojo», «No juega hace 9 días», «Sin actividad registrada») y los mundos afectados.
+      - Acceso directo con un clic a su ficha individual.
+  - **Rendimiento de carga en una sola consulta (`src/app/api/students/route.ts`):**
+    - Se agregó el parámetro `withProgress=true` a `GET /api/students`, permitiendo obtener todos los alumnos y sus registros de progreso mediante `getProgressMany` en un solo viaje de ida y vuelta a la base de datos (0 llamadas individuales por alumno).
+  - **Persistencia de mejor puntaje (`src/types/index.ts`, `src/lib/progressLogic.ts`):**
+    - Se agregó `bestWorldScore?: Record<number, number>` a `StudentProgress` para almacenar de forma retrocompatible y registrar en cada `applyWorldAttempt` el puntaje más alto obtenido por el estudiante.
+  - **Clarificación de rótulos en «Registro y Fortalezas» (`src/app/admin/dashboard/page.tsx`):**
+    - «🌱 Mundos a tratar» se renombró a **«🌱 Mundos jugados con bajo desempeño»** con el texto de ayuda explicativo: «Mundos que el alumno ya jugó pero todavía no llegó al X %. Conviene repasarlos.».
+    - «📌 Contenidos a fortalecer» se reemplazó por **«📌 Contenidos todavía no trabajados»** con el cálculo exacto de mundos habilitados del programa que el alumno aún no inició, acompañado del texto de ayuda: «Mundos habilitados del programa que el alumno todavía no empezó a jugar.».
+    - Se conservó además el apartado **«💪 Fortalezas (precisión ≥ 80%)»** y una alerta diferenciada **«⚠️ Contenidos con precisión menor al 50%»** para mundos con baja precisión acumulada.
+
+- **2. Cómo se probó:**
+  - `scripts/test-resumen.ts`: suite automatizada que valida:
+    - Umbrales pedagógicos por grado (80% en 1.º, 85% en 2.º, 90% en 3.º).
+    - Estados por celda (unplayed, mastered, in_progress, needs_help) y conteo de vueltas.
+    - Cálculo matemático independiente de precisión global, actividad de los últimos 7 días y filtro de mundos más difíciles (≥ 3 alumnos).
+    - Priorización de «A quién ayudar primero» ordenando por mundos en rojo e inactividad.
+    - Verificación manual cruzada de 3 alumnos del aula piloto real (`.data/db.json`), comprobando coherencia entre mundos completados y la grilla.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `scripts/test-vuelta.ts`: 100% aprobado.
+  - `scripts/test-dictado.ts`: 100% aprobado.
+  - `scripts/test-cuentos.ts`: 100% aprobado.
+  - `scripts/test-simulation.ts`: 119 mundos × 40 iteraciones (38.840 actividades): 0 errores.
+  - `npx tsc --noEmit`: 0 errores de tipado.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción exitosa con Next.js 16.3.5 Turbopack.
+
+- **3. Decisiones pendientes para que revise Pedro:**
+  - **Pestaña por defecto en `/admin`:** Se configuró «📋 Resumen del curso» como la pestaña predeterminada al ingresar al panel docente, ya que ofrece una visión panorámica inmediata de toda la clase. Si Pedro prefiere que siga abriendo por defecto en «👥 Alumnos», se puede conmutar el estado inicial en una línea.
+  - **Criterio de umbral para mundos difíciles:** Se estableció el umbral mínimo en 3 alumnos para que un mundo entre al ranking de dificultad (evitando que el intento aislado de un solo alumno sesgue la métrica). Pedro puede ajustar este valor según el tamaño promedio esperado de las aulas.
 
 ### CL-09 · Retomar mundos, tienda por tiempo limitado y revisión de AG-06 (Claude)
 - **Retomar donde se dejó** (`src/lib/vuelta.ts`, `/api/round`): al empezar una vuelta se guardan sus actividades en el servidor (`roundsInProgress`, fuera de la versión liviana) y cada respuesta avanza el índice (`roundId` en `/api/progress`). Si el alumno sale y vuelve, sigue desde la primera que le falta, con las mismas actividades, en cualquier dispositivo. En el mapa: «👣 Seguí 3/10». Sin «empezar de nuevo» (no se puede borrar una vuelta mala). Vence a los 14 días; la del dictado, al cambiar la semana; máximo 8 mundos a medias. Pruebas: `scripts/test-vuelta.ts`.

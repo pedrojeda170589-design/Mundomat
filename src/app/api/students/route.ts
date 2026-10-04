@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { addStudent, deleteStudent, getStudents, setMultipleStudentDisplayNames, setStudentBirthday, setStudentDisplayName, setStudentGrade } from "@/lib/data";
+import { addStudent, deleteStudent, getProgressMany, getStudents, setMultipleStudentDisplayNames, setStudentBirthday, setStudentDisplayName, setStudentGrade } from "@/lib/data";
+import { StudentProgress } from "@/types";
 import { GRADES } from "@/lib/grades";
 import { checkAdminPassword } from "@/lib/auth";
 
@@ -7,11 +8,21 @@ import { checkAdminPassword } from "@/lib/auth";
 // docente). Antes era pública: ya no se exponen nombres ni códigos. Los
 // alumnos de otras aulas se ven en el panel de la plataforma (/docente).
 export async function GET(request: NextRequest) {
-  const adminPassword = new URL(request.url).searchParams.get("adminPassword");
+  const url = new URL(request.url);
+  const adminPassword = url.searchParams.get("adminPassword");
   if (!adminPassword || !checkAdminPassword(adminPassword)) {
     return Response.json({ error: "No autorizado." }, { status: 401 });
   }
+  const withProgress = url.searchParams.get("withProgress") === "true";
   const students = (await getStudents()).filter((s) => !s.classroomId);
+  if (withProgress) {
+    const progressList = await getProgressMany(students.map((s) => s.code));
+    const progressMap: Record<string, StudentProgress> = {};
+    for (const p of progressList) {
+      progressMap[p.code] = p;
+    }
+    return Response.json({ students, progressMap });
+  }
   return Response.json({ students });
 }
 

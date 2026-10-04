@@ -144,6 +144,15 @@ export function applyWorldAttempt(
     ),
     worldsNeedingTeacherReview: Array.from(needsReview).sort((a, b) => a - b),
     lastWorldAttemptScore,
+    bestWorldScore: {
+      ...(progress.bestWorldScore ?? {}),
+      [worldId]: Math.max(
+        progress.bestWorldScore?.[worldId] ?? 0,
+        progress.lastWorldAttemptScore?.[worldId] ?? 0,
+        scorePct,
+        pendingRetry.has(worldId) || completedWorlds.includes(worldId) ? masteryPct : 0
+      ),
+    },
     lastPlayedAt: new Date().toISOString(),
   };
 
