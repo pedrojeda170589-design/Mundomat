@@ -18,7 +18,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
@@ -26,6 +26,37 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-09 · Mapeo curricular Santa Cruz con validación docente (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Mapeo curricular estructurado e independiente del código (`src/lib/curriculo/`):**
+    - `src/lib/curriculo/santa-cruz.json`: 289 entradas correspondientes a la totalidad de mundos del catálogo (1.º, 2.º, 3.º grado, mundos canónicos de comprensión lectora 11101..11119, 21101..21119, 31101..31106 y mundos de dictado semanal 28001, 38001).
+      - Cada entrada contiene: `area`, `eje`, `contenido`, `fuente` (con citas precisas del Diseño Curricular de Educación Primaria - Primer Ciclo de Santa Cruz, páginas 26 a 97 según área y grado) y `"validado": false` por defecto.
+    - `src/lib/curriculo/nap.json`: 289 entradas mapeadas a los Núcleos de Aprendizajes Prioritarios nacionales (1.er Ciclo EGB / Primaria).
+    - `src/lib/curriculo/index.ts`: módulo de gestión curricular con soporte multi-marco (`santa-cruz` por defecto, alternable a `nap`), resolución por número o string, y función de mezcla con validaciones del docente.
+  - **Persistencia de validaciones docentes en store sin mutar archivos JSON (`src/lib/data.ts`, `src/app/api/curriculum/route.ts`):**
+    - Métodos `getValidatedCurriculumWorldIds()` y `validateCurriculumWorld(worldId, validated)` en el almacén de datos (Upstash Redis / local fallback `curriculum_validated_worlds`).
+    - Endpoint API `GET /api/curriculum` y `POST /api/curriculum` protegido con contraseña docente para validar o invalidar mundos.
+  - **Visualización en el Panel Docente (`src/app/admin/dashboard/page.tsx`, `src/components/admin/CourseSummary.tsx`):**
+    - En **Habilitar Mundos (`tab === "mundos"`)**:
+      - Banner superior de selección de marco curricular de referencia (`Santa Cruz (1.er Ciclo)` vs. `Nacional (NAP)`).
+      - Componente unificado `AdminWorldCard` para 1.º, 2.º y 3.º grado con visualización de área y eje, tooltip completo con contenido y fuente curricular, y estado de validación (`✅ Validado` o `⚠️ Pendiente de validar`).
+      - Botón interactivo «Revisé este dato» que permite a los docentes confirmar la correspondencia curricular y guardarla inmediatamente.
+    - En **Resumen del curso (`src/components/admin/CourseSummary.tsx`)**:
+      - Integración de área y eje en los encabezados y celdas individuales con advertencia `⚠️ Propuesta pedagógica pendiente de validación docente`.
+    - En **Registro y Fortalezas (`tab === "registro"`)**:
+      - Formato curricular estandarizado («Nombre · Área · Eje») en mundos con bajo desempeño, a un repaso de completar, contenidos todavía no trabajados, fortalezas y debilidades.
+  - **Script generador (`scripts/curriculo/generate-curriculo.ts`) y script de pruebas (`scripts/test-curriculo.ts`):**
+    - Generación y verificación automatizada de integridad curricular.
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-curriculo.ts`: 100% aprobado. Verifica los 289 mundos en ambos marcos (Santa Cruz y NAP), comprueba que ninguna entrada esté vacía ni falte, valida que `validado` sea `false` en los archivos JSON y comprueba el ciclo completo de validación y desvalidación en el store.
+  - `npx tsx scripts/test-resumen.ts`: suite de AG-08 verificada sin regresiones.
+  - `npx tsx scripts/test-privacidad.ts`: suite de AG-07 verificada sin regresiones.
+  - `npx tsc --noEmit`: 0 errores de TypeScript.
+  - `npx eslint src`: 0 advertencias y 0 errores de linter.
+  - `npm run build`: compilación de producción exitosa con Next.js 16.3.5 Turbopack.
+- **3. Decisiones pendientes para Pedro:**
+  - Revisar una muestra representativa de mundos en `/admin` (pestaña «Habilitar Mundos») y hacer clic en «Revisé este dato» para validar los contenidos asignados según el plan de clases real de su escuela.
 
 ### AG-08 · Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero» (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

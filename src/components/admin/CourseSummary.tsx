@@ -9,6 +9,7 @@ import {
   getStudentWorldSummary,
   getWorldsForGrade,
 } from "@/lib/courseSummary";
+import { CurriculumEntry } from "@/lib/curriculo";
 import SubjectBadge from "@/components/SubjectBadge";
 
 interface CourseSummaryProps {
@@ -17,6 +18,7 @@ interface CourseSummaryProps {
   enabledWorldIds: number[]; // 3.º
   g2Enabled: number[]; // 2.º
   g1Enabled: number[]; // 1.º
+  curriculumEntries?: Record<string, CurriculumEntry>;
   onSelectStudent: (code: string) => void;
 }
 
@@ -28,6 +30,7 @@ export default function CourseSummary({
   enabledWorldIds,
   g2Enabled,
   g1Enabled,
+  curriculumEntries,
   onSelectStudent,
 }: CourseSummaryProps) {
   // Filtro de materia: "todas" o una materia puntual.
@@ -338,20 +341,41 @@ export default function CourseSummary({
 
               {/* Fila 2: Encabezados de cada mundo */}
               <tr className="bg-amber-50/80 border-b border-amber-800/20 text-[11px]">
-                {gridWorlds.map((w) => (
-                  <th
-                    key={w.id}
-                    title={w.name}
-                    className="px-1.5 py-1 text-center font-semibold text-amber-900 border-r border-amber-800/10 min-w-[55px] max-w-[80px]"
-                  >
-                    <div className="flex flex-col items-center">
-                      <span className="text-base leading-none mb-0.5">{w.emoji}</span>
-                      <span className="truncate max-w-[65px] text-[10px] text-amber-950 font-bold">
-                        {w.worldNumber ? `M${w.worldNumber}` : w.name.split(" ")[0]}
-                      </span>
-                    </div>
-                  </th>
-                ))}
+                {gridWorlds.map((w) => {
+                  const curr = curriculumEntries?.[String(w.id)];
+                  const headerTitle = `${w.name}${
+                    curr
+                      ? `\nDiseño Curricular: ${curr.area} · ${curr.eje}\nContenido: ${curr.contenido}\nFuente: ${curr.fuente} (${
+                          curr.validado ? "Validado por docente" : "Pendiente de validar"
+                        })`
+                      : ""
+                  }`;
+
+                  return (
+                    <th
+                      key={w.id}
+                      title={headerTitle}
+                      className="px-1.5 py-1 text-center font-semibold text-amber-900 border-r border-amber-800/10 min-w-[55px] max-w-[80px]"
+                    >
+                      <div className="flex flex-col items-center">
+                        <div className="relative">
+                          <span className="text-base leading-none mb-0.5">{w.emoji}</span>
+                          {curr && !curr.validado && (
+                            <span
+                              className="absolute -top-1 -right-2 text-[9px] leading-none"
+                              title="⚠️ Pendiente de validar"
+                            >
+                              ⚠️
+                            </span>
+                          )}
+                        </div>
+                        <span className="truncate max-w-[65px] text-[10px] text-amber-950 font-bold">
+                          {w.worldNumber ? `M${w.worldNumber}` : w.name.split(" ")[0]}
+                        </span>
+                      </div>
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
 
@@ -378,6 +402,7 @@ export default function CourseSummary({
                     {/* Celdas de mundos */}
                     {gridWorlds.map((world) => {
                       const summary = getStudentWorldSummary(student, p, world.id);
+                      const curr = curriculumEntries?.[String(world.id)];
 
                       let cellBg = "bg-slate-50 text-slate-400";
                       let tooltip = `${student.name}: Sin jugar aún en «${world.name}»`;
@@ -386,6 +411,11 @@ export default function CourseSummary({
                         tooltip = `${student.name}: ${summary.bestScore}% en ${summary.vueltas} ${
                           summary.vueltas === 1 ? "vuelta" : "vueltas"
                         } (umbral de dominio: ${threshold}%)`;
+                        if (curr) {
+                          tooltip += `\nCurricular: ${curr.area} · ${curr.eje} (${
+                            curr.validado ? "Validado" : "⚠️ Pendiente de validar"
+                          })`;
+                        }
 
                         if (summary.status === "mastered") {
                           cellBg = "bg-emerald-100/90 text-emerald-800 font-bold border-emerald-300";

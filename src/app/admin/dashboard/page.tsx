@@ -22,6 +22,7 @@ import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
 import { proposeDisplayName } from "@/lib/studentNames";
+import { CurriculumEntry } from "@/lib/curriculo";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -29,6 +30,8 @@ export default function AdminDashboardPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, StudentProgress>>({});
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
+  const [curriculumEntries, setCurriculumEntries] = useState<Record<string, CurriculumEntry>>({});
+  const [activeCurriculo, setActiveCurriculo] = useState<"santa-cruz" | "nap">("santa-cruz");
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
@@ -50,12 +53,14 @@ export default function AdminDashboardPage() {
 
   const loadAll = useCallback(async (pw: string) => {
     setLoading(true);
-    const [studentsRes, worldsRes] = await Promise.all([
+    const [studentsRes, worldsRes, curriculoRes] = await Promise.all([
       fetch(`/api/students?adminPassword=${encodeURIComponent(pw)}&withProgress=true`),
       fetch("/api/worlds"),
+      fetch(`/api/curriculum?adminPassword=${encodeURIComponent(pw)}`),
     ]);
     const studentsData = await studentsRes.json();
     const worldsData = await worldsRes.json();
+    const curriculoData = await curriculoRes.json();
     fetch("/api/worlds?grade=1")
       .then((r) => r.json())
       .then((d) => setG1Enabled(d.config?.enabledWorldIds ?? []))
@@ -67,8 +72,46 @@ export default function AdminDashboardPage() {
     setStudents(studentsData.students ?? []);
     setProgressMap(studentsData.progressMap ?? {});
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
+    setCurriculumEntries(curriculoData.entries ?? {});
+    setActiveCurriculo(curriculoData.curriculo ?? "santa-cruz");
     setLoading(false);
   }, []);
+
+  async function handleValidateCurriculum(worldId: number) {
+    if (!adminPassword) return;
+    const res = await fetch("/api/curriculum", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        adminPassword,
+        worldId,
+        validated: true,
+        curriculo: activeCurriculo,
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      setCurriculumEntries((prev) => {
+        const next = { ...prev };
+        if (next[String(worldId)]) {
+          next[String(worldId)] = { ...next[String(worldId)], validado: true };
+        }
+        return next;
+      });
+    }
+  }
+
+  async function handleSwitchCurriculo(cId: "santa-cruz" | "nap") {
+    setActiveCurriculo(cId);
+    if (!adminPassword) return;
+    const res = await fetch(
+      `/api/curriculum?adminPassword=${encodeURIComponent(adminPassword)}&curriculo=${cId}`
+    );
+    const data = await res.json();
+    if (data.entries) {
+      setCurriculumEntries(data.entries);
+    }
+  }
 
   useEffect(() => {
     const pw = sessionStorage.getItem("mundomat_admin_password");
@@ -240,7 +283,12 @@ export default function AdminDashboardPage() {
   const selectedStudent = students.find((s) => s.code === selectedCode);
   const stats =
     selectedProgress && selectedStudent
-      ? computeStudentStats(selectedProgress, (id) => getWorld(id)?.name ?? "?")
+      ? computeStudentStats(selectedProgress, (id) => {
+          const w = getWorld(id);
+          const name = w?.name ?? "?";
+          const curr = curriculumEntries[String(id)];
+          return curr ? `${name} · ${curr.area} · ${curr.eje}` : name;
+        })
       : null;
 
   return (
@@ -293,6 +341,7 @@ export default function AdminDashboardPage() {
             enabledWorldIds={enabledWorldIds}
             g2Enabled={g2Enabled}
             g1Enabled={g1Enabled}
+            curriculumEntries={curriculumEntries}
             onSelectStudent={handleViewStats}
           />
         )}
@@ -434,6 +483,32 @@ export default function AdminDashboardPage() {
         )}
 
         {tab === "mundos" && (
+          <div className="bg-amber-100/90 border border-amber-300 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+            <div>
+              <p className="text-amber-950 font-black text-sm flex items-center gap-1.5">
+                🏛️ Marco Curricular de Referencia
+              </p>
+              <p className="text-amber-900/80 text-xs">
+                {activeCurriculo === "santa-cruz"
+                  ? "Diseño Curricular de Educación Primaria - Primer Ciclo (Consejo Provincial de Educación de Santa Cruz)"
+                  : "Núcleos de Aprendizajes Prioritarios (NAP) - 1.er Ciclo Primaria"}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-bold text-amber-950">Marco:</label>
+              <select
+                value={activeCurriculo}
+                onChange={(e) => void handleSwitchCurriculo(e.target.value as "santa-cruz" | "nap")}
+                className="bg-white text-xs font-bold text-amber-950 border border-amber-400 rounded-lg px-2.5 py-1.5 shadow-sm"
+              >
+                <option value="santa-cruz">Santa Cruz (1.er Ciclo)</option>
+                <option value="nap">Nacional (NAP)</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        {tab === "mundos" && (
           <div className="flex gap-2 mb-4">
             {[3, 2, 1].map((g) => (
               <button
@@ -470,27 +545,18 @@ export default function AdminDashboardPage() {
                     </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {ws.map((w) => {
-                      const enabled = g2Enabled.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleG2World([w.id], !enabled)}
-                          title={w.objective}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.worldNumber}. {w.name}
-                          </p>
-                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {ws.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={`${w.worldNumber}. ${w.name}`}
+                        objective={w.objective}
+                        enabled={g2Enabled.includes(w.id)}
+                        onToggle={() => toggleG2World([w.id], !g2Enabled.includes(w.id))}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -520,27 +586,18 @@ export default function AdminDashboardPage() {
                     </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {ws.map((w) => {
-                      const enabled = g1Enabled.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleG1World([w.id], !enabled)}
-                          title={w.objective}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.worldNumber}. {w.name}
-                          </p>
-                          <p className={`text-xs font-semibold mt-2 ${enabled ? "text-emerald-700" : "text-amber-800/50"}`}>
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {ws.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={`${w.worldNumber}. ${w.name}`}
+                        objective={w.objective}
+                        enabled={g1Enabled.includes(w.id)}
+                        onToggle={() => toggleG1World([w.id], !g1Enabled.includes(w.id))}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -555,39 +612,44 @@ export default function AdminDashboardPage() {
               const subjectWorlds = WORLDS.filter(
                 (w) => w.subject === subject
               );
+              const allOn = subjectWorlds.every((w) => enabledWorldIds.includes(w.id));
               return (
                 <div key={subject}>
-                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2">
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2 flex-wrap">
                     <SubjectBadge subject={subject} size={30} />
-                    {info.label}
+                    {info.label} · 3.º
+                    <button
+                      onClick={() => {
+                        const ids = subjectWorlds.map((w) => w.id);
+                        const next = allOn
+                          ? enabledWorldIds.filter((id) => !ids.includes(id))
+                          : Array.from(new Set([...enabledWorldIds, ...ids]));
+                        setEnabledWorldIds(next);
+                        if (adminPassword) {
+                          void fetch("/api/worlds", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ enabledWorldIds: next, adminPassword }),
+                          });
+                        }
+                      }}
+                      className="ml-auto text-xs font-bold rounded-full bg-white/80 border border-amber-700/30 px-3 py-1"
+                    >
+                      {allOn ? "Bloquear todos" : "Habilitar todos"}
+                    </button>
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {subjectWorlds.map((w) => {
-                      const enabled = enabledWorldIds.includes(w.id);
-                      return (
-                        <button
-                          key={w.id}
-                          onClick={() => toggleWorld(w.id)}
-                          className={`rounded-2xl p-3 text-left border-2 transition ${
-                            enabled
-                              ? "border-emerald-500 bg-emerald-400/20"
-                              : "border-amber-700/20 bg-white/60"
-                          }`}
-                        >
-                          <div className="text-2xl mb-1">{w.emoji}</div>
-                          <p className="text-amber-950 text-sm font-bold leading-tight">
-                            {w.name}
-                          </p>
-                          <p
-                            className={`text-xs font-semibold mt-2 ${
-                              enabled ? "text-emerald-700" : "text-amber-800/50"
-                            }`}
-                          >
-                            {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
-                          </p>
-                        </button>
-                      );
-                    })}
+                    {subjectWorlds.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={w.name}
+                        enabled={enabledWorldIds.includes(w.id)}
+                        onToggle={() => toggleWorld(w.id)}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
                   </div>
                 </div>
               );
@@ -685,11 +747,13 @@ export default function AdminDashboardPage() {
                       {selectedProgress.worldsNeedingTeacherReview
                         .map((id) => {
                           const name = getWorld(id)?.name ?? "?";
+                          const curr = curriculumEntries[String(id)];
+                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
                           const score =
                             selectedProgress.lastWorldAttemptScore?.[id];
                           return score !== undefined
-                            ? `${name} (${score}%)`
-                            : name;
+                            ? `${name}${tag} (${score}%)`
+                            : `${name}${tag}`;
                         })
                         .join(", ")}
                     </p>
@@ -703,7 +767,12 @@ export default function AdminDashboardPage() {
                     </p>
                     <p className="text-amber-950/80 text-sm">
                       {selectedProgress.worldsPendingReinforcementRetry
-                        .map((id) => getWorld(id)?.name ?? "?")
+                        .map((id) => {
+                          const name = getWorld(id)?.name ?? "?";
+                          const curr = curriculumEntries[String(id)];
+                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
+                          return `${name}${tag}`;
+                        })
                         .join(", ")}
                     </p>
                   </div>
@@ -761,7 +830,11 @@ export default function AdminDashboardPage() {
                         const hasScore = selectedProgress.lastWorldAttemptScore?.[id] !== undefined;
                         return !completed && !pending && !needing && !inSummary && !inLog && !hasScore;
                       })
-                      .map((id) => getWorld(id)?.name ?? `Mundo ${id}`);
+                      .map((id) => {
+                        const name = getWorld(id)?.name ?? `Mundo ${id}`;
+                        const curr = curriculumEntries[String(id)];
+                        return curr ? `${name} · ${curr.area} · ${curr.eje}` : name;
+                      });
 
                     if (unworked.length > 0) {
                       return (
@@ -816,3 +889,86 @@ function Stat({ label, value }: { label: string; value: string | number }) {
     </div>
   );
 }
+
+function AdminWorldCard({
+  emoji,
+  title,
+  objective,
+  enabled,
+  onToggle,
+  curr,
+  onValidate,
+}: {
+  emoji: string;
+  title: string;
+  objective?: string;
+  enabled: boolean;
+  onToggle: () => void;
+  curr?: CurriculumEntry;
+  onValidate: () => void;
+}) {
+  return (
+    <div
+      className={`rounded-2xl p-3 text-left border-2 transition flex flex-col justify-between ${
+        enabled ? "border-emerald-500 bg-emerald-400/20" : "border-amber-700/20 bg-white/60"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        title={objective ?? (curr?.contenido ? `${curr.contenido} (${curr.fuente})` : undefined)}
+        className="text-left w-full focus:outline-none cursor-pointer"
+      >
+        <div className="text-2xl mb-1">{emoji}</div>
+        <p className="text-amber-950 text-sm font-bold leading-tight">
+          {title}
+        </p>
+        <p
+          className={`text-xs font-semibold mt-2 ${
+            enabled ? "text-emerald-700" : "text-amber-800/50"
+          }`}
+        >
+          {enabled ? "✅ Habilitado" : "🔒 Bloqueado"}
+        </p>
+      </button>
+
+      {curr && (
+        <div className="mt-2.5 pt-2 border-t border-amber-900/10 text-xs">
+          <p
+            className="text-amber-900/80 font-medium text-[11px] leading-tight line-clamp-2"
+            title={`${curr.area} · ${curr.eje} - ${curr.contenido} (${curr.fuente})`}
+          >
+            📚 <span className="font-bold text-amber-950">{curr.area}</span> · {curr.eje}
+          </p>
+          <div className="mt-1.5 flex items-center justify-between gap-1 flex-wrap">
+            {curr.validado ? (
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full border border-emerald-300">
+                ✅ Validado
+              </span>
+            ) : (
+              <>
+                <span
+                  className="text-[10px] bg-amber-100 text-amber-900 font-medium px-1.5 py-0.5 rounded-full border border-amber-300"
+                  title="Propuesta algorítmica pendiente de validación docente"
+                >
+                  ⚠️ Pendiente de validar
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onValidate();
+                  }}
+                  className="text-[10px] font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2 py-0.5 rounded transition cursor-pointer"
+                >
+                  Revisé este dato
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+

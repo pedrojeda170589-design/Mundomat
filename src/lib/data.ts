@@ -562,6 +562,25 @@ export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {
   await setJSON(WORLDS_CONFIG_KEY, config);
 }
 
+const CURRICULUM_VALIDATED_KEY = "curriculum_validated_worlds";
+
+export async function getValidatedCurriculumWorldIds(): Promise<number[]> {
+  return getJSON<number[]>(CURRICULUM_VALIDATED_KEY, []);
+}
+
+export async function validateCurriculumWorld(worldId: number, validated = true): Promise<number[]> {
+  const current = await getValidatedCurriculumWorldIds();
+  const set = new Set(current);
+  if (validated) {
+    set.add(worldId);
+  } else {
+    set.delete(worldId);
+  }
+  const next = Array.from(set).sort((a, b) => a - b);
+  await setJSON(CURRICULUM_VALIDATED_KEY, next);
+  return next;
+}
+
 // Mundos con contenido de un grado (no 3.º).
 export function gradeWorldIds(grade: number): number[] {
   return getGrade(grade)
