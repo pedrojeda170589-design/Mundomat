@@ -14,6 +14,7 @@ import { generateCourseCSV, downloadCourseCSV } from "@/lib/courseExport";
 import { computeClassroomEvolution, computeStudentActivityMetrics } from "@/lib/activityMetrics";
 import EvolutionChart from "@/components/admin/EvolutionChart";
 import SubjectBadge from "@/components/SubjectBadge";
+import { GRADES } from "@/lib/grades";
 
 interface CourseSummaryProps {
   students: Student[];
@@ -518,7 +519,7 @@ export default function CourseSummary({
             <span className="font-bold text-amber-900/80">Estados:</span>
             <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-800">
               <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
-              🟩 Dominado (≥ 90% en 3.º, ≥ 85% en 2.º, ≥ 80% en 1.º)
+              🟩 Dominado ({GRADES.map((g) => `≥ ${g.masteryPct}% en ${g.grade}.º`).join(", ")})
             </span>
             <span className="inline-flex items-center gap-1.5 font-semibold text-amber-800">
               <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />

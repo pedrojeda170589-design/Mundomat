@@ -397,12 +397,16 @@ export default function SchoolPage() {
             currentCount={classrooms.length}
             maxAllowed={maxAulas}
             planName={planDef.name}
-            onCreate={(g, d, y) =>
+            onCreate={(g, d, y) => {
+              if (classrooms.length >= maxAulas) {
+                alert(`Tu escuela alcanzó el cupo máximo de ${maxAulas} aulas del ${planDef.name}. Para agregar más divisiones, consultá por la ampliación al Plan Escuela o Distrito.`);
+                return;
+              }
               act(
                 () => platform().rpc("create_classroom", { p_school: school.id, p_grade: g, p_division: d, p_year: y }),
                 "Aula creada."
-              )
-            }
+              );
+            }}
           />
 
           {/* 5. Aulas por ciclo */}
@@ -474,7 +478,7 @@ export default function SchoolPage() {
 }
 
 // Grados que ya tienen mundos en el juego (ver GRADES en src/lib/grades.ts).
-const GRADOS_CON_MUNDOS = [1, 2, 3];
+const GRADOS_CON_MUNDOS = [1, 2, 3, 4];
 
 function NewClassroom({
   currentCount,

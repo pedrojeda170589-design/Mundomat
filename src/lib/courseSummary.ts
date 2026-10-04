@@ -2,6 +2,8 @@ import { Student, StudentProgress, WorldDef, WorldSubject } from "@/types";
 import { getWorld, WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+import { GRADE4_WORLDS } from "@/lib/grade4/worlds";
+import { DEFAULT_GRADE, getGrade, masteryPctForWorld } from "@/lib/grades";
 
 export interface StudentWorldSummary {
   worldId: number;
@@ -38,9 +40,7 @@ export interface ClassroomMetrics {
 }
 
 export function getMasteryThreshold(grade: number | undefined): number {
-  if (grade === 1) return 80;
-  if (grade === 2) return 85;
-  return 90; // 3.º grado por defecto
+  return getGrade(grade ?? DEFAULT_GRADE).masteryPct;
 }
 
 export function getStudentWorldSummary(
@@ -86,7 +86,7 @@ export function getStudentWorldSummary(
     };
   }
 
-  const threshold = getMasteryThreshold(student.grade);
+  const threshold = masteryPctForWorld(worldId);
   let best = bestStored ?? lastScore ?? 0;
 
   if (isCompleted || isPendingRetry) {
@@ -278,5 +278,6 @@ export function computeStudentsNeedingHelp(
 export function getWorldsForGrade(grade: number | undefined): WorldDef[] {
   if (grade === 1) return GRADE1_WORLDS;
   if (grade === 2) return GRADE2_WORLDS;
+  if (grade === 4) return GRADE4_WORLDS;
   return WORLDS;
 }

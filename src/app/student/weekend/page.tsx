@@ -10,6 +10,7 @@ import Burst from "@/components/weekend/Burst";
 import { WEEKEND_GAMES } from "@/components/weekend/registry";
 import { WeekendActivity, WeekendPlan } from "@/lib/weekend/plan";
 import { WeekendRecord, getAccessoryById, getAccessorySrc } from "@/types";
+import TorneoTablasGame from "@/components/weekend/TorneoTablasGame";
 
 interface WeekendState {
   available: boolean;
@@ -27,6 +28,7 @@ interface WeekendState {
 
 type Screen =
   | { kind: "map" }
+  | { kind: "torneo" }
   | { kind: "intro"; activity: WeekendActivity }
   | { kind: "play"; activity: WeekendActivity }
   | { kind: "result"; activity: WeekendActivity; points: number; perfect: number; errors: number }
@@ -138,6 +140,21 @@ export default function WeekendPage() {
   const nextReward = data.nextRewardId ? getAccessoryById(data.nextRewardId) : undefined;
 
   // --- Pantallas del juego ---
+  if (screen.kind === "torneo") {
+    return (
+      <main className="relative flex-1 flex flex-col bg-explorer-day py-8 px-4 overflow-hidden">
+        <CloudsBackground />
+        {header}
+        <TorneoTablasGame
+          code={code!}
+          onExit={() => setScreen({ kind: "map" })}
+          onCoinsUpdated={(newCoins) => setCoins(newCoins)}
+          currentCoins={coins ?? 0}
+        />
+      </main>
+    );
+  }
+
   if (screen.kind === "intro") {
     const a = screen.activity;
     const intro = WEEKEND_GAMES[a.kind].intro(a);
@@ -306,6 +323,23 @@ export default function WeekendPage() {
       <CloudsBackground />
       {header}
       <div className="relative z-10 max-w-md w-full mx-auto flex flex-col gap-3">
+        {/* Tarjeta destacada: Torneo de las tablas */}
+        <div className="parchment-panel rounded-2xl p-3.5 flex items-center justify-between gap-3 border-2 border-amber-400 bg-gradient-to-r from-amber-100/90 via-yellow-50 to-amber-100/90 shadow-md">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl animate-bounce">⚡</span>
+            <div>
+              <span className="block font-black text-amber-950 text-sm">Torneo de las tablas</span>
+              <span className="block text-xs text-amber-900/80">Desafío contra reloj con las tablas del 2 al 10</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setScreen({ kind: "torneo" })}
+            className="rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black text-xs px-3.5 py-2 shadow-sm shrink-0 active:scale-95 transition flex items-center gap-1"
+          >
+            <span>🚀</span> ¡Jugar!
+          </button>
+        </div>
+
         <div className="parchment-panel rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
           <span>
             <span className="block font-black">🧠 Juegos de memoria</span>

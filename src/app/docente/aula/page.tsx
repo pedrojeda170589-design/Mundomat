@@ -7,10 +7,12 @@ import PanelShell, { ErrorNote, NotConfigured, Panel, usePanelSession } from "@/
 import { friendlyError, platform } from "@/lib/platform/client";
 import {
   Classroom,
+  School,
   formatMinutes,
   subjectEmoji,
   subjectLabel,
 } from "@/lib/platform/shared";
+import { getPlan, limiteDe } from "@/lib/planes";
 
 import { grade1HasContent } from "@/lib/grade1/content";
 import { getGrade } from "@/lib/grades";
@@ -47,7 +49,8 @@ export default function ClassroomPage() {
   const router = useRouter();
   const { state } = usePanelSession();
   const [id, setId] = useState<string | null>(null);
-  const [classroom, setClassroom] = useState<(Classroom & { schools: { name: string } | null }) | null>(null);
+  const [classroom, setClassroom] = useState<(Classroom & { schools: School | null }) | null>(null);
+  const [schoolStudentCount, setSchoolStudentCount] = useState<number>(0);
   const [mine, setMine] = useState<Classroom[]>([]);
   const [rows, setRows] = useState<StudentRow[] | null>(null);
   const [closed, setClosed] = useState(false);
@@ -63,18 +66,20 @@ export default function ClassroomPage() {
     if (!id) return;
     const sb = platform();
     setError(null);
-    const { data: c, error: e1 } = await sb.from("classrooms").select("*, schools(name)").eq("id", id).maybeSingle();
+    const { data: c, error: e1 } = await sb.from("classrooms").select("*, schools(*)").eq("id", id).maybeSingle();
     if (e1) return setError(e1);
     if (!c) return setError(new Error("No tenés acceso a esta aula (o no existe)."));
     setClassroom(c);
-    const [{ data: cyc }, { data: ov, error: e2 }, { data: others }] = await Promise.all([
+    const [{ data: cyc }, { data: ov, error: e2 }, { data: others }, { count: studentCount }] = await Promise.all([
       sb.from("school_cycles").select("status").eq("school_id", c.school_id).eq("school_year", c.school_year).maybeSingle(),
       sb.rpc("classroom_overview", { p_classroom: id }),
       sb.from("classrooms").select("*").eq("school_id", c.school_id).order("school_year", { ascending: false }),
+      sb.from("student_enrollments").select("id, classrooms!inner(school_id)", { count: "exact", head: true }).eq("classrooms.school_id", c.school_id).eq("status", "active"),
     ]);
     if (e2) return setError(e2);
     setClosed(cyc?.status === "closed");
     setMine((others ?? []) as Classroom[]);
+    setSchoolStudentCount(studentCount ?? 0);
     const map = new Map<string, StudentRow>();
     for (const r of (ov ?? []) as OverviewRow[]) {
       const s = map.get(r.student_id) ?? {
@@ -165,7 +170,15 @@ export default function ClassroomPage() {
           {tab === "alumnos" && <StudentsTab rows={rows} />}
           {tab === "mundos" && <WorldsTab classroom={classroom} closed={closed} onSaved={load} />}
           {tab === "movimientos" && <MovesTab classroom={classroom} rows={rows} onDone={load} />}
-          {tab === "inscribir" && <EnrollTab classroom={classroom} closed={closed} onDone={load} />}
+          {tab === "inscribir" && (
+            <EnrollTab
+              classroom={classroom}
+              closed={closed}
+              onDone={load}
+              school={classroom.schools}
+              schoolStudentCount={schoolStudentCount}
+            />
+          )}
         </>
       )}
     </PanelShell>
@@ -452,7 +465,19 @@ function MovesTab({ classroom, rows, onDone }: { classroom: Classroom; rows: Stu
 
 import { proposeDisplayName } from "@/lib/studentNames";
 
-function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed: boolean; onDone: () => void }) {
+function EnrollTab({
+  classroom,
+  closed,
+  onDone,
+  school,
+  schoolStudentCount,
+}: {
+  classroom: Classroom;
+  closed: boolean;
+  onDone: () => void;
+  school?: School | null;
+  schoolStudentCount?: number;
+}) {
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [nicknameTouched, setNicknameTouched] = useState(false);
@@ -461,8 +486,15 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const maxStudents = limiteDe(school, "alumnos");
+  const planDef = getPlan(school?.plan);
+  const atLimit = (schoolStudentCount ?? 0) >= maxStudents;
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (atLimit) {
+      return setError(`Tu escuela alcanzó el cupo máximo de ${maxStudents} alumnos del ${planDef.name}. Para inscribir más alumnos, consultá por la ampliación al Plan Escuela o Distrito.`);
+    }
     setBusy(true);
     setError(null);
     const { data, error: err } = await platform().rpc("enroll_new_student", {
@@ -490,6 +522,26 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
 
   return (
     <Panel>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-bold text-slate-800">
+          Inscripción de alumno nuevo
+        </p>
+        {atLimit && (
+          <span className="text-xs bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full border border-rose-300">
+            Límite alcanzado ({schoolStudentCount}/{maxStudents})
+          </span>
+        )}
+      </div>
+      {atLimit && (
+        <div className="mb-4 rounded-xl bg-rose-50 border border-rose-300 p-3 text-xs text-rose-900">
+          <p className="font-bold flex items-center gap-1.5 text-sm mb-1">
+            <span>⚠️</span> Cupo de alumnos alcanzado ({schoolStudentCount}/{maxStudents})
+          </p>
+          <p>
+            Tu escuela alcanzó el cupo máximo de {maxStudents} alumnos del {planDef.name}. Para inscribir más alumnos, consultá por la ampliación al Plan Escuela o Distrito.
+          </p>
+        </div>
+      )}
       <p className="text-sm mb-3">
         Para alumnos <b>nuevos</b> en la plataforma. Si el alumno ya usó MundoTest26 en otra aula o escuela, no lo
         inscribas de nuevo: se lo promueve o traslada y conserva su historial.
@@ -505,8 +557,8 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
           }}
           placeholder="Nombre completo"
           required
-          disabled={closed}
-          className="flex-1 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2"
+          disabled={closed || atLimit}
+          className="flex-1 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2 disabled:opacity-50"
         />
         <input
           value={nickname}
@@ -516,18 +568,18 @@ function EnrollTab({ classroom, closed, onDone }: { classroom: Classroom; closed
           }}
           placeholder="Nombre visible"
           title="Nombre que verán sus compañeros en el juego"
-          disabled={closed}
-          className="w-36 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2 font-bold"
+          disabled={closed || atLimit}
+          className="w-36 rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2 font-bold disabled:opacity-50"
         />
         <input
           type="date"
           value={birth}
           onChange={(e) => setBirth(e.target.value)}
-          disabled={closed}
+          disabled={closed || atLimit}
           title="Fecha de nacimiento (opcional)"
-          className="rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2"
+          className="rounded-xl border-2 border-amber-800/30 bg-white/80 px-3 py-2 disabled:opacity-50"
         />
-        <button disabled={busy || closed} className="rounded-xl bg-emerald-600 text-white font-bold px-4 py-2 disabled:opacity-50">
+        <button disabled={busy || closed || atLimit} className="rounded-xl bg-emerald-600 text-white font-bold px-4 py-2 disabled:opacity-50">
           Inscribir
         </button>
       </form>

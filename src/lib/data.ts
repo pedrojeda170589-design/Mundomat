@@ -22,6 +22,8 @@ import {
 import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
+import { CurriculoId, getCurriculoActivo } from "@/lib/curriculo";
+import { resolveDisplayNames } from "@/lib/studentNames";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import { OPEN_CLASSROOM_ID, isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
@@ -42,6 +44,15 @@ import {
   getWeekendDay,
   scoreActivity,
 } from "@/lib/weekend/plan";
+import { getArgentinaDate } from "@/lib/seasons";
+import { displayName } from "@/lib/news";
+import {
+  calcularMedalla,
+  MONEDAS_MEDALLA,
+  premioGrupoParaTabla,
+  type MedallaTorneo,
+  type PremioGrupoItem,
+} from "@/lib/torneo/tiempos";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -270,6 +281,29 @@ export function liteProgress(p: StudentProgress): StudentProgress {
   const { activityLog, activitySummary, roundsInProgress, ...rest } = p;
   const roundsResume = roundsInProgress ? resumenVueltas(p) : undefined;
   return { ...rest, activityLog: [], ...(roundsResume && Object.keys(roundsResume).length ? { roundsResume } : {}) };
+}
+
+// Progreso resumido para el panel docente y reportes (/admin, con withProgress=true).
+// Conserva métricas, resumen de actividad y las entradas recientes de activityLog
+// (para alertas tempranas y gráficos de evolución), pero descarta vueltas incompletas y
+// recorta el registro histórico no necesario para el panel.
+export function adminSummaryProgress(p: StudentProgress): StudentProgress {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { roundsInProgress, ...rest } = p;
+  const msInDay = 24 * 60 * 60 * 1000;
+  const cutoffMs = Date.now() - 60 * msInDay;
+  const rawLogs = p.activityLog ?? [];
+  const recentLogs = rawLogs.filter((log) => {
+    const rawDate = log.finishedAt || (log as { timestamp?: string }).timestamp;
+    const t = rawDate ? new Date(rawDate).getTime() : NaN;
+    return isNaN(t) || t >= cutoffMs;
+  });
+  const limitedLogs = recentLogs.length < 30 ? rawLogs.slice(-30) : recentLogs.slice(-100);
+
+  return {
+    ...rest,
+    activityLog: limitedLogs,
+  };
 }
 
 // Progreso de varios alumnos en una sola consulta.
@@ -591,12 +625,29 @@ export async function saveWorldsConfig(config: WorldsConfig): Promise<void> {
 
 const CURRICULUM_VALIDATED_KEY = "curriculum_validated_worlds";
 
-export async function getValidatedCurriculumWorldIds(): Promise<number[]> {
-  return getJSON<number[]>(CURRICULUM_VALIDATED_KEY, []);
+export function curriculumValidatedKey(curriculo: CurriculoId | string = "santa-cruz"): string {
+  return `curriculumValidated:${curriculo}`;
 }
 
-export async function validateCurriculumWorld(worldId: number, validated = true): Promise<number[]> {
-  const current = await getValidatedCurriculumWorldIds();
+export async function getValidatedCurriculumWorldIds(curriculo?: CurriculoId | string): Promise<number[]> {
+  const c = (curriculo as CurriculoId) || getCurriculoActivo();
+  const key = curriculumValidatedKey(c);
+  const ids = await getJSON<number[] | null>(key, null);
+  if (ids !== null) return ids;
+  // Conservar las validaciones que ya existen para Santa Cruz
+  if (c === "santa-cruz") {
+    return getJSON<number[]>(CURRICULUM_VALIDATED_KEY, []);
+  }
+  return [];
+}
+
+export async function validateCurriculumWorld(
+  worldId: number,
+  validated = true,
+  curriculo?: CurriculoId | string
+): Promise<number[]> {
+  const c = (curriculo as CurriculoId) || getCurriculoActivo();
+  const current = await getValidatedCurriculumWorldIds(c);
   const set = new Set(current);
   if (validated) {
     set.add(worldId);
@@ -604,7 +655,10 @@ export async function validateCurriculumWorld(worldId: number, validated = true)
     set.delete(worldId);
   }
   const next = Array.from(set).sort((a, b) => a - b);
-  await setJSON(CURRICULUM_VALIDATED_KEY, next);
+  await setJSON(curriculumValidatedKey(c), next);
+  if (c === "santa-cruz") {
+    await setJSON(CURRICULUM_VALIDATED_KEY, next);
+  }
   return next;
 }
 
@@ -680,7 +734,7 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
 }
 
 export function isDictationWorld(worldId: number): boolean {
-  return worldId === 28001 || worldId === 38001;
+  return worldId === 28001 || worldId === 38001 || worldId === 48001;
 }
 
 // Acredita el resultado del Mundo del Dictado semanal en el servidor:
@@ -780,4 +834,190 @@ export async function setTeacherAlertConfig(config: AlertConfigData): Promise<vo
   };
   await setJSON(ALERT_CONFIG_KEY, sanitized);
 }
+
+// --- Torneo de velocidad con las tablas (Fin de semana) ---
+
+/**
+ * Devuelve la clave del sábado correspondiente al fin de semana de la fecha dada (hora argentina).
+ * Sirve para agrupar las participaciones del sábado y domingo bajo el mismo torneo semanal.
+ */
+export function weekendSaturdayKey(now: Date = new Date()): string {
+  const d = getArgentinaDate(now);
+  const dt = new Date(Date.UTC(d.year, d.month - 1, d.day));
+  const dow = dt.getUTCDay(); // 0 domingo ... 6 sábado
+  const daysSinceSaturday = (dow + 1) % 7;
+  dt.setUTCDate(dt.getUTCDate() - daysSinceSaturday);
+  const y = dt.getUTCFullYear();
+  const m = String(dt.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(dt.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export interface TorneoResultado {
+  tabla: number;
+  ms: number;
+  errores: number;
+  medalla: MedallaTorneo;
+  monedasGanadas: number;
+  coins: number;
+  mejorMs: number;
+  esMejorTiempo: boolean;
+  nuevoObjeto?: PremioGrupoItem;
+  satKey: string;
+}
+
+/**
+ * Registra una partida completada en el Torneo de tablas:
+ * - Valida disponibilidad de fin de semana (hora argentina).
+ * - Calcula la medalla según metas de tiempos.ts.
+ * - Acredita monedas (oro: 15, plata: 8, bronce: 3), máximo una vez por tabla y por día.
+ * - Desbloquea objeto especial la primera vez que se logra oro en su grupo.
+ * - Actualiza el mejor tiempo histórico del fin de semana.
+ */
+export async function completeTorneoTable(
+  code: string,
+  tabla: number,
+  ms: number,
+  errores: number,
+  now: Date = new Date()
+): Promise<TorneoResultado | { error: string }> {
+  const today = getWeekendDay(now);
+  if (!today) {
+    return { error: "El torneo de las tablas solo está disponible el fin de semana (sábados y domingos)." };
+  }
+
+  if (!Number.isInteger(tabla) || tabla < 2 || tabla > 10) {
+    return { error: "Tabla inválida (debe ser del 2 al 10)." };
+  }
+  if (typeof ms !== "number" || ms < 5000 || ms > 600000) {
+    return { error: "Tiempo fuera de rango (5s a 600s)." };
+  }
+  if (typeof errores !== "number" || errores < 0 || errores > 50) {
+    return { error: "Cantidad de errores fuera de rango (0 a 50)." };
+  }
+
+  const student = await findStudentByCode(code);
+  if (!student) {
+    return { error: "Alumno no encontrado." };
+  }
+
+  const progress = await getProgress(student.code);
+  const satKey = weekendSaturdayKey(now);
+  const todayKey = today.dayKey;
+
+  const medalla = calcularMedalla(tabla, ms);
+
+  // Monedas: una vez por tabla y por día
+  const weekendRecords = progress.tablasTorneo?.[satKey] ?? {};
+  const tablaRecord = weekendRecords[tabla];
+  const diasCobrados = tablaRecord?.monedasDia ?? [];
+  const yaCobroHoy = diasCobrados.includes(todayKey);
+  let monedasGanadas = 0;
+  const monedasDia = [...diasCobrados];
+
+  if (!yaCobroHoy) {
+    monedasGanadas = MONEDAS_MEDALLA[medalla];
+    monedasDia.push(todayKey);
+  }
+
+  // Objeto especial por primera vez logrando oro en el grupo de la tabla
+  let nuevoObjeto: PremioGrupoItem | undefined;
+  const ownedAccessories = new Set(progress.seasonalCollection ?? []);
+  if (medalla === "oro") {
+    const premio = premioGrupoParaTabla(tabla);
+    if (premio && !ownedAccessories.has(premio.id)) {
+      ownedAccessories.add(premio.id);
+      nuevoObjeto = premio;
+    }
+  }
+
+  // Mejor tiempo del fin de semana
+  const prevMejorMs = tablaRecord?.mejorMs;
+  const esMejorTiempo = prevMejorMs === undefined || ms < prevMejorMs;
+  const mejorMs = esMejorTiempo ? ms : prevMejorMs;
+  const mejorMedalla = esMejorTiempo ? medalla : tablaRecord.medalla;
+  const finalErrores = esMejorTiempo ? errores : tablaRecord?.errores ?? errores;
+
+  const updated: StudentProgress = {
+    ...progress,
+    coins: progress.coins + monedasGanadas,
+    seasonalCollection: [...ownedAccessories],
+    tablasTorneo: {
+      ...(progress.tablasTorneo ?? {}),
+      [satKey]: {
+        ...weekendRecords,
+        [tabla]: {
+          mejorMs,
+          medalla: mejorMedalla,
+          errores: finalErrores,
+          monedasDia,
+        },
+      },
+    },
+    lastPlayedAt: now.toISOString(),
+  };
+
+  await saveProgress(updated);
+
+  return {
+    tabla,
+    ms,
+    errores,
+    medalla,
+    monedasGanadas,
+    coins: updated.coins,
+    mejorMs,
+    esMejorTiempo,
+    nuevoObjeto,
+    satKey,
+  };
+}
+
+export interface TorneoRankingEntry {
+  displayName: string;
+  mejorMs: number;
+  medalla: MedallaTorneo;
+}
+
+/**
+ * Obtiene el ranking de los 5 mejores tiempos del aula para una tabla en el fin de semana actual.
+ * Respeta estrictamente la privacidad (AG-07): muestra solo el nombre visible / apodo.
+ */
+export async function getClassroomTorneoRanking(
+  code: string,
+  tabla: number,
+  now: Date = new Date()
+): Promise<TorneoRankingEntry[]> {
+  const me = await findStudentByCode(code);
+  if (!me) return [];
+
+  const satKey = weekendSaturdayKey(now);
+  const allStudents = await getStudents();
+  const classmates = classmatesOf(me, allStudents);
+  const resolvedNames = resolveDisplayNames(classmates);
+
+  const progresses = await getProgressMany(classmates.map((c) => c.code));
+  const progressMap = new Map<string, StudentProgress>(progresses.map((p) => [p.code, p]));
+
+  const entries: TorneoRankingEntry[] = [];
+
+  for (const classmate of classmates) {
+    const p = progressMap.get(classmate.code);
+    const rec = p?.tablasTorneo?.[satKey]?.[tabla];
+    if (rec && typeof rec.mejorMs === "number") {
+      entries.push({
+        displayName: displayName(classmate, p, resolvedNames.get(classmate.code)),
+        mejorMs: rec.mejorMs,
+        medalla: rec.medalla,
+      });
+    }
+  }
+
+  // Ordenar de menor a mayor tiempo (el más rápido primero)
+  entries.sort((a, b) => a.mejorMs - b.mejorMs);
+
+  // Máximo los 5 primeros puestos
+  return entries.slice(0, 5);
+}
+
 

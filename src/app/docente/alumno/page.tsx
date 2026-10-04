@@ -18,6 +18,7 @@ import {
 import { getWorld } from "@/lib/worlds";
 import SkillReportByCode from "@/components/admin/SkillReportByCode";
 import DictationReportByCode from "@/components/admin/DictationReportByCode";
+import TorneoReportByCode from "@/components/admin/TorneoReportByCode";
 import { proposeDisplayName } from "@/lib/studentNames";
 import { AvatarAccessories } from "@/types";
 
@@ -312,6 +313,13 @@ export default function StudentRecordPage() {
             <Panel>
               <p className="font-black mb-2">✍️ Mundo del Dictado (semanal)</p>
               <DictationReportByCode code={student.access_code} />
+            </Panel>
+          )}
+
+          {student && (
+            <Panel>
+              <p className="font-black mb-2">⚡ Torneo de las tablas (Fin de semana)</p>
+              <TorneoReportByCode code={student.access_code} />
             </Panel>
           )}
 

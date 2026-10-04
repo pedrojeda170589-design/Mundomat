@@ -1,6 +1,7 @@
 import { WorldDef } from "@/types";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+import { GRADE4_WORLDS } from "@/lib/grade4/worlds";
 import { withStories } from "@/lib/cuentos/recorrido";
 import { getMundoDictado, isDictationWorldId } from "@/lib/dictado/banco";
 
@@ -597,8 +598,13 @@ export const WORLDS: WorldDef[] = (() => {
 
 // Busca en todos los grados y mundos especiales de dictado.
 export function getWorld(id: number): WorldDef | undefined {
-  if (isDictationWorldId(id)) return getMundoDictado(id === 28001 ? 2 : 3);
-  return WORLDS.find((w) => w.id === id) ?? GRADE1_WORLDS.find((w) => w.id === id) ?? GRADE2_WORLDS.find((w) => w.id === id);
+  if (isDictationWorldId(id)) return getMundoDictado(id === 48001 ? 4 : id === 28001 ? 2 : 3);
+  return (
+    WORLDS.find((w) => w.id === id) ??
+    GRADE1_WORLDS.find((w) => w.id === id) ??
+    GRADE2_WORLDS.find((w) => w.id === id) ??
+    GRADE4_WORLDS.find((w) => w.id === id)
+  );
 }
 
 // Etapa del paisaje del Mapa de Mundos (1 a 4). Crece con el avance

@@ -28,6 +28,9 @@ if (process.argv.includes("--json")) {
     items[l.id] = { tipo: "avatar", comoAvatar: l.comoAvatar, carpeta: "avatars" };
     if (l.mascota) items[l.mascota.id] = { tipo: "objeto", slot: "pet", carpeta: "accessories-temporada" };
   }
+  items["vincha-relampago"] = { tipo: "objeto", slot: "headwear", molde: "cuernitos-dragon", carpeta: "accessories-temporada" };
+  items["lentes-turbo"] = { tipo: "objeto", slot: "eyewear", molde: "lentes-aviador", carpeta: "accessories-temporada" };
+  items["medalla-rayo"] = { tipo: "objeto", slot: "pendant", molde: "sol-de-mayo", carpeta: "accessories-temporada" };
   console.log(JSON.stringify(items));
   process.exit(0);
 }
@@ -55,4 +58,8 @@ for (const l of AVATARES_LOGRO) {
   out += `| ${marca(hecho("avatars", l.id))} | \`arte/coleccion/avatars/${l.id}.jpg\` | ${l.texto} | **${l.label}** (encuadre como \`${l.comoAvatar}\`): ${l.blurb} |\n`;
   if (l.mascota) out += `| ${marca(hecho("accessories-temporada", l.mascota.id))} | \`arte/coleccion/legendarios/${l.mascota.id}.jpg\` | ${l.texto} | 🐾 **${l.mascota.label}** (mascota de logro): ${l.mascota.blurb} |\n`;
 }
+out += `\n### ⚡ Torneo de las tablas (fin de semana)\n\n| | Archivo | Qué es | Descripción |\n|---|---|---|---|\n`;
+out += `| ${marca(hecho("accessories-temporada", "vincha-relampago"))} | \`arte/coleccion/legendarios/vincha-relampago.jpg\` | se usa puesto (headwear, molde \`cuernitos-dragon\`) | **Vincha relámpago**: Oro en tablas 2 a 4 |\n`;
+out += `| ${marca(hecho("accessories-temporada", "lentes-turbo"))} | \`arte/coleccion/legendarios/lentes-turbo.jpg\` | se usa puesto (eyewear, molde \`lentes-aviador\`) | **Lentes turbo**: Oro en tablas 5 a 7 |\n`;
+out += `| ${marca(hecho("accessories-temporada", "medalla-rayo"))} | \`arte/coleccion/legendarios/medalla-rayo.jpg\` | se usa puesto (pendant, molde \`sol-de-mayo\`) | **Medalla del rayo**: Oro en tablas 8 a 10 |\n`;
 console.log(out);

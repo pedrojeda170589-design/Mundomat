@@ -24,9 +24,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
-| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE (ahora) |
-| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ⏳ PENDIENTE (después de AG-14) |
-| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ✅ 4.º LISTO PARA REVISAR |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
 | CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
@@ -34,6 +34,164 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-16 · Contenidos de 4.º grado (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Catálogo de habilidades (`src/lib/grade4/skills.ts`):**
+    - 57 habilidades creadas y registradas: Lengua (`l4-noticia`, `l4-expositivo`, `l4-biografia`, `l4-sustantivo`, `l4-adjetivo`, `l4-verbo-tiempo`, `l4-acentuacion`, etc.), Matemática (`m4-num-100k`, `m4-num-1m`, `m4-posicional`, `m4-romanos`, `m4-mult-2cifras`, `m4-div-resto`, `m4-frac-parte`, `m4-decimales-dinero`, `m4-triangulos`, `m4-perimetro`, etc.), Ciencias Sociales (`s4-mapa-sc`, `s4-relieve-sc`, `s4-aonikenk`, `s4-magallanes`, `s4-circuito-potosi`, `s4-constitucion`, etc.), Ciencias Naturales (`n4-ambientes-sc`, `n4-adaptaciones`, `n4-red-trofica`, `n4-esqueleto`, `n4-estados-materia`, `n4-separacion-mezclas`, `n4-rotacion-traslacion`, etc.), y Dictado (`l4-dictado-palabra`, `l4-dictado-oracion`, `m4-num-dictado`).
+  - **Mundos de 4.º grado (`src/lib/grade4/worlds.ts`):**
+    - Exactamente **92 mundos curriculares** con progresión pedagógica y prerrequisitos acíclicos válidos (IDs 41001-41026 Lengua, 42001-42026 Matemática, 43001-43020 Sociales, 44001-44020 Naturales).
+    - Basados fielmente en la columna de 4.º grado del **Diseño Curricular de Santa Cruz**:
+      - **Lengua (26 mundos, DC línea ~674):** 41001 Noticia escolar, 41002 Texto expositivo, 41003 Biografías patagónicas, 41004 Textos instructivos, 41005 Cartas y correos, 41006 Fábulas tradicionales, 41007 Poesía y rima, 41008 Texto teatral, 41009 Historieta, 41010 Párrafo y oración, 41011 Cohesión y conectores, 41012 Sujeto expreso y desinencial, 41013 Predicado verbal simple y compuesto, 41014 Sustantivos, 41015 Adjetivos, 41016 Concordancia, 41017 El verbo: persona y número, 41018 Tiempos verbales, 41019 Pretéritos narrativos, 41020 Verbos en infinitivo, 41021 Sinónimos y antónimos, 41022 Hiperónimos e hipónimos, 41023 Familias de palabras, 41024 Acentuación (agudas, graves, esdrújulas), 41025 Signos de puntuación, 41026 Reglas ortográficas (b/v, c/s/z, g/j, h, ll/y).
+      - **Matemática (26 mundos, DC línea ~764):** 42001 Números hasta 100.000, 42002 Números hasta 1.000.000, 42003 Valor posicional, 42004 Comparación y recta numérica, 42005 Números romanos, 42006 Sumas y restas con números grandes, 42007 Cálculo mental y redondeo, 42008 Multiplicación por unidad seguida de ceros, 42009 Multiplicación por dos cifras, 42010 Propiedades de la multiplicación, 42011 Organizaciones rectangulares y combinatoria, 42012 División por una cifra, 42013 División por dos cifras y análisis del resto, 42014 Múltiplos y divisores en repartos, 42015 Fracciones como parte de un todo, 42016 Fracciones de tercios, sextos y quintos, 42017 Fracciones equivalentes, 42018 Números mixtos, 42019 Suma y resta de fracciones de igual denominador, 42020 Decimales con dinero y precios, 42021 Décimos y centésimos en medidas, 42022 Suma y resta de decimales, 42023 Rectas paralelas y perpendiculares, 42024 Clasificación de triángulos, 42025 Cuadriláteros particulares, 42026 Perímetro de figuras poligonales.
+      - **Ciencias Sociales (20 mundos, DC línea ~653):** 43001 Santa Cruz en el mapa argentino, 43002 División política y departamentos, 43003 Ciudades y pueblos santacruceños, 43004 Relieves de Santa Cruz, 43005 Cuencas hídricas, ríos y grandes lagos, 43006 Clima frío y árido patagónico, 43007 Recursos y áreas protegidas de Santa Cruz, 43008 Ganadería ovina patagónica, 43009 Petróleo, gas y minería, 43010 Turismo y pesca, 43011 Pueblos originarios: Aonikenk (tehuelches), 43012 Cazadores y canoeros australes (Selk'nam y Yámanas), 43013 Agricultores del noroeste: Diaguitas, 43014 Expedición de Magallanes en San Julián (1520), 43015 Corrientes colonizadoras, 43016 Sociedad colonial y actores sociales, 43017 Circuito comercial del Potosí, 43018 Constitución Nacional y república federal, 43019 Constitución de Santa Cruz y autonomía, 43020 Convivencia democrática y Derechos del Niño.
+      - **Ciencias Naturales (20 mundos, DC línea ~402):** 44001 Ambientes santacruceños (estepa, bosque, costa), 44002 Flora autóctona (coirón, lenga, calafate), 44003 Fauna nativa y adaptaciones (guanaco, choique, huemul), 44004 Adaptaciones al frío y la sequedad, 44005 Los reinos de los seres vivos, 44006 Redes tróficas y roles ecológicos, 44007 Impacto humano y conservación, 44008 Sistema de sostén: esqueleto y huesos, 44009 Articulaciones y músculos en movimiento, 44010 Cuidado osteo-artro-muscular y posturas, 44011 Materiales naturales y artificiales, 44012 Propiedades térmicas y eléctricas, 44013 Estados de la materia (sólido, líquido, gas), 44014 Cambios de estado por calor, 44015 Ciclo hidrológico y glaciares patagónicos, 44016 Mezclas homogéneas y heterogéneas, 44017 Métodos de separación de mezclas, 44018 Luz, sombras y propagación, 44019 Magnetismo e imanes, 44020 La Tierra en el espacio (rotación, traslación, subsistemas).
+  - **Generadores y bancos de contenido (`src/lib/grade4/content/**`):**
+    - `util.ts`: generadores para selección múltiple con tarjetas (`qToPick`), ordenamiento (`makeOrder`), clasificación en categorías (`makeClassify`), comprensión lectora con texto previo (`makeStoryPick`), verdadero/falso (`makeTrueFalse`) e ingresos numéricos (`makeInput`).
+    - `matematica.ts`: generación algorítmica contextualizada en la Patagonia para los 26 mundos (fracciones, decimales, divisiones con resto, números romanos, cálculo mental, etc.).
+    - `lengua.ts`: bancos completos de actividades gramaticales, ortográficas y de comprensión textual.
+    - `sociales.ts`: banco exhaustivo con **>= 15 preguntas por mundo** (300 preguntas) + actividades interactivas variadas (`EXTRA_SOCIALES`).
+    - `naturales.ts`: banco exhaustivo con **>= 15 preguntas por mundo** (300 preguntas) + actividades interactivas variadas (`EXTRA_NATURALES`).
+    - `index.ts`: despachador de actividades por mundo (`buildGrade4Activities`), zonas de práctica (`buildPractice`) y chequeo de contenidos (`grade4HasContent`).
+  - **Dictado de 4.º grado (`src/lib/dictado/banco.ts`):**
+    - Bancos diferenciados: números hasta 100.000 (`NUMEROS_G4_*`), vocabulario y palabras con reglas de 4.º (`PALABRAS_G4_TODOS`), y oraciones contextualizadas (`ORACIONES_G4_TODOS`).
+    - Mundo de Dictado 48001 registrado en `getMundoDictado(4)` e integrado al ciclo de recompensas semanales de la plataforma.
+  - **Integración con el núcleo de la plataforma:**
+    - `src/lib/grades.ts`: registrado 4.º grado (`masteryPct: 90`, `unlockPct: 60`, tema provisorio `THEMES.meseta`). `gradeOfWorld` reconoce mundo 48001.
+    - `src/lib/activities.ts`: enrutamiento de actividades para mundos de 4.º grado y dictado 48001.
+    - `src/lib/worlds.ts`: resolución en `getWorld`.
+    - `src/lib/data.ts`: reconocimiento en `isDictationWorld`.
+    - `src/lib/courseSummary.ts`: soporte para `getWorldsForGrade(4)`.
+    - `src/app/docente/escuela/page.tsx`: grado 4 incorporado a `GRADOS_CON_MUNDOS`.
+  - **Suite de pruebas automatizada (`scripts/test-grado4.ts`):**
+    - Valida integridad, unicidad global de IDs (1.º a 4.º), grafo de prerrequisitos, mínimos de banco (>= 15), regla de balance de longitud de opciones (longest <= 25%) y simulación masiva de 200 iteraciones por mundo.
+
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-grado4.ts`: **10 de 10 pruebas pasaron con éxito**:
+    - Catálogo: 92 mundos + 1 mundo de dictado (48001).
+    - Unicidad de IDs: 0 colisiones en toda la plataforma.
+    - Grafo de dependencias: 0 ciclos, todos los prerrequisitos pertenecen a 4.º grado.
+    - Bancos de Sociales y Naturales: 100% de los mundos cumplen con $\ge 15$ preguntas (300 preguntas c/u).
+    - Balance de opciones: de 808 preguntas evaluadas, solo en 65 la respuesta correcta es la estrictamente más larga (**8.04%**, cumpliendo ampliamente la cota máxima del 25%).
+    - Simulación masiva: **144.200 actividades generadas y validadas** a lo largo de 200 iteraciones en los 93 mundos sin ningún fallo.
+  - Regresiones de suites previas:
+    - `npx tsx scripts/test-simulation.ts`: 0 errores (38.840 actividades de 2.º probadas sin regresiones en 1.º ni 3.º).
+    - `npx tsx scripts/test-dictado.ts`: 0 errores.
+    - `npx tsx scripts/test-cuentos.ts`: 0 errores.
+    - `npx tsx scripts/test-colecciones.ts`: 0 errores.
+    - `npx tsx scripts/test-vuelta.ts`: 0 errores.
+    - `npx tsx scripts/test-privacidad.ts`: 0 errores.
+  - Linters y compilación:
+    - `npx eslint scripts/test-grado4.ts src`: 0 errores y 0 advertencias.
+    - `npx tsc --noEmit`: 0 errores de TypeScript.
+    - `npm run build`: compilación de producción de Next.js Turbopack 100% exitosa (41 rutas generadas).
+
+- **3. Decisiones tomadas y pendientes de revisión para Pedro:**
+  - **Ambiente provisorio de 4.º grado:** Se configuró con `THEMES.meseta` hasta que Claude ilustre el nuevo ambiente y sus islas correspondientes (respetando la regla de no tocar `public/theme/**`).
+  - **Balance de longitud de opciones (8.04%):** Se enriquecieron los distractores con datos geográficos y biológicos paralelos y verosímiles en lugar de descripciones genéricas, asegurando alta calidad pedagógica.
+  - **Paso siguiente:** Esperar la revisión y confirmación de Pedro antes de comenzar con 5.º grado.
+
+### AG-15 · Seguimiento de AG-07 a AG-12: detalles menores (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **1. Nombres repetidos en competencia, fin de semana, novedades y torneo (`src/lib/news.ts`, `src/app/api/competition/route.ts`, `src/app/api/weekend/route.ts`, `src/app/api/world-attempt/route.ts`, `src/lib/data.ts`):**
+    - Se integró `resolveDisplayNames` en todas las rutas de actividad pública para resolver homónimos dinámicamente con la inicial del apellido (ej. «Santiago S.» y «Santiago R.»), idéntico al comportamiento del buzón.
+    - `newsForWorldProgress` ahora acepta `resolvedDisambiguation?: string` y la pasa a `displayName`.
+    - En `/api/competition`: se resolvió en invitaciones de duelo en vivo (~164), detalle de sala de duelo (~189), publicación de ganador/empate en pizarrón (~401), pantalla final de duelo (~418) y torneo semanal de memoria (~435).
+    - En `/api/weekend`: la publicación de finalización de aventura de fin de semana en el pizarrón resuelve los nombres con `resolveDisplayNames`.
+    - En `/api/world-attempt`: la publicación de mundos superados o completados en el pizarrón resuelve los nombres con `resolveDisplayNames`.
+    - En `getClassroomTorneoRanking` (`src/lib/data.ts`): el ranking de los 5 mejores tiempos del torneo de tablas resuelve los nombres con `resolveDisplayNames`.
+  - **2. Rendimiento del panel docente (`src/lib/data.ts`, `src/app/api/students/route.ts`):**
+    - Se implementó `adminSummaryProgress(p: StudentProgress)`: descarta `roundsInProgress` (árboles pesados de rondas incompletas) y recorta `activityLog` a los últimos 60 días (máximo 100 entradas o 30 si tiene pocas), conservando `activitySummary`, `activeDays`, `completedWorlds`, `tablasTorneo` y las métricas necesarias para las alertas tempranas y las series de evolución temporal.
+    - `GET /api/students?withProgress=true` ahora procesa cada progreso con `adminSummaryProgress`, aliviando significativamente el payload de red y el consumo de memoria en `/admin/dashboard` y `/admin/reporte/curso`.
+  - **3. Porcentaje de dominio centralizado (`src/lib/grades.ts`, `src/lib/courseSummary.ts`, `src/components/admin/CourseSummary.tsx`, `src/app/admin/dashboard/page.tsx`):**
+    - Se eliminó el 80/85/90 escrito a mano.
+    - `getMasteryThreshold(grade)` en `courseSummary.ts` delega en `getGrade(grade ?? DEFAULT_GRADE).masteryPct`.
+    - En `getStudentWorldSummary(student, progress, worldId)` se utiliza `masteryPctForWorld(worldId)`.
+    - En `src/components/admin/CourseSummary.tsx`: la leyenda del estado «Dominado» se genera dinámicamente mapeando `GRADES.map(g => ≥ ${g.masteryPct}% en ${g.grade}.º)`.
+    - En `src/app/admin/dashboard/page.tsx`: se reemplazaron los valores fijos por `getGrade(2).masteryPct` y `getGrade(selectedStudent.grade ?? 3).masteryPct`.
+  - **4. Cumplimiento de límites de planes en la plataforma (`src/app/docente/escuela/page.tsx`, `src/app/docente/aula/page.tsx`):**
+    - En `/docente/escuela`: la creación de aulas verifica `classrooms.length >= maxAulas` antes de invocar el RPC `create_classroom`.
+    - En `/docente/aula`: `EnrollTab` ahora recibe los datos de la escuela y el conteo de alumnos activos matriculados en toda la institución. Si `schoolStudentCount >= maxStudents` (35 en piloto_gratuito, 750 en escuela):
+      - Muestra un cartel de advertencia de cupo alcanzado con indicación cordial de consultar ampliación.
+      - Deshabilita los campos del formulario y el botón de inscripción.
+      - Bloquea el envío en el manejador `submit` con mensaje amable.
+    - **Propuesta de negocio para Pedro:** Establecer que las escuelas existentes en la base de datos queden configuradas con el plan `"escuela"` (25 aulas, 750 alumnos, 40 docentes) en lugar de `"piloto_gratuito"`, para que mantengan todas las funcionalidades habilitadas sin requerir mutación directa de datos en esta tarea.
+  - **5. Separación del almacenamiento de validaciones curriculares (`src/lib/data.ts`, `scripts/test-curriculo.ts`):**
+    - `getValidatedCurriculumWorldIds(curriculo)` y `validateCurriculumWorld(worldId, validated, curriculo)` ahora guardan bajo la clave `curriculumValidated:${curriculo}` (`santa-cruz` o `nap`).
+    - Para Santa Cruz (`santa-cruz`), se mantiene retrocompatibilidad total leyendo y sincronizando con la clave histórica `curriculum_validated_worlds`.
+    - Validar o desvalidar un mundo en Santa Cruz no altera el estado de ese mundo en NAP, y viceversa.
+    - Se respetó estrictamente la restricción de **no tocar** `src/app/api/curriculum/route.ts`.
+
+- **2. Cómo se probó:**
+  - `scripts/test-curriculo.ts`: se agregaron pruebas específicas para verificar la independencia de validaciones entre Santa Cruz y NAP y la persistencia de la clave histórica. Pasó 100%.
+  - `scripts/test-privacidad.ts`: pasó 100% (resolución de homónimos, apodos y aislamiento).
+  - `scripts/test-actividad.ts`: pasó 100% (evolución temporal de 6 y 8 semanas, alertas tempranas).
+  - `scripts/test-planes.ts`: pasó 100% (verificación de límites y excepciones).
+  - `scripts/test-resumen.ts`: pasó 100% (umbrales de dominio por grado, métricas del aula).
+  - `scripts/test-torneo.ts`: pasó 100% (tiempos, medallas, ranking).
+  - `scripts/test-reportes.ts`: pasó 100% (reportes individuales y CSV).
+  - `scripts/test-simulation.ts`: 38.840 actividades simuladas sin errores (0 regresiones).
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 advertencias o errores.
+  - `npm run build`: compilación de producción de Next.js exitosa para las 41 rutas.
+
+- **3. Decisiones pendientes para Pedro:**
+  - **Configuración de escuelas existentes:** Aprobar la propuesta de que las escuelas preexistentes en la plataforma pasen al plan `"escuela"` (para que cuenten con panel directivo, reportes consolidados y límite de 750 alumnos en vez de los 35 del piloto gratuito).
+  - **Valores provisorios de límites de planes:** Revisar si los límites provisorios definidos en `src/lib/planes.ts` (Piloto: 2 aulas / 35 alumnos / 2 docentes; Escuela: 25 aulas / 750 alumnos / 40 docentes) se ajustan a las necesidades de los convenios escolares.
+
+### AG-14 · Torneo de velocidad con las tablas (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Lógica de tiempos, metas y premios (`src/lib/torneo/tiempos.ts`):**
+    - Parámetros base configurables al inicio del archivo para fácil ajuste pedagógico por Pedro:
+      - `META_ORO_BASE = 35` segundos (para la tabla del 2).
+      - `META_ORO_INCREMENTO = 3` segundos adicionales por tabla subsiguiente (`metaOro(n) = 35 + 3 * (n - 2)`).
+      - `META_PLATA_DELTA = 15` segundos adicionales para medalla de plata (`metaPlata(n) = metaOro(n) + 15`).
+      - `PENALIDAD_ERROR_MS = 3000` (+3 segundos por intento fallido).
+    - Monedas: Oro 15 🪙, Plata 8 🪙, Bronce 3 🪙 (una vez por tabla y por día de fin de semana).
+    - Premios especiales de objetos exclusivos (desbloqueados la primera vez que se logra oro en su grupo):
+      - Tablas 2 a 4: «Vincha relámpago» ⚡ (`vincha-relampago`, slot `headwear`, molde `cuernitos-dragon`).
+      - Tablas 5 a 7: «Lentes turbo» 🕶️ (`lentes-turbo`, slot `eyewear`, molde `lentes-aviador`).
+      - Tablas 8 a 10: «Medalla del rayo» 🏅 (`medalla-rayo`, slot `pendant`, molde `sol-de-mayo`).
+  - **Generador de opciones con 3 alternativas (`src/lib/torneo/opciones.ts`):**
+    - 11 pasos en estricto orden ($N \times 0$ a $N \times 10$).
+    - Opciones matemáticas balanceadas y siempre no negativas: la respuesta correcta más dos distractores cercanos distintos entre sí y distintos de la correcta ($N \times (k-1)$, $N \times (k+1)$ o $\pm 1 / \pm 2$).
+  - **Modelos de datos y accesorios (`src/types/index.ts`):**
+    - Se agregó `tablasTorneo` en `StudentProgress` (agrupado por clave del sábado `AAAA-MM-DD` -> tabla -> `{ mejorMs, medalla, errores, monedasDia }`).
+    - Se incorporaron `vincha-relampago`, `lentes-turbo` y `medalla-rayo` a `ACCESSORY_CATALOG_PREMIO`.
+    - Se actualizaron las referencias en `scripts/coleccion/lista-para-dibujar.ts`.
+  - **Servidor y persistencia (`src/lib/data.ts`, `src/app/api/torneo/route.ts`):**
+    - `weekendSaturdayKey(now)`: agrupa sábados y domingos bajo la misma fecha del sábado para reiniciar el ranking semanalmente.
+    - `completeTorneoTable(...)`: validación estricta de fin de semana en hora argentina, rangos válidos, cálculo de medalla, entrega de monedas sin duplicar en el mismo día, desbloqueo de accesorios por primera vez y actualización del mejor tiempo.
+    - `getClassroomTorneoRanking(...)`: ranking semanal de los 5 mejores tiempos del aula por tabla, respetando la privacidad (AG-07) al mostrar únicamente el nombre visible / apodo.
+    - Endpoints `GET /api/torneo` y `POST /api/torneo` con rate limiting anti-fuerza bruta.
+  - **Interfaz del alumno en la Aventura de Fin de Semana (`src/components/weekend/TorneoTablasGame.tsx`, `src/app/student/weekend/page.tsx`):**
+    - Tarjeta banner destacada en `/student/weekend` para entrar al «⚡ Torneo de las tablas».
+    - Selector interactivo de tablas del 2 al 10 con metas visibles y ranking del aula en tiempo real.
+    - Pantalla de cuenta regresiva (3-2-1).
+    - Pantalla de juego optimizada para móviles (390px) con cronómetro de décimas de segundo, cuenta gigante («4 × 7 = ?») y 3 botones táctiles grandes sin desplazamiento al tocar rápido.
+    - Respuesta inmediata al acertar (≤ 180 ms) y sacudida roja con alerta `+3s` en caso de error (no avanza hasta corregir).
+    - Pantalla de resultado final con medalla, tiempo con penalidades, errores, monedas ganadas, aviso de nuevo objeto desbloqueado, repaso completo de las 11 multiplicaciones y opciones de reintento.
+  - **Reporte docente en Panel y Legajo (`src/components/admin/TorneoReport.tsx`, `src/components/admin/TorneoReportByCode.tsx`, `src/app/admin/dashboard/page.tsx`, `src/app/docente/alumno/page.tsx`):**
+    - Muestra en el detalle del alumno las tablas jugadas por fin de semana, mejor tiempo y cantidad de errores, alertando con un aviso destacado aquellas tablas que convendría reforzar en clase.
+- **2. Cómo se probó:**
+  - `scripts/test-torneo.ts`: suite automatizada integral que verifica:
+    - Opciones para todas las tablas 2..10 y todos los multiplicadores 0..10 (3 opciones, 1 correcta, todas distintas y ninguna negativa).
+    - Metas de tiempo oro y plata exactas para las 9 tablas.
+    - Asignación de medallas al milisegundo en bordes críticos (ej. 35.0s oro vs 35.1s plata).
+    - Penalidad de 3000 ms por error.
+    - Monedas por medalla (15, 8, 3) y restricción de una sola entrega por tabla por día.
+    - Entrega de accesorios de premio una sola vez por grupo.
+    - Rechazo fuera de fin de semana.
+    - Ranking del curso con privacidad (nombre visible/apodo).
+  - `scripts/test-simulation.ts`: 38 840 actividades simuladas sin errores ni regresiones.
+  - `scripts/test-colecciones.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores de TypeScript en todo el proyecto.
+  - `npx eslint src`: 0 advertencias y 0 errores de linter.
+  - `npm run build`: compilación de producción con Next.js Turbopack 100% limpia (41 rutas generadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Metas de tiempo por tabla:** Confirmar si el tiempo base de 35 segundos para la tabla del 2 (+3s por tabla subsiguiente) resulta adecuado para sus alumnos de 3.º grado, o si prefiere un tiempo base más relajado (ej. 40s) o más estricto.
+  - **Penalidad por error:** Se configuró en +3 segundos adicionales al cronómetro por cada error antes de poder avanzar; confirmar si ese valor resulta balanceado.
+  - **Monedas por medalla:** Se configuraron en 15 🪙 para oro, 8 🪙 para plata y 3 🪙 para bronce.
 
 ### CL-12 · Fondos, portada y Camino de premios (Claude)
 - **Colecciones de 10 días** (`DIAS_TEMPORADA = 10`, del día −4 al +5). Excepciones: Halloween del 23/10 al 1/11 (en 2026 sigue hasta el 2/11, como se anunció), Navidad del 18/12 al 27/12 y Tradición del 5/11 al 14/11. La prueba del calendario (sin superposiciones y con días libres) sigue pasando hasta 2028.

@@ -156,13 +156,15 @@ export async function GET(request: NextRequest) {
     );
     if (duels.length === 0) return Response.json({ invites: [] });
     const snapshot = await getClassSnapshot();
+    const mates = classmatesOf(me, snapshot.students);
+    const resolvedNames = resolveDisplayNames(mates);
     const invites = await Promise.all(
       duels.map(async (d) => {
         const s = snapshot.students.find((x) => x.code === d.from);
         const p = snapshot.progress.get(d.from);
         return {
           id: d.id,
-          fromName: s ? displayName(s, p) : "Un compañero",
+          fromName: s ? displayName(s, p, resolvedNames.get(s.code)) : "Un compañero",
           avatar: p?.avatar,
           accessories: p?.avatarAccessories,
           tweaks: p?.avatarTweaks,
@@ -175,6 +177,7 @@ export async function GET(request: NextRequest) {
   }
 
   const students = classmatesOf(me, await getStudents());
+  const resolvedNames = resolveDisplayNames(students);
 
   // Detalle de un duelo (sala del duelo; en vivo se consulta cada 2 s, así
   // que solo se leen los datos de los dos jugadores).
@@ -188,7 +191,7 @@ export async function GET(request: NextRequest) {
     const other = duel.from === me.code ? duel.to : duel.from;
     const otherStudent = students.find((s) => s.code === other);
     const otherProgress = await getProgress(other);
-    const names = new Map([[other, { name: otherStudent ? displayName(otherStudent, otherProgress) : "Un compañero" }]]);
+    const names = new Map([[other, { name: otherStudent ? displayName(otherStudent, otherProgress, resolvedNames.get(other)) : "Un compañero" }]]);
     return Response.json({
       duel: duelView(duel, me.code, names),
       opponentInfo: {
@@ -395,10 +398,11 @@ export async function POST(request: NextRequest) {
     if (after.status === "terminado") {
       coinsEarned = await payIfNeeded(after, me.code);
       // Pizarrón: lo publica quien termina segundo.
-      const students = await getStudents();
+      const students = classmatesOf(me, await getStudents());
+      const resolvedNames = resolveDisplayNames(students);
       const name = async (c: string) => {
-        const s = students.find((x) => x.code === c)!;
-        return displayName(s, await getProgress(c));
+        const s = students.find((x) => x.code === c);
+        return s ? displayName(s, await getProgress(c), resolvedNames.get(c)) : "Un compañero";
       };
       const w = winnerOf(after);
       const [a, b] = [await name(after.from), await name(after.to)];
@@ -413,9 +417,11 @@ export async function POST(request: NextRequest) {
     }
     const view = await getDuel(duel.id);
     const other = duel.from === me.code ? duel.to : duel.from;
-    const otherStudent = (await getStudents()).find((s) => s.code === other);
+    const studentsAfter = classmatesOf(me, await getStudents());
+    const resolvedNamesAfter = resolveDisplayNames(studentsAfter);
+    const otherStudent = studentsAfter.find((s) => s.code === other);
     const names = new Map([
-      [other, { name: otherStudent ? displayName(otherStudent, await getProgress(other)) : "Un compañero" }],
+      [other, { name: otherStudent ? displayName(otherStudent, await getProgress(other), resolvedNamesAfter.get(other)) : "Un compañero" }],
     ]);
     return Response.json({ ok: true, coinsEarned, duel: duelView(view!, me.code, names) });
   }
@@ -430,9 +436,10 @@ export async function POST(request: NextRequest) {
     const p = await getProgress(me.code);
     await saveProgress({ ...p, coins: p.coins + TOURNAMENT_COINS });
     const students = classmatesOf(me, await getStudents());
+    const resolvedNames = resolveDisplayNames(students);
     const ranking = rankTournament(await getTournamentEntries(week, students.map((s) => s.code)));
     const position = ranking.findIndex((e) => e.code === me.code) + 1;
-    const who = displayName(me, p);
+    const who = displayName(me, p, resolvedNames.get(me.code));
     await addNews([
       position === 1 && ranking.length > 1
         ? { code: me.code, who, kind: "torneo", emoji: "🏆", text: "pasó al primer puesto del torneo de la semana" }
