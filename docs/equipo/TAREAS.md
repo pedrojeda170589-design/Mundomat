@@ -12,9 +12,15 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-03 | Imágenes de 1.º (ambiente «costa patagónica»), ambientes por grado y avatares de Halloween | Claude | 🟢 UNIDA A MAIN |
 | CL-04 | Cuentos en 1.º, 2.º y 3.º: 19 cuentos ilustrados, un mundo de comprensión cada 3 en Lengua | Claude | 🟢 UNIDA A MAIN |
 | AG-04 | [Comprensión lectora 2.º y 3.º (preguntas por grado), fichas de los cuentos y más variedad en 2.º](./tareas/AG-04-comprension-lectora.md) | Antigravity | 🟢 UNIDA A MAIN |
-| AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-05 | [Ajustes de comprensión: lenguaje de 3.º y opciones parejas](./tareas/AG-05-ajustes-comprension.md) | Antigravity | 🟢 UNIDA A MAIN |
 | AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🔨 EN CURSO |
+| CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
+| AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
@@ -240,3 +246,9 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 - 6 leyendas nuevas, con prioridad a Santa Cruz y la Argentina: Kóoch y el origen del mundo y Cómo llegó la ballena al mar (tehuelches), el hornero y la yerba mate (guaraníes), el Cerro de los Siete Colores (Jujuy) y las Cataratas del Iguazú (guaraní). Total: 25 textos ilustrados.
 - Las islas de los mundos de comprensión ilustran su texto y se guardan por texto (`cuento-<id>.png` en cada ambiente; `world.image`), así no dependen de la posición.
 - Lectura en **diapositivas**: cada escena entra con un fundido y la imagen se acerca despacio; mientras la voz lee, se resalta la oración que suena (correspondencia imagen–texto–voz). Si hay audio grabado, se resalta la escena entera.
+
+### CL-08 · Voz y música de los cuentos (Claude)
+- Voz de los textos con Kokoro-82M (voz «Alex», Apache 2.0): un audio por oración (`public/audio/cuentos/voz/<hash>.mp3`, `src/lib/cuentos/voz.ts`), con resaltado sincronizado. Prioridad: grabación del docente → voz Kokoro → voz del navegador. Si cambian o se agregan textos (AG-06), regenerar con `scripts/voz/` (ver LEEME).
+- Música original compuesta por código (`scripts/musica/componer.py` → `public/audio/musica/`): inicio, un mapa por ambiente, cuento, leyenda, fábula y festejo. Suena bajita, baja durante la lectura y se apaga con el botón 🎵 (se recuerda por dispositivo).
+- Lectura en voz alta paga en 3.º (5 🪙 por texto) y textos por grado (`escenasDe`).
+- Licencias del audio: `docs/CREDITOS-AUDIO.md`.
