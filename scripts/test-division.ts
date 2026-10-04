@@ -2,7 +2,9 @@
 // 2000 vueltas (respuestas correctas presentes, cuentas bien, sin repetir
 // opciones, divisiones exactas donde corresponde).
 import assert from "node:assert/strict";
-import { buildActivitiesForWorld } from "../src/lib/activities";
+import { buildActivitiesForWorld, repasoTablasActivo, actividadRepasoTablas } from "../src/lib/activities";
+import { GRADE1_WORLDS } from "../src/lib/grade1/worlds";
+import { GRADE4_WORLDS } from "../src/lib/grade4/worlds";
 import { WORLDS } from "../src/lib/worlds";
 
 const mundo = WORLDS.find((w) => w.id === 8)!;
@@ -56,3 +58,39 @@ for (const id of [5, 6, 7]) {
   }
 }
 console.log("✅ Mundos 5 a 7: tabla pitagórica y regularidades OK.");
+
+// Repaso de las tablas: desde julio de 3.º; en 4.º en adelante, todo el año.
+{
+  const mayo = new Date("2026-05-15T12:00:00-03:00");
+  const julio = new Date("2026-07-01T09:00:00-03:00");
+  const mundo1 = WORLDS.find((w) => w.id === 1)!; // 3.º, números
+  assert.equal(repasoTablasActivo(mundo1, mayo), false, "3.º antes de julio: no");
+  assert.equal(repasoTablasActivo(mundo1, julio), true, "3.º desde julio: sí");
+  assert.equal(repasoTablasActivo(WORLDS.find((w) => w.id === 15)!, julio), true, "también en Lengua");
+  assert.equal(repasoTablasActivo(WORLDS.find((w) => w.id === 5)!, julio), false, "los mundos de tablas ya son de tablas");
+  assert.equal(repasoTablasActivo(WORLDS.find((w) => w.storyId)!, julio), false, "no en los cuentos");
+  assert.equal(repasoTablasActivo(GRADE1_WORLDS[0], julio), false, "1.º nunca");
+  assert.equal(repasoTablasActivo(GRADE4_WORLDS[0], mayo), true, "4.º todo el año");
+  // Aparece a veces (no siempre), nunca primera ni última.
+  let con = 0;
+  for (let v = 0; v < 2000; v++) {
+    const acts = buildActivitiesForWorld(mundo1, julio);
+    const i = acts.findIndex((a) => a.id === "repaso-tablas");
+    if (i >= 0) {
+      con++;
+      assert.ok(i > 0 && i < acts.length - 1);
+    }
+    assert.ok(buildActivitiesForWorld(mundo1, mayo).every((a) => a.id !== "repaso-tablas"));
+  }
+  assert.ok(con > 600 && con < 1000, `aparece en ~40 % de las vueltas (salió ${con}/2000)`);
+  for (let v = 0; v < 3000; v++) {
+    const a = actividadRepasoTablas(v % 2 ? 3 : 6);
+    if (a.type === "pitagorica") assert.ok(a.fila >= 2 && a.fila <= 10 && a.columna >= 2 && a.columna <= 10);
+    if (a.type === "mc") {
+      assert.equal(new Set(a.choices).size, a.choices.length);
+      const [x, y] = a.prompt.match(/(\d+) × (\d+)/)!.slice(1).map(Number);
+      assert.equal(Number(a.choices[a.answerIndex]), x * y);
+    }
+  }
+  console.log(`✅ Repaso de las tablas: desde julio de 3.º y siempre desde 4.º (${con}/2000 vueltas).`);
+}

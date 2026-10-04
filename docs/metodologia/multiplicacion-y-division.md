@@ -48,6 +48,22 @@ Actividades nuevas:
 
 Las pruebas están en `scripts/test-division.ts`.
 
+**Tabla pitagórica (modelo de Pedro):**
+- Va de 0 a 10, con columnas de colores. La fila es el primer número y la columna el segundo.
+- La usan la actividad del juego y la página para descargar `/tabla-pitagorica`. Esa página tiene el PDF A4 y la imagen en `public/descargas/`, generados con `node scripts/descargas/tabla-pitagorica.mjs`.
+- Se llega a la página desde el mapa de mundos («📥 Mi tabla pitagórica para imprimir»), desde las fichas para las familias y desde cada actividad de la tabla.
+
+**Repaso de las tablas:**
+- **Cuándo:** desde julio en 3.º grado; en 4.º grado en adelante, todo el año.
+- **Cuánto:** en el 40 % de las vueltas se agrega UNA actividad «🔁 Repaso de las tablas», nunca primera ni última.
+- **Qué:** puede ser:
+  - el cruce en la tabla pitagórica;
+  - una división con la tabla;
+  - un cálculo de opción múltiple.
+  
+  En 5.º en adelante salen más las tablas difíciles.
+- **Dónde no:** en los cuentos, en los dictados ni en los mundos que ya son de tablas o de división.
+
 ## Proyección a otros grados
 
 - **2.º grado** (cuadro del 1 al 100, tablas del 2, 5 y 10, reparto):

@@ -26,6 +26,17 @@ export default function FamiliasPage() {
           </Link>
         </div>
 
+        <a
+          href="/tabla-pitagorica"
+          className="parchment-panel rounded-2xl px-4 py-3 flex items-center gap-3 font-bold text-amber-950 hover:brightness-105"
+        >
+          <span className="text-3xl">✖️</span>
+          <span>
+            Tabla pitagórica para imprimir (PDF o imagen)
+            <span className="block text-xs font-normal">Del 0 al 10, para multiplicar y dividir. Ideal para pegar en la carpeta.</span>
+          </span>
+        </a>
+
         <FichasView />
       </div>
     </main>

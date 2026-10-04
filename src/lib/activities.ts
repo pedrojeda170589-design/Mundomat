@@ -7027,7 +7027,59 @@ export function buildDictationWorldActivities(world: WorldDef): ActivitySpec[] {
   }));
 }
 
-export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
+// Vuelta de un mundo. Además, el REPASO DE LAS TABLAS (pedido de Pedro):
+// desde julio de 3.º grado, y en 4.º grado en adelante todo el año, a veces
+// aparece una actividad de repaso de multiplicación o división con la tabla
+// pitagórica, para que no se olviden.
+export function buildActivitiesForWorld(world: WorldDef, now: Date = new Date()): ActivitySpec[] {
+  return conRepasoDeTablas(world, armarVuelta(world), now);
+}
+
+export const REPASO_TABLAS_PROBABILIDAD = 0.4;
+export function repasoTablasActivo(world: WorldDef, now: Date = new Date()): boolean {
+  const grado = world.grade ?? 3;
+  if (grado < 3) return false;
+  if (world.storyId || world.kind === "dictado" || world.category === "dictado") return false;
+  if (world.category === "tabla" || world.category === "reparto") return false; // ya son de tablas
+  if (grado > 3) return true;
+  const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
+  return mesAR >= 7;
+}
+
+export function actividadRepasoTablas(grado: number): ActivitySpec {
+  const titulo = "🔁 Repaso de las tablas";
+  // En 5.º en adelante, más tablas difíciles.
+  const t = grado >= 5 ? pick([6, 7, 8, 9, 9, 7, 4, 3]) : randInt(2, 9);
+  const m = randInt(2, 10);
+  const r = Math.random();
+  if (r < 0.35) {
+    return {
+      type: "pitagorica", id: "repaso-tablas", title: titulo, modo: "cruce", fila: t, columna: m,
+      prompt: `¡Repaso! ¿Cuánto es ${t} × ${m}? Buscalo en la tabla pitagórica.`,
+      hint: `Pista: fila del ${t}, columna del ${m}.`,
+    };
+  }
+  if (r < 0.65) {
+    return {
+      type: "pitagorica", id: "repaso-tablas", title: titulo, modo: "inversa", fila: t, columna: m,
+      prompt: `¡Repaso! ¿Cuánto es ${t * m} ÷ ${t}? Usá la tabla pitagórica.`,
+      hint: `Pista: buscá el ${t * m} en la fila del ${t} y mirá en qué columna está.`,
+    };
+  }
+  return mcFromAnswer(
+    "repaso-tablas", titulo, `¡Repaso de las tablas! ¿Cuánto es ${t} × ${m}?`, t * m,
+    `Pista: es la tabla del ${t}. Si no te acordás, sumá ${t} un total de ${m} veces.`, t
+  );
+}
+
+function conRepasoDeTablas(world: WorldDef, acts: ActivitySpec[], now: Date): ActivitySpec[] {
+  if (acts.length < 3 || !repasoTablasActivo(world, now) || Math.random() >= REPASO_TABLAS_PROBABILIDAD) return acts;
+  // Ni primera ni última (la última suele ser el desafío final).
+  const pos = randInt(1, acts.length - 1);
+  return [...acts.slice(0, pos), actividadRepasoTablas(world.grade ?? 3), ...acts.slice(pos)];
+}
+
+function armarVuelta(world: WorldDef): ActivitySpec[] {
   if (world.id === 28001 || world.id === 38001 || world.id === 48001 || world.category === "dictado") {
     return buildDictationWorldActivities(world);
   }

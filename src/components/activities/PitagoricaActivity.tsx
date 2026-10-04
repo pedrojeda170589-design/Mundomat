@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { cardBase } from "./shared";
+import { COLOR_COLUMNA, COLOR_FILA, TABLA_MAX } from "@/lib/tablaPitagorica";
 
-// Tabla pitagórica interactiva (metodología de Pedro, clases 1, 2, 6 y 7):
-// - "cruce": buscar la fila de a y la columna de b y tocar el casillero
-//   donde se cruzan (a × b).
-// - "inversa": para dividir D ÷ d, buscar la fila del divisor, avanzar hasta
-//   el dividendo y subir hasta el número de arriba de esa columna (el
-//   cociente). Se toca ese número de arriba.
+// Tabla pitagórica interactiva con el modelo de Pedro (0 a 10, columnas de
+// colores; la fila es el primer número y la columna el segundo):
+// - "cruce": para a × b, tocar el casillero donde se cruzan la fila a y la
+//   columna b.
+// - "inversa": para D ÷ d, buscar el D en la fila d y después tocar el
+//   número de arriba de esa columna (el resultado).
 interface Props {
   prompt: string;
   modo: "cruce" | "inversa";
@@ -17,79 +18,98 @@ interface Props {
   onDone: (correct: boolean) => void;
 }
 
-const N = 10;
+const N = TABLA_MAX;
 
 export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone }: Props) {
   const [tocado, setTocado] = useState<{ f: number; c: number } | null>(null);
-  // En "inversa", primero se toca el dividendo en la fila del divisor.
   const [dividendoOk, setDividendoOk] = useState(false);
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
 
   function terminar(ok: boolean) {
     setResult(ok ? "correct" : "wrong");
-    setTimeout(() => onDone(ok), 1300);
+    setTimeout(() => onDone(ok), 1400);
   }
 
+  // f y c van de -1 (encabezados) a N.
   function tocar(f: number, c: number) {
     if (result) return;
     setTocado({ f, c });
-    if (modo === "cruce") {
-      terminar(f === fila && c === columna);
-      return;
-    }
-    // inversa
+    if (modo === "cruce") return terminar(f === fila && c === columna);
     if (!dividendoOk) {
       if (f === fila && c === columna) setDividendoOk(true);
       else terminar(false);
       return;
     }
-    // segundo toque: el número de arriba de la columna (fila 0 = encabezado)
-    terminar(f === 0 && c === columna);
+    terminar(f === -1 && c === columna);
   }
 
-  const resaltarFila = modo === "inversa" || (tocado && result === null) ? fila : -1;
+  const cuenta =
+    modo === "cruce"
+      ? `${fila} × ${columna} = ${fila * columna}`
+      : `${fila * columna} ÷ ${fila} = ${columna}, porque ${fila} × ${columna} = ${fila * columna}`;
   const ayuda =
     modo === "cruce"
-      ? `Buscá la fila del ${fila} (←) y la columna del ${columna} (↑). Tocá donde se cruzan.`
+      ? `En la fila está el primer número (${fila}) y en la columna el segundo (${columna}). Tocá donde se cruzan.`
       : dividendoOk
-        ? "¡Bien! Ahora subí por esa columna y tocá el número de arriba: ese es el resultado."
-        : `Andá a la fila del ${fila} (el divisor) y tocá el ${fila * columna} (el dividendo).`;
+        ? `¡Bien! El ${fila * columna} está en la columna del ${columna}. Tocá el número de arriba de esa columna.`
+        : `Buscá el ${fila * columna} en la fila del ${fila} y tocalo.`;
+
+  const filaMarcada = modo === "inversa" || dividendoOk ? fila : -2;
 
   return (
     <div className={cardBase}>
       <p className="text-lg font-bold text-white mb-1 text-center">{prompt}</p>
       <p className="text-xs text-amber-200 text-center mb-3">{ayuda}</p>
       <div
-        className="grid gap-[2px] mx-auto select-none"
-        style={{ gridTemplateColumns: `repeat(${N + 1}, minmax(0, 1fr))`, maxWidth: 360 }}
+        className="grid gap-[2px] mx-auto select-none rounded-lg overflow-hidden p-[2px]"
+        style={{ gridTemplateColumns: `repeat(${N + 2}, minmax(0, 1fr))`, maxWidth: 380, background: "#3f3a8c" }}
         role="grid"
         aria-label="Tabla pitagórica"
       >
-        {Array.from({ length: N + 1 }, (_, f) =>
-          Array.from({ length: N + 1 }, (_, c) => {
-            const esquina = f === 0 && c === 0;
-            const encabezado = f === 0 || c === 0;
-            const valor = esquina ? "×" : f === 0 ? c : c === 0 ? f : f * c;
-            const enFila = f === resaltarFila && c > 0;
-            const elegido = tocado?.f === f && tocado?.c === c;
+        {Array.from({ length: N + 2 }, (_, i) => i - 1).map((f) =>
+          Array.from({ length: N + 2 }, (_, j) => j - 1).map((c) => {
+            const esquina = f === -1 && c === -1;
+            const encFila = c === -1 && f >= 0; // número de la fila (izquierda)
+            const encCol = f === -1 && c >= 0; // número de la columna (arriba)
+            const valor = esquina ? "×" : encFila ? f : encCol ? c : f * c;
+            let bg = esquina
+              ? COLOR_FILA.esquina
+              : encFila
+                ? COLOR_FILA.encabezado
+                : encCol
+                  ? COLOR_COLUMNA[c].encabezado
+                  : COLOR_COLUMNA[c].celda;
+            let extra = "";
+            const enFila = f === filaMarcada && c >= 0;
+            if (enFila) extra = "ring-2 ring-inset ring-sky-600";
             const esRespuesta =
               result !== null &&
               ((modo === "cruce" && f === fila && c === columna) ||
-                (modo === "inversa" && ((f === 0 && c === columna) || (f === fila && c === columna))));
-            const clickeable = modo === "cruce" ? !encabezado : !esquina && (f === 0 ? c > 0 : c > 0);
-            let color = encabezado ? "bg-amber-500/80 text-slate-950 font-black" : "bg-slate-800 text-slate-100";
-            if (enFila && !encabezado) color = "bg-sky-700/80 text-white";
-            if (dividendoOk && f === fila && c === columna) color = "bg-emerald-500 text-white font-black";
-            if (esRespuesta) color = "bg-emerald-500 text-white font-black ring-2 ring-emerald-200";
-            if (elegido && result === "wrong") color = "bg-rose-500 text-white font-black";
+                (modo === "inversa" && ((f === -1 && c === columna) || (f === fila && c === columna))));
+            if (dividendoOk && f === fila && c === columna) {
+              bg = "#22c55e";
+              extra = "text-white";
+            }
+            if (esRespuesta) {
+              bg = "#16a34a";
+              extra = "text-white ring-2 ring-emerald-200";
+            }
+            if (tocado?.f === f && tocado?.c === c && result === "wrong") {
+              bg = "#ef4444";
+              extra = "text-white";
+            }
+            const clickeable = modo === "cruce" ? !encFila && !encCol && !esquina : !esquina && !encFila;
             return (
               <button
-                key={`${f}-${c}`}
+                key={`${f}:${c}`}
                 type="button"
                 disabled={!clickeable || result !== null}
                 onClick={() => tocar(f, c)}
-                className={`aspect-square rounded-[4px] text-[11px] sm:text-xs leading-none flex items-center justify-center ${color} disabled:cursor-default`}
-                aria-label={esquina ? "por" : encabezado ? String(valor) : `${f} por ${c}`}
+                style={{ background: bg }}
+                className={`aspect-square rounded-[3px] text-[10px] sm:text-xs leading-none flex items-center justify-center text-slate-900 ${
+                  encFila || encCol || esquina ? "font-black text-[11px] sm:text-sm" : "font-semibold"
+                } ${esquina ? "text-white" : ""} ${extra} disabled:cursor-default`}
+                aria-label={esquina ? "por" : encFila ? `fila ${f}` : encCol ? `columna ${c}` : `${f} por ${c}`}
               >
                 {valor}
               </button>
@@ -97,16 +117,18 @@ export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone
           })
         )}
       </div>
-      {result === "correct" && (
-        <p className="text-emerald-300 font-bold text-center mt-3">
-          ¡Correcto! {modo === "cruce" ? `${fila} × ${columna} = ${fila * columna}` : `${fila * columna} ÷ ${fila} = ${columna}, porque ${fila} × ${columna} = ${fila * columna}`} 🎉
+      {result && (
+        <p className={`${result === "correct" ? "text-emerald-300" : "text-red-300"} font-bold text-center mt-3`}>
+          {result === "correct" ? "¡Correcto! " : "No era. "}
+          {cuenta}
+          {result === "correct" ? " 🎉" : "."}
         </p>
       )}
-      {result === "wrong" && (
-        <p className="text-red-300 font-bold text-center mt-3">
-          No era. {modo === "cruce" ? `${fila} × ${columna} = ${fila * columna}` : `${fila * columna} ÷ ${fila} = ${columna}, porque ${fila} × ${columna} = ${fila * columna}`}.
-        </p>
-      )}
+      <p className="text-center mt-2">
+        <a href="/tabla-pitagorica" target="_blank" className="text-[11px] text-sky-300 underline">
+          📥 Descargar mi tabla pitagórica
+        </a>
+      </p>
     </div>
   );
 }
