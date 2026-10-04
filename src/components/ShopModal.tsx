@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
-import { getSeasonalEventById } from "@/lib/seasons";
-import { AVISO_PREVIO_DIAS, textoContador, ventanaDe, type Ventana } from "@/lib/tiempo-limitado";
+import { AVISO_PREVIO_DIAS, getTemporada, nombreTemporada, textoContador, ventanaDe, type Ventana } from "@/lib/tiempo-limitado";
+import { LEGENDARIO_MUNDOS } from "@/lib/coleccion/temporadas";
 import {
   ACCESSORY_CATALOG_TIENDA,
   AVATAR_INFO,
@@ -15,6 +15,7 @@ import {
   SHOP_CATEGORY_LABEL,
   ShopAvatar,
   StudentProgress,
+  getAccessoryById,
   getAccessorySrc,
   getAvatarSrc,
 } from "@/types";
@@ -174,6 +175,7 @@ export default function ShopModal({
         <button onClick={() => setPreview({ accessory: acc })} className="relative aspect-square rounded-xl bg-slate-700/60" title="Probar">
           <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="100px" className={`object-contain p-2 ${soon ? "opacity-60" : ""}`} />
           {owned.has(acc.id) && <span className="absolute top-1 right-1 rounded-full bg-emerald-500 text-white text-[10px] font-black px-1.5">TUYO</span>}
+          {acc.unicaVez && <span className="absolute bottom-1 left-1 rounded-full bg-fuchsia-600 text-white text-[9px] font-black px-1.5">🔐 EXCLUSIVO</span>}
         </button>
         <p className="text-white text-xs font-bold leading-tight min-h-[2rem]">{acc.label}</p>
         {using ? (
@@ -258,6 +260,7 @@ export default function ShopModal({
                   <section key={v.eventId} className="mb-3">
                     <LimitedHeader v={v} />
                     <ul className="grid grid-cols-3 gap-2">{items.map(accessoryCard)}</ul>
+                    <LegendaryCard v={v} progress={progress} />
                   </section>
                 );
               })}
@@ -268,6 +271,8 @@ export default function ShopModal({
           )}
         </div>
         <p className="text-slate-500 text-[11px] text-center">
+          🏆 Los avatares de los cuentos, leyendas y fábulas no se venden: se ganan sacando 90 % o más.
+          <br />
           Las monedas se ganan aprendiendo: respondiendo bien, completando mundos y en la aventura del finde.
         </p>
       </div>
@@ -278,8 +283,11 @@ export default function ShopModal({
 
 // Cartel de una festividad con cosas por tiempo limitado: cuánto falta para
 // que se vayan (o para que lleguen).
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
 function LimitedHeader({ v }: { v: Ventana }) {
-  const ev = getSeasonalEventById(v.eventId);
+  const n = nombreTemporada(v.eventId);
+  const temporada = getTemporada(v.eventId);
   const urgente = v.activa && v.dias <= 3;
   return (
     <div
@@ -288,11 +296,44 @@ function LimitedHeader({ v }: { v: Ventana }) {
       }`}
     >
       <p className="text-xs font-black text-white">
-        {ev?.emoji} {ev?.label} · {v.activa ? "por tiempo limitado" : "próximamente"}
+        {n.emoji} {n.titulo} · {v.activa ? "por tiempo limitado" : "próximamente"}
       </p>
+      {n.sub && <p className="text-[10px] text-slate-300">{n.sub}</p>}
       <p className={`text-[11px] font-black ${v.activa ? (urgente ? "text-red-300" : "text-orange-200") : "text-sky-200"}`}>
         ⏳ {textoContador(v)}
       </p>
+      {temporada && v.activa && (
+        <p className="text-[10px] text-slate-300">
+          🛒 Temporada: después desaparece y vuelve en {MESES[v.desde.month - 1]} de {v.desde.year + 1}.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Legendario de la temporada: no se vende, se gana superando mundos con 90 %
+// o más mientras dura la temporada.
+function LegendaryCard({ v, progress }: { v: Ventana; progress: StudentProgress }) {
+  const t = getTemporada(v.eventId);
+  const def = t?.legendario ? getAccessoryById(t.legendario.id) : undefined;
+  if (!t || !def) return null;
+  const tiene = (progress.seasonalCollection ?? []).includes(def.id);
+  const hechos = progress.legendaryProgress?.[`${t.id}-${v.desde.year}`]?.length ?? 0;
+  return (
+    <div className="mt-2 flex items-center gap-3 rounded-2xl border-2 border-violet-400 bg-violet-500/15 p-2">
+      <span className="relative w-14 h-14 shrink-0 rounded-xl bg-slate-700/60">
+        <Image src={getAccessorySrc(def.id)} alt={def.label} fill sizes="56px" className={`object-contain p-1 ${tiene ? "" : "opacity-70"}`} />
+      </span>
+      <div className="text-left">
+        <p className="text-[11px] font-black text-violet-200">👑 LEGENDARIO · {def.label}</p>
+        <p className="text-[11px] text-slate-200">
+          {tiene
+            ? "¡Ya es tuyo! Ponételo desde tu perfil."
+            : v.activa
+              ? `No se compra: superá ${LEGENDARIO_MUNDOS} mundos con 90 % o más durante la temporada (${Math.min(hechos, LEGENDARIO_MUNDOS)}/${LEGENDARIO_MUNDOS}).`
+              : `Cuando empiece la temporada, superá ${LEGENDARIO_MUNDOS} mundos con 90 % o más para ganarlo.`}
+        </p>
+      </div>
     </div>
   );
 }

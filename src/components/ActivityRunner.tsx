@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { COINS_BONUS_WORLD_COMPLETE, COINS_PER_CORRECT_ANSWER, WorldDef } from "@/types";
+import {
+  AVATAR_INFO,
+  COINS_BONUS_WORLD_COMPLETE,
+  COINS_PER_CORRECT_ANSWER,
+  WorldDef,
+  getAccessoryById,
+  getAccessorySrc,
+  getAvatarSrc,
+} from "@/types";
 import { ActivitySpec, buildActivitiesForWorld } from "@/lib/activities";
 import { WorldMasteryOutcome } from "@/lib/progressLogic";
 import McActivity from "@/components/activities/McActivity";
@@ -20,6 +28,8 @@ import BuildActivity from "@/components/activities/BuildActivity";
 import TraceActivity from "@/components/activities/TraceActivity";
 import ListenActivity from "@/components/activities/ListenActivity";
 import { festejo } from "@/lib/musica";
+import type { PremiosNuevos } from "@/lib/coleccion/premios";
+import { LEGENDARIO_MUNDOS, TEMPORADAS } from "@/lib/coleccion/temporadas";
 import DictationActivity from "@/components/activities/DictationActivity";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
@@ -91,6 +101,7 @@ export default function ActivityRunner({
   const [lastCoinsEarned, setLastCoinsEarned] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [dictationMistakes, setDictationMistakes] = useState<string[]>([]);
+  const [premios, setPremios] = useState<PremiosNuevos | null>(null);
   const [attemptOutcome, setAttemptOutcome] =
     useState<WorldMasteryOutcome | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -225,6 +236,7 @@ export default function ActivityRunner({
       const data = await res.json();
       if (res.ok) {
         setAttemptOutcome(data.outcome);
+        if (data.premios) setPremios(data.premios);
         if (data.coinsEarned) {
           onCoinsChange(data.progress.coins);
         }
@@ -275,6 +287,7 @@ export default function ActivityRunner({
       <WorldDoneScreen
         world={world}
         outcome={attemptOutcome}
+        premios={premios}
         onBack={onWorldCompleted}
       />
     );
@@ -505,6 +518,7 @@ export default function ActivityRunner({
 interface WorldDoneScreenProps {
   world: WorldDef;
   outcome: WorldMasteryOutcome | null;
+  premios: PremiosNuevos | null;
   onBack: () => void;
 }
 
@@ -512,7 +526,7 @@ interface WorldDoneScreenProps {
 // depende del resultado del sistema de refuerzo (90%): completado (de
 // primera o tras la repetición de refuerzo), a un repaso de completar, o a
 // fortalecer (a tratar por el docente).
-function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
+function WorldDoneScreen({ world, outcome, premios, onBack }: WorldDoneScreenProps) {
   let emoji = "🏆";
   let title = `¡Completaste ${world.name}!`;
   let message = "Muy buen trabajo, seguí así.";
@@ -572,6 +586,7 @@ function WorldDoneScreen({ world, outcome, onBack }: WorldDoneScreenProps) {
         {coinsNote && (
           <p className="text-amber-700 font-semibold mb-4">{coinsNote}</p>
         )}
+        <PremiosGanados premios={premios} />
         <button
           onClick={onBack}
           className="mt-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-extrabold px-8 py-3 border-2 border-amber-700/40"
@@ -601,4 +616,48 @@ function Scenery({ world, isDay }: { world: WorldDef; isDay: boolean }) {
   if (s === "seashore") return <Seashore isDay={isDay} />;
   if (s === "forest") return <Forest isDay={isDay} />;
   return <Mountains isDay={isDay} />;
+}
+
+// Lo que se ganó aprendiendo en esta vuelta: avatar de logro del texto,
+// legendario de la temporada, y cuánto falta para el legendario.
+function PremiosGanados({ premios }: { premios: PremiosNuevos | null }) {
+  if (!premios) return null;
+  const avatares = premios.logros.filter((id) => AVATAR_INFO[id]);
+  const objetos = [...premios.logros, ...premios.legendarios].filter((id) => getAccessoryById(id));
+  const avance = Object.entries(premios.avance).filter(([, n]) => n < LEGENDARIO_MUNDOS);
+  if (!avatares.length && !objetos.length && !avance.length) return null;
+  return (
+    <div className="mt-3 flex flex-col gap-2">
+      {avatares.map((id) => (
+        <div key={id} className="flex items-center gap-3 rounded-2xl bg-amber-100 border-2 border-amber-400 p-2 text-left">
+          <span className="relative w-14 h-14 shrink-0 rounded-xl overflow-hidden bg-sky-200">
+            <Image src={getAvatarSrc(id)} alt="" fill sizes="56px" className="object-cover" />
+          </span>
+          <p className="text-sm font-black text-amber-900">🏆 ¡Desbloqueaste el avatar «{AVATAR_INFO[id].label}»! Elegilo en tu perfil.</p>
+        </div>
+      ))}
+      {objetos.map((id) => {
+        const def = getAccessoryById(id)!;
+        return (
+          <div key={id} className="flex items-center gap-3 rounded-2xl bg-violet-100 border-2 border-violet-400 p-2 text-left">
+            <span className="relative w-14 h-14 shrink-0">
+              <Image src={getAccessorySrc(id)} alt="" fill sizes="56px" className="object-contain" />
+            </span>
+            <p className="text-sm font-black text-violet-900">
+              {def.legendarioDe ? "👑 ¡Ganaste el legendario" : "🎁 ¡Ganaste"} «{def.label}»!
+            </p>
+          </div>
+        );
+      })}
+      {avance.map(([t, n]) => {
+        const temp = TEMPORADAS.find((x) => x.id === t);
+        if (!temp?.legendario || !getAccessoryById(temp.legendario.id)) return null;
+        return (
+          <p key={t} className="text-xs font-bold text-violet-800">
+            👑 {temp.emoji} Legendario «{temp.legendario.label}»: {n} de {LEGENDARIO_MUNDOS} mundos superados esta temporada.
+          </p>
+        );
+      })}
+    </div>
+  );
 }

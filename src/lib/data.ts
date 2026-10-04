@@ -22,11 +22,11 @@ import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
 import { getClassroomWorlds, isPlatformEnabled, lookupStudent } from "@/lib/platform/server";
 import { OPEN_CLASSROOM_ID } from "@/lib/openClassroomShared";
-import { isEventActiveNow } from "@/lib/seasons";
 import { DEFAULT_GRADE, getGrade, gradeOf } from "@/lib/grades";
 import { grade1HasContent } from "@/lib/grade1/content";
 import { claveSemanaDictado } from "@/lib/dictado/banco";
 import { resumenVueltas } from "@/lib/vuelta";
+import { enVenta } from "@/lib/tiempo-limitado";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -297,7 +297,7 @@ export async function updateStudentProfile(
   }
   const progress = await getProgress(code);
   // Los avatares de la tienda solo si los compró.
-  if (update.avatar !== undefined && !canUseAvatar(update.avatar, progress.shopCollection)) {
+  if (update.avatar !== undefined && !canUseAvatar(update.avatar, progress.shopCollection, progress.achievementCollection)) {
     return null;
   }
   // El personaje "efectivo" contra el que se validan los accesorios: el
@@ -558,10 +558,10 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
   const progress = await getProgress(code);
   const owned = progress.shopCollection ?? [];
   if (owned.includes(itemId)) return { ok: false, error: "¡Ya lo tenés!" };
-  if (avatar?.season && !isEventActiveNow(avatar.season)) {
+  if (avatar?.season && !enVenta(avatar.season, avatar.unicaVez)) {
     return { ok: false, error: "Este avatar solo se consigue durante su temporada." };
   }
-  if (accessory?.season && !isEventActiveNow(accessory.season)) {
+  if (accessory?.season && !enVenta(accessory.season, accessory.unicaVez)) {
     return { ok: false, error: "Este objeto es por tiempo limitado y ahora no está a la venta." };
   }
   if (progress.coins < price) {

@@ -5,6 +5,8 @@ import { findStudentByCode, getProgress, saveProgress, liteProgress, isDictation
 import { applyWorldAttempt } from "@/lib/progressLogic";
 import { esSemanaDeDictado } from "@/lib/dictado/banco";
 import { terminarVuelta } from "@/lib/vuelta";
+import { aplicarPremiosDeMundo } from "@/lib/coleccion/premios";
+import { getWorld } from "@/lib/worlds";
 import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
@@ -81,13 +83,18 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const { progress: updated, outcome, coinsEarned } = applyWorldAttempt(
+  const { progress: afterAttempt, outcome, coinsEarned } = applyWorldAttempt(
     progress,
     worldId,
     correctCount,
     totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD,
     masteryPctForWorld(worldId)
   );
+  // Premios que se ganan aprendiendo: avatar de logro del texto (90 %+) y
+  // avance hacia el legendario de la temporada.
+  const totalVuelta = Math.max(1, totalActivities ?? TOTAL_ACTIVITIES_PER_WORLD);
+  const pct = Math.round((Math.min(correctCount, totalVuelta) / totalVuelta) * 100);
+  const { progress: updated, premios } = aplicarPremiosDeMundo(afterAttempt, worldId, pct, getWorld(worldId)?.storyId);
   await saveProgress(updated);
   // Aula de prueba: si ya superó los mundos de todas las materias, la prueba
   // termina (al volver al mapa ve su informe final).
@@ -128,5 +135,5 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  return Response.json({ progress: liteProgress(updated), outcome, coinsEarned, trialFinished });
+  return Response.json({ progress: liteProgress(updated), outcome, coinsEarned, trialFinished, premios });
 }

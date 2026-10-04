@@ -5,8 +5,9 @@
 // Para el cartel de la tienda calcula la ventana de fechas de cada
 // festividad: si está activa, cuántos días le quedan; si todavía no empezó,
 // en cuántos días llega. Todo en hora argentina.
-import { getArgentinaDate, getSeasonalEventById, type ArgDate } from "@/lib/seasons";
+import { easterSunday, getArgentinaDate, getSeasonalEventById, type ArgDate } from "@/lib/seasons";
 import { ACCESSORY_CATALOG_TIENDA, SHOP_AVATARS } from "@/types";
+import { DIAS_TEMPORADA, TEMPORADAS, type Temporada } from "@/lib/coleccion/temporadas";
 
 export interface Ventana {
   eventId: string;
@@ -27,12 +28,54 @@ function dayNum(d: ArgDate): number {
   return Math.floor(Date.UTC(d.year, d.month - 1, d.day) / DAY);
 }
 
+// Ventana [inicio, fin] (números de día) de una temporada de la tienda en un año.
+function ventanaDelAnio(t: Temporada, year: number): [number, number] {
+  const ex = t.excepciones?.[year];
+  if (ex) return [dayNum({ year, month: ex.desde[0], day: ex.desde[1] }), dayNum({ year: ex.hasta[0] < ex.desde[0] ? year + 1 : year, month: ex.hasta[0], day: ex.hasta[1] })];
+  let dia: number;
+  if (t.dia === "carnaval") {
+    // Lunes de carnaval = Pascua − 48 días.
+    const e = easterSunday(year);
+    dia = dayNum({ year, month: e.month, day: e.day }) - 48;
+  } else {
+    dia = dayNum({ year, month: t.dia[0], day: t.dia[1] });
+  }
+  const inicio = dia - (t.antes ?? 7);
+  return [inicio, inicio + (t.dias ?? DIAS_TEMPORADA) - 1];
+}
+
+export function getTemporada(id: string): Temporada | undefined {
+  return TEMPORADAS.find((t) => t.id === id);
+}
+
+// ¿Está a la venta hoy? Para las temporadas de la tienda, por su ventana de
+// 15 días; si no, por la festividad de siempre (src/lib/seasons.ts).
+function activaFn(eventId: string): ((n: number) => boolean) | null {
+  const t = getTemporada(eventId);
+  if (t) {
+    return (n: number) => {
+      const y = new Date(n * DAY).getUTCFullYear();
+      return [y - 1, y].some((yy) => {
+        const [a, b] = ventanaDelAnio(t, yy);
+        return n >= a && n <= b;
+      });
+    };
+  }
+  const ev = getSeasonalEventById(eventId);
+  return ev ? (n: number) => ev.isActive(toArg(n)) : null;
+}
+
+// Año en que empezó la ventana activa (para claves como «tradicion-2026»).
+export function claveTemporada(eventId: string, now: Date = new Date()): string | null {
+  const v = ventanaDe(eventId, now);
+  return v?.activa ? `${eventId}-${v.desde.year}` : null;
+}
+
 // Ventana actual (si está activa) o la próxima dentro de `horizonte` días.
 export function ventanaDe(eventId: string, now: Date = new Date(), horizonte = 400): Ventana | null {
-  const ev = getSeasonalEventById(eventId);
-  if (!ev) return null;
+  const on = activaFn(eventId);
+  if (!on) return null;
   const today = dayNum(getArgentinaDate(now));
-  const on = (n: number) => ev.isActive(toArg(n));
   let start: number | null = null;
   if (on(today)) {
     start = today;
@@ -73,7 +116,9 @@ export function textoContador(v: Ventana): string {
 }
 
 // Cuántos días antes se muestra en la tienda lo que está por llegar.
-export const AVISO_PREVIO_DIAS = 21;
+// Pedido de Pedro: fuera de su fecha, las colecciones quedan OCULTAS (0 = no
+// se anticipan). Lo que el alumno ya compró lo sigue viendo siempre.
+export const AVISO_PREVIO_DIAS = 0;
 
 // La festividad con cosas a la venta que se va más pronto (para el aviso
 // junto al botón de la tienda), o null si no hay ninguna activa.
@@ -83,4 +128,19 @@ export function ofertaVigente(now: Date = new Date()): Ventana | null {
   for (const a of ACCESSORY_CATALOG_TIENDA) if (a.season) ids.add(a.season);
   const activas = [...ids].map((id) => ventanaDe(id, now)).filter((v): v is Ventana => !!v?.activa);
   return activas.sort((a, b) => a.dias - b.dias)[0] ?? null;
+}
+
+// ¿Se puede comprar hoy algo de esta temporada? (y, si es de única vez, solo ese año)
+export function enVenta(season: string, unicaVez?: number, now: Date = new Date()): boolean {
+  const v = ventanaDe(season, now);
+  if (!v?.activa) return false;
+  return !unicaVez || v.desde.year === unicaVez;
+}
+
+// Nombre para el cartel: «🧉 Aventura Argentina · Día de la Tradición».
+export function nombreTemporada(id: string): { emoji: string; titulo: string; sub?: string } {
+  const t = getTemporada(id);
+  if (t) return { emoji: t.emoji, titulo: t.coleccion, sub: t.label };
+  const ev = getSeasonalEventById(id);
+  return { emoji: ev?.emoji ?? "⏳", titulo: ev?.label ?? id };
 }

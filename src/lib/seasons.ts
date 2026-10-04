@@ -192,7 +192,7 @@ export const SEASONAL_EVENTS: SeasonalEvent[] = [
     label: "Halloween",
     emoji: "🎃",
     kind: "festividad",
-    description: "¡Mes de disfraces! En la tienda hay avatares de Halloween hasta el 2 de noviembre.",
+    description: "¡Mes de disfraces! Mirá la tienda: hay avatares y objetos de Halloween por tiempo limitado.",
     // Todo octubre y hasta el 2 de noviembre (avatares de temporada en la tienda).
     isActive: (d) => inRange(d, 1001, 1102),
   },

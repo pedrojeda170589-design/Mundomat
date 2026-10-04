@@ -1,3 +1,6 @@
+import { TEMPORADAS } from "@/lib/coleccion/temporadas";
+import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
+import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
 // Tipos compartidos de MundoMat
 
 export type StudentType = "aula" | "agregado" | "prueba";
@@ -94,6 +97,11 @@ export interface StudentProgress {
   // Último puntaje (0-100) del intento más reciente de cada mundo, para
   // mostrarlo en el Panel Docente.
   lastWorldAttemptScore?: Record<number, number>;
+  // Avatares de logro ganados (90 % o más en un mundo de comprensión).
+  achievementCollection?: string[];
+  // Mundos superados (90 %+) durante cada temporada, para su legendario.
+  // Clave "<temporada>-<año en que empezó>".
+  legendaryProgress?: Record<string, number[]>;
   // Vueltas empezadas y no terminadas, por mundo: si el alumno sale del
   // mundo, al volver sigue desde la primera actividad que le falta (con las
   // mismas actividades). Se borra al terminar la vuelta. Ver src/lib/vuelta.ts.
@@ -172,7 +180,21 @@ export const AVATAR_OPTIONS: string[] = [
   "gato-negro",
   "murcielago",
   "ratita",
+  // Colecciones por temporada (tienda, 15 días) y avatares de logro de los
+  // textos de comprensión: solo los que ya tienen imagen.
+  ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => a.id)).filter((id) => IMAGENES_LISTAS.has(id)),
+  ...AVATARES_LOGRO.map((l) => l.id).filter((id) => IMAGENES_LISTAS.has(id)),
 ];
+
+// Avatares nuevos (colecciones y logros): personaje de siempre con el mismo
+// encuadre, para ubicar gorros y lentes (ver AvatarDisplay).
+export const AVATAR_FIT_LIKE: Record<string, string> = Object.fromEntries([
+  ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => [a.id, a.comoAvatar ?? "explorador"])),
+  ...AVATARES_LOGRO.map((l) => [l.id, l.comoAvatar]),
+]);
+
+// Avatares de logro: se ganan, no se compran (StudentProgress.achievementCollection).
+export const LOGRO_AVATAR_IDS = new Set(AVATARES_LOGRO.map((l) => l.id));
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
 // respaldo si la imagen no llegara a cargar.
@@ -206,6 +228,10 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   "gato-negro": { label: "Gato negro", emoji: "🐈‍⬛" },
   murcielago: { label: "Murcielaguito", emoji: "🦇" },
   ratita: { label: "Ratita", emoji: "🐀" },
+  ...Object.fromEntries(
+    TEMPORADAS.flatMap((t) => t.avatares.map((a) => [a.id, { label: a.label, emoji: t.emoji }]))
+  ),
+  ...Object.fromEntries(AVATARES_LOGRO.map((l) => [l.id, { label: l.label, emoji: "🏆" }])),
 };
 
 // --- Tienda ---
@@ -214,11 +240,13 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
 export interface ShopAvatar {
   id: string;
   price: number;
-  category: "proceres" | "fauna" | "oficios" | "fantasia" | "halloween";
+  category: "proceres" | "fauna" | "oficios" | "fantasia" | "halloween" | "temporada";
   blurb: string;
   // Si tiene temporada, solo se puede comprar mientras esa festividad está
-  // activa (ver src/lib/seasons.ts). Lo comprado queda para siempre.
+  // activa (ver src/lib/coleccion/temporadas.ts). Lo comprado queda para siempre.
   season?: string;
+  // Coleccionable: solo se vende en la temporada de ese año.
+  unicaVez?: number;
 }
 
 export const SHOP_AVATARS: ShopAvatar[] = [
@@ -235,6 +263,12 @@ export const SHOP_AVATARS: ShopAvatar[] = [
   { id: "gato-negro", price: 200, category: "halloween", season: "halloween", blurb: "Un gatito negro muy curioso." },
   { id: "murcielago", price: 200, category: "halloween", season: "halloween", blurb: "Un murcielaguito que duerme cabeza abajo." },
   { id: "ratita", price: 200, category: "halloween", season: "halloween", blurb: "Una ratita curiosa con bufanda de Halloween." },
+  // Colecciones por temporada (15 días al año; ver src/lib/coleccion/temporadas.ts).
+  ...TEMPORADAS.flatMap((t) =>
+    t.avatares
+      .filter((a) => IMAGENES_LISTAS.has(a.id))
+      .map((a): ShopAvatar => ({ id: a.id, price: a.price, category: "temporada", season: t.id, blurb: a.blurb, unicaVez: a.unicaVez }))
+  ),
 ];
 
 export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
@@ -243,6 +277,7 @@ export const SHOP_CATEGORY_LABEL: Record<ShopAvatar["category"], string> = {
   oficios: "🧰 Oficios",
   fantasia: "✨ Fantasía",
   halloween: "🎃 Halloween",
+  temporada: "🛒 Temporada",
 };
 
 export function getShopAvatar(id: string): ShopAvatar | undefined {
@@ -251,8 +286,10 @@ export function getShopAvatar(id: string): ShopAvatar | undefined {
 
 // ¿Puede usar este personaje? Los de siempre, sí; los de la tienda, si
 // los compró.
-export function canUseAvatar(id: string, shopCollection: string[] = []): boolean {
-  return AVATAR_OPTIONS.includes(id) && (!getShopAvatar(id) || shopCollection.includes(id));
+export function canUseAvatar(id: string, shopCollection: string[] = [], achievementCollection: string[] = []): boolean {
+  if (!AVATAR_OPTIONS.includes(id)) return false;
+  if (LOGRO_AVATAR_IDS.has(id)) return achievementCollection.includes(id);
+  return !getShopAvatar(id) || shopCollection.includes(id);
 }
 
 // Los dos avatares "estándar" tienen un guardarropa mucho más amplio (ver
@@ -283,7 +320,11 @@ export type AccessorySlot =
   | "face"
   | "torso"
   | "backpack"
-  | "pendant";
+  | "pendant"
+  // Mascota (esquina inferior izquierda) y objeto de mano (inferior derecha):
+  // se dibujan sobre el retrato, sin ajuste por personaje.
+  | "pet"
+  | "prop";
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
 
@@ -309,6 +350,11 @@ export interface AccessoryDef {
   // Se ubica sobre el personaje igual que este otro accesorio (misma forma
   // y mismo tamaño de imagen). Ver AvatarDisplay.
   fitLike?: string;
+  // Coleccionable: solo se vende en la temporada de ese año.
+  unicaVez?: number;
+  // Premio legendario de esa temporada / mascota de logro de ese texto.
+  legendarioDe?: string;
+  logroDe?: string;
 }
 
 // Catálogo "de siempre": accesorios simples (íconos planos) para los 14
@@ -420,11 +466,45 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
   { id: "vincha-reno", slot: "headwear", label: "Vincha de reno", emoji: "🦌", group: "tienda", price: 65, season: "navidad", fitLike: "cuernitos-dragon" },
   { id: "lentes-copos", slot: "eyewear", label: "Lentes de copos de nieve", emoji: "❄️", group: "tienda", price: 45, season: "navidad", fitLike: "lentes-corazon" },
   { id: "corbatin-navidad", slot: "face", label: "Corbatín navideño", emoji: "🎄", group: "tienda", price: 35, season: "navidad", fitLike: "corbatin-lunares" },
+  // Colecciones por temporada (ver src/lib/coleccion/temporadas.ts).
+  ...TEMPORADAS.flatMap((t) =>
+    t.objetos
+      .filter((o) => IMAGENES_LISTAS.has(o.id))
+      .map(
+        (o): AccessoryDef => ({
+          id: o.id,
+          slot: o.slot ?? "prop",
+          label: o.label,
+          emoji: t.emoji,
+          group: "tienda",
+          price: o.price,
+          season: t.id,
+          ...(o.molde ? { fitLike: o.molde } : {}),
+          ...(o.unicaVez ? { unicaVez: o.unicaVez } : {}),
+        })
+      )
+  ),
 ];
 
 // Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
 export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio", fitLike: "sol-de-mayo" },
+  // Legendarios de cada temporada (se ganan superando mundos durante la temporada).
+  ...TEMPORADAS.filter((t) => t.legendario && IMAGENES_LISTAS.has(t.legendario.id)).map(
+    (t): AccessoryDef => ({
+      id: t.legendario!.id,
+      slot: t.legendario!.slot ?? "prop",
+      label: t.legendario!.label,
+      emoji: "👑",
+      group: "premio",
+      legendarioDe: t.id,
+      ...(t.legendario!.molde ? { fitLike: t.legendario!.molde } : {}),
+    })
+  ),
+  // Mascotas de logro (vienen con el avatar de un texto de comprensión).
+  ...AVATARES_LOGRO.filter((l) => l.mascota && IMAGENES_LISTAS.has(l.mascota.id)).map(
+    (l): AccessoryDef => ({ id: l.mascota!.id, slot: "pet", label: l.mascota!.label, emoji: "🏆", group: "premio", logroDe: l.storyId })
+  ),
 ];
 
 export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(

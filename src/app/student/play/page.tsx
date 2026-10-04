@@ -417,6 +417,7 @@ export default function StudentPlayPage() {
           isBirthday={isBirthday}
           seasonalCollection={progress.seasonalCollection}
           shopCollection={progress.shopCollection}
+          achievementCollection={progress.achievementCollection}
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
           onClose={() => setEditingProfile(false)}
