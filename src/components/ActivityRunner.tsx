@@ -274,7 +274,7 @@ export default function ActivityRunner({
               />
             )}
             {activity.type === "listen" && (
-              <ListenActivity key={`listen-${index}`} title={activity.title} storyId={activity.storyId} mode={activity.mode ?? "listen"} genre={activity.genre} scenes={activity.scenes} onFinish={handleNext} />
+              <ListenActivity key={`listen-${index}`} title={activity.title} storyId={activity.storyId} mode={activity.mode ?? "listen"} genre={activity.genre} scenes={activity.scenes} voiceCost={activity.voiceCost ?? 0} coins={coins} studentCode={studentCode} onCoinsChange={onCoinsChange} onFinish={handleNext} />
             )}
             {activity.type === "trace" && (
               <TraceActivity key={`trace-${index}`} prompt={activity.prompt} say={activity.say} glyph={activity.glyph} onDone={submitResult} />

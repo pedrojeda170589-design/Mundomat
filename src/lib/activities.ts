@@ -60,6 +60,8 @@ export type ActivitySpec = (
       // "listen": se narra solo (1.º); "read": lo leen ellos, audio opcional (2.º y 3.º).
       mode?: "listen" | "read";
       genre?: "cuento" | "leyenda" | "fabula";
+      // Monedas que cuesta escucharlo en voz alta (desde 3.º; se paga una vez por texto).
+      voiceCost?: number;
       scenes: { text: string; image: string }[];
       hint: string;
     }
