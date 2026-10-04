@@ -27,6 +27,7 @@ import { grade1HasContent } from "@/lib/grade1/content";
 import { claveSemanaDictado } from "@/lib/dictado/banco";
 import { resumenVueltas } from "@/lib/vuelta";
 import { enVenta } from "@/lib/tiempo-limitado";
+import { getDrop, puedeComprarDrop } from "@/lib/coleccion/drops";
 import {
   computeNextStreak,
   computeSpecialChallengeReward,
@@ -560,6 +561,11 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
   if (owned.includes(itemId)) return { ok: false, error: "¡Ya lo tenés!" };
   if (avatar?.season && !enVenta(avatar.season, avatar.unicaVez)) {
     return { ok: false, error: "Este avatar solo se consigue durante su temporada." };
+  }
+  if (accessory?.drop) {
+    const d = getDrop(accessory.drop);
+    const ok = d ? puedeComprarDrop(progress, d, !!accessory.superEspecial) : { ok: false as const, motivo: "Ese lanzamiento no existe." };
+    if (!ok.ok) return { ok: false, error: ok.motivo };
   }
   if (accessory?.season && !enVenta(accessory.season, accessory.unicaVez)) {
     return { ok: false, error: "Este objeto es por tiempo limitado y ahora no está a la venta." };

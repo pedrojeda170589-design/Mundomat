@@ -58,3 +58,25 @@ console.log(`✅ Legendario: ${LEGENDARIO_MUNDOS} mundos distintos con 90 %+ dur
 const fuera = aplicarPremiosDeMundo(base, 5, 100, undefined, at("2027-07-01"));
 assert.deepEqual(fuera.premios.legendarios, []);
 console.log("\n🎉 Todas las pruebas de colecciones pasaron.");
+
+// 4. Drops: 3/5/7 días, 3 mundos antes de comprar, superespecial solo «al día».
+import { dropActivo, estaAlDia, mundosEnDrop, puedeComprarDrop, textoDrop, type Drop } from "../src/lib/coleccion/drops";
+const drop: Drop = { id: "prueba", label: "Prueba", emoji: "⚡", desde: "2026-10-10", dias: 3, mundosRequeridos: 3, items: [] };
+assert.ok(!dropActivo(drop, new Date("2026-10-10T02:59:00Z")), "antes de la medianoche argentina");
+assert.ok(dropActivo(drop, new Date("2026-10-10T03:00:00Z")));
+assert.ok(dropActivo(drop, new Date("2026-10-13T02:59:00Z")) && !dropActivo(drop, new Date("2026-10-13T03:00:00Z")));
+console.log("✅ Drop de 3 días: del 10/10 0 h al 12/10 24 h (hora argentina) ·", textoDrop(drop, new Date("2026-10-12T20:00:00Z")));
+let a: StudentProgress = base;
+const t = (h: number) => new Date(Date.UTC(2026, 9, 10, 12 + h));
+a = aplicarPremiosDeMundo(a, 1, 95, undefined, t(0)).progress;
+a = aplicarPremiosDeMundo(a, 2, 92, undefined, t(1)).progress;
+assert.equal(mundosEnDrop(a, drop), 2);
+assert.equal(puedeComprarDrop(a, drop, false, t(2)).ok, false);
+a = aplicarPremiosDeMundo(a, 3, 100, undefined, t(3)).progress;
+assert.equal(puedeComprarDrop(a, drop, false, t(4)).ok, true);
+console.log("✅ Se puede comprar recién después de superar 3 mundos durante el drop");
+assert.ok(estaAlDia(a, t(5)));
+assert.ok(!estaAlDia({ ...a, worldsNeedingTeacherReview: [7] }, t(5)), "con mundos a fortalecer no está al día");
+assert.ok(!estaAlDia(a, new Date(Date.UTC(2026, 9, 20))), "a los 10 días ya no");
+console.log("✅ «Al día»: 3 mundos en 7 días y nada a fortalecer (ve el superespecial)");
+console.log("🎉 Drops OK.");

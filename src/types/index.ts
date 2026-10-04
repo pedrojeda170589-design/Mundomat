@@ -1,6 +1,7 @@
 import { TEMPORADAS } from "@/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
+import { DROPS } from "@/lib/coleccion/drops";
 // Tipos compartidos de MundoMat
 
 export type StudentType = "aula" | "agregado" | "prueba";
@@ -102,6 +103,9 @@ export interface StudentProgress {
   // Mundos superados (90 %+) durante cada temporada, para su legendario.
   // Clave "<temporada>-<año en que empezó>".
   legendaryProgress?: Record<string, number[]>;
+  // Últimos mundos superados con 90 %+ (id y fecha), para los drops y para
+  // saber si está «al día». Se guardan los últimos 40.
+  pasesRecientes?: { w: number; at: string }[];
   // Vueltas empezadas y no terminadas, por mundo: si el alumno sale del
   // mundo, al volver sigue desde la primera actividad que le falta (con las
   // mismas actividades). Se borra al terminar la vuelta. Ver src/lib/vuelta.ts.
@@ -355,6 +359,10 @@ export interface AccessoryDef {
   // Premio legendario de esa temporada / mascota de logro de ese texto.
   legendarioDe?: string;
   logroDe?: string;
+  // Drop (lanzamiento corto): solo se compra mientras dura y superando antes
+  // los mundos que pide; superEspecial: solo para quienes están al día.
+  drop?: string;
+  superEspecial?: boolean;
 }
 
 // Catálogo "de siempre": accesorios simples (íconos planos) para los 14
@@ -466,6 +474,24 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
   { id: "vincha-reno", slot: "headwear", label: "Vincha de reno", emoji: "🦌", group: "tienda", price: 65, season: "navidad", fitLike: "cuernitos-dragon" },
   { id: "lentes-copos", slot: "eyewear", label: "Lentes de copos de nieve", emoji: "❄️", group: "tienda", price: 45, season: "navidad", fitLike: "lentes-corazon" },
   { id: "corbatin-navidad", slot: "face", label: "Corbatín navideño", emoji: "🎄", group: "tienda", price: 35, season: "navidad", fitLike: "corbatin-lunares" },
+  // Drops (ver src/lib/coleccion/drops.ts).
+  ...DROPS.flatMap((d) =>
+    [...d.items.map((o) => ({ o, sup: false })), ...(d.superEspecial ? [{ o: d.superEspecial, sup: true }] : [])]
+      .filter(({ o }) => IMAGENES_LISTAS.has(o.id))
+      .map(
+        ({ o, sup }): AccessoryDef => ({
+          id: o.id,
+          slot: o.slot ?? "prop",
+          label: o.label,
+          emoji: d.emoji,
+          group: "tienda",
+          price: o.price,
+          drop: d.id,
+          ...(sup ? { superEspecial: true } : {}),
+          ...(o.molde ? { fitLike: o.molde } : {}),
+        })
+      )
+  ),
   // Colecciones por temporada (ver src/lib/coleccion/temporadas.ts).
   ...TEMPORADAS.flatMap((t) =>
     t.objetos

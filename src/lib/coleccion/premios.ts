@@ -24,7 +24,11 @@ export function aplicarPremiosDeMundo(
 ): { progress: StudentProgress; premios: PremiosNuevos } {
   const premios: PremiosNuevos = { logros: [], legendarios: [], avance: {} };
   if (scorePct < UMBRAL_LOGRO) return { progress: p, premios };
-  let next = p;
+  // Registro de mundos superados (para drops y «al día»).
+  let next: StudentProgress = {
+    ...p,
+    pasesRecientes: [...(p.pasesRecientes ?? []), { w: worldId, at: now.toISOString() }].slice(-40),
+  };
 
   // Avatar de logro del texto (y su mascota, si tiene).
   const logro = storyId ? logroDeCuento(storyId) : undefined;
