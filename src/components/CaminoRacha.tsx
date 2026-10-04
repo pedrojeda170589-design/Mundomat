@@ -1,5 +1,7 @@
 "use client";
 
+import Profe from "@/components/Profe";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
@@ -14,24 +16,19 @@ import {
   type Nodo,
 } from "@/lib/coleccion/racha";
 
-// Camino de premios con la personalidad de MundoTest26 (estilo «mapa de
-// niveles» de los juegos que conocen los chicos): de fondo, el mapa
-// ilustrado de la Patagonia con su sendero de piedras; arriba, un cartel de
-// madera y un pergamino con la racha; las paradas son «caramelos» brillantes
-// y el avatar del alumno marca dónde está. Se recorre de abajo hacia arriba.
-const X = [50, 26, 50, 74];
-const PASO = 118;
-
-// Mapa de fondo según el grado (el mismo de su recorrido).
-function fondoDe(grade?: number): string {
-  if (grade === 1) return "/theme/grados/1/mapa/etapa-2.jpg";
-  if (grade === 2) return "/theme/grados/2/mapa/etapa-3.jpg";
-  return "/theme/map/etapa-1.jpg";
-}
+// Camino de premios sobre el MAPA ESPECIAL (lámina propia, 1024×1536): un
+// sendero de piedras que sube de la pradera con lupinos hasta el Fitz Roy,
+// con banderines, globos y fuegos artificiales, y arriba el trofeo con el
+// profe Pedro alentando. Cada parada está sobre una piedra del dibujo
+// (posiciones en % de la lámina). Se toca una parada para ver su premio.
+const PIEDRAS: [number, number][] = [
+  [39.5, 95.6], [55, 91.3], [53.8, 85.1], [45, 80.3], [34.7, 76.7], [23.8, 73.3], [15.5, 69.7],
+  [38, 53.7], [38.7, 47.2], [48.8, 45.2], [59.5, 43], [69.5, 40.9], [78.2, 38.1], [71.7, 32.1],
+  [64.2, 29.8], [56.8, 27.6], [62.8, 23], [70.5, 21], [83.3, 17.6], [76.2, 13], [81.7, 8.3],
+];
 
 export default function CaminoRacha({
   progress,
-  grade,
   onClose,
 }: {
   progress: StudentProgress;
@@ -42,19 +39,16 @@ export default function CaminoRacha({
   const mundos = mundosSuperados(progress);
   const dados = new Set(progress.caminoReclamados ?? []);
   const siguiente = CAMINO.findIndex((n) => !nodoCumplido(n, est.mejor, mundos));
+  const [elegido, setElegido] = useState<number>(siguiente >= 0 ? siguiente : CAMINO.length - 1);
   const hoyN = est.hoy.c + est.hoy.i;
   const hoyPct = hoyN ? Math.round((est.hoy.c / hoyN) * 100) : 0;
   const faltanHoy = Math.max(0, MIN_ACTIVIDADES_DIA - hoyN);
-
-  // De abajo hacia arriba: la primera parada queda abajo de todo.
-  const alto = CAMINO.length * PASO + 120;
-  const pts = CAMINO.map((_, i) => ({ x: X[i % X.length], y: alto - 80 - i * PASO }));
-  const actualY = pts[siguiente >= 0 ? siguiente : CAMINO.length - 1].y;
+  const hecho = (i: number) => dados.has(CAMINO[i].id) || nodoCumplido(CAMINO[i], est.mejor, mundos);
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 px-2 py-3">
       <div className="relative w-full max-w-md h-[94vh] rounded-[2rem] overflow-hidden border-4 border-sky-300 shadow-2xl flex flex-col bg-sky-200">
-        {/* Encabezado: cartel de madera */}
+        {/* Encabezado: cartel de madera + pergamino con la racha */}
         <div className="relative z-10 px-3 pt-3">
           <div className="wood-panel rounded-2xl px-4 py-2 flex items-center justify-between">
             <h2 className="font-black text-lg tracking-wide drop-shadow">🔥 Camino de premios</h2>
@@ -66,15 +60,14 @@ export default function CaminoRacha({
               ✕
             </button>
           </div>
-          {/* Pergamino con la racha y el avatar del alumno */}
           <div className="parchment-panel mt-2 rounded-2xl px-3 py-2 flex items-center gap-3 shadow-lg">
             <AvatarDisplay
               character={progress.avatar}
               accessories={progress.avatarAccessories}
               tweaks={progress.avatarTweaks}
               background={progress.avatarBackground}
-              className="w-14 h-14 rounded-full border-2 border-amber-500 shrink-0"
-              imageSizes="56px"
+              className="w-12 h-12 rounded-full border-2 border-amber-500 shrink-0"
+              imageSizes="48px"
             />
             <div className="flex-1 min-w-0">
               <div className="flex gap-1.5 text-[11px] font-black">
@@ -90,66 +83,55 @@ export default function CaminoRacha({
                     : `Necesitás ${Math.round(MIN_ACIERTO_DIA * 100)} % bien para que hoy sume. ¡Seguí practicando!`}
               </p>
             </div>
+            <Profe pose={est.hoyCuenta ? "aplaude" : "reloj"} className="w-10 h-14 -my-1" />
           </div>
         </div>
 
-        {/* Camino sobre el mapa ilustrado */}
+        {/* Mapa especial con las paradas sobre las piedras */}
         <div
-          className="relative flex-1 overflow-y-auto -mt-2"
+          className="relative flex-1 overflow-y-auto -mt-1"
           ref={(el) => {
             // Abre mostrando la parada en la que está.
             if (el && !el.dataset.listo) {
               el.dataset.listo = "1";
-              el.scrollTop = Math.max(0, actualY - el.clientHeight / 2);
+              const p = PIEDRAS[siguiente >= 0 ? siguiente : PIEDRAS.length - 1];
+              const alto = el.clientWidth * 1.5;
+              el.scrollTop = Math.max(0, (p[1] / 100) * alto - el.clientHeight / 2);
             }
           }}
         >
-          <div
-            className="relative w-full"
-            style={{
-              height: alto,
-              backgroundImage: `url(${fondoDe(grade)})`,
-              backgroundSize: "100% auto",
-              backgroundRepeat: "repeat-y",
-              backgroundPosition: "center bottom",
-            }}
-          >
-            <svg className="absolute inset-0 w-full h-full" viewBox={`0 0 100 ${alto}`} preserveAspectRatio="none" aria-hidden>
-              <polyline
-                points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
-                fill="none"
-                stroke="rgba(255,255,255,0.85)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeDasharray="1 14"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
+          <div className="relative w-full" style={{ aspectRatio: "1024 / 1536" }}>
+            <Image src="/theme/mapa-especial.jpg" alt="" fill sizes="448px" className="object-cover" priority />
+            {/* El profe arriba, junto al trofeo, alentando */}
+            <div className="absolute" style={{ left: "47%", top: "1%", width: "21%", height: "15%" }}>
+              <Image src="/theme/profe/festejo.png" alt="El profe Pedro alentando" fill sizes="96px" className="object-contain object-bottom drop-shadow-[0_4px_4px_rgba(0,0,0,0.4)]" />
+            </div>
+            <div className="absolute rounded-2xl bg-white/95 border-2 border-amber-400 px-2 py-1 shadow-lg" style={{ left: "6%", top: "3%", maxWidth: "40%" }}>
+              <p className="text-[10px] font-black text-amber-900 leading-tight">¡Vamos, campeones! 💪 ¡Los espero en la cima!</p>
+            </div>
             {CAMINO.map((n, i) => (
               <Parada
                 key={n.id}
                 n={n}
                 numero={i + 1}
-                x={pts[i].x}
-                y={pts[i].y}
-                hecho={dados.has(n.id) || nodoCumplido(n, est.mejor, mundos)}
+                x={PIEDRAS[i][0]}
+                y={PIEDRAS[i][1]}
+                hecho={hecho(i)}
                 actual={i === siguiente}
-                mejor={est.mejor}
-                mundos={mundos}
+                elegido={i === elegido}
+                onClick={() => setElegido(i)}
                 progress={progress}
               />
             ))}
           </div>
         </div>
 
-        {/* Botón grande para ir a jugar */}
-        <div className="relative z-10 p-3 bg-gradient-to-t from-sky-900/40 to-transparent">
-          <p className="text-center text-[10px] font-bold text-white drop-shadow mb-1">
-            Sábados, domingos y vacaciones no cortan la racha · cada 5 días ganás un escudo 🛡️
-          </p>
+        {/* Premio de la parada elegida + botón para jugar */}
+        <div className="relative z-10 p-3 bg-gradient-to-t from-sky-900/60 to-sky-900/20">
+          <Detalle n={CAMINO[elegido]} numero={elegido + 1} hecho={hecho(elegido)} mejor={est.mejor} mundos={mundos} />
           <button
             onClick={onClose}
-            className="w-full rounded-full py-3 text-xl font-black text-white border-4 border-white shadow-xl bg-gradient-to-b from-amber-400 via-orange-500 to-orange-600 active:scale-95"
+            className="mt-2 w-full rounded-full py-2.5 text-xl font-black text-white border-4 border-white shadow-xl bg-gradient-to-b from-amber-400 via-orange-500 to-orange-600 active:scale-95"
           >
             ¡A jugar! 🧭
           </button>
@@ -167,8 +149,8 @@ function Parada({
   y,
   hecho,
   actual,
-  mejor,
-  mundos,
+  elegido,
+  onClick,
   progress,
 }: {
   n: Nodo;
@@ -177,66 +159,79 @@ function Parada({
   y: number;
   hecho: boolean;
   actual: boolean;
-  mejor: number;
-  mundos: number;
+  elegido: boolean;
+  onClick: () => void;
   progress: StudentProgress;
 }) {
-  const def = n.premio.tipo === "objeto" ? getAccessoryById(n.premio.id) : undefined;
   const esFinal = n.id === "final";
-  const req = [n.racha ? `🔥${n.racha}` : null, n.mundos ? `🏆${n.mundos}` : null].filter(Boolean).join(" + ");
-  const falta =
-    !hecho && actual
-      ? [
-          n.racha && mejor < n.racha ? (n.racha - mejor === 1 ? "1 día" : `${n.racha - mejor} días`) : null,
-          n.mundos && mundos < n.mundos ? (n.mundos - mundos === 1 ? "1 mundo" : `${n.mundos - mundos} mundos`) : null,
-        ]
-          .filter(Boolean)
-          .join(" y ")
-      : "";
   const caramelo = hecho
-    ? "from-emerald-300 via-emerald-500 to-emerald-700 border-white"
+    ? "from-emerald-300 via-emerald-500 to-emerald-700"
     : actual
-      ? "from-yellow-200 via-amber-400 to-orange-500 border-white"
-      : "from-slate-200 via-slate-400 to-slate-600 border-slate-100";
-  const tam = esFinal ? "w-24 h-24" : "w-[4.5rem] h-[4.5rem]";
+      ? "from-yellow-200 via-amber-400 to-orange-500"
+      : "from-slate-200 via-slate-400 to-slate-600";
   return (
-    <div className="absolute flex flex-col items-center" style={{ left: `${x}%`, top: y, transform: "translate(-50%, -50%)", width: 130 }}>
+    <button
+      type="button"
+      onClick={onClick}
+      className="absolute"
+      style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -60%)" }}
+      aria-label={`Parada ${numero}`}
+    >
       {actual && (
-        <div className="absolute -top-14 flex flex-col items-center animate-bounce">
+        <span className="absolute left-1/2 -translate-x-1/2 -top-12 flex flex-col items-center animate-bounce pointer-events-none">
           <AvatarDisplay
             character={progress.avatar}
             accessories={progress.avatarAccessories}
             tweaks={progress.avatarTweaks}
             background={progress.avatarBackground}
-            className="w-11 h-11 rounded-full border-[3px] border-white shadow-lg"
-            imageSizes="44px"
+            className="w-9 h-9 rounded-full border-[3px] border-white shadow-lg"
+            imageSizes="36px"
           />
-          <span className="w-0 h-0 border-l-[7px] border-r-[7px] border-t-[9px] border-l-transparent border-r-transparent border-t-white" />
-        </div>
+          <span className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-white" />
+        </span>
       )}
-      <div
-        className={`relative ${tam} rounded-full border-4 bg-gradient-to-br ${caramelo} shadow-[0_6px_0_rgba(0,0,0,0.25),0_10px_18px_rgba(0,0,0,0.35)] flex items-center justify-center`}
+      <span
+        className={`relative flex items-center justify-center ${esFinal ? "w-12 h-12 text-lg" : "w-9 h-9 text-sm"} rounded-full border-[3px] ${
+          elegido ? "border-yellow-300 ring-4 ring-yellow-300/60" : "border-white"
+        } bg-gradient-to-br ${caramelo} font-black text-white shadow-[0_4px_0_rgba(0,0,0,0.3),0_6px_10px_rgba(0,0,0,0.35)]`}
       >
-        {/* brillo de caramelo */}
-        <span className="absolute top-1.5 left-3 w-6 h-3 rounded-full bg-white/60 rotate-[-20deg]" />
+        <span className="absolute top-1 left-1.5 w-3.5 h-2 rounded-full bg-white/60 rotate-[-20deg]" />
+        <span className="drop-shadow">{hecho ? "✓" : esFinal ? "👑" : numero}</span>
+      </span>
+    </button>
+  );
+}
+
+// Tarjeta con el premio de la parada elegida.
+function Detalle({ n, numero, hecho, mejor, mundos }: { n: Nodo; numero: number; hecho: boolean; mejor: number; mundos: number }) {
+  const def = n.premio.tipo === "objeto" ? getAccessoryById(n.premio.id) : undefined;
+  const req = [n.racha ? `🔥 ${n.racha} días de racha` : null, n.mundos ? `🏆 ${n.mundos} mundos al 90 %` : null].filter(Boolean).join(" + ");
+  const falta = [
+    n.racha && mejor < n.racha ? (n.racha - mejor === 1 ? "1 día" : `${n.racha - mejor} días`) : null,
+    n.mundos && mundos < n.mundos ? (n.mundos - mundos === 1 ? "1 mundo" : `${n.mundos - mundos} mundos`) : null,
+  ]
+    .filter(Boolean)
+    .join(" y ");
+  return (
+    <div className="parchment-panel rounded-2xl px-3 py-2 flex items-center gap-3 shadow-lg">
+      <span className="relative w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-amber-100 to-amber-300 border-2 border-amber-500 flex items-center justify-center">
         {n.premio.tipo === "monedas" ? (
-          <span className="text-sm font-black text-amber-950 drop-shadow">🪙{n.premio.cantidad}</span>
+          <span className="text-sm font-black text-amber-900">🪙{n.premio.cantidad}</span>
         ) : def ? (
-          <Image src={getAccessorySrc(def.id)} alt={def.label} fill sizes="96px" className={`object-contain p-2.5 ${hecho || actual ? "" : "grayscale opacity-70"}`} />
+          <Image src={getAccessorySrc(def.id)} alt={def.label} fill sizes="56px" className="object-contain p-1.5" />
         ) : (
-          <span className="text-3xl drop-shadow">{esFinal ? "🧉" : n.premio.slot === "eyewear" ? "🕶️" : "🎀"}</span>
+          <span className="text-2xl">{n.premio.slot === "eyewear" ? "🕶️" : "🎀"}</span>
         )}
-        {hecho && <span className="absolute -top-1 -right-1 rounded-full bg-white text-emerald-600 text-sm font-black w-6 h-6 flex items-center justify-center shadow">✓</span>}
-        {!hecho && !actual && <span className="absolute -bottom-1 -right-1 text-base drop-shadow">🔒</span>}
-        <span className="absolute -bottom-2 -left-2 rounded-full bg-sky-700 border-2 border-white text-white text-[10px] font-black w-6 h-6 flex items-center justify-center">{numero}</span>
+      </span>
+      <div className="min-w-0">
+        <p className="text-[11px] font-black text-amber-950">
+          Parada {numero}: {n.premio.tipo === "monedas" ? `${n.premio.cantidad} monedas` : n.premio.label}
+        </p>
+        <p className="text-[10px] font-bold text-amber-800">{req}</p>
+        <p className={`text-[10px] font-black ${hecho ? "text-emerald-700" : "text-orange-700"}`}>
+          {hecho ? "✅ ¡Ya lo ganaste!" : `Te faltan ${falta}.`}
+        </p>
       </div>
-      <div className="mt-1.5 rounded-full bg-white/90 px-2 py-0.5 shadow text-center">
-        <p className="text-[10px] font-black text-sky-900 leading-tight">{req}</p>
-      </div>
-      <p className="text-[10px] font-black text-white text-center leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-        {n.premio.tipo === "monedas" ? `${n.premio.cantidad} monedas` : n.premio.label}
-      </p>
-      {falta && <p className="mt-0.5 rounded-full bg-amber-400 px-2 text-[10px] font-black text-amber-950 shadow">Faltan {falta}</p>}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Profe from "@/components/Profe";
 import { useState } from "react";
 import { choiceButtonClass, cardBase } from "./shared";
 
@@ -30,9 +31,10 @@ export default function FindErrorActivity({
 
   return (
     <div className={cardBase}>
-      <p className="text-lg font-bold text-white mb-3 text-center">
-        {prompt}
-      </p>
+      <div className="flex items-center justify-center gap-2 mb-3">
+        <Profe pose="lupa" className="w-12 h-16" />
+        <p className="text-lg font-bold text-white text-center">{prompt}</p>
+      </div>
       <p className="text-center text-amber-200 font-mono text-lg bg-slate-800/70 border border-slate-700 rounded-xl px-4 py-3 mb-5">
         {resolution}
       </p>

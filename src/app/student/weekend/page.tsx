@@ -1,5 +1,6 @@
 "use client";
 
+import Profe from "@/components/Profe";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -121,7 +122,9 @@ export default function WeekendPage() {
         <CloudsBackground />
         {header}
         <div className="relative z-10 parchment-panel rounded-3xl max-w-md mx-auto p-6 text-center">
-          <p className="text-5xl mb-2">🗓️</p>
+          <div className="flex justify-center mb-2">
+            <Profe pose="mate" className="w-20 h-28" />
+          </div>
           <p className="font-black text-xl">¡La aventura abre el sábado!</p>
           <p className="text-sm opacity-80 mt-2">
             Los sábados y domingos hay 10 juegos de memoria (Memoria Numérica y memoramas de dibujos y de palabras) con premios especiales.
@@ -149,9 +152,12 @@ export default function WeekendPage() {
           <h1 className="text-3xl font-black text-violet-700">
             {a.kind === "memoria-secuencia" ? "🔢" : a.kind === "memorama-imagenes" ? "🖼️" : "📝"} {intro.gameName}
           </h1>
-          <div className="text-left">
-            <p className="font-black text-sm mb-1">¿Qué vamos a hacer?</p>
-            <p className="text-sm leading-relaxed">{intro.howTo}</p>
+          <div className="flex items-end gap-2 text-left">
+            <Profe pose="explica" className="w-20 h-20" />
+            <div>
+              <p className="font-black text-sm mb-1">¿Qué vamos a hacer?</p>
+              <p className="text-sm leading-relaxed">{intro.howTo}</p>
+            </div>
           </div>
           {intro.sequenceType && (
             <p className="rounded-xl bg-violet-100 border-2 border-violet-300 py-2 font-black text-violet-800">
