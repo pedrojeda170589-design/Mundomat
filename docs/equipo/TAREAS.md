@@ -21,7 +21,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-10, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-10, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
@@ -29,6 +29,42 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-11 · Actividad, alertas y evolución (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Métricas de actividad por alumno y aula (`src/types/index.ts`, `src/lib/progressLogic.ts`, `src/lib/activityMetrics.ts`):**
+    - Se agregó `activeDays?: string[]` a `StudentProgress` (días calendario `YYYY-MM-DD` con actividad, podado automáticamente a 120 días).
+    - `computeCurrentStreak`: calcula la racha actual continua; si el alumno jugó hoy cuenta hacia atrás desde hoy; si jugó ayer la racha se mantiene viva y cuenta desde ayer; si no jugó ni hoy ni ayer es 0.
+    - `computeStudentActivityMetrics`: calcula racha, días activos en los últimos 7 días, en los últimos 30 días, etiqueta amigable de última conexión («Hoy», «Ayer», «Hace 3 días») y detección de inactividad o caída.
+    - En el detalle del alumno (`src/app/admin/dashboard/page.tsx` pestaña «Registro y Fortalezas»): cuatro tarjetas métricas dedicadas (Racha con 🔥, Días activos 7d, Días activos 30d, Última conexión).
+    - En el Resumen del curso (`src/components/admin/CourseSummary.tsx`): columna fija de alumnos con indicador visual de racha y última conexión.
+  - **Alertas tempranas para el docente (`src/lib/data.ts`, `src/app/api/alerts/route.ts`, `src/components/admin/TeacherAlertsBanner.tsx`):**
+    - Tarjeta «🔔 Para mirar» en la cabecera del panel docente con dos criterios pedagógicos automáticos:
+      1. **Inactividad prolongada**: alumnos sin actividad en X días (configurable por el docente, 7 días por defecto). El docente puede cambiar el umbral directamente desde el panel y se persiste en `admin_alert_config` (store Upstash / `.data/db.json`).
+      2. **Caída marcada de rendimiento**: detecta si la precisión semanal cayó $\ge 20$ puntos porcentuales respecto al promedio de las 3 semanas anteriores (`PERFORMANCE_DROP_THRESHOLD_PTS = 20`), requiriendo al menos 5 actividades en cada período para validez estadística.
+    - Cada alerta permite hacer clic en el alumno y abre directamente su ficha y registro completo.
+  - **Evolución en el tiempo sin librerías pesadas (`src/components/admin/EvolutionChart.tsx`):**
+    - Gráfico ligero responsivo en SVG puro y Tailwind, con barras dobles para aciertos (%) y tiempo de práctica (minutos), más tooltips interactivos.
+    - Integrado en el detalle individual del alumno (`/admin/dashboard`), en el reporte familiar (`/admin/reporte/alumno`) y a nivel de toda el aula en el Resumen del curso (`CourseSummary.tsx`).
+- **2. Cómo se probó:**
+  - `scripts/test-actividad.ts`: suite integral automatizada que valida:
+    - Lógica de racha continua (hoy, ayer, corte de racha tras 2 días).
+    - Conteo exacto de días activos en ventanas de 7 y 30 días.
+    - Detección precisa de caída de rendimiento ($\ge 20$ pts con $\ge 5$ actividades) vs. rendimiento estable y casos con pocas actividades.
+    - Generación y severidad de alertas docentes con umbral por defecto y personalizado.
+    - Cálculo de series temporales de evolución (alumno y aula completa).
+    - Persistencia de configuración en base de datos.
+    - Validación sin errores sobre los 22 alumnos reales del aula piloto en `.data/db.json`.
+  - `scripts/test-reportes.ts`: 100% aprobado.
+  - `scripts/test-curriculo.ts`: 100% aprobado.
+  - `scripts/test-resumen.ts`: 100% aprobado.
+  - `scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores.
+  - `npx eslint src`: 0 advertencias, 0 errores.
+  - `npm run build`: compilación de producción exitosa (40 rutas optimizadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Umbral de caída de rendimiento (20 pts):** Definido en la constante `PERFORMANCE_DROP_THRESHOLD_PTS = 20`. Pedro puede evaluar si prefiere que sea más sensible (ej. 15 pts) o más tolerante (25 pts).
+  - **Ventana de semanas en los gráficos:** Se configuró en 8 semanas para el detalle individual y 6 semanas para el aula y reporte familiar.
 
 ### AG-10 · Reportes imprimibles para familias y planilla CSV del curso (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

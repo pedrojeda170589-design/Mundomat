@@ -11,6 +11,8 @@ import {
 } from "@/lib/courseSummary";
 import { CurriculumEntry } from "@/lib/curriculo";
 import { generateCourseCSV, downloadCourseCSV } from "@/lib/courseExport";
+import { computeClassroomEvolution, computeStudentActivityMetrics } from "@/lib/activityMetrics";
+import EvolutionChart from "@/components/admin/EvolutionChart";
 import SubjectBadge from "@/components/SubjectBadge";
 
 interface CourseSummaryProps {
@@ -104,6 +106,11 @@ export default function CourseSummary({
     return computeStudentsNeedingHelp(filteredStudents, progressMap, activeGradeEnabledIds);
   }, [filteredStudents, progressMap, activeGradeEnabledIds]);
 
+  // Evolución semanal del aula (últimas 6 semanas)
+  const classroomEvolution = useMemo(() => {
+    return computeClassroomEvolution(filteredStudents, progressMap);
+  }, [filteredStudents, progressMap]);
+
   return (
     <div className="flex flex-col gap-6">
       {/* 1. Métricas arriba */}
@@ -171,6 +178,13 @@ export default function CourseSummary({
           </p>
         </div>
       </div>
+
+      {/* Gráfico de evolución semanal del aula */}
+      <EvolutionChart
+        title="Evolución semanal del aula"
+        subtitle={`Tendencia de aciertos y tiempo de práctica en las últimas semanas (${filteredStudents.length} alumnos)`}
+        points={classroomEvolution}
+      />
 
       {/* 2. Sección «A quién ayudar primero» */}
       <div className="rounded-2xl border-2 border-rose-300 bg-rose-50/70 p-4 shadow-sm">
@@ -412,10 +426,11 @@ export default function CourseSummary({
               {filteredStudents.map((student) => {
                 const p = progressMap[student.code];
                 const threshold = getMasteryThreshold(student.grade);
+                const activityMetrics = computeStudentActivityMetrics(p);
 
                 return (
                   <tr key={student.code} className="hover:bg-amber-50/40 transition">
-                    {/* Columna fija: Nombre del alumno */}
+                    {/* Columna fija: Nombre del alumno y actividad */}
                     <td className="sticky left-0 bg-white hover:bg-amber-50/40 border-r border-amber-800/20 px-3 py-2 z-10">
                       <div className="flex items-center justify-between gap-1.5">
                         <button
@@ -423,8 +438,17 @@ export default function CourseSummary({
                           className="text-left font-bold text-amber-950 hover:text-amber-700 hover:underline flex flex-col min-w-0"
                         >
                           <span className="truncate max-w-[135px]">{student.name}</span>
-                          <span className="text-[10px] text-amber-900/50 font-normal">
-                            {student.grade ? `${student.grade}.º grado` : "3.º grado"} · {student.code}
+                          <span className="text-[10px] text-amber-900/60 font-normal flex items-center gap-1.5 flex-wrap">
+                            <span>{student.grade ? `${student.grade}.º` : "3.º"}</span>
+                            <span>·</span>
+                            <span title={`Última actividad: ${activityMetrics.lastConnectionLabel}`}>
+                              🕒 {activityMetrics.lastConnectionLabel}
+                            </span>
+                            {activityMetrics.currentStreak > 0 && (
+                              <span className="text-amber-800 font-bold" title={`Racha de ${activityMetrics.currentStreak} días seguidos`}>
+                                🔥{activityMetrics.currentStreak}d
+                              </span>
+                            )}
                           </span>
                         </button>
                         <a

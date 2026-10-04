@@ -723,3 +723,29 @@ export function applyDictationWorldAttempt(
     lapizUnlocked,
   };
 }
+
+const ALERT_CONFIG_KEY = "admin_alert_config";
+
+export interface AlertConfigData {
+  inactiveDaysThreshold: number;
+}
+
+export async function getTeacherAlertConfig(): Promise<AlertConfigData> {
+  const config = await getJSON<AlertConfigData>(ALERT_CONFIG_KEY, {
+    inactiveDaysThreshold: 7,
+  });
+  return {
+    inactiveDaysThreshold:
+      typeof config?.inactiveDaysThreshold === "number" && config.inactiveDaysThreshold > 0
+        ? config.inactiveDaysThreshold
+        : 7,
+  };
+}
+
+export async function setTeacherAlertConfig(config: AlertConfigData): Promise<void> {
+  const sanitized: AlertConfigData = {
+    inactiveDaysThreshold: Math.max(1, Math.min(60, config.inactiveDaysThreshold ?? 7)),
+  };
+  await setJSON(ALERT_CONFIG_KEY, sanitized);
+}
+

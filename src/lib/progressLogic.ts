@@ -153,6 +153,13 @@ export function applyWorldAttempt(
         pendingRetry.has(worldId) || completedWorlds.includes(worldId) ? masteryPct : 0
       ),
     },
+    activeDays: (() => {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const cutoff120Days = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const set = new Set((progress.activeDays ?? []).filter((d) => d >= cutoff120Days));
+      set.add(todayStr);
+      return Array.from(set).sort();
+    })(),
     lastPlayedAt: new Date().toISOString(),
   };
 

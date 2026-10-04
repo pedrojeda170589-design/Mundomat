@@ -23,6 +23,9 @@ import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
 import { proposeDisplayName } from "@/lib/studentNames";
 import { CurriculumEntry } from "@/lib/curriculo";
+import TeacherAlertsBanner from "@/components/admin/TeacherAlertsBanner";
+import EvolutionChart from "@/components/admin/EvolutionChart";
+import { computeStudentActivityMetrics, computeStudentEvolution } from "@/lib/activityMetrics";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -291,6 +294,14 @@ export default function AdminDashboardPage() {
         })
       : null;
 
+  const activityMetrics = selectedProgress
+    ? computeStudentActivityMetrics(selectedProgress)
+    : null;
+
+  const studentEvolution = selectedProgress
+    ? computeStudentEvolution(selectedProgress, 8)
+    : [];
+
   return (
     <main className="relative flex-1 bg-explorer-day py-8 px-4 overflow-hidden">
       <Mountains isDay />
@@ -333,6 +344,13 @@ export default function AdminDashboardPage() {
             </button>
           ))}
         </div>
+
+        <TeacherAlertsBanner
+          students={students}
+          progressMap={progressMap}
+          adminPassword={adminPassword}
+          onSelectStudent={handleViewStats}
+        />
 
         {tab === "resumen" && (
           <CourseSummary
@@ -743,6 +761,50 @@ export default function AdminDashboardPage() {
                     value={`${Math.round(stats.totalTimeSeconds / 60)} min`}
                   />
                 </div>
+
+                {activityMetrics && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <Stat
+                      label="Racha de actividad"
+                      value={activityMetrics.streakDays > 0 ? `🔥 ${activityMetrics.streakDays} ${activityMetrics.streakDays === 1 ? "día" : "días"}` : "0 días"}
+                    />
+                    <Stat
+                      label="Días activos (últimos 7d)"
+                      value={`${activityMetrics.activeDaysLast7} / 7`}
+                    />
+                    <Stat
+                      label="Días activos (últimos 30d)"
+                      value={`${activityMetrics.activeDaysLast30} / 30`}
+                    />
+                    <Stat
+                      label="Última conexión"
+                      value={activityMetrics.lastConnectionLabel}
+                    />
+                  </div>
+                )}
+
+                {activityMetrics?.hasPerformanceDrop && (
+                  <div className="rounded-xl border-2 border-amber-600 bg-amber-50 p-3.5 flex items-start gap-3 shadow-sm">
+                    <span className="text-xl">⚠️</span>
+                    <div className="text-xs">
+                      <p className="font-bold text-amber-950">
+                        Atención pedagógica: caída de precisión reciente
+                      </p>
+                      <p className="text-amber-900/80 mt-0.5">
+                        El promedio de aciertos de los últimos 7 días ({activityMetrics.recentAccuracyPct}%) cayó más de 20 puntos respecto al período previo ({activityMetrics.priorAccuracyPct}%). Conviene repasar mundos anteriores o revisar dudas en clase.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {studentEvolution.length > 0 && (
+                  <div className="rounded-2xl bg-white/70 border-2 border-amber-700/20 p-4 shadow-sm">
+                    <EvolutionChart
+                      data={studentEvolution}
+                      title="Evolución semanal del alumno (últimas 8 semanas)"
+                    />
+                  </div>
+                )}
 
                 {!!selectedProgress.worldsNeedingTeacherReview?.length && (
                   <div>

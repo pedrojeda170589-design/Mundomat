@@ -50,6 +50,8 @@ export interface StudentProgress {
   // sin fin y la app siga rápida): totales por mundo.
   activitySummary?: Record<number, { correct: number; incorrect: number; timeSpentSeconds: number }>;
   lastPlayedAt?: string;
+  // Días calendario (YYYY-MM-DD) con al menos una actividad resuelta (acotado a 120 días)
+  activeDays?: string[];
   coins: number; // moneda ganada por respuestas correctas / mundos completados
   // Personalización propia del alumno (no afecta el nombre real, que sigue
   // viviendo en Student.name y es el único que ve el docente).
