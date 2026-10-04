@@ -386,14 +386,14 @@ export function computeClassroomEvolution(
     nowMs = typeof maybeNowMs === "number" ? maybeNowMs : Date.now();
   } else {
     progressMap = studentsOrMap;
+    weeksCount = typeof progressMapOrWeeksCount === "number" ? progressMapOrWeeksCount : 6;
+    nowMs = typeof maybeWeeksCount === "number" ? maybeWeeksCount : Date.now();
     students = Object.keys(progressMap).map((code) => ({
       code,
       name: code,
       type: "aula" as const,
       createdAt: new Date(nowMs).toISOString(),
     }));
-    weeksCount = typeof progressMapOrWeeksCount === "number" ? progressMapOrWeeksCount : 6;
-    nowMs = typeof maybeWeeksCount === "number" ? maybeWeeksCount : Date.now();
   }
 
   const msInDay = 24 * 60 * 60 * 1000;

@@ -21,6 +21,20 @@ export interface School {
   name: string;
   code: string;
   active: boolean;
+  plan?: string;
+}
+
+export interface SchoolClassroomSummary {
+  classroom_id: string;
+  classroom_name: string;
+  grade: number;
+  division: string;
+  school_year: number;
+  total_students: number;
+  active_students_7d: number;
+  avg_accuracy_pct: number;
+  total_activities: number;
+  practice_minutes: number;
 }
 
 export const STATUS_LABEL: Record<EnrollmentStatus, string> = {

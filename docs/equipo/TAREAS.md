@@ -22,13 +22,71 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-10, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-12 · Vista de directivo y modelo de planes (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Módulo central de definición de planes (`src/lib/planes.ts`):**
+    - Definición unificada de planes sin pasarelas de pago ni cobros:
+      - `piloto_gratuito`: 2 aulas, 35 alumnos, 2 docentes. Funciones: `resumen_aula`, `metricas_basicas`, `fichas_familias`.
+      - `escuela`: 25 aulas, 750 alumnos, 40 docentes. Suma `reportes_curso_csv`, `reportes_imprimibles`, `vista_directivo_multiaula`, `comparacion_divisiones`, `alertas_tempranas`, `curriculo_personalizado`.
+      - `distrito`: Aulas, alumnos y docentes ilimitados. Suma `analiticas_distrito` y `exportacion_masiva`.
+    - Funciones `puedeUsar(target, feature)` y `limiteDe(target, limit)`:
+      - **Regla de oro para el aula piloto de Pedro:** si `!target` o `target.is_legacy_pilot`, devuelve siempre `true` para cualquier funcionalidad y `Infinity` para cualquier límite, garantizando total retrocompatibilidad.
+    - Función `planUpgradeNotice(feature)`: mensajes amables e institucionales sin botones de compra ni precios, orientados a la gestión directiva escolar.
+  - **Migración SQL y seguridad por roles (`supabase/migrations/20261004000100_directivo_y_planes.sql`):**
+    - Se agregó columna `plan text` a `public.schools` y `public.licenses` con default `'piloto_gratuito'`.
+    - Función SQL `public.school_active_plan(p_school uuid)`: resuelve el plan vigente consultando licencias activas o la configuración de la escuela.
+    - Función SQL `public.school_classrooms_summary(p_school uuid)` (`security definer`):
+      - Directivos (`school_admin`) y administradores globales (`super_admin`) ven todas las aulas de su escuela con métricas agregadas: total de alumnos matriculados, alumnos activos en los últimos 7 días, aciertos promedio, minutos de práctica y actividades completadas.
+      - Docentes (`teacher`) ven **exclusivamente sus propias aulas asignadas** dentro de la escuela.
+      - Usuarios sin relación con la escuela reciben error SQL 42501 (insufficient privilege).
+    - Función SQL `public.school_grade_comparison(p_school uuid, p_grade smallint, p_year int)` (`security definer`):
+      - Permite a la dirección comparar métricas entre divisiones paralelas del mismo grado (alumnos, activos 7d, aciertos promedio, actividades).
+    - Función SQL `public.assign_school_plan(...)`: administración de licencias reservada a `super_admin`.
+  - **Pruebas de base de datos en Postgres (`supabase/tests/db.test.mjs`):**
+    - Se incorporó la prueba del escenario multi-escuela: verificación de que directivos ven todas las aulas de su escuela, docentes solo ven sus aulas asignadas, y docentes ajenos son bloqueados con 42501.
+  - **Vista de Dirección en la UI (`src/app/docente/escuela/page.tsx`, `src/lib/platform/shared.ts`):**
+    - Badge visual del plan activo de la escuela y tarjeta de estado de límites (aulas utilizadas vs. cupo del plan).
+    - Quota check al crear aulas nuevas: si se alcanza el cupo del plan, se bloquea el formulario con un mensaje amable explicando el límite del plan actual.
+    - **Panel de Dirección Escolar (Multi-aula):**
+      - 4 métricas globales consolidadas: Aulas activas, Alumnos matriculados, Activos últimos 7 días con porcentaje, y Aciertos promedio general de la escuela.
+      - Tiempo acumulado de práctica en plataforma.
+    - **Comparación pedagógica entre divisiones del mismo grado:**
+      - Pestañas selectoras por grado (ej. 1.º, 2.º, 3.º).
+      - Tabla comparativa entre divisiones paralelas (A, B, C...) con alumnos, activos en 7d y aciertos promedio.
+      - Gráfico de barras visual en CSS puro con código de color pedagógico (verde $\ge 75\%$, ámbar $60-74\%$, rojo $< 60\%$).
+      - **Alerta temprana de equidad pedagógica:** si la diferencia de aciertos entre dos divisiones del mismo grado es $\ge 15$ puntos porcentuales, muestra un aviso destacado recomendando articular estrategias docentes.
+    - Listado de aulas enriquecido con métricas de 7d activos y aciertos promedio.
+  - **Script de prueba automatizado (`scripts/test-planes.ts`):**
+    - Valida catálogo de planes, fallbacks, `puedeUsar`, `limiteDe`, excepciones del aula piloto de Pedro, avisos amables, agregados multi-aula y brecha de rendimiento.
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-planes.ts`: 100% aprobado (catálogo, permisos, límites, cálculo de brecha de equidad y migración SQL).
+  - `npx tsx scripts/test-actividad.ts`: 100% aprobado (validado con los 22 alumnos reales de `.data/db.json`).
+  - `npx tsx scripts/test-reportes.ts`: 100% aprobado.
+  - `npx tsx scripts/test-curriculo.ts`: 100% aprobado.
+  - `npx tsx scripts/test-resumen.ts`: 100% aprobado.
+  - `npx tsx scripts/test-privacidad.ts`: 100% aprobado.
+  - `npx tsc --noEmit`: 0 errores de TypeScript.
+  - `npx eslint src`: 0 errores y 0 advertencias de ESLint.
+  - `npm run build`: compilación de producción con Next.js Turbopack 100% limpia (40 rutas generadas).
+- **3. Decisiones pendientes para Pedro:**
+  - **Límites numéricos provisorios de cada plan:**
+    - Se dejaron valores de ejemplo marcados como provisorios en `src/lib/planes.ts`:
+      - *Piloto Gratuito*: 2 aulas, 35 alumnos, 2 docentes.
+      - *Escuela*: 25 aulas, 750 alumnos, 40 docentes.
+      - *Distrito*: Ilimitado.
+    - Pedro puede ajustar estos números en cualquier momento en `src/lib/planes.ts`.
+  - **Funciones asignadas a cada plan:**
+    - Revisar si el plan Escuela debe incluir también la generación de diplomas de fin de año o módulos específicos adicionales.
+  - **Sensibilidad de la alerta de equidad entre divisiones:**
+    - Se fijó en $\ge 15$ puntos porcentuales de diferencia de aciertos entre divisiones paralelas del mismo grado; confirmar si prefiere un umbral más amplio (ej. 20 pts) o más estrecho (ej. 10 pts).
 
 ### AG-11 · Actividad, alertas y evolución (Antigravity)
 - **1. Qué se cambió y archivos modificados:**
