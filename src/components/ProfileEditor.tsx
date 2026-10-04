@@ -7,6 +7,7 @@ import {
   ACCESSORY_CATALOG_TEMPORADA,
   ACCESSORY_CATALOG_TIENDA,
   getShopAvatar,
+  LOGRO_AVATAR_IDS,
   AUTO_BACKGROUND,
   AVATAR_OPTIONS,
   AVATAR_INFO,
@@ -24,6 +25,7 @@ import {
   isStandardAvatar,
 } from "@/types";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import {
   getActiveEvents,
   getAutoBackgroundId,
@@ -39,6 +41,8 @@ const ALL_SLOTS: AccessorySlot[] = [
   "torso",
   "backpack",
   "pendant",
+  "pet",
+  "prop",
 ];
 
 interface Props {
@@ -49,6 +53,7 @@ interface Props {
   currentBackground?: string;
   seasonalCollection?: string[];
   shopCollection?: string[];
+  achievementCollection?: string[];
   isBirthday?: boolean;
   realName: string;
   completedWorldsCount: number;
@@ -89,6 +94,7 @@ export default function ProfileEditor({
   currentBackground,
   seasonalCollection = [],
   shopCollection = [],
+  achievementCollection = [],
   isBirthday = false,
   realName,
   completedWorldsCount,
@@ -118,7 +124,11 @@ export default function ProfileEditor({
   );
   const boughtAccessories = ACCESSORY_CATALOG_TIENDA.filter((a) => shopCollection.includes(a.id));
   // Personajes disponibles: los de siempre + los comprados en la tienda.
-  const avatarChoices = AVATAR_OPTIONS.filter((a) => !getShopAvatar(a) || shopCollection.includes(a));
+  const avatarChoices = AVATAR_OPTIONS.filter((a) =>
+    LOGRO_AVATAR_IDS.has(a) ? achievementCollection.includes(a) : !getShopAvatar(a) || shopCollection.includes(a)
+  );
+  // Avatares de logro con imagen (ganados o por ganar), para «Mi colección».
+  const logros = AVATARES_LOGRO.filter((l) => AVATAR_OPTIONS.includes(l.id));
   const owned = new Set(seasonalCollection);
   const activeEventIds = new Set(getActiveEvents().map((e) => e.id));
   const autoBackground = getBackgroundById(getAutoBackgroundId());
@@ -244,6 +254,42 @@ export default function ProfileEditor({
             ))}
           </div>
         </div>
+
+        {logros.length > 0 && (
+          <div>
+            <p className="text-slate-400 text-xs mb-1">🏆 Mi colección de logros</p>
+            <p className="text-slate-500 text-[11px] mb-2">
+              No se compran: se ganan sacando 90 % o más en los cuentos, leyendas y fábulas.
+            </p>
+            <div className="grid grid-cols-4 gap-2">
+              {logros.map((l) => {
+                const ganado = achievementCollection.includes(l.id);
+                return (
+                  <button
+                    key={l.id}
+                    disabled={!ganado}
+                    onClick={() => handleSelectAvatar(l.id)}
+                    title={ganado ? `${l.label} (${l.texto})` : `Superá «${l.texto}» con 90 % para ganarlo`}
+                    className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-gradient-to-b from-amber-200 to-amber-50 ${
+                      avatar === l.id ? "border-amber-400 ring-2 ring-amber-400/50" : "border-slate-700"
+                    }`}
+                  >
+                    <Image
+                      src={getAvatarSrc(l.id)}
+                      alt={l.label}
+                      fill
+                      sizes="80px"
+                      className={`object-cover ${ganado ? "" : "brightness-0 opacity-30"}`}
+                    />
+                    <span className="absolute bottom-0 inset-x-0 bg-black/60 text-[9px] leading-tight text-white px-0.5 py-0.5">
+                      {ganado ? l.label : `🔒 ${l.texto}`}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-3">
           <p className="text-slate-400 text-xs -mb-1">

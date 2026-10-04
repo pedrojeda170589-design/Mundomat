@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {
+  AVATAR_FIT_LIKE,
   AccessorySlot,
   AvatarAccessories,
   getAccessoryById,
@@ -51,7 +52,9 @@ function AccessoryLayer({
 }) {
   // Los objetos nuevos pueden ubicarse "como" otro de la misma forma (fitLike).
   const like = getAccessoryById(id)?.fitLike;
-  const fit = AVATAR_FIT[character]?.[id] ?? (like ? AVATAR_FIT[character]?.[like] : undefined);
+  // Personajes nuevos (colecciones, logros): se ubican como uno de siempre con el mismo encuadre.
+  const fits = AVATAR_FIT[character] ?? AVATAR_FIT[AVATAR_FIT_LIKE[character] ?? ""];
+  const fit = fits?.[id] ?? (like ? fits?.[like] : undefined);
   if (!fit) return null;
   const [left, top, width, height, rot, ox, oy] = fit;
   // La parte de atrás (patillas, elástico) se toma del modelo si el objeto no tiene la suya.
@@ -126,6 +129,19 @@ export default function AvatarDisplay({
           <AccessoryLayer key={id} id={id} character={characterId} back={false} imageSizes={imageSizes} />
         ))}
       </span>
+      {/* Mascota (abajo a la izquierda) y objeto de mano (abajo a la derecha). */}
+      {(["pet", "prop"] as const).map((slot) => {
+        const id = equipped[slot];
+        if (!id || !getAccessoryById(id)) return null;
+        return (
+          <span
+            key={slot}
+            className={`absolute bottom-[1%] w-[40%] h-[40%] pointer-events-none ${slot === "pet" ? "left-[1%]" : "right-[1%]"}`}
+          >
+            <Image src={getAccessorySrc(id)} alt="" fill sizes={imageSizes} className="object-contain object-bottom drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]" />
+          </span>
+        );
+      })}
       {birthday && (
         <span
           className="absolute right-[3%] top-[3%] w-[30%] h-[30%] pointer-events-none animate-bounce"

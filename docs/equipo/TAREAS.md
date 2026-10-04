@@ -16,16 +16,27 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-06 | [Textos más largos por grado y dictados de números y palabras (2.º y 3.º), mundo especial semana por medio](./tareas/AG-06-dictados-y-textos.md) | Antigravity | 🟢 UNIDA A MAIN |
 | CL-08 | Lectura en voz alta paga en 3.º (5 🪙), textos por grado (`escenasDe`), música original y voces de los cuentos | Claude | 🟢 UNIDA A MAIN |
 | CL-09 | Retomar el mundo donde se dejó, tienda por tiempo limitado con contador, revisión de AG-06 | Claude | 🟢 UNIDA A MAIN |
+| CL-10 | Colecciones por temporada (15 días, calendario anual), legendarios, avatares de logro de los textos, mascotas y objetos de mano | Claude | 🟢 UNIDA A MAIN |
 | AG-07 | [Privacidad: nombre visible, datos sensibles y límite de intentos en códigos](./tareas/AG-07-privacidad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-08 | [Resumen del curso: grilla por alumno, métricas y «a quién ayudar primero»](./tareas/AG-08-resumen-del-curso.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-09 | [Mapeo curricular Santa Cruz (con validación docente)](./tareas/AG-09-curriculo.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
-| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-06, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-10 | [Reportes: informe a la familia (imprimible) y del curso (PDF/CSV)](./tareas/AG-10-reportes.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-11 | [Actividad, rachas, alertas y evolución](./tareas/AG-11-actividad-y-alertas.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-12 | [Vista de dirección y planes (Piloto/Escuela/Distrito), sin cobros](./tareas/AG-12-escuelas-y-planes.md) | Antigravity | ⏳ PENDIENTE (después de AG-09, en orden; leer antes [reglas comunes](./tareas/_COMUN-mejoras-panel.md)) |
+| AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ⏳ PENDIENTE |
+| AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ⏳ PENDIENTE |
 | CL-07 | Cuento → leyenda → fábula en los mundos de comprensión, 6 leyendas nuevas (Santa Cruz y Argentina) y lectura en diapositivas | Claude | 🟢 UNIDA A MAIN |
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### CL-10 · Colecciones por temporada y avatares de logro (Claude)
+- **Calendario de la tienda** (`src/lib/coleccion/temporadas.ts`): 16 colecciones de octubre a marzo (Animales, Guardaparques, Diversidad Cultural, Halloween, Tradición, Soberanía, Yaguareté, Suelo, Montañas, Navidad, Año Nuevo, Verano, Educación Ambiental, Humedales, Carnaval, Regreso a clases) y la lista de fechas de abril a septiembre para la segunda tanda. Cada una se vende **15 días** (del día −7 al +7, con ajustes: Halloween 18/10–1/11, Navidad 15–29/12; Carnaval es fecha móvil) y **vuelve cada año**; fuera de su fecha queda **oculta** (lo comprado se sigue viendo). Halloween 2026 respeta el 2/11 ya anunciado. `unicaVez` para exclusivos de un solo año.
+- **Legendario** de cada temporada: no se vende; se gana superando 3 mundos distintos con 90 %+ durante la temporada (`src/lib/coleccion/premios.ts`). La tienda muestra el avance (1/3).
+- **Avatares de logro** (`src/lib/coleccion/logros.ts`): uno por cada uno de los 25 textos; se gana con 90 %+ en su mundo de comprensión (cualquier grado). Nunca están en la tienda. «🏆 Mi colección de logros» en el perfil (los que faltan, en silueta con «Superá … con 90 %»). La leyenda del Iguazú da además el Mini yaguareté.
+- Casilleros nuevos **mascota** y **objeto de mano** (esquinas del retrato, sin ajuste por personaje). Avatares nuevos usan el ajuste de un personaje de siempre (`AVATAR_FIT_LIKE`).
+- Un ítem aparece solo cuando tiene imagen (`src/lib/coleccion/imagenes-listas.ts`, se regenera con `npx tsx scripts/coleccion/listar-imagenes.ts`). Arte de Antigravity en `arte/coleccion/**` → `python3 scripts/coleccion/procesar_arte.py` (quita fondo, ajusta al molde). Lista de lo que falta: `npx tsx scripts/coleccion/lista-para-dibujar.ts`.
+- Pruebas: `scripts/test-colecciones.ts`.
 
 ### AG-09 · Mapeo curricular Santa Cruz con validación docente (Antigravity)
 - **1. Qué se cambió y archivos modificados:**
