@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import MusicToggle from "@/components/MusicToggle";
+import { ponerMusica } from "@/lib/musica";
 import Link from "next/link";
 import SkyScene from "@/components/SkyScene";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
@@ -12,6 +14,10 @@ export default function StudentLoginPage() {
   const router = useRouter();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  // Música de la pantalla de inicio (arranca con el primer toque).
+  useEffect(() => {
+    ponerMusica("inicio");
+  }, []);
   const [loading, setLoading] = useState(false);
   const [expiredStudent, setExpiredStudent] = useState<{
     code: string;
@@ -56,6 +62,7 @@ export default function StudentLoginPage() {
 
   return (
     <main className="relative flex-1 flex flex-col items-center justify-center px-6 py-12 bg-hero-night overflow-hidden">
+      <MusicToggle />
       <SkyScene showCelestial={false} />
       {expiredStudent ? (
         <div className="relative z-10 w-full max-w-md mx-auto flex flex-col gap-4">

@@ -27,6 +27,9 @@ import ClassMailbox from "@/components/ClassMailbox";
 import { isBirthdayToday } from "@/lib/seasons";
 import { warmUpVoices } from "@/lib/tts";
 import Link from "next/link";
+import MusicToggle from "@/components/MusicToggle";
+import { ponerMusica, type Pista } from "@/lib/musica";
+import { getCuento } from "@/lib/cuentos/catalogo";
 import { TRIAL_WORLDS_PER_SUBJECT, TrialReport, getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
 import TrialReportCard from "@/components/prueba/TrialReportCard";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
@@ -38,7 +41,17 @@ export default function StudentPlayPage() {
   const [progress, setProgress] = useState<StudentProgress | null>(null);
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [grade, setGrade] = useState<number>(DEFAULT_GRADE);
+
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
+
+  // Música de fondo: la del mapa según el ambiente del grado; en los mundos de
+  // comprensión, la del género del texto (cuento, leyenda o fábula).
+  useEffect(() => {
+    const genero = selectedWorld?.storyId ? getCuento(selectedWorld.storyId)?.genre : undefined;
+    const mapa: Record<string, Pista> = { costa: "mapa-costa", bosque: "mapa-bosque", meseta: "mapa-meseta" };
+    ponerMusica(genero ?? mapa[themeForGrade(grade).id] ?? "mapa-meseta");
+  }, [selectedWorld, grade]);
+  useEffect(() => () => ponerMusica(null), []);
   const [loading, setLoading] = useState(true);
   const [subject, setSubject] = useState<WorldSubject>("matematica");
   const [birthday, setBirthday] = useState<string | undefined>(undefined);
@@ -195,6 +208,7 @@ export default function StudentPlayPage() {
             void refresh(code);
           }}
         />
+        <MusicToggle />
       </main>
     );
   }
@@ -225,6 +239,7 @@ export default function StudentPlayPage() {
 
   return (
     <main className={`relative flex-1 flex flex-col ${themeForGrade(grade).dayBg} py-8 overflow-hidden`}>
+      <MusicToggle />
       <CloudsBackground />
       {sceneryType === "seashore" ? <Seashore isDay /> : sceneryType === "forest" ? <Forest isDay /> : <Mountains isDay />}
 

@@ -19,6 +19,7 @@ import CountActivity from "@/components/activities/CountActivity";
 import BuildActivity from "@/components/activities/BuildActivity";
 import TraceActivity from "@/components/activities/TraceActivity";
 import ListenActivity from "@/components/activities/ListenActivity";
+import { festejo } from "@/lib/musica";
 import AssistControls from "@/components/AssistControls";
 import CoinBadge from "@/components/CoinBadge";
 import Mountains from "@/components/Mountains";
@@ -171,6 +172,7 @@ export default function ActivityRunner({
       // si falla la red, igual dejamos ver la pantalla final (sin detalle)
       setAttemptOutcome(null);
     }
+    festejo();
     setPhase("world-done");
   }
 

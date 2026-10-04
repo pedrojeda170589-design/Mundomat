@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { playClip, stopClip } from "@/lib/audio";
 import { speak } from "@/lib/tts";
+import { bajarMusica } from "@/lib/musica";
+import { oraciones as sentences, vozUrl } from "@/lib/cuentos/voz";
 
 type Genre = "cuento" | "leyenda" | "fabula";
 
@@ -30,11 +32,6 @@ const LABEL: Record<Genre, { art: string; icon: string }> = {
   fabula: { art: "la fábula", icon: "🦊" },
 };
 
-// Parte el texto de una escena en oraciones (para resaltar la que se lee).
-function sentences(text: string): string[] {
-  const parts = text.match(/[^.!?…]+[.!?…]+[»”"]?\s*|[^.!?…]+$/g) ?? [text];
-  return parts.map((p) => p.trim()).filter(Boolean);
-}
 
 // Texto narrativo ilustrado, como diapositivas: cada escena muestra su
 // imagen y su texto, y mientras se lee en voz alta se resalta la oración
@@ -67,11 +64,20 @@ export default function ListenActivity({
   const parts = useMemo(() => scenes.map((s) => sentences(s.text)), [scenes]);
   const label = LABEL[genre];
 
+  // Una oración: voz grabada (Kokoro) si existe; si no, la del navegador.
+  function say(text: string, onDone: () => void) {
+    const url = vozUrl(text);
+    if (url) playClip({ audio: url, onEnd: onDone, onFallback: () => speak(text, onDone) });
+    else speak(text, onDone);
+  }
+
   function read(k: number, advance: boolean) {
     const my = ++token.current;
     setReading(true);
+    bajarMusica(true);
     const finish = () => {
       if (token.current !== my) return;
+      bajarMusica(false);
       setReading(false);
       setCurrent(null);
       setHeard((h) => new Set(h).add(k));
@@ -85,8 +91,9 @@ export default function ListenActivity({
       if (token.current !== my) return;
       if (n >= parts[k].length) return finish();
       setCurrent(n);
-      const text = k === 0 && n === 0 ? `${title}. ${parts[k][n]}` : parts[k][n];
-      speak(text, () => setTimeout(() => bySentence(n + 1), 150));
+      const next = () => setTimeout(() => bySentence(n + 1), 150);
+      if (k === 0 && n === 0) say(title, () => token.current === my && say(parts[k][n], next));
+      else say(parts[k][n], next);
     };
     setCurrent("all");
     playClip({ audio: `/audio/cuentos/${storyId}-${k + 1}.mp3`, onEnd: finish, onFallback: () => bySentence(0) });
@@ -104,6 +111,7 @@ export default function ListenActivity({
     () => () => {
       token.current++;
       stopClip();
+      bajarMusica(false);
     },
     []
   );
@@ -111,6 +119,7 @@ export default function ListenActivity({
   function go(k: number) {
     token.current++;
     stopClip();
+    bajarMusica(false);
     setReading(false);
     setCurrent(null);
     setI(Math.max(0, Math.min(last, k)));
