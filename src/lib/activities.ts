@@ -1,6 +1,7 @@
 import { WorldDef } from "@/types";
 import { buildGrade1Activities } from "@/lib/grade1/content";
 import { buildGrade2Activities } from "@/lib/grade2/content";
+import { buildGrade4Activities } from "@/lib/grade4/content";
 import { buildStoryActivities } from "@/lib/cuentos/actividades";
 import { generarSetMundoDictado } from "@/lib/dictado/banco";
 
@@ -6854,7 +6855,7 @@ function buildDiversidadCiudadaniaActivities(): ActivitySpec[] {
 // ---------------------------------------------------------------------------
 
 export function buildDictationWorldActivities(world: WorldDef): ActivitySpec[] {
-  const items = generarSetMundoDictado(world.grade ?? (world.id === 38001 ? 3 : 2));
+  const items = generarSetMundoDictado(world.grade ?? (world.id === 48001 ? 4 : world.id === 38001 ? 3 : 2));
   return items.map((it, idx) => ({
     type: "dictation" as const,
     id: `dict-${world.id}-${idx}`,
@@ -6875,12 +6876,13 @@ export function buildDictationWorldActivities(world: WorldDef): ActivitySpec[] {
 }
 
 export function buildActivitiesForWorld(world: WorldDef): ActivitySpec[] {
-  if (world.id === 28001 || world.id === 38001 || world.category === "dictado") {
+  if (world.id === 28001 || world.id === 38001 || world.id === 48001 || world.category === "dictado") {
     return buildDictationWorldActivities(world);
   }
   if (world.storyId) return buildStoryActivities(world);
   if (world.grade === 1) return buildGrade1Activities(world);
   if (world.grade === 2) return buildGrade2Activities(world);
+  if (world.grade === 4) return buildGrade4Activities(world);
   switch (world.category) {
     case "numeros":
       return buildNumerosActivities();

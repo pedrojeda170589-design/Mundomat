@@ -26,7 +26,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-13 | [Imágenes de las colecciones y de los avatares de logro (primero piloto de 5)](./tareas/AG-13-imagenes-colecciones.md) | Antigravity | ❌ YA NO: las imágenes las hace Claude en ChatGPT |
 | AG-14 | [Torneo de velocidad con las tablas (fin de semana)](./tareas/AG-14-torneo-tablas.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ⏳ PENDIENTE (después de AG-15) |
+| AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | ✅ 4.º LISTO PARA REVISAR |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-13 | Cumpleaños de la Escuela (4/10): portada de fiesta, gorrito celeste y blanco y fondo para todos; vinchas, anteojos y squishies de ChatGPT procesados | Claude | 🟢 UNIDA A MAIN |
 | CL-11 | Revisión y unión de AG-07 a AG-12 con arreglos; drops con superespecial; calendario sin superposiciones; racha y camino de premios; acomodar y agrandar objetos del avatar | Claude | 🟢 UNIDA A MAIN |
@@ -34,6 +34,62 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-16 · Contenidos de 4.º grado (Antigravity)
+- **1. Qué se cambió y archivos modificados:**
+  - **Catálogo de habilidades (`src/lib/grade4/skills.ts`):**
+    - 57 habilidades creadas y registradas: Lengua (`l4-noticia`, `l4-expositivo`, `l4-biografia`, `l4-sustantivo`, `l4-adjetivo`, `l4-verbo-tiempo`, `l4-acentuacion`, etc.), Matemática (`m4-num-100k`, `m4-num-1m`, `m4-posicional`, `m4-romanos`, `m4-mult-2cifras`, `m4-div-resto`, `m4-frac-parte`, `m4-decimales-dinero`, `m4-triangulos`, `m4-perimetro`, etc.), Ciencias Sociales (`s4-mapa-sc`, `s4-relieve-sc`, `s4-aonikenk`, `s4-magallanes`, `s4-circuito-potosi`, `s4-constitucion`, etc.), Ciencias Naturales (`n4-ambientes-sc`, `n4-adaptaciones`, `n4-red-trofica`, `n4-esqueleto`, `n4-estados-materia`, `n4-separacion-mezclas`, `n4-rotacion-traslacion`, etc.), y Dictado (`l4-dictado-palabra`, `l4-dictado-oracion`, `m4-num-dictado`).
+  - **Mundos de 4.º grado (`src/lib/grade4/worlds.ts`):**
+    - Exactamente **92 mundos curriculares** con progresión pedagógica y prerrequisitos acíclicos válidos (IDs 41001-41026 Lengua, 42001-42026 Matemática, 43001-43020 Sociales, 44001-44020 Naturales).
+    - Basados fielmente en la columna de 4.º grado del **Diseño Curricular de Santa Cruz**:
+      - **Lengua (26 mundos, DC línea ~674):** 41001 Noticia escolar, 41002 Texto expositivo, 41003 Biografías patagónicas, 41004 Textos instructivos, 41005 Cartas y correos, 41006 Fábulas tradicionales, 41007 Poesía y rima, 41008 Texto teatral, 41009 Historieta, 41010 Párrafo y oración, 41011 Cohesión y conectores, 41012 Sujeto expreso y desinencial, 41013 Predicado verbal simple y compuesto, 41014 Sustantivos, 41015 Adjetivos, 41016 Concordancia, 41017 El verbo: persona y número, 41018 Tiempos verbales, 41019 Pretéritos narrativos, 41020 Verbos en infinitivo, 41021 Sinónimos y antónimos, 41022 Hiperónimos e hipónimos, 41023 Familias de palabras, 41024 Acentuación (agudas, graves, esdrújulas), 41025 Signos de puntuación, 41026 Reglas ortográficas (b/v, c/s/z, g/j, h, ll/y).
+      - **Matemática (26 mundos, DC línea ~764):** 42001 Números hasta 100.000, 42002 Números hasta 1.000.000, 42003 Valor posicional, 42004 Comparación y recta numérica, 42005 Números romanos, 42006 Sumas y restas con números grandes, 42007 Cálculo mental y redondeo, 42008 Multiplicación por unidad seguida de ceros, 42009 Multiplicación por dos cifras, 42010 Propiedades de la multiplicación, 42011 Organizaciones rectangulares y combinatoria, 42012 División por una cifra, 42013 División por dos cifras y análisis del resto, 42014 Múltiplos y divisores en repartos, 42015 Fracciones como parte de un todo, 42016 Fracciones de tercios, sextos y quintos, 42017 Fracciones equivalentes, 42018 Números mixtos, 42019 Suma y resta de fracciones de igual denominador, 42020 Decimales con dinero y precios, 42021 Décimos y centésimos en medidas, 42022 Suma y resta de decimales, 42023 Rectas paralelas y perpendiculares, 42024 Clasificación de triángulos, 42025 Cuadriláteros particulares, 42026 Perímetro de figuras poligonales.
+      - **Ciencias Sociales (20 mundos, DC línea ~653):** 43001 Santa Cruz en el mapa argentino, 43002 División política y departamentos, 43003 Ciudades y pueblos santacruceños, 43004 Relieves de Santa Cruz, 43005 Cuencas hídricas, ríos y grandes lagos, 43006 Clima frío y árido patagónico, 43007 Recursos y áreas protegidas de Santa Cruz, 43008 Ganadería ovina patagónica, 43009 Petróleo, gas y minería, 43010 Turismo y pesca, 43011 Pueblos originarios: Aonikenk (tehuelches), 43012 Cazadores y canoeros australes (Selk'nam y Yámanas), 43013 Agricultores del noroeste: Diaguitas, 43014 Expedición de Magallanes en San Julián (1520), 43015 Corrientes colonizadoras, 43016 Sociedad colonial y actores sociales, 43017 Circuito comercial del Potosí, 43018 Constitución Nacional y república federal, 43019 Constitución de Santa Cruz y autonomía, 43020 Convivencia democrática y Derechos del Niño.
+      - **Ciencias Naturales (20 mundos, DC línea ~402):** 44001 Ambientes santacruceños (estepa, bosque, costa), 44002 Flora autóctona (coirón, lenga, calafate), 44003 Fauna nativa y adaptaciones (guanaco, choique, huemul), 44004 Adaptaciones al frío y la sequedad, 44005 Los reinos de los seres vivos, 44006 Redes tróficas y roles ecológicos, 44007 Impacto humano y conservación, 44008 Sistema de sostén: esqueleto y huesos, 44009 Articulaciones y músculos en movimiento, 44010 Cuidado osteo-artro-muscular y posturas, 44011 Materiales naturales y artificiales, 44012 Propiedades térmicas y eléctricas, 44013 Estados de la materia (sólido, líquido, gas), 44014 Cambios de estado por calor, 44015 Ciclo hidrológico y glaciares patagónicos, 44016 Mezclas homogéneas y heterogéneas, 44017 Métodos de separación de mezclas, 44018 Luz, sombras y propagación, 44019 Magnetismo e imanes, 44020 La Tierra en el espacio (rotación, traslación, subsistemas).
+  - **Generadores y bancos de contenido (`src/lib/grade4/content/**`):**
+    - `util.ts`: generadores para selección múltiple con tarjetas (`qToPick`), ordenamiento (`makeOrder`), clasificación en categorías (`makeClassify`), comprensión lectora con texto previo (`makeStoryPick`), verdadero/falso (`makeTrueFalse`) e ingresos numéricos (`makeInput`).
+    - `matematica.ts`: generación algorítmica contextualizada en la Patagonia para los 26 mundos (fracciones, decimales, divisiones con resto, números romanos, cálculo mental, etc.).
+    - `lengua.ts`: bancos completos de actividades gramaticales, ortográficas y de comprensión textual.
+    - `sociales.ts`: banco exhaustivo con **>= 15 preguntas por mundo** (300 preguntas) + actividades interactivas variadas (`EXTRA_SOCIALES`).
+    - `naturales.ts`: banco exhaustivo con **>= 15 preguntas por mundo** (300 preguntas) + actividades interactivas variadas (`EXTRA_NATURALES`).
+    - `index.ts`: despachador de actividades por mundo (`buildGrade4Activities`), zonas de práctica (`buildPractice`) y chequeo de contenidos (`grade4HasContent`).
+  - **Dictado de 4.º grado (`src/lib/dictado/banco.ts`):**
+    - Bancos diferenciados: números hasta 100.000 (`NUMEROS_G4_*`), vocabulario y palabras con reglas de 4.º (`PALABRAS_G4_TODOS`), y oraciones contextualizadas (`ORACIONES_G4_TODOS`).
+    - Mundo de Dictado 48001 registrado en `getMundoDictado(4)` e integrado al ciclo de recompensas semanales de la plataforma.
+  - **Integración con el núcleo de la plataforma:**
+    - `src/lib/grades.ts`: registrado 4.º grado (`masteryPct: 90`, `unlockPct: 60`, tema provisorio `THEMES.meseta`). `gradeOfWorld` reconoce mundo 48001.
+    - `src/lib/activities.ts`: enrutamiento de actividades para mundos de 4.º grado y dictado 48001.
+    - `src/lib/worlds.ts`: resolución en `getWorld`.
+    - `src/lib/data.ts`: reconocimiento en `isDictationWorld`.
+    - `src/lib/courseSummary.ts`: soporte para `getWorldsForGrade(4)`.
+    - `src/app/docente/escuela/page.tsx`: grado 4 incorporado a `GRADOS_CON_MUNDOS`.
+  - **Suite de pruebas automatizada (`scripts/test-grado4.ts`):**
+    - Valida integridad, unicidad global de IDs (1.º a 4.º), grafo de prerrequisitos, mínimos de banco (>= 15), regla de balance de longitud de opciones (longest <= 25%) y simulación masiva de 200 iteraciones por mundo.
+
+- **2. Cómo se probó:**
+  - `npx tsx scripts/test-grado4.ts`: **10 de 10 pruebas pasaron con éxito**:
+    - Catálogo: 92 mundos + 1 mundo de dictado (48001).
+    - Unicidad de IDs: 0 colisiones en toda la plataforma.
+    - Grafo de dependencias: 0 ciclos, todos los prerrequisitos pertenecen a 4.º grado.
+    - Bancos de Sociales y Naturales: 100% de los mundos cumplen con $\ge 15$ preguntas (300 preguntas c/u).
+    - Balance de opciones: de 808 preguntas evaluadas, solo en 65 la respuesta correcta es la estrictamente más larga (**8.04%**, cumpliendo ampliamente la cota máxima del 25%).
+    - Simulación masiva: **144.200 actividades generadas y validadas** a lo largo de 200 iteraciones en los 93 mundos sin ningún fallo.
+  - Regresiones de suites previas:
+    - `npx tsx scripts/test-simulation.ts`: 0 errores (38.840 actividades de 2.º probadas sin regresiones en 1.º ni 3.º).
+    - `npx tsx scripts/test-dictado.ts`: 0 errores.
+    - `npx tsx scripts/test-cuentos.ts`: 0 errores.
+    - `npx tsx scripts/test-colecciones.ts`: 0 errores.
+    - `npx tsx scripts/test-vuelta.ts`: 0 errores.
+    - `npx tsx scripts/test-privacidad.ts`: 0 errores.
+  - Linters y compilación:
+    - `npx eslint scripts/test-grado4.ts src`: 0 errores y 0 advertencias.
+    - `npx tsc --noEmit`: 0 errores de TypeScript.
+    - `npm run build`: compilación de producción de Next.js Turbopack 100% exitosa (41 rutas generadas).
+
+- **3. Decisiones tomadas y pendientes de revisión para Pedro:**
+  - **Ambiente provisorio de 4.º grado:** Se configuró con `THEMES.meseta` hasta que Claude ilustre el nuevo ambiente y sus islas correspondientes (respetando la regla de no tocar `public/theme/**`).
+  - **Balance de longitud de opciones (8.04%):** Se enriquecieron los distractores con datos geográficos y biológicos paralelos y verosímiles en lugar de descripciones genéricas, asegurando alta calidad pedagógica.
+  - **Paso siguiente:** Esperar la revisión y confirmación de Pedro antes de comenzar con 5.º grado.
 
 ### AG-15 · Seguimiento de AG-07 a AG-12: detalles menores (Antigravity)
 - **1. Qué se cambió y archivos modificados:**

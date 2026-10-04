@@ -734,7 +734,7 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
 }
 
 export function isDictationWorld(worldId: number): boolean {
-  return worldId === 28001 || worldId === 38001;
+  return worldId === 28001 || worldId === 38001 || worldId === 48001;
 }
 
 // Acredita el resultado del Mundo del Dictado semanal en el servidor:

@@ -2,6 +2,7 @@ import { Student, StudentProgress, WorldDef, WorldSubject } from "@/types";
 import { getWorld, WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
+import { GRADE4_WORLDS } from "@/lib/grade4/worlds";
 import { DEFAULT_GRADE, getGrade, masteryPctForWorld } from "@/lib/grades";
 
 export interface StudentWorldSummary {
@@ -277,5 +278,6 @@ export function computeStudentsNeedingHelp(
 export function getWorldsForGrade(grade: number | undefined): WorldDef[] {
   if (grade === 1) return GRADE1_WORLDS;
   if (grade === 2) return GRADE2_WORLDS;
+  if (grade === 4) return GRADE4_WORLDS;
   return WORLDS;
 }

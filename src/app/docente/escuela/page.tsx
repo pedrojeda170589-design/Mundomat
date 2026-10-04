@@ -478,7 +478,7 @@ export default function SchoolPage() {
 }
 
 // Grados que ya tienen mundos en el juego (ver GRADES en src/lib/grades.ts).
-const GRADOS_CON_MUNDOS = [1, 2, 3];
+const GRADOS_CON_MUNDOS = [1, 2, 3, 4];
 
 function NewClassroom({
   currentCount,

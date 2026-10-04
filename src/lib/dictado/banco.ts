@@ -189,6 +189,64 @@ export const ORACIONES_G3_TODOS = [
   { s: "¡Qué hermosa leyenda nos contaron los abuelos de Santa Cruz!", h: "Pista: oración con signos de exclamación completos." },
 ];
 
+// ==========================================
+// BANCOS DE 4.º GRADO
+// ==========================================
+
+export const NUMEROS_G4_NIVEL1 = [
+  1250, 2400, 3560, 4820, 5030, 6100, 7500, 8420, 9600, 9990
+];
+
+export const NUMEROS_G4_NIVEL2 = [
+  12300, 15450, 20800, 25600, 34200, 45100, 56000, 68900, 72500, 85000
+];
+
+export const NUMEROS_G4_NIVEL3 = [
+  10050, 20405, 30080, 40015, 50602, 60090, 70500, 80005, 90340, 99999
+];
+
+export const PALABRAS_G4_TODOS: { w: string; h: string; strict?: boolean }[] = [
+  // Acentuación: agudas
+  { w: "volcán", h: "Pista: palabra aguda terminada en n, lleva tilde en la a.", strict: true },
+  { w: "compás", h: "Pista: palabra aguda terminada en s, lleva tilde en la a.", strict: true },
+  { w: "patagón", h: "Pista: palabra aguda terminada en n, lleva tilde en la o.", strict: true },
+  { w: "observación", h: "Pista: palabra aguda terminada en n con tilde en la o y c ante i.", strict: true },
+  // Acentuación: graves
+  { w: "árbol", h: "Pista: palabra grave terminada en l, lleva tilde en la a.", strict: true },
+  { w: "fácil", h: "Pista: palabra grave terminada en l, lleva tilde en la a.", strict: true },
+  { w: "césped", h: "Pista: palabra grave terminada en d, lleva tilde en la e.", strict: true },
+  { w: "azúcar", h: "Pista: palabra grave terminada en r, lleva tilde en la u y zeta.", strict: true },
+  { w: "difícil", h: "Pista: palabra grave terminada en l, lleva tilde en la segunda i.", strict: true },
+  { w: "cráter", h: "Pista: palabra grave terminada en r, lleva tilde en la a.", strict: true },
+  { w: "cóndor", h: "Pista: palabra grave terminada en r, lleva tilde en la primera o.", strict: true },
+  // Acentuación: esdrújulas (todas llevan tilde)
+  { w: "música", h: "Pista: palabra esdrújula, lleva tilde en la u.", strict: true },
+  { w: "pájaro", h: "Pista: palabra esdrújula, lleva tilde en la primera a.", strict: true },
+  { w: "brújula", h: "Pista: palabra esdrújula, lleva tilde en la primera u.", strict: true },
+  { w: "oxígeno", h: "Pista: palabra esdrújula con x, lleva tilde en la i.", strict: true },
+  { w: "máquina", h: "Pista: palabra esdrújula con qu, lleva tilde en la a.", strict: true },
+  { w: "atmósfera", h: "Pista: palabra esdrújula, lleva tilde en la o.", strict: true },
+  { w: "científico", h: "Pista: palabra esdrújula con c, lleva tilde en la segunda i.", strict: true },
+  // Reglas ortográficas (mb, nv, h, j/g, homófonos)
+  { w: "sombrero", h: "Pista: regla mb, accesorio para la cabeza." },
+  { w: "invierno", h: "Pista: regla nv, estación más fría del año." },
+  { w: "convivencia", h: "Pista: regla nv y terminación -encia con c." },
+  { w: "paisaje", h: "Pista: terminación -aje con j." },
+  { w: "personaje", h: "Pista: terminación -aje con j." },
+  { w: "huella", h: "Pista: empieza con hue- (con h) y doble ll." },
+  { w: "hierba", h: "Pista: empieza con hie- (con h) y b larga." },
+  { w: "humedad", h: "Pista: empieza con hum- (con h)." },
+];
+
+export const ORACIONES_G4_TODOS = [
+  { s: "En la cordillera de Santa Cruz contemplamos glaciares, lagos y bosques nativos.", h: "Pista: mayúscula inicial, coma en la enumeración y punto final." },
+  { s: "¿Sabías que el cóndor andino es una de las aves voladoras más grandes del mundo?", h: "Pista: abre con ¿Sabías con tilde en la i y cierra con ?." },
+  { s: "¡Qué emocionante fue navegar frente a las inmensas paredes de hielo del Perito Moreno!", h: "Pista: oración exclamativa con tildes y signos de apertura y cierre." },
+  { s: "Los antiguos cazadores patagónicos fabricaban puntas de flecha y boleadoras de piedra.", h: "Pista: mayúscula inicial, ortografía de cazadores con z y punto final." },
+  { s: "¿Quién descubrió el estrecho que une el océano Atlántico con el Pacífico?", h: "Pista: pregunta con ¿Quién... y tildes en Atlántico y Pacífico." },
+  { s: "En el taller de ciencias clasificamos los materiales en conductores y aislantes térmicos.", h: "Pista: mayúscula, tilde en térmicos y punto final." },
+];
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -203,8 +261,10 @@ export function generarDictadoNumero(grade: number, nivel: 1 | 2 | 3): DictadoIt
   let pool: number[];
   if (grade === 2) {
     pool = nivel === 1 ? NUMEROS_G2_NIVEL1 : nivel === 2 ? NUMEROS_G2_NIVEL2 : NUMEROS_G2_NIVEL3;
-  } else {
+  } else if (grade === 3) {
     pool = nivel === 1 ? NUMEROS_G3_NIVEL1 : nivel === 2 ? NUMEROS_G3_NIVEL2 : NUMEROS_G3_NIVEL3;
+  } else {
+    pool = nivel === 1 ? NUMEROS_G4_NIVEL1 : nivel === 2 ? NUMEROS_G4_NIVEL2 : NUMEROS_G4_NIVEL3;
   }
   const n = pool[Math.floor(Math.random() * pool.length)];
   const letras = numeroEnLetras(n);
@@ -213,7 +273,7 @@ export function generarDictadoNumero(grade: number, nivel: 1 | 2 | 3): DictadoIt
     say: letras,
     answer: String(n),
     hint: `Pista: el número es «${letras}».`,
-    skills: grade === 2 ? ["m2-num-dictado"] : ["m3-num-dictado"],
+    skills: grade === 2 ? ["m2-num-dictado"] : grade === 3 ? ["m3-num-dictado"] : ["m4-num-dictado"],
   };
 }
 
@@ -239,6 +299,29 @@ export function generarDictadoLengua(grade: number, nivel: 1 | 2 | 3): DictadoIt
       answer: p.w,
       hint: p.h,
       skills: ["l2-dictado-palabra"],
+    };
+  }
+
+  if (grade === 4) {
+    if (Math.random() < 0.3) {
+      const o = ORACIONES_G4_TODOS[Math.floor(Math.random() * ORACIONES_G4_TODOS.length)];
+      return {
+        kind: "oracion",
+        say: o.s,
+        answer: o.s,
+        strictAccents: true,
+        hint: o.h,
+        skills: ["l4-dictado-oracion"],
+      };
+    }
+    const p = PALABRAS_G4_TODOS[Math.floor(Math.random() * PALABRAS_G4_TODOS.length)];
+    return {
+      kind: "palabra",
+      say: p.w,
+      answer: p.w,
+      strictAccents: p.strict ?? false,
+      hint: p.h,
+      skills: ["l4-dictado-palabra"],
     };
   }
 
@@ -273,8 +356,10 @@ export function generarSetMundoDictado(grade: number, fecha: Date = new Date()):
   let numPool: number[];
   if (grade === 2) {
     numPool = nivel === 1 ? NUMEROS_G2_NIVEL1 : nivel === 2 ? NUMEROS_G2_NIVEL2 : NUMEROS_G2_NIVEL3;
-  } else {
+  } else if (grade === 3) {
     numPool = nivel === 1 ? NUMEROS_G3_NIVEL1 : nivel === 2 ? NUMEROS_G3_NIVEL2 : NUMEROS_G3_NIVEL3;
+  } else {
+    numPool = nivel === 1 ? NUMEROS_G4_NIVEL1 : nivel === 2 ? NUMEROS_G4_NIVEL2 : NUMEROS_G4_NIVEL3;
   }
   const pickedNums = shuffle(numPool).slice(0, 5);
   const numItems: DictadoItem[] = pickedNums.map((n) => ({
@@ -282,7 +367,7 @@ export function generarSetMundoDictado(grade: number, fecha: Date = new Date()):
     say: numeroEnLetras(n),
     answer: String(n),
     hint: `Pista: el número es «${numeroEnLetras(n)}».`,
-    skills: grade === 2 ? ["m2-num-dictado"] : ["m3-num-dictado"],
+    skills: grade === 2 ? ["m2-num-dictado"] : grade === 3 ? ["m3-num-dictado"] : ["m4-num-dictado"],
   }));
 
   // 5 palabras u oraciones distintas
@@ -309,6 +394,28 @@ export function generarSetMundoDictado(grade: number, fecha: Date = new Date()):
         skills: ["l2-dictado-oracion"],
       });
     }
+  } else if (grade === 4) {
+    // 4.º grado: 4 palabras + 1 oración
+    const pickedP = shuffle(PALABRAS_G4_TODOS).slice(0, 4);
+    for (const p of pickedP) {
+      lenguaItems.push({
+        kind: "palabra",
+        say: p.w,
+        answer: p.w,
+        strictAccents: p.strict ?? false,
+        hint: p.h,
+        skills: ["l4-dictado-palabra"],
+      });
+    }
+    const o = shuffle(ORACIONES_G4_TODOS)[0];
+    lenguaItems.push({
+      kind: "oracion",
+      say: o.s,
+      answer: o.s,
+      strictAccents: true,
+      hint: o.h,
+      skills: ["l4-dictado-oracion"],
+    });
   } else {
     // 3.º grado: 4 palabras + 1 oración
     const pickedP = shuffle(PALABRAS_G3_TODOS).slice(0, 4);
@@ -343,11 +450,11 @@ export function generarSetMundoDictado(grade: number, fecha: Date = new Date()):
 }
 
 export function isDictationWorldId(id: number): boolean {
-  return id === 28001 || id === 38001;
+  return id === 28001 || id === 38001 || id === 48001;
 }
 
 export function getMundoDictado(grade: number): WorldDef {
-  const id = grade === 2 ? 28001 : 38001;
+  const id = grade === 2 ? 28001 : grade === 3 ? 38001 : 48001;
   return {
     id,
     grade,
@@ -361,7 +468,9 @@ export function getMundoDictado(grade: number): WorldDef {
     skills:
       grade === 2
         ? ["m2-num-dictado", "l2-dictado-palabra", "l2-dictado-oracion"]
-        : ["m3-num-dictado", "l3-dictado-palabra", "l3-dictado-oracion"],
+        : grade === 3
+          ? ["m3-num-dictado", "l3-dictado-palabra", "l3-dictado-oracion"]
+          : ["m4-num-dictado", "l4-dictado-palabra", "l4-dictado-oracion"],
     kind: "dictado",
     activityCount: 10,
     colorFrom: "#fde68a",
