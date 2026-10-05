@@ -25,6 +25,7 @@ import { estadoRacha } from "@/lib/coleccion/racha";
 import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import InsigniaTorneo from "@/components/InsigniaTorneo";
+import { torneoHabilitado } from "@/lib/torneo/tiempos";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
@@ -50,6 +51,7 @@ export default function StudentPlayPage() {
   const [progress, setProgress] = useState<StudentProgress | null>(null);
   const [enabledWorldIds, setEnabledWorldIds] = useState<number[]>([]);
   const [grade, setGrade] = useState<number>(DEFAULT_GRADE);
+  const [repasoTablas, setRepasoTablas] = useState(false);
 
   const [selectedWorld, setSelectedWorld] = useState<WorldDef | null>(null);
 
@@ -108,6 +110,8 @@ export default function StudentPlayPage() {
     }
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
     setGrade(typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE);
+    // Repaso de las tablas: actividad especial de todos los días (desde 3.º, de julio en adelante).
+    setRepasoTablas(torneoHabilitado(typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE));
     if (challengeRes.ok) {
       setWeekend(await challengeRes.json());
     }
@@ -516,6 +520,26 @@ export default function StudentPlayPage() {
 
       {weekend?.available && grade === DEFAULT_GRADE && (
         <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
+      )}
+
+      {repasoTablas && (
+        <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-4">
+          <button
+            onClick={() => router.push("/student/tablas")}
+            className="w-full parchment-panel rounded-2xl p-3.5 flex items-center justify-between gap-3 border-2 border-amber-400 bg-gradient-to-r from-amber-100/90 via-yellow-50 to-amber-100/90 shadow-md text-left"
+          >
+            <span className="flex items-center gap-3">
+              <span className="text-3xl">⚡</span>
+              <span>
+                <span className="block font-black text-amber-950 text-sm">Repaso de las tablas · actividad especial de todos los días</span>
+                <span className="block text-xs text-amber-900/80">
+                  Completá las 9 tablas: objeto del mes dorado, plateado o de bronce e insignia (×2, ×3… A1).
+                </span>
+              </span>
+            </span>
+            <span className="rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs px-3.5 py-2 shrink-0">🚀 ¡Jugar!</span>
+          </button>
+        </div>
       )}
 
       <NewsBoard code={code} />

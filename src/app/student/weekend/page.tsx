@@ -330,10 +330,10 @@ export default function WeekendPage() {
           <div className="flex items-center gap-3">
             <span className="text-3xl animate-bounce">⚡</span>
             <div>
-              <span className="block font-black text-amber-950 text-sm">Torneo de las tablas</span>
+              <span className="block font-black text-amber-950 text-sm">Repaso de las tablas</span>
               <span className="block text-xs text-amber-900/80">Desafío contra reloj con las tablas del 2 al 10</span>
               <span className="block text-[11px] text-amber-900/80 mt-0.5">
-                🎁 Completá las 9 tablas: objeto del mes dorado, plateado o de bronce e insignia (×2, ×3… A1). Y si estás al día con tus mundos habilitados, elegís un accesorio Six-Seven prestado por el resto de la semana.
+                🎁 Completá las 9 tablas: objeto del mes dorado, plateado o de bronce e insignia (×2, ×3… A1). Ahora también de lunes a viernes, desde el mapa.
               </span>
             </div>
           </div>

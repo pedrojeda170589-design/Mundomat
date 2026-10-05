@@ -8,6 +8,7 @@ import { DROPS } from "../../src/lib/coleccion/drops";
 import { CAMINO } from "../../src/lib/coleccion/racha";
 import { TODOS_LOS_PREMIOS_TORNEO } from "../../src/lib/torneo/vueltas";
 import { ventanaDe } from "../../src/lib/tiempo-limitado";
+import { AVATARES_MONTE_LEON, MASCOTA_MONTE_LEON, MEDALLA_MONTE_LEON, MOCHILA_MONTE_LEON } from "../../src/lib/monteLeon/arte";
 
 const root = join(__dirname, "../..");
 const hecho = (carpeta: string, id: string) => existsSync(join(root, "public/theme", carpeta, `${id}.png`));
@@ -32,6 +33,9 @@ if (process.argv.includes("--json")) {
   items["vincha-relampago"] = { tipo: "objeto", slot: "headwear", molde: "cuernitos-dragon", carpeta: "accessories-temporada" };
   // Premios de las vueltas del torneo (6 objetos × 3 metales × 2 niveles).
   for (const p of TODOS_LOS_PREMIOS_TORNEO) items[p.id] = { tipo: "objeto", slot: p.slot, molde: p.molde, carpeta: "accessories-temporada" };
+  // Viaje a Monte León (AG-19).
+  for (const o of [...MOCHILA_MONTE_LEON, MEDALLA_MONTE_LEON, MASCOTA_MONTE_LEON]) items[o.id] = { tipo: "objeto", slot: o.slot, molde: "molde" in o ? o.molde : undefined, carpeta: "accessories-temporada" };
+  for (const a of AVATARES_MONTE_LEON) items[a.id] = { tipo: "avatar", comoAvatar: a.comoAvatar, carpeta: "avatars" };
   items["lentes-turbo"] = { tipo: "objeto", slot: "eyewear", molde: "lentes-aviador", carpeta: "accessories-temporada" };
   items["medalla-rayo"] = { tipo: "objeto", slot: "pendant", molde: "sol-de-mayo", carpeta: "accessories-temporada" };
   console.log(JSON.stringify(items));

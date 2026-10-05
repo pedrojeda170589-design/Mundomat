@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 
   return Response.json({
     ok: true,
-    available: weekendDay !== null,
+    available: torneoHabilitado(gradeOf(student), now), // todos los días (desde 3.º, de julio en adelante)
     day: weekendDay?.day,
     satKey,
     tabla,
@@ -139,9 +139,6 @@ export async function POST(request: NextRequest) {
     if (!alumno) {
       await recordFailedLookup();
       return Response.json({ error: "Código no encontrado." }, { status: 404 });
-    }
-    if (!getWeekendDay(new Date())) {
-      return Response.json({ error: "El torneo es solo el fin de semana." }, { status: 400 });
     }
     if (!torneoHabilitado(gradeOf(alumno))) {
       return Response.json({ error: "El torneo de las tablas empieza en 3.º grado, después de junio." }, { status: 403 });

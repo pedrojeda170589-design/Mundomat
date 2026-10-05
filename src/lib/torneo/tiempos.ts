@@ -1,4 +1,4 @@
-// Configuración de tiempos, metas y premios para el Torneo de las tablas (fin de semana).
+// Configuración de tiempos, metas y premios para el Torneo de las tablas (todos los días desde el 5/10/2026; antes, solo el fin de semana).
 // Pedro puede ajustar los valores de referencia directamente desde estas constantes.
 
 export const META_ORO_BASE = 35; // segundos para la tabla del 2

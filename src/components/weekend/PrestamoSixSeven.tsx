@@ -45,7 +45,7 @@ export default function PrestamoSixSeven({
     <div className="rounded-2xl bg-violet-50 border-2 border-violet-300 p-3 text-left text-xs text-violet-950 flex flex-col gap-2">
       <p className="font-black text-sm">6️⃣7️⃣ Accesorio Six-Seven prestado</p>
       <p className="leading-relaxed">
-        Quienes juegan el torneo y están <b>al día con los mundos habilitados</b> pueden elegir un accesorio Six-Seven{" "}
+        Quienes juegan el repaso de las tablas y están <b>al día con los mundos habilitados</b> pueden elegir un accesorio Six-Seven{" "}
         <b>prestado</b> para usar en el avatar por el resto de la semana (hasta el viernes a la noche). Después se devuelve solo.
       </p>
       {estado && !estado.alDia && (
@@ -59,7 +59,7 @@ export default function PrestamoSixSeven({
         </p>
       )}
       {estado && estado.alDia && !estado.jugoEsteFinde && (
-        <p className="font-bold">¡Estás al día! Completá una tabla del torneo y elegí tu accesorio.</p>
+        <p className="font-bold">¡Estás al día! Completá una tabla esta semana y elegí tu accesorio.</p>
       )}
       {estado?.actual && (
         <p className="font-bold">

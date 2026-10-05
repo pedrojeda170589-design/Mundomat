@@ -924,10 +924,12 @@ export async function completeTorneoTable(
   errores: number,
   now: Date = new Date()
 ): Promise<TorneoResultado | { error: string }> {
-  const today = getWeekendDay(now);
-  if (!today) {
-    return { error: "El torneo de las tablas solo está disponible el fin de semana (sábados y domingos)." };
-  }
+  // Pedido de Pedro (5/10): el repaso de las tablas es una actividad
+  // especial de TODOS los días (antes, solo el fin de semana). Las monedas
+  // siguen siendo una vez por tabla y por día; el ranking y los récords son
+  // por semana (de sábado a viernes).
+  const ar = getArgentinaDate(now);
+  const today = { dayKey: `${ar.year}-${String(ar.month).padStart(2, "0")}-${String(ar.day).padStart(2, "0")}` };
 
   if (!Number.isInteger(tabla) || tabla < 2 || tabla > 10) {
     return { error: "Tabla inválida (debe ser del 2 al 10)." };

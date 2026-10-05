@@ -1,6 +1,6 @@
 // Préstamo de un accesorio Six-Seven (pedido de Pedro, oct. 2026).
 //
-// Quien juega el Torneo de las tablas el fin de semana Y está al día con sus
+// Quien juega el Repaso de las tablas en la semana Y está al día con sus
 // mundos habilitados (como mucho MAX_PENDING_WORLDS sin terminar, la misma
 // regla de la competencia) puede elegir UN accesorio Six-Seven prestado por
 // el resto de la semana: hasta el viernes a la noche (cuando empieza el
@@ -24,8 +24,8 @@ function inicioAR(fecha: string): number {
   return Date.UTC(y, m - 1, d) + 3 * 3600 * 1000;
 }
 
-// Hasta cuándo dura un préstamo pedido el fin de semana que empieza ese
-// sábado: hasta el viernes siguiente a las 23:59 (hora argentina).
+// Hasta cuándo dura un préstamo pedido en la semana que empieza ese sábado:
+// hasta el viernes a las 23:59 (hora argentina).
 export function hastaDelPrestamo(sabado: string): string {
   return new Date(inicioAR(sabado) + 7 * DIA - 1000).toISOString();
 }

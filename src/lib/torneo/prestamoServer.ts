@@ -2,12 +2,11 @@
 import { findStudentByCode, getProgress, saveProgress, weekendSaturdayKey } from "@/lib/data";
 import { getEligibility } from "@/lib/competition/server";
 import { MAX_PENDING_WORLDS } from "@/lib/competition/shared";
-import { getWeekendDay } from "@/lib/weekend/plan";
 import { ACCESSORY_CATALOG_TIENDA } from "@/types";
 import { hastaDelPrestamo, IDS_PRESTAMO, prestamoVigente } from "./prestamo";
 
 export interface EstadoPrestamo {
-  jugoEsteFinde: boolean; // completó al menos una tabla del torneo este fin de semana
+  jugoEsteFinde: boolean; // completó al menos una tabla del torneo esta semana (de sábado a viernes)
   alDia: boolean;
   pendientes: { id: number; name: string; emoji: string }[];
   maxPendientes: number;
@@ -31,7 +30,7 @@ export async function estadoPrestamo(code: string, now: Date = new Date()): Prom
     alDia: eleg.eligible,
     pendientes: eleg.pending,
     maxPendientes: MAX_PENDING_WORLDS,
-    puedeElegir: !!getWeekendDay(now) && jugoEsteFinde && eleg.eligible && opciones.length > 0,
+    puedeElegir: jugoEsteFinde && eleg.eligible && opciones.length > 0,
     opciones,
     actual: vigente && progress.prestamo67 ? { id: vigente, hasta: progress.prestamo67.hasta } : null,
   };
@@ -41,7 +40,6 @@ export async function estadoPrestamo(code: string, now: Date = new Date()): Prom
 export async function elegirPrestamo(code: string, id: string, now: Date = new Date()): Promise<{ ok: true; hasta: string } | { ok: false; error: string }> {
   const estado = await estadoPrestamo(code, now);
   if (!estado) return { ok: false, error: "Código no encontrado." };
-  if (!getWeekendDay(now)) return { ok: false, error: "El préstamo se elige el fin de semana, después de jugar el torneo." };
   if (!estado.jugoEsteFinde) return { ok: false, error: "Primero completá una tabla del Torneo de las tablas." };
   if (!estado.alDia) {
     return { ok: false, error: `Para el préstamo tenés que estar al día con tus mundos (podés tener hasta ${MAX_PENDING_WORLDS} sin terminar).` };

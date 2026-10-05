@@ -256,7 +256,7 @@ export default function TorneoTablasGame({
           vueltaCompleta: data.vueltaCompleta,
           vueltaTablasHechas: data.vueltaTablasHechas,
         });
-        // Ya jugó este finde: puede que ahora pueda elegir el préstamo.
+        // Ya jugó esta semana: puede que ahora pueda elegir el préstamo.
         fetch(`/api/torneo?code=${encodeURIComponent(code)}&tabla=${tablaSeleccionada}`)
           .then((r) => r.json())
           .then((d) => {
@@ -299,16 +299,16 @@ export default function TorneoTablasGame({
               onClick={onExit}
               className="text-amber-900 font-bold text-xs bg-amber-200/80 hover:bg-amber-300 px-3 py-1.5 rounded-xl transition"
             >
-              ← Volver al mapa
+              ← Volver
             </button>
             <span className="text-xs font-black text-amber-950 uppercase tracking-wider bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
-              ⚡ Fin de semana
+              ⚡ Todos los días
             </span>
           </div>
 
           <div>
             <h1 className="text-2xl font-black text-amber-950 flex items-center justify-center gap-2">
-              <span>⚡</span> Torneo de las Tablas
+              <span>⚡</span> Repaso de las Tablas
             </h1>
             <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
               Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido y sin errores: al completar las 9 tablas ganás el objeto especial del mes (dorado, plateado o de bronce).
@@ -363,14 +363,14 @@ export default function TorneoTablasGame({
             <h2 className="text-sm font-black text-amber-950 flex items-center gap-1.5">
               <span>🏆</span> Top 5 del aula · Tabla del {tablaSeleccionada}
             </h2>
-            <span className="text-[11px] text-amber-900/70 font-medium">Este finde</span>
+            <span className="text-[11px] text-amber-900/70 font-medium">Esta semana</span>
           </div>
 
           {loadingRanking ? (
             <p className="text-xs text-amber-900/60 py-3 text-center">Cargando posiciones...</p>
           ) : ranking.length === 0 ? (
             <p className="text-xs text-amber-900/70 py-3 text-center italic bg-amber-50/60 rounded-xl">
-              ¡Aún nadie jugó esta tabla este finde! Sé el primero en poner tu récord.
+              ¡Aún nadie jugó esta tabla esta semana! Sé el primero en poner tu récord.
             </p>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -626,7 +626,7 @@ export default function TorneoTablasGame({
             onClick={onExit}
             className="text-xs text-amber-900/70 hover:text-amber-950 underline py-1"
           >
-            Volver a la Aventura de fin de semana
+            Volver
           </button>
         </div>
       </div>

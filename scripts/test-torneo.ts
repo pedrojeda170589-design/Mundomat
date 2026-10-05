@@ -213,13 +213,13 @@ async function main() {
   assert.strictEqual(devolverPrestamoVencido(conPrestamo, new Date("2026-10-12T10:00:00-03:00")), conPrestamo, "vigente: no cambia");
   console.log("  ✅ El préstamo dura hasta el viernes y se devuelve solo.");
 
-  // 7. Rechazo fuera de fin de semana
-  console.log("7. Probando validación de fin de semana...");
+  // 7. Todos los días (pedido de Pedro, 5/10): un miércoles también se juega.
+  console.log("7. Probando que el repaso de las tablas está todos los días...");
   const miercoles = new Date("2026-10-07T14:00:00-03:00"); // Miércoles
-  const resMiercoles = await completeTorneoTable("TEST", 2, 25000, 0, miercoles);
-  assert.ok("error" in resMiercoles);
-  assert.ok(resMiercoles.error.includes("fin de semana"));
-  console.log("  ✅ Partida rechazada correctamente fuera del fin de semana.");
+  const resMiercoles = await completeTorneoTable("NOEXISTE", 2, 25000, 0, miercoles);
+  assert.ok("error" in resMiercoles && resMiercoles.error.includes("Alumno"), "un miércoles no se rechaza por el día");
+  assert.strictEqual(weekendSaturdayKey(miercoles), "2026-10-03", "la semana va de sábado a viernes");
+  console.log("  ✅ Se juega cualquier día; récords y ranking por semana.");
 
   // 7b. Desde 3.º grado y después de junio (pedido de Pedro)
   assert.equal(torneoHabilitado(3, new Date("2026-07-04T15:00:00-03:00")), true);
@@ -230,7 +230,7 @@ async function main() {
   console.log("  ✅ Torneo solo desde 3.º y de julio en adelante.");
 
   // 8. Flujo completo con alumno real en sábado y domingo simulados
-  console.log("8. Probando flujo de torneo en fin de semana...");
+  console.log("8. Probando flujo del repaso de las tablas...");
   // Nunca contra la base real: esta parte escribe en el progreso de un alumno.
   if (isUsingRemoteStore()) throw new Error("test-torneo usa datos locales: sacá las variables de Upstash/KV para correrlo.");
   const students = await getStudents();
@@ -360,8 +360,9 @@ async function main() {
   assert.strictEqual(sinJugar?.puedeElegir, false, "sin jugar ese finde no puede elegir");
   const rechazo = await elegirPrestamo(student.code, IDS_PRESTAMO[0], otroFinde);
   assert.strictEqual(rechazo.ok, false);
-  const enSemana = await elegirPrestamo(student.code, IDS_PRESTAMO[0], new Date("2026-10-14T15:00:00-03:00"));
-  assert.strictEqual(enSemana.ok, false, "se elige el fin de semana");
+  // Todos los días: un miércoles de la misma semana (jugó el sábado 10) también puede elegir.
+  const enSemana = await estadoPrestamo(student.code, new Date("2026-10-14T15:00:00-03:00"));
+  assert.strictEqual(enSemana?.jugoEsteFinde, true, "la semana va de sábado a viernes");
   if (!estadoSab.alDia) {
     const r = await elegirPrestamo(student.code, IDS_PRESTAMO[0], sabado);
     assert.strictEqual(r.ok, false, "si no está al día, no hay préstamo");
