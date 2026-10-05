@@ -109,6 +109,8 @@ def procesar(id_, ruta):
 if __name__ == "__main__":
     pedidos = set(sys.argv[1:])
     rutas = sorted(sum((glob.glob(os.path.join(ROOT, "arte", "coleccion", "*", f"*.{e}")) for e in ("png", "jpg", "jpeg", "webp")), []))
+    # arte/coleccion/profe/ son las poses del profe (mate, lupa…): no son objetos.
+    rutas = [r for r in rutas if os.sep + "profe" + os.sep not in r]
     for r in rutas:
         id_ = os.path.splitext(os.path.basename(r))[0]
         if not pedidos or id_ in pedidos:

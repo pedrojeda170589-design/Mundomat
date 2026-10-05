@@ -30,7 +30,8 @@ poder comercializarse; hacé una auditoría para prevenir conflictos de autoría
 3. **Sin texto en las imágenes,** salvo los números de los drops (6 y 7).
 4. **Símbolos patrios** (bandera, escarapela, escudo, mapa de Malvinas): se pueden usar, siempre con respeto y sin deformarlos.
 5. **Pueblos originarios:** con respeto, sin disfraces ni caricaturas. Los atuendos se describen como «inspirados en», sin copiar piezas sagradas.
-6. **Registro de cada lámina** en la tabla del final: fecha, herramienta, tema y prompt (los prompts quedan en `scripts/coleccion/` y en el historial).
+6. **Objetos que se ponen en la cara o la cabeza** (pedido de Pedro, 5/10/2026): se dibujan de frente, **sin patillas** (ni las puntas a los costados) y con los **marcos sin vidrio**, para que no se vea nada «a través» que debería quedar tapado por la cabeza. Se piden sobre fondo verde liso y se procesan con `scripts/coleccion/anteojos_verde.py`, que deja los huecos transparentes y conserva el tamaño y el lugar de la imagen anterior (las viejas quedan en `arte/coleccion/anteojos-viejos/`).
+7. **Registro de cada lámina** en la tabla del final: fecha, herramienta, tema y prompt (los prompts quedan en `scripts/coleccion/` y en el historial).
 
 ## 4. Revisión de lo que ya está en la app (4/10/2026)
 
@@ -84,3 +85,15 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
 - **Viaje a Monte León** (`public/theme/monte-leon/`, `accessories-temporada/*-ml.png`, `medalla-monte-leon`, `avatars/*-monte-leon.png`), generados en ChatGPT el 5/10/2026: objetos de la mochila, pingüino de peluche, medalla, tres avatares superespeciales, seis escenas del parque (ilustraciones, no fotos) e isla del mapa.
 - **Premios del repaso de las tablas en tres metales** (cronómetro, gorra y banderín de las tablas; trofeo, corona y estrella fugaz), ChatGPT, 5/10/2026.
 - **Cuento «La tortuga gigante», escena 2**: se le quitó el tercer ojo a la tortuga (retoque local, 5/10/2026).
+
+## 7. Revisión del 5/10/2026 (imágenes nuevas)
+
+Revisé una por una las láminas nuevas (Monte León, premios del repaso en tres metales, Six-Seven, láminas 9 a 15 de colecciones y los anteojos rehechos):
+
+- **Sin personajes, marcas ni logos de terceros.** Los avatares de Monte León (explorador, guardaparque, pingüino) son personajes originales. En la escena del guardaparque el cartel tiene solo dibujos (pingüino, basura tachada, huella), sin el logo de Parques Nacionales ni texto; el uniforme es genérico.
+- **Lugares reales** (Monte León, la Cabeza del León, la Ruta 3): son ilustraciones nuevas, no copias de fotos. Pintar un paisaje o un lugar público no infringe derechos.
+- **Bandera argentina** (isla de Monte León, bufanda del pingüino): símbolo patrio, usado con respeto (regla 4).
+- **«Six-Seven» y los números 6 y 7:** sin logos, tapas de canciones ni nombres de artistas.
+- **Un error encontrado y corregido:** los objetos «mate» y «lupa» de la lámina 9 y 15 se habían procesado con la imagen equivocada (la pose del profe con el mate y con la lupa, que tiene el mismo nombre de archivo). Se rehicieron con el dibujo del objeto y `procesar_arte.py` ya no mezcla las poses del profe con los objetos. La foto de Pedro solo se usa en las poses del profe, con su autorización.
+- **Anteojos y antifaces rehechos** (sin patillas y sin vidrio): lentes, anteojos de lectura, arcoíris, nube, margaritas, estrellas, carpincho, palta, manteca, rana, soles, copos, corazón, estrella, antifaz de carnaval, antifaz de murciélago (ahora con forma de murciélago), antiparras, lentes turbo, antifaces estelares, aviador, gafas de sol, lentes de sol, lentes de verano, anteojos 67 y anteojos de sol del viaje. Todos en ChatGPT (cuenta de Pedro), 5/10/2026. Los lentes de copos y el antifaz de murciélago antes estaban dibujados por código; ahora son de ChatGPT.
+- **Lo que sigue vigente del punto 2:** el uso comercial está permitido por los términos de OpenAI, pero una imagen hecha solo con IA puede no tener derecho de autor exclusivo. Lo que protege al proyecto es el aporte humano y el registro de la marca. Esto no es asesoramiento legal.

@@ -67,5 +67,9 @@ Las escenas son 1536×1024 (3:2), en JPG.
 ## 7. Cuentos
 - `public/theme/grados/1/cuentos/tortuga-gigante-2.jpg`: corregida (la tortuga tenía tres ojos).
 
-## Pendientes de dibujo
-Se actualiza al final de cada tanda; ver la sección «Estado» abajo.
+## 8. Anteojos y antifaces (regla del 5/10/2026)
+Todo lo que se pone en la cara se dibuja **de frente, sin patillas y sin vidrio** (nada que «se vea a través» y que debería tapar la cabeza), sobre fondo verde, y se procesa con `scripts/coleccion/anteojos_verde.py <lámina> <id1> … <id9>`. Las versiones anteriores quedan en `arte/coleccion/anteojos-viejos/`.
+
+## Estado (5/10/2026, noche)
+- Con imagen: 212 ítems de colecciones; todo Monte León; los 36 premios del repaso; 25 anteojos y antifaces rehechos.
+- **Faltan** (láminas 16 a 21 de colecciones, 48 ítems): exploradores y navegantes (valija, gorro explorador, globo dorado, gorra de capitán, medallón ancla, catalejo, salvavidas, barquito, patito), selva (timón dorado, vincha yaguareté, binoculares, mochila selvática, mapa, tucán, huella dorada), jardín y ciencia (sombrero de jardín, maceta, regadera, girasol, microscopio, lombriz, árbol de la vida), montaña (gorro, antiparras de nieve, cuerda, carpa, mini montaña, bandera de cumbre), fiesta (gorro dorado, lentes de estrellas, globo, trompeta, cohete), ambiente (botella reutilizable, tacho de reciclaje, panel solar, bicicleta, abeja, mariposa, planeta verde) y lluvia y agua (gorro y botas de lluvia, juncos, rana, flamenco, tortuga, gota de cristal). Se están dibujando en ChatGPT.
