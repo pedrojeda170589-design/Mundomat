@@ -34,18 +34,18 @@ function check(desc: string, fn: () => void) {
 // ---------------------------------------------------------------------------
 // 1. Integridad de Catálogo y Prerrequisitos
 // ---------------------------------------------------------------------------
-check("Catálogo de 4.º grado tiene exactamente 92 mundos", () => {
-  assert.equal(GRADE4_WORLDS.length, 92, `Se esperaban 92 mundos, se encontraron ${GRADE4_WORLDS.length}`);
+check("Catálogo de 4.º grado tiene exactamente 108 mundos curriculares", () => {
+  assert.equal(GRADE4_WORLDS.length, 108, `Se esperaban 108 mundos, se encontraron ${GRADE4_WORLDS.length}`);
   const bySubject = {
     lengua: GRADE4_WORLDS.filter((w) => w.subject === "lengua"),
     matematica: GRADE4_WORLDS.filter((w) => w.subject === "matematica"),
     sociales: GRADE4_WORLDS.filter((w) => w.subject === "sociales"),
     naturales: GRADE4_WORLDS.filter((w) => w.subject === "naturales"),
   };
-  assert.equal(bySubject.lengua.length, 26, "Deben haber 26 mundos de Lengua");
-  assert.equal(bySubject.matematica.length, 26, "Deben haber 26 mundos de Matemática");
-  assert.equal(bySubject.sociales.length, 20, "Deben haber 20 mundos de Sociales");
-  assert.equal(bySubject.naturales.length, 20, "Deben haber 20 mundos de Naturales");
+  assert.equal(bySubject.lengua.length, 28, `Deben haber 28 mundos de Lengua, hay ${bySubject.lengua.length}`);
+  assert.equal(bySubject.matematica.length, 28, `Deben haber 28 mundos de Matemática, hay ${bySubject.matematica.length}`);
+  assert.equal(bySubject.sociales.length, 26, `Deben haber 26 mundos de Sociales, hay ${bySubject.sociales.length}`);
+  assert.equal(bySubject.naturales.length, 26, `Deben haber 26 mundos de Naturales, hay ${bySubject.naturales.length}`);
 });
 
 check("Unicidad de IDs en toda la plataforma (1.º, 2.º, 3.º, 4.º y dictados)", () => {
@@ -124,43 +124,46 @@ check("Validación de grafo de prerrequisitos (sin ciclos y dentro de 4.º)", ()
 });
 
 // ---------------------------------------------------------------------------
-// 2. Bancos de Contenido (Mínimo 15 preguntas en Sociales y Naturales)
+// 2. Bancos de Contenido (Mínimos: 20 Lengua, 15 Sociales, 15 Naturales)
 // ---------------------------------------------------------------------------
-check("Bancos de Ciencias Sociales tienen >= 15 preguntas en cada uno de los 20 mundos", () => {
-  for (let n = 1; n <= 20; n++) {
+check("Bancos de Lengua tienen >= 20 preguntas en cada uno de los 28 mundos", () => {
+  for (let n = 1; n <= 28; n++) {
+    const bank = LENGUA_BANK[n];
+    assert(bank, `Falta banco LENGUA_BANK para el mundo ${n}`);
+    assert(bank.length >= 20, `Mundo Lengua ${n} tiene ${bank.length} preguntas (mínimo requerido: 20)`);
+  }
+});
+
+check("Bancos de Ciencias Sociales tienen >= 15 preguntas en cada uno de los 26 mundos", () => {
+  for (let n = 1; n <= 26; n++) {
     const bank = SOCIALES_BANK[n];
     assert(bank, `Falta banco SOCIALES_BANK para el mundo ${n}`);
     assert(bank.length >= 15, `Mundo Sociales ${n} tiene ${bank.length} preguntas (mínimo requerido: 15)`);
   }
 });
 
-check("Bancos de Ciencias Naturales tienen >= 15 preguntas en cada uno de los 20 mundos", () => {
-  for (let n = 1; n <= 20; n++) {
+check("Bancos de Ciencias Naturales tienen >= 15 preguntas en cada uno de los 26 mundos", () => {
+  for (let n = 1; n <= 26; n++) {
     const bank = NATURALES_BANK[n];
     assert(bank, `Falta banco NATURALES_BANK para el mundo ${n}`);
     assert(bank.length >= 15, `Mundo Naturales ${n} tiene ${bank.length} preguntas (mínimo requerido: 15)`);
   }
 });
 
-check("Banco de Lengua tiene preguntas para los 26 mundos", () => {
-  for (let n = 1; n <= 26; n++) {
-    const bank = LENGUA_BANK[n];
-    assert(bank, `Falta banco LENGUA_BANK para el mundo ${n}`);
-    assert(bank.length >= 8, `Mundo Lengua ${n} tiene ${bank.length} preguntas (mínimo esperado: 8)`);
-  }
-});
+// ---------------------------------------------------------------------------
+// 3. Reglas de Balance de Longitud de Opciones (Longest <= 25%, Shortest <= 30%)
+// ---------------------------------------------------------------------------
+interface McBankItem {
+  prompt?: string;
+  options?: [string, string][];
+  answer?: number | number[];
+  hint?: string;
+}
 
-// ---------------------------------------------------------------------------
-// 3. Regla de Balance de Longitud de Opciones (Longest <= 25%)
-// ---------------------------------------------------------------------------
-check("Balance de longitud de opciones: la respuesta correcta es la más larga en <= 25% de las preguntas", () => {
+check("Balance de longitud de opciones: estrictamente más larga <= 25% y estrictamente más corta <= 30%", () => {
   let totalMCQuestions = 0;
   let correctStrictlyLongest = 0;
-
-  interface McBankItem {
-    options?: [string, string][];
-    answer?: number | number[];
-  }
+  let correctStrictlyShortest = 0;
 
   function evaluateQ(q: McBankItem) {
     if (!q || !Array.isArray(q.options) || typeof q.answer !== "number") return;
@@ -168,35 +171,100 @@ check("Balance de longitud de opciones: la respuesta correcta es la más larga e
     const lengths = q.options.map((c: [string, string]) => c[1].trim().length);
     const correctLen = lengths[q.answer];
     const isStrictlyLongest = lengths.every((len: number, idx: number) => idx === q.answer || len < correctLen);
-    if (isStrictlyLongest) {
-      correctStrictlyLongest++;
-    }
+    const isStrictlyShortest = lengths.every((len: number, idx: number) => idx === q.answer || len > correctLen);
+    if (isStrictlyLongest) correctStrictlyLongest++;
+    if (isStrictlyShortest) correctStrictlyShortest++;
   }
 
-  // Lengua
-  for (let n = 1; n <= 26; n++) {
+  for (let n = 1; n <= 28; n++) {
     for (const q of LENGUA_BANK[n] ?? []) evaluateQ(q);
   }
-  // Sociales
-  for (let n = 1; n <= 20; n++) {
+  for (let n = 1; n <= 26; n++) {
     for (const q of SOCIALES_BANK[n] ?? []) evaluateQ(q);
   }
-  // Naturales
-  for (let n = 1; n <= 20; n++) {
+  for (let n = 1; n <= 26; n++) {
     for (const q of NATURALES_BANK[n] ?? []) evaluateQ(q);
   }
 
-  const pct = (correctStrictlyLongest / totalMCQuestions) * 100;
+  const pctLongest = (correctStrictlyLongest / totalMCQuestions) * 100;
+  const pctShortest = (correctStrictlyShortest / totalMCQuestions) * 100;
+
   console.log(`   [Balance de Opciones] Total preguntas evaluadas: ${totalMCQuestions}`);
-  console.log(`   [Balance de Opciones] Respuestas correctas estrictamente más largas: ${correctStrictlyLongest} (${pct.toFixed(2)}%)`);
+  console.log(`   [Balance de Opciones] Más larga: ${correctStrictlyLongest} (${pctLongest.toFixed(2)}%) [límite <= 25%]`);
+  console.log(`   [Balance de Opciones] Más corta: ${correctStrictlyShortest} (${pctShortest.toFixed(2)}%) [límite <= 30%]`);
+
   assert(
-    pct <= 25.0,
-    `La respuesta correcta es estrictamente la más larga en ${pct.toFixed(2)}% de las preguntas (límite máximo permitido: 25%)`
+    pctLongest <= 25.0,
+    `La respuesta correcta es estrictamente la más larga en ${pctLongest.toFixed(2)}% (límite máximo permitido: 25%)`
+  );
+  assert(
+    pctShortest <= 30.0,
+    `La respuesta correcta es estrictamente la más corta en ${pctShortest.toFixed(2)}% (límite máximo permitido: 30%)`
   );
 });
 
 // ---------------------------------------------------------------------------
-// 4. Integración en el Núcleo de la Plataforma
+// 4. Calidad de Redacción: Cero Frases Prohibidas y Cero Palabras Repetidas
+// ---------------------------------------------------------------------------
+check("Calidad lingüística: sin frases de relleno prohibidas ni palabras duplicadas", () => {
+  const forbiddenPhrases = [
+    "en distintas partes del territorio",
+    "a lo largo del territorio",
+    "por todo el territorio",
+    "en todo el territorio",
+    "en diversas partes del territorio",
+    "en varias partes del territorio",
+    "en distintos puntos del territorio",
+    "a lo largo de todo el territorio",
+  ];
+
+  function checkText(text: string, context: string) {
+    const lower = text.toLowerCase();
+    for (const phrase of forbiddenPhrases) {
+      assert(
+        !lower.includes(phrase),
+        `Frase prohibida "${phrase}" encontrada en ${context}: "${text}"`
+      );
+    }
+
+    // Chequeo de palabras duplicadas consecutivas sin puntuación intermedia ("el el", "los los", etc.)
+    const words = text.split(/\s+/);
+    for (let i = 0; i < words.length - 1; i++) {
+      const raw1 = words[i];
+      const raw2 = words[i + 1];
+      const hasPunctuationBetween = /[.,:;!?»"’)\]]$/.test(raw1) || /^[«"‘(\[¡¿]/.test(raw2);
+      if (hasPunctuationBetween) continue;
+      const clean1 = raw1.toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+      const clean2 = raw2.toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+      if (clean1 && clean1 === clean2) {
+        throw new Error(`Palabra duplicada consecutiva "${clean1} ${clean2}" en ${context}: "${text}"`);
+      }
+    }
+  }
+
+  function checkBank(bank: Record<number, McBankItem[]>, subjectName: string) {
+    for (const [mStr, questions] of Object.entries(bank)) {
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const ctx = `${subjectName} mundo ${mStr} pregunta ${i + 1}`;
+        if (q.prompt) checkText(q.prompt, ctx);
+        if (q.hint) checkText(q.hint, ctx);
+        if (q.options) {
+          for (const opt of q.options) {
+            checkText(opt[1], `${ctx} opción`);
+          }
+        }
+      }
+    }
+  }
+
+  checkBank(LENGUA_BANK, "Lengua");
+  checkBank(SOCIALES_BANK, "Sociales");
+  checkBank(NATURALES_BANK, "Naturales");
+});
+
+// ---------------------------------------------------------------------------
+// 5. Integración en el Núcleo de la Plataforma
 // ---------------------------------------------------------------------------
 check("Integración con grades.ts, worlds.ts, data.ts, courseSummary.ts y dictado", () => {
   // getGrade(4)
@@ -205,7 +273,7 @@ check("Integración con grades.ts, worlds.ts, data.ts, courseSummary.ts y dictad
   assert.equal(g4.grade, 4, "getGrade(4) debe retornar registro de grado 4");
   assert.equal(g4.masteryPct, 90, "masteryPct debe ser 90%");
   assert.equal(g4.unlockPct, 60, "unlockPct debe ser 60%");
-  assert.equal(g4.worlds.length, 92, "g4.worlds debe contener los 92 mundos");
+  assert.equal(g4.worlds.length, 108, `g4.worlds debe contener 108 mundos, tiene ${g4.worlds.length}`);
 
   // getWorld y gradeOfWorld para todos los mundos de 4.º
   for (const w of GRADE4_WORLDS) {
@@ -225,13 +293,13 @@ check("Integración con grades.ts, worlds.ts, data.ts, courseSummary.ts y dictad
 
   // courseSummary.getWorldsForGrade(4)
   const csWorlds = getWorldsForGrade(4);
-  assert.equal(csWorlds.length, 92, "getWorldsForGrade(4) debe retornar 92 mundos");
+  assert.equal(csWorlds.length, 108, `getWorldsForGrade(4) debe retornar 108 mundos, tiene ${csWorlds.length}`);
 });
 
 // ---------------------------------------------------------------------------
-// 5. Simulación Exhaustiva de Actividades (200 iteraciones por mundo)
+// 6. Simulación Exhaustiva de Actividades (200 iteraciones por mundo)
 // ---------------------------------------------------------------------------
-check("Simulación de 200 iteraciones por cada uno de los 92 mundos de 4.º grado + Dictado", () => {
+check("Simulación de 200 iteraciones por cada uno de los 108 mundos de 4.º grado + Dictado", () => {
   const g4SkillCodes = new Set(GRADE4_SKILLS.map((s) => s.id));
   const RUNS = 200;
   let totalActivities = 0;
@@ -245,6 +313,15 @@ check("Simulación de 200 iteraciones por cada uno de los 92 mundos de 4.º grad
         activities && activities.length >= 6,
         `Mundo ${world.id} (${world.name}) run ${run}: generó ${activities ? activities.length : 0} actividades (requerido >= 6)`
       );
+
+      // Verificación de actividades no-pick en Ciencias Sociales y Naturales (>= 2 por ejecución)
+      if (world.subject === "sociales" || world.subject === "naturales") {
+        const nonPickCount = activities.filter((a) => a.type !== "pick").length;
+        assert(
+          nonPickCount >= 2,
+          `Mundo ${world.id} (${world.subject}) run ${run}: generó ${nonPickCount} actividades interactivas no-pick (requerido >= 2)`
+        );
+      }
 
       for (let i = 0; i < activities.length; i++) {
         totalActivities++;

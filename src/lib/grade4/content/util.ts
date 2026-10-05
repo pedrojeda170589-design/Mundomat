@@ -140,8 +140,8 @@ export function makeOrder(
 export function makeClassify(
   id: string,
   prompt: string,
-  categories: [string, string],
-  items: { label: string; cat: 0 | 1 }[],
+  categories: string[],
+  items: { label: string; cat: number }[],
   hint: string,
   skills: string[]
 ): ActivitySpec {
@@ -225,3 +225,22 @@ export function makeInput(
     skills,
   };
 }
+
+export function makeMatch(
+  id: string,
+  prompt: string,
+  pairs: { left: string; right: string }[],
+  hint: string,
+  skills?: string[]
+): ActivitySpec {
+  return {
+    type: "match",
+    id,
+    title: "Actividad",
+    prompt,
+    pairs,
+    hint: hint.startsWith("Pista:") ? hint : `Pista: ${hint}`,
+    skills,
+  };
+}
+
