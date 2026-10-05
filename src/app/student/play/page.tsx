@@ -24,6 +24,7 @@ import CaminoRacha from "@/components/CaminoRacha";
 import { estadoRacha } from "@/lib/coleccion/racha";
 import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import InsigniaTorneo from "@/components/InsigniaTorneo";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
@@ -361,6 +362,9 @@ export default function StudentPlayPage() {
                 🎂
               </span>
             )}
+            {!!progress.torneoVueltas && !progress.insigniaTorneoOculta && (
+              <InsigniaTorneo vueltas={progress.torneoVueltas} className="absolute -bottom-1.5 -left-1.5 min-w-6 h-6 px-1 text-[9px]" />
+            )}
           </span>
           <span>
             <span className="block text-amber-100 text-sm">
@@ -474,8 +478,12 @@ export default function StudentPlayPage() {
           achievementCollection={progress.achievementCollection}
           realName={name}
           completedWorldsCount={progress.completedWorlds.length}
+          torneoVueltas={progress.torneoVueltas}
+          insigniaOculta={progress.insigniaTorneoOculta}
+          torneoPrestados={progress.torneoPrestados}
+          prestamo={progress.prestamo67}
           onClose={() => setEditingProfile(false)}
-          onSaved={({ avatar, accessories, nickname, background, tweaks }) => {
+          onSaved={({ avatar, accessories, nickname, background, tweaks, insigniaOculta }) => {
             setProgress((p) =>
               p
                 ? {
@@ -485,6 +493,7 @@ export default function StudentPlayPage() {
                     nickname,
                     avatarBackground: background,
                     avatarTweaks: tweaks,
+                    insigniaTorneoOculta: insigniaOculta,
                   }
                 : p
             );

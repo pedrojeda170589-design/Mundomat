@@ -2,6 +2,7 @@ import { TEMPORADAS } from "@/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
 import { DROPS } from "@/lib/coleccion/drops";
+import { OBJETOS_TORNEO_ANTERIORES, TODOS_LOS_PREMIOS_TORNEO } from "@/lib/torneo/vueltas";
 import { CAMINO } from "@/lib/coleccion/racha";
 // Tipos compartidos de MundoMat
 
@@ -159,6 +160,16 @@ export interface StudentProgress {
       }
     >
   >;
+  // Vueltas del Torneo de las tablas (ver lib/torneo/vueltas.ts): vueltas
+  // completas (las 9 tablas), la vuelta en curso, los premios prestados y si
+  // el alumno ocultó la insignia (×2, ×3… A1…) de su perfil.
+  torneoVueltas?: number;
+  vueltaTablas?: { tablas: Record<number, { ms: number; errores: number }>; desde: string };
+  torneoPrestados?: { id: string; hastaVueltas: number; vence: string }[];
+  insigniaTorneoOculta?: boolean;
+  // Accesorio Six-Seven prestado (torneo + al día con los mundos): se puede
+  // usar hasta `hasta` (el viernes a la noche) y después se devuelve solo.
+  prestamo67?: { id: string; hasta: string; semana: string };
 }
 
 export interface RoundInProgress {
@@ -558,14 +569,15 @@ export const ACCESSORY_CATALOG_TIENDA: AccessoryDef[] = [
 // Accesorios especiales de premio (no se venden en la tienda: se ganan por desafíos especiales).
 export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   { id: "lapiz-dorado", slot: "pendant", label: "Lápiz dorado", emoji: "✏️", group: "premio", fitLike: "sol-de-mayo" },
-  // Premios del torneo de tablas (AG-14). Se ganan igual (quedan en la
+  // Premios del torneo de tablas: uno por mes (ver torneo/tiempos.ts). Se ganan igual (quedan en la
   // colección), pero se muestran recién cuando su dibujo está en public/.
   ...(
     [
-      { id: "vincha-relampago", slot: "headwear", label: "Vincha relámpago", emoji: "⚡", group: "premio", fitLike: "cuernitos-dragon" },
-      { id: "lentes-turbo", slot: "eyewear", label: "Lentes turbo", emoji: "🕶️", group: "premio", fitLike: "lentes-aviador" },
-      { id: "medalla-rayo", slot: "pendant", label: "Medalla del rayo", emoji: "🏅", group: "premio", fitLike: "sol-de-mayo" },
-    ] satisfies AccessoryDef[]
+      ...OBJETOS_TORNEO_ANTERIORES,
+      ...TODOS_LOS_PREMIOS_TORNEO.map((p) => ({ id: p.id, slot: p.slot, label: p.label, emoji: p.emoji, molde: p.molde })),
+    ].map(
+      (p): AccessoryDef => ({ id: p.id, slot: p.slot, label: p.label, emoji: p.emoji, group: "premio", ...(p.molde ? { fitLike: p.molde } : {}) })
+    )
   ).filter((o) => IMAGENES_LISTAS.has(o.id)),
   // Legendarios de cada temporada (se ganan superando mundos durante la temporada).
   ...TEMPORADAS.filter((t) => t.legendario && IMAGENES_LISTAS.has(t.legendario.id)).map(

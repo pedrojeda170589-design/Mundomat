@@ -61,54 +61,8 @@ export function calcularMedalla(tabla: number, ms: number): MedallaTorneo {
   return "bronce";
 }
 
-/**
- * Grupos de tablas y sus objetos especiales desbloqueables la primera vez que se logra oro.
- * Grupo 1 (tablas 2 a 4) -> «Vincha relámpago» ⚡ (cabeza, molde cuernitos-dragon)
- * Grupo 2 (tablas 5 a 7) -> «Lentes turbo» 🕶️ (ojos, molde lentes-aviador)
- * Grupo 3 (tablas 8 a 10) -> «Medalla del rayo» 🏅 (colgante, molde sol-de-mayo)
- */
-export interface PremioGrupoItem {
-  id: string;
-  tablas: number[];
-  label: string;
-  emoji: string;
-  slot: "headwear" | "eyewear" | "pendant";
-  molde: string;
-  grupoNombre: string;
-}
-
-export const PREMIOS_TORNEO_ITEMS: PremioGrupoItem[] = [
-  {
-    id: "vincha-relampago",
-    tablas: [2, 3, 4],
-    label: "Vincha relámpago",
-    emoji: "⚡",
-    slot: "headwear",
-    molde: "cuernitos-dragon",
-    grupoNombre: "Tablas 2, 3 y 4",
-  },
-  {
-    id: "lentes-turbo",
-    tablas: [5, 6, 7],
-    label: "Lentes turbo",
-    emoji: "🕶️",
-    slot: "eyewear",
-    molde: "lentes-aviador",
-    grupoNombre: "Tablas 5, 6 y 7",
-  },
-  {
-    id: "medalla-rayo",
-    tablas: [8, 9, 10],
-    label: "Medalla del rayo",
-    emoji: "🏅",
-    slot: "pendant",
-    molde: "sol-de-mayo",
-    grupoNombre: "Tablas 8, 9 y 10",
-  },
-];
-
-export function premioGrupoParaTabla(tabla: number): PremioGrupoItem | undefined {
-  return PREMIOS_TORNEO_ITEMS.find((p) => p.tablas.includes(tabla));
+export function mesAR(now: Date = new Date()): number {
+  return new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
 }
 
 /**
@@ -118,6 +72,5 @@ export function premioGrupoParaTabla(tabla: number): PremioGrupoItem | undefined
 export const TORNEO_GRADO_MINIMO = 3;
 export const TORNEO_DESDE_MES = 7; // julio
 export function torneoHabilitado(grade: number, now: Date = new Date()): boolean {
-  const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
-  return grade >= TORNEO_GRADO_MINIMO && mesAR >= TORNEO_DESDE_MES;
+  return grade >= TORNEO_GRADO_MINIMO && mesAR(now) >= TORNEO_DESDE_MES;
 }

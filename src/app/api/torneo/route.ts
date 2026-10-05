@@ -4,12 +4,15 @@ import {
   completeTorneoTable,
   findStudentByCode,
   getClassroomTorneoRanking,
+  getProgress,
   weekendSaturdayKey,
 } from "@/lib/data";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { getWeekendDay } from "@/lib/weekend/plan";
 import { delKey, getJSON, setJSON } from "@/lib/store";
 import { PENALIDAD_ERROR_MS, torneoHabilitado } from "@/lib/torneo/tiempos";
+import { esNivelSuper, insigniaDeVueltas, metalQueTiene, objetoDelMes, tablasHechas, vueltasParaQuedarse } from "@/lib/torneo/vueltas";
+import { elegirPrestamo, estadoPrestamo } from "@/lib/torneo/prestamoServer";
 import { gradeOf } from "@/lib/grades";
 
 // Cada partida se abre en el servidor cuando arranca el reloj ({action:"start"})
@@ -53,7 +56,15 @@ export async function GET(request: NextRequest) {
   const weekendDay = getWeekendDay(now);
   const satKey = weekendSaturdayKey(now);
 
-  const ranking = await getClassroomTorneoRanking(student.code, tabla, now);
+  const [ranking, prestamo, progreso] = await Promise.all([
+    getClassroomTorneoRanking(student.code, tabla, now),
+    estadoPrestamo(student.code, now),
+    getProgress(student.code),
+  ]);
+  const vueltas = progreso.torneoVueltas ?? 0;
+  // El objeto del mes que se gana con la PRÓXIMA vuelta (superespecial desde A1).
+  const superEsp = esNivelSuper(vueltas + 1);
+  const objetoMes = objetoDelMes(now, superEsp) ?? null;
 
   return Response.json({
     ok: true,
@@ -62,6 +73,18 @@ export async function GET(request: NextRequest) {
     satKey,
     tabla,
     ranking,
+    vuelta: {
+      vueltas,
+      insignia: insigniaDeVueltas(vueltas),
+      proximaInsignia: insigniaDeVueltas(vueltas + 1),
+      tablasHechas: tablasHechas(progreso.vueltaTablas),
+      objetoMes,
+      superEspecial: superEsp,
+      metalQueTiene: objetoMes ? metalQueTiene(progreso.seasonalCollection ?? [], objetoMes.base) : null,
+      hastaVueltas: vueltasParaQuedarse(vueltas + 1),
+      prestados: progreso.torneoPrestados ?? [],
+    },
+    prestamo,
   });
 }
 
@@ -76,7 +99,8 @@ export async function POST(request: NextRequest) {
   }
 
   let body: {
-    action?: "start";
+    action?: "start" | "prestamo";
+    id?: string;
     partida?: string;
     code?: string;
     tabla?: number;
@@ -91,6 +115,22 @@ export async function POST(request: NextRequest) {
   }
 
   const { code, tabla, ms, errores } = body;
+  if (body.action === "prestamo") {
+    if (!code || typeof body.id !== "string") {
+      return Response.json({ error: "Faltan parámetros (code, id)." }, { status: 400 });
+    }
+    const alumno = await findStudentByCode(code);
+    if (!alumno) {
+      await recordFailedLookup();
+      return Response.json({ error: "Código no encontrado." }, { status: 404 });
+    }
+    if (isTrialExpired(alumno)) {
+      return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
+    }
+    const r = await elegirPrestamo(alumno.code, body.id);
+    if (!r.ok) return Response.json({ error: r.error }, { status: 400 });
+    return Response.json({ ok: true, hasta: r.hasta, prestamo: await estadoPrestamo(alumno.code) });
+  }
   if (body.action === "start") {
     if (!code || typeof tabla !== "number" || !Number.isInteger(tabla) || tabla < 2 || tabla > 10) {
       return Response.json({ error: "Faltan parámetros (code, tabla)." }, { status: 400 });

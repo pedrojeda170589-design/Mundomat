@@ -49,10 +49,25 @@ import { displayName } from "@/lib/news";
 import {
   calcularMedalla,
   MONEDAS_MEDALLA,
-  premioGrupoParaTabla,
   type MedallaTorneo,
-  type PremioGrupoItem,
 } from "@/lib/torneo/tiempos";
+import { devolverPrestamoVencido, tiendaConPrestamo } from "@/lib/torneo/prestamo";
+import {
+  esNivelSuper,
+  evaluarVuelta,
+  insigniaDeVueltas,
+  mejorPartida,
+  metalQueTiene,
+  METALES,
+  objetoDelMes,
+  ordenarPrestadosTorneo,
+  premioDe,
+  TABLAS_DE_LA_VUELTA,
+  venceElAnio,
+  vueltasParaQuedarse,
+  type PremioTorneo,
+  type ResultadoVuelta,
+} from "@/lib/torneo/vueltas";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -271,7 +286,9 @@ function emptyProgress(code: string): StudentProgress {
 }
 
 export async function getProgress(code: string): Promise<StudentProgress> {
-  return getJSON<StudentProgress>(`${PROGRESS_KEY_PREFIX}${code}`, emptyProgress(code));
+  // El accesorio prestado vencido se devuelve solo (se saca del avatar).
+  // y los premios del torneo prestados vencidos también.
+  return ordenarPrestadosTorneo(devolverPrestamoVencido(await getJSON<StudentProgress>(`${PROGRESS_KEY_PREFIX}${code}`, emptyProgress(code))));
 }
 
 // Progreso sin el registro detallado (para responder a las pantallas del
@@ -315,10 +332,11 @@ export async function companerosParaNombres(student: Student): Promise<Student[]
 
 // Progreso de varios alumnos en una sola consulta.
 export async function getProgressMany(codes: string[]): Promise<StudentProgress[]> {
-  return getJSONMany<StudentProgress>(
+  const lista = await getJSONMany<StudentProgress>(
     codes.map((c) => `${PROGRESS_KEY_PREFIX}${c}`),
     (key) => emptyProgress(key.slice(PROGRESS_KEY_PREFIX.length))
   );
+  return lista.map((p) => ordenarPrestadosTorneo(devolverPrestamoVencido(p)));
 }
 
 export async function saveProgress(progress: StudentProgress): Promise<void> {
@@ -380,6 +398,8 @@ export interface ProfileUpdate {
   background?: string;
   // Corrimiento y tamaño de cada objeto puesto (se valida y se acota).
   tweaks?: Partial<Record<AccessorySlot, { x?: unknown; y?: unknown; s?: unknown } | null>>;
+  // Mostrar u ocultar la insignia del torneo (×2, ×3… A1…), si la ganó.
+  insigniaVisible?: boolean;
 }
 
 // Actualiza el avatar, accesorios y/o apodo del alumno dentro de su
@@ -416,7 +436,7 @@ export async function updateStudentProfile(
       progress.completedWorlds.length,
       effectiveAvatar,
       progress.seasonalCollection,
-      progress.shopCollection
+      tiendaConPrestamo(progress)
     );
     const merged: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
     for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
@@ -465,6 +485,9 @@ export async function updateStudentProfile(
   }
   if (update.accessories !== undefined || update.avatar !== undefined) {
     next.avatarAccessories = nextAccessories;
+  }
+  if (typeof update.insigniaVisible === "boolean" && (progress.torneoVueltas ?? 0) > 0) {
+    next.insigniaTorneoOculta = !update.insigniaVisible;
   }
   if (update.nickname !== undefined) {
     const clean = sanitizeNickname(update.nickname);
@@ -869,7 +892,17 @@ export interface TorneoResultado {
   coins: number;
   mejorMs: number;
   esMejorTiempo: boolean;
-  nuevoObjeto?: PremioGrupoItem;
+  // La vuelta (las 9 tablas): cuántas lleva hechas en la vuelta en curso y,
+  // si con esta partida la completó, el resultado y el premio.
+  vueltaTablasHechas: number[];
+  vueltaCompleta?: ResultadoVuelta & {
+    vueltas: number;
+    insignia: string;
+    premio?: PremioTorneo;
+    yaTeniaMejor?: boolean;
+    hastaVueltas?: number; // prestado hasta esta cantidad de vueltas
+    seQuedo: string[]; // premios prestados que con esta vuelta pasan a ser suyos
+  };
   satKey: string;
 }
 
@@ -878,7 +911,9 @@ export interface TorneoResultado {
  * - Valida disponibilidad de fin de semana (hora argentina).
  * - Calcula la medalla según metas de tiempos.ts.
  * - Acredita monedas (oro: 15, plata: 8, bronce: 3), máximo una vez por tabla y por día.
- * - Desbloquea objeto especial la primera vez que se logra oro en su grupo.
+ * - Suma la tabla a la vuelta (las 9 tablas). Al completarla: insignia
+ *   (×2, ×3… A1…) y objeto del mes dorado, plateado o de bronce (prestado
+ *   hasta 10 vueltas). Ver lib/torneo/vueltas.ts.
  * - Actualiza el mejor tiempo histórico del fin de semana.
  */
 export async function completeTorneoTable(
@@ -927,15 +962,38 @@ export async function completeTorneoTable(
     monedasDia.push(todayKey);
   }
 
-  // Objeto especial por primera vez logrando oro en el grupo de la tabla
-  let nuevoObjeto: PremioGrupoItem | undefined;
+  // Vuelta de las 9 tablas: de cada tabla cuenta la mejor partida.
+  const vuelta = progress.vueltaTablas ?? { tablas: {}, desde: now.toISOString() };
+  const tablasVuelta = { ...vuelta.tablas, [tabla]: mejorPartida(vuelta.tablas[tabla], { ms, errores }) };
+  const completa = TABLAS_DE_LA_VUELTA.every((t) => tablasVuelta[t]);
   const ownedAccessories = new Set(progress.seasonalCollection ?? []);
-  if (medalla === "oro") {
-    const premio = premioGrupoParaTabla(tabla);
-    if (premio && !ownedAccessories.has(premio.id)) {
-      ownedAccessories.add(premio.id);
-      nuevoObjeto = premio;
+  let prestados = [...(progress.torneoPrestados ?? [])];
+  let vueltas = progress.torneoVueltas ?? 0;
+  let vueltaCompleta: TorneoResultado["vueltaCompleta"];
+  if (completa) {
+    vueltas += 1;
+    const r = evaluarVuelta({ tablas: tablasVuelta, desde: vuelta.desde });
+    // Los prestados que con esta vuelta llegan a su meta pasan a ser suyos.
+    const seQuedo = prestados.filter((x) => vueltas >= x.hastaVueltas).map((x) => x.id);
+    prestados = prestados.filter((x) => vueltas < x.hastaVueltas);
+    // Objeto del mes en el metal logrado (superespecial desde A1). Nunca baja.
+    const superEsp = esNivelSuper(vueltas);
+    const obj = objetoDelMes(now, superEsp);
+    let premio: PremioTorneo | undefined;
+    let yaTeniaMejor = false;
+    let hastaVueltas: number | undefined;
+    if (obj) {
+      const tiene = metalQueTiene([...ownedAccessories], obj.base);
+      if (tiene && METALES.indexOf(tiene) <= METALES.indexOf(r.metal)) {
+        yaTeniaMejor = true;
+      } else {
+        premio = premioDe(obj, r.metal, superEsp);
+        ownedAccessories.add(premio.id);
+        hastaVueltas = vueltasParaQuedarse(vueltas);
+        prestados.push({ id: premio.id, hastaVueltas, vence: venceElAnio(now) });
+      }
     }
+    vueltaCompleta = { ...r, vueltas, insignia: insigniaDeVueltas(vueltas)!, premio, yaTeniaMejor, hastaVueltas, seQuedo };
   }
 
   // Mejor tiempo del fin de semana
@@ -949,6 +1007,9 @@ export async function completeTorneoTable(
     ...progress,
     coins: progress.coins + monedasGanadas,
     seasonalCollection: [...ownedAccessories],
+    torneoVueltas: vueltas,
+    vueltaTablas: completa ? undefined : { tablas: tablasVuelta, desde: vuelta.desde },
+    torneoPrestados: prestados,
     tablasTorneo: {
       ...(progress.tablasTorneo ?? {}),
       [satKey]: {
@@ -975,7 +1036,8 @@ export async function completeTorneoTable(
     coins: updated.coins,
     mejorMs,
     esMejorTiempo,
-    nuevoObjeto,
+    vueltaTablasHechas: completa ? [] : TABLAS_DE_LA_VUELTA.filter((t) => tablasVuelta[t]),
+    vueltaCompleta,
     satKey,
   };
 }

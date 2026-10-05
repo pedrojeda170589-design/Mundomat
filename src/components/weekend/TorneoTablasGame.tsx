@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { generarPasosTabla, PasoTorneo } from "@/lib/torneo/opciones";
 import {
   calcularMedalla,
   getMetaTabla,
   MedallaTorneo,
   PENALIDAD_ERROR_MS,
-  premioGrupoParaTabla,
-  PremioGrupoItem,
 } from "@/lib/torneo/tiempos";
-import { getAccessoryById, getAccessorySrc } from "@/types";
+import type { EstadoPrestamo } from "@/lib/torneo/prestamoServer";
+import PrestamoSixSeven from "./PrestamoSixSeven";
+import { InfoVuelta, ResultadoDeVuelta, type EstadoVuelta, type VueltaCompleta } from "./VueltaTorneo";
 
 export interface TorneoTablasGameProps {
   code: string;
@@ -70,8 +69,12 @@ export default function TorneoTablasGame({
     monedasGanadas: number;
     mejorMs: number;
     esMejorTiempo: boolean;
-    nuevoObjeto?: PremioGrupoItem;
+    vueltaCompleta?: VueltaCompleta;
+    vueltaTablasHechas?: number[];
   } | null>(null);
+  // Objeto del mes y préstamo Six-Seven (vienen con el ranking).
+  const [vuelta, setVuelta] = useState<EstadoVuelta | null>(null);
+  const [prestamo, setPrestamo] = useState<EstadoPrestamo | null>(null);
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
 
   // Cronómetro
@@ -91,6 +94,8 @@ export default function TorneoTablasGame({
       .then((d) => {
         if (!cancelled && d.ok) {
           setRankingDe({ tabla: tablaSeleccionada, lista: d.ranking ?? [] });
+          setVuelta(d.vuelta ?? null);
+          setPrestamo(d.prestamo ?? null);
         }
       })
       .catch(() => {
@@ -248,8 +253,19 @@ export default function TorneoTablasGame({
           monedasGanadas: data.monedasGanadas,
           mejorMs: data.mejorMs,
           esMejorTiempo: data.esMejorTiempo,
-          nuevoObjeto: data.nuevoObjeto,
+          vueltaCompleta: data.vueltaCompleta,
+          vueltaTablasHechas: data.vueltaTablasHechas,
         });
+        // Ya jugó este finde: puede que ahora pueda elegir el préstamo.
+        fetch(`/api/torneo?code=${encodeURIComponent(code)}&tabla=${tablaSeleccionada}`)
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.ok) {
+              setPrestamo(d.prestamo ?? null);
+              setVuelta(d.vuelta ?? null);
+            }
+          })
+          .catch(() => {});
         if (data.coins !== undefined) {
           onCoinsUpdated(data.coins);
         }
@@ -272,7 +288,6 @@ export default function TorneoTablasGame({
   const tiempoVisibleMs = tiempoTranscurridoMs + penalidadMs;
   const segundosVisibles = (tiempoVisibleMs / 1000).toFixed(1);
   const metaActual = getMetaTabla(tablaSeleccionada);
-  const premioGrupo = premioGrupoParaTabla(tablaSeleccionada);
 
   // --- 1. Pantalla de Selección de Tabla y Ranking ---
   if (fase === "seleccion") {
@@ -296,7 +311,7 @@ export default function TorneoTablasGame({
               <span>⚡</span> Torneo de las Tablas
             </h1>
             <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
-              Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido para ganar medallas de oro, monedas y objetos exclusivos!
+              Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido y sin errores: al completar las 9 tablas ganás el objeto especial del mes (dorado, plateado o de bronce).
             </p>
           </div>
 
@@ -329,20 +344,9 @@ export default function TorneoTablasGame({
             </div>
           </div>
 
-          {/* Tarjeta de objeto especial del grupo */}
-          {premioGrupo && (
-            <div className="rounded-2xl bg-amber-50 border border-amber-300 p-3 text-left flex items-center gap-3">
-              <span className="text-3xl">{premioGrupo.emoji}</span>
-              <div className="flex-1 text-xs">
-                <p className="font-bold text-amber-950">
-                  Premio de Oro: {premioGrupo.label}
-                </p>
-                <p className="text-amber-900/80 text-[11px]">
-                  Lográ medalla de oro en cualquiera de las {premioGrupo.grupoNombre.toLowerCase()} para ganarlo.
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Vuelta de las 9 tablas, insignia y objeto especial del mes */}
+          <InfoVuelta estado={vuelta} />
+          <PrestamoSixSeven code={code} estado={prestamo} onCambio={setPrestamo} />
 
           {/* Botón de inicio */}
           <button
@@ -576,33 +580,18 @@ export default function TorneoTablasGame({
             </div>
           )}
 
-          {resultadoFinal.nuevoObjeto && (
-            <div className="rounded-2xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-100 border-2 border-amber-400 p-3 flex items-center gap-3 text-left shadow-sm animate-pulse">
-              <span className="relative w-12 h-12 shrink-0 flex items-center justify-center text-3xl">
-                {getAccessoryById(resultadoFinal.nuevoObjeto.id) ? (
-                  <Image
-                    src={getAccessorySrc(resultadoFinal.nuevoObjeto.id)}
-                    alt=""
-                    fill
-                    sizes="48px"
-                    className="object-contain"
-                  />
-                ) : (
-                  resultadoFinal.nuevoObjeto.emoji
-                )}
-              </span>
-              <div className="text-xs">
-                <p className="font-black text-amber-950">
-                  🎉 ¡Nuevo objeto desbloqueado: {resultadoFinal.nuevoObjeto.label}!
-                </p>
-                <p className="text-amber-900/80 text-[11px]">
-                  {getAccessoryById(resultadoFinal.nuevoObjeto.id)
-                    ? "¡Ya podés equiparlo en tu avatar desde «Mi perfil»!"
-                    : "Ya es tuyo: muy pronto vas a poder ponértelo en el avatar."}
-                </p>
+          {resultadoFinal.vueltaCompleta && !errorEnvio ? (
+            <ResultadoDeVuelta v={resultadoFinal.vueltaCompleta} />
+          ) : (
+            !errorEnvio &&
+            resultadoFinal.vueltaTablasHechas && (
+              <div className="rounded-xl bg-amber-50 border border-amber-200 py-1.5 px-3 text-[11px] text-amber-950">
+                🔁 Tu vuelta: <b>{resultadoFinal.vueltaTablasHechas.length} de 9 tablas</b>. Te faltan:{" "}
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10].filter((t) => !resultadoFinal.vueltaTablasHechas!.includes(t)).join(", ")}.
               </div>
-            </div>
+            )
           )}
+          {!errorEnvio && <PrestamoSixSeven code={code} estado={prestamo} onCambio={setPrestamo} />}
         </div>
 
         {/* Repaso completo de la tabla (N x 0 ... N x 10) */}

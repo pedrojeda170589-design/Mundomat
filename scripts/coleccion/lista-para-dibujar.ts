@@ -6,6 +6,7 @@ import { TEMPORADAS } from "../../src/lib/coleccion/temporadas";
 import { AVATARES_LOGRO } from "../../src/lib/coleccion/logros";
 import { DROPS } from "../../src/lib/coleccion/drops";
 import { CAMINO } from "../../src/lib/coleccion/racha";
+import { TODOS_LOS_PREMIOS_TORNEO } from "../../src/lib/torneo/vueltas";
 import { ventanaDe } from "../../src/lib/tiempo-limitado";
 
 const root = join(__dirname, "../..");
@@ -29,6 +30,8 @@ if (process.argv.includes("--json")) {
     if (l.mascota) items[l.mascota.id] = { tipo: "objeto", slot: "pet", carpeta: "accessories-temporada" };
   }
   items["vincha-relampago"] = { tipo: "objeto", slot: "headwear", molde: "cuernitos-dragon", carpeta: "accessories-temporada" };
+  // Premios de las vueltas del torneo (6 objetos × 3 metales × 2 niveles).
+  for (const p of TODOS_LOS_PREMIOS_TORNEO) items[p.id] = { tipo: "objeto", slot: p.slot, molde: p.molde, carpeta: "accessories-temporada" };
   items["lentes-turbo"] = { tipo: "objeto", slot: "eyewear", molde: "lentes-aviador", carpeta: "accessories-temporada" };
   items["medalla-rayo"] = { tipo: "objeto", slot: "pendant", molde: "sol-de-mayo", carpeta: "accessories-temporada" };
   console.log(JSON.stringify(items));

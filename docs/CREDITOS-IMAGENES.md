@@ -79,3 +79,5 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
   - andinista, guardaparque, científico, astrónomo
   - explorador, gaucho, escritor, matemático, almacenero
 - **Premios del torneo de las tablas** (`public/theme/accessories-temporada/`): vincha relámpago, lentes turbo y medalla del rayo.
+- **Premios de las vueltas del torneo** (`public/theme/accessories-temporada/*-oro|plata|bronce.png`), generados en ChatGPT el 5/10/2026: vincha relámpago, lentes turbo y medalla del rayo en dorado, plateado y bronce (y, a medida que se dibujan, los superespeciales: antifaz estelar, collar estrella y cetro de los números).
+- **Six-Seven** (`public/theme/accessories-tienda/*-67.png`, `squishy-6/7`), y objetos de la lámina 9 (mate, termo, guitarra, bombo legüero, mascotas caballo, oveja y ovejero, poncho del gran explorador, bastón de caramelo), generados en ChatGPT el 5/10/2026.

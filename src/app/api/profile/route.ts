@@ -10,7 +10,8 @@ import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 // Panel Docente.
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, avatar, nickname, accessories, background, tweaks } = body as {
+  const { code, avatar, nickname, accessories, background, tweaks, insigniaVisible } = body as {
+    insigniaVisible?: boolean;
     tweaks?: Record<string, { x?: number; y?: number; s?: number } | null>;
     code?: string;
     avatar?: string;
@@ -27,7 +28,8 @@ export async function POST(request: NextRequest) {
     nickname === undefined &&
     accessories === undefined &&
     background === undefined &&
-    tweaks === undefined
+    tweaks === undefined &&
+    typeof insigniaVisible !== "boolean"
   ) {
     return Response.json(
       { error: "No hay nada para actualizar." },
@@ -57,6 +59,7 @@ export async function POST(request: NextRequest) {
     nickname,
     accessories,
     background,
+    insigniaVisible: typeof insigniaVisible === "boolean" ? insigniaVisible : undefined,
     tweaks: tweaks as Partial<Record<AccessorySlot, { x?: number; y?: number; s?: number } | null>> | undefined,
   });
   if (!updated) {

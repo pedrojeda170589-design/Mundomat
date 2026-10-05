@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { textoHasta } from "@/lib/torneo/prestamo";
 import {
   ACCESSORY_CATALOG_PREMIO,
   ACCESSORY_CATALOG_TEMPORADA,
@@ -25,6 +26,7 @@ import {
   isBackgroundSelectable,
   isStandardAvatar,
 } from "@/types";
+import InsigniaTorneo from "@/components/InsigniaTorneo";
 import AcomodarObjetos from "@/components/AcomodarObjetos";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
 import {
@@ -59,6 +61,12 @@ interface Props {
   isBirthday?: boolean;
   realName: string;
   completedWorldsCount: number;
+  // Insignia del torneo (×2, ×3… A1…), premios del torneo prestados y
+  // accesorio Six-Seven prestado.
+  torneoVueltas?: number;
+  insigniaOculta?: boolean;
+  torneoPrestados?: { id: string; hastaVueltas: number; vence: string }[];
+  prestamo?: { id: string; hasta: string };
   onClose: () => void;
   onSaved: (update: {
     avatar?: string;
@@ -66,6 +74,7 @@ interface Props {
     nickname?: string;
     background?: string;
     tweaks?: AvatarTweaks;
+    insigniaOculta?: boolean;
   }) => void;
 }
 
@@ -102,9 +111,17 @@ export default function ProfileEditor({
   isBirthday = false,
   realName,
   completedWorldsCount,
+  torneoVueltas = 0,
+  insigniaOculta = false,
+  torneoPrestados = [],
+  prestamo,
   onClose,
   onSaved,
 }: Props) {
+  const [insigniaVisible, setInsigniaVisible] = useState(!insigniaOculta);
+  const prestadoTorneo = new Set(torneoPrestados.map((x) => x.id));
+  // El préstamo vigente se puede poner como si fuera comprado.
+  const tiendaYPrestamo = prestamo && !shopCollection.includes(prestamo.id) ? [...shopCollection, prestamo.id] : shopCollection;
   const [avatar, setAvatar] = useState<string>(
     currentAvatar || AVATAR_OPTIONS[0]
   );
@@ -125,9 +142,9 @@ export default function ProfileEditor({
     completedWorldsCount,
     avatar,
     seasonalCollection,
-    shopCollection
+    tiendaYPrestamo
   );
-  const boughtAccessories = ACCESSORY_CATALOG_TIENDA.filter((a) => shopCollection.includes(a.id));
+  const boughtAccessories = ACCESSORY_CATALOG_TIENDA.filter((a) => tiendaYPrestamo.includes(a.id));
   // Personajes disponibles: los de siempre + los comprados en la tienda.
   const avatarChoices = AVATAR_OPTIONS.filter((a) =>
     LOGRO_AVATAR_IDS.has(a) ? achievementCollection.includes(a) : !getShopAvatar(a) || shopCollection.includes(a)
@@ -190,6 +207,7 @@ export default function ProfileEditor({
           ),
           // Solo se guardan ajustes de lo que está puesto.
           tweaks: Object.fromEntries(ALL_SLOTS.map((slot) => [slot, accessories[slot] ? tweaks[slot] ?? null : null])),
+          ...(torneoVueltas > 0 ? { insigniaVisible } : {}),
         }),
       });
       const data = await res.json();
@@ -204,6 +222,7 @@ export default function ProfileEditor({
         nickname: data.progress.nickname,
         background: data.progress.avatarBackground,
         tweaks: data.progress.avatarTweaks,
+        insigniaOculta: data.progress.insigniaTorneoOculta,
       });
     } catch {
       setError("Ocurrió un error. Probá de nuevo.");
@@ -371,7 +390,7 @@ export default function ProfileEditor({
 
         {boughtAccessories.length > 0 && (
           <div>
-            <p className="text-slate-400 text-xs mb-2">🛍️ Comprados en la tienda</p>
+            <p className="text-slate-400 text-xs mb-2">🛍️ Comprados en la tienda{prestamo ? " (y tu préstamo Six-Seven)" : ""}</p>
             <div className="grid grid-cols-4 gap-2">
               {boughtAccessories.map((acc) => {
                 const selected = accessories[acc.slot] === acc.id;
@@ -385,11 +404,42 @@ export default function ProfileEditor({
                     }`}
                   >
                     <Image src={getAccessorySrc(acc.id)} alt={acc.label} fill sizes="64px" className="object-contain p-1.5" />
+                    {prestamo?.id === acc.id && !shopCollection.includes(acc.id) && (
+                      <span className="absolute bottom-0 inset-x-0 bg-violet-600/90 text-white text-[8px] font-black text-center leading-tight py-0.5">
+                        PRESTADO
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </div>
+            {prestamo && !shopCollection.includes(prestamo.id) && (
+              <p className="text-violet-200 text-[11px] mt-1.5">
+                6️⃣7️⃣ Prestado por estar al día con tus mundos: lo podés usar hasta el{" "}
+                {textoHasta(prestamo.hasta)}.
+              </p>
+            )}
           </div>
+        )}
+
+        {torneoVueltas > 0 && (
+          <label className="flex items-center gap-3 rounded-2xl bg-white/10 border border-white/20 px-3 py-2 text-xs text-white cursor-pointer">
+            <InsigniaTorneo vueltas={torneoVueltas} className="min-w-8 h-8 px-1 text-xs shrink-0" />
+            <span className="flex-1">
+              <b>Insignia del torneo</b>
+              <span className="block text-slate-300 text-[11px]">
+                Repasaste las 9 tablas {torneoVueltas} {torneoVueltas === 1 ? "vez" : "veces"}. Sube con cada vuelta (×2, ×3… y a las 10, A1).
+              </span>
+            </span>
+            <input
+              type="checkbox"
+              checked={insigniaVisible}
+              onChange={(e) => setInsigniaVisible(e.target.checked)}
+              className="w-5 h-5 accent-amber-400"
+              aria-label="Mostrar la insignia del torneo en mi perfil"
+            />
+            <span className="text-[11px] w-12">{insigniaVisible ? "Visible" : "Oculta"}</span>
+          </label>
         )}
 
         <div>
@@ -438,10 +488,21 @@ export default function ProfileEditor({
                       {event?.emoji} {event?.label}
                     </span>
                   )}
+                  {earned && prestadoTorneo.has(acc.id) && (
+                    <span className="absolute bottom-0 inset-x-0 bg-violet-600/90 text-white text-[8px] font-black text-center leading-tight py-0.5">
+                      PRESTADO
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
+          {torneoPrestados.length > 0 && (
+            <p className="text-violet-200 text-[11px] mt-1.5">
+              ⚡ Los premios del torneo marcados «prestado» son tuyos para siempre cuando completes{" "}
+              {Math.min(...torneoPrestados.map((x) => x.hastaVueltas))} vueltas de las 9 tablas (llevás {torneoVueltas}). Si el 31/12 no llegaste, se devuelven.
+            </p>
+          )}
         </div>
 
         <div>
