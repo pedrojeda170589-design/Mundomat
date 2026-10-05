@@ -130,3 +130,30 @@ export async function setJSON<T>(key: string, value: T, opts?: { ttlSeconds?: nu
 export async function delKey(key: string): Promise<void> {
   await kvDelRaw(key);
 }
+
+// Todas las claves guardadas (local: el archivo; Upstash: SCAN). La usa el
+// borrado de datos del aula abierta para no dejar rastros en ninguna clave.
+export async function listKeys(): Promise<string[]> {
+  if (!KV_URL || !KV_TOKEN) return Object.keys(readLocalDb());
+  const keys: string[] = [];
+  let cursor = "0";
+  for (let i = 0; i < 1000; i++) {
+    const res = await fetch(KV_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${KV_TOKEN}` },
+      body: JSON.stringify(["SCAN", cursor, "COUNT", "1000"]),
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("No se pudieron listar las claves.");
+    const { result } = (await res.json()) as { result: [string, string[]] };
+    keys.push(...result[1]);
+    cursor = result[0];
+    if (cursor === "0") break;
+  }
+  return keys;
+}
+
+// Valor crudo (texto) de una clave, sin interpretar.
+export async function getRaw(key: string): Promise<string | null> {
+  return kvGetRaw(key);
+}

@@ -33,6 +33,14 @@ export interface Student {
   // "mundos" si la prueba terminó antes por completar los mundos de todas
   // las materias (si no, terminó por los días).
   trialEndedBy?: "mundos";
+  // Aula abierta: aceptación de las condiciones por la persona adulta
+  // responsable (fecha y hora, y versión del texto aceptado).
+  condicionesAceptadasAt?: string;
+  version_condiciones?: string;
+  // Cuándo se reemplaza el nombre por un número (inscripción + 30 días) y
+  // cuándo se hizo.
+  anonimizarAt?: string;
+  anonimizadoAt?: string;
 }
 
 export interface ActivityResult {

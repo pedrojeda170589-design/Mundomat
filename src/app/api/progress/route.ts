@@ -4,7 +4,8 @@ import { findStudentByCode, getProgress, liteProgress, saveProgress, syncStudent
 import { applyActivityResult } from "@/lib/progressLogic";
 import { collectActiveSeasonalRewards } from "@/lib/seasons";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
-import { closeTrialIfExpired, isTrialWorldBlocked } from "@/lib/openClassroom";
+import { closeTrialIfExpired, getTrialReport, isTrialWorldBlocked } from "@/lib/openClassroom";
+import { anonimizarVencidos, debeAnonimizarse } from "@/lib/privacidadPrueba";
 import { ActivityResult } from "@/types";
 import { avanzarVuelta } from "@/lib/vuelta";
 import { reclamarCamino, registrarRespuesta } from "@/lib/coleccion/racha";
@@ -39,8 +40,15 @@ export async function GET(request: NextRequest) {
   if (isTrialExpired(student)) {
     // Primera vez después del vencimiento: se guarda el informe final y se
     // borra el historial de juego.
-    const report = await closeTrialIfExpired(student);
-    return Response.json({ trialExpired: true, student, report, error: "Tu período de prueba terminó." }, { status: 403 });
+    let report = await closeTrialIfExpired(student);
+    let alumno = student;
+    // A los 30 días: el nombre se reemplaza por un número (y se borra de todos lados).
+    if (debeAnonimizarse(student)) {
+      await anonimizarVencidos();
+      alumno = (await findStudentByCode(student.code)) ?? student;
+      report = await getTrialReport(student.code);
+    }
+    return Response.json({ trialExpired: true, student: alumno, report, error: "Tu período de prueba terminó." }, { status: 403 });
   }
   // Festividades del día: el premio llega al entrar (no hace falta jugar).
   // En el cumpleaños de la Escuela, además, el gorrito se pone solo si no

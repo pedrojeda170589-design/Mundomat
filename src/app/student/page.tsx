@@ -13,6 +13,7 @@ import SkyScene from "@/components/SkyScene";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 import { TrialReport, getTrialLengthDays } from "@/lib/openClassroomShared";
 import TrialReportCard from "@/components/prueba/TrialReportCard";
+import { EliminarCuenta, QuePasaA30Dias } from "@/components/prueba/DatosPrueba";
 
 export default function StudentLoginPage() {
   const router = useRouter();
@@ -88,6 +89,11 @@ export default function StudentLoginPage() {
 
             <div className="print:hidden">
               <TrialRatingCard studentCode={expiredStudent.code} />
+            </div>
+
+            <div className="print:hidden text-left flex flex-col gap-2">
+              <QuePasaA30Dias claro />
+              <EliminarCuenta code={expiredStudent.code} claro />
             </div>
 
             <div className="pt-2">

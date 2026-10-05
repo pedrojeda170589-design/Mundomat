@@ -26,10 +26,36 @@ THEME = os.path.join(ROOT, "public", "theme")
 catalogo = json.loads(subprocess.check_output(["npx", "tsx", "scripts/coleccion/lista-para-dibujar.ts", "--json"], cwd=ROOT))
 
 _s = None
+# Con MM_RELLENO=1 se quita el fondo blanco «pintando» desde los bordes
+# (sirve para personajes blancos o con partes claras, que rembg borra).
+def relleno_blanco(im, tol=26):
+    from collections import deque
+    from PIL import ImageFilter
+    a = np.asarray(im.convert("RGB")).astype(int)
+    h, w, _ = a.shape
+    claro = (255 - a).max(axis=2) <= tol
+    mask = np.zeros((h, w), bool)
+    q = deque([(y, x) for x in range(w) for y in (0, h - 1)] + [(y, x) for y in range(h) for x in (0, w - 1)])
+    while q:
+        y, x = q.popleft()
+        if mask[y, x] or not claro[y, x]:
+            continue
+        mask[y, x] = True
+        if y > 0: q.append((y - 1, x))
+        if y < h - 1: q.append((y + 1, x))
+        if x > 0: q.append((y, x - 1))
+        if x < w - 1: q.append((y, x + 1))
+    alfa = Image.fromarray(((~mask) * 255).astype("uint8")).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
+    out = im.convert("RGBA")
+    out.putalpha(alfa)
+    return out
+
 def quitar_fondo(im):
     a = np.array(im.convert("RGBA"))
     if (a[..., 3] < 10).mean() > 0.05:  # ya viene transparente
         return Image.fromarray(a)
+    if os.environ.get("MM_RELLENO"):
+        return relleno_blanco(im)
     global _s
     from rembg import remove, new_session
     if _s is None:

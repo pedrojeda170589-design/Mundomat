@@ -1,4 +1,5 @@
 import { delKey, getJSON, setJSON } from "@/lib/store";
+import { DIAS_PRUEBA, VERSION_CONDICIONES } from "@/lib/legal/condiciones";
 import { generateUniqueCode } from "@/lib/codes";
 import { SUBJECT_INFO, Student, StudentProgress, WorldSubject } from "@/types";
 import { getProgress, getStudents } from "@/lib/data";
@@ -115,25 +116,32 @@ export type RegistrationResult =
 
 export async function registerOpenClassroomStudent(
   rawName: string,
-  clientIp: string
+  clientIp: string,
+  aceptacion: { version: string; now?: Date }
 ): Promise<RegistrationResult> {
   const name = rawName.trim().replace(/\s+/g, " ");
 
-  // Validación de nombre: 2 a 30 caracteres, letras, espacios, puntos, guiones
-  if (name.length < 2 || name.length > 30) {
+  // Solo nombre de pila o apodo: 2 a 20 letras, como mucho dos palabras
+  // (sin apellido ni otros datos).
+  if (name.length < 2 || name.length > 20) {
     return {
       ok: false,
-      error: "El nombre debe tener entre 2 y 30 caracteres.",
+      error: "El nombre de pila o apodo debe tener entre 2 y 20 letras.",
       status: 400,
     };
   }
-
-  const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s.'-]+$/;
-  if (!nameRegex.test(name)) {
+  if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ]+( [A-Za-zÁÉÍÓÚáéíóúÑñüÜ]+)?$/.test(name)) {
     return {
       ok: false,
-      error: "El nombre solo puede contener letras y espacios.",
+      error: "Escribí solo un nombre de pila o un apodo, con letras (sin apellido).",
       status: 400,
+    };
+  }
+  if (aceptacion.version !== VERSION_CONDICIONES) {
+    return {
+      ok: false,
+      error: "Las condiciones cambiaron. Recargá la página y volvé a leerlas.",
+      status: 409,
     };
   }
 
@@ -170,7 +178,7 @@ export async function registerOpenClassroomStudent(
   const existingCodes = new Set(students.map((s) => s.code));
   const code = generateUniqueCode(existingCodes);
 
-  const now = new Date();
+  const now = aceptacion.now ?? new Date();
   const trialEnds = new Date(
     now.getTime() + (config.trialDays || 30) * 24 * 60 * 60 * 1000
   );
@@ -183,6 +191,11 @@ export async function registerOpenClassroomStudent(
     createdAt: now.toISOString(),
     trialStartedAt: now.toISOString(),
     trialEndsAt: trialEnds.toISOString(),
+    // Aceptación de la persona adulta: fecha y hora, y versión del texto.
+    condicionesAceptadasAt: now.toISOString(),
+    version_condiciones: VERSION_CONDICIONES,
+    // A los 30 días el nombre se reemplaza por un número (ver privacidadPrueba.ts).
+    anonimizarAt: new Date(now.getTime() + DIAS_PRUEBA * 24 * 60 * 60 * 1000).toISOString(),
   };
 
   const updated = [...students, student];

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
+import { anonimizarVencidos } from "@/lib/privacidadPrueba";
 import {
   getOpenClassroomConfig,
   getOpenClassroomRatings,
@@ -17,6 +18,8 @@ export async function GET(request: NextRequest) {
   // Las pruebas vencidas se cierran (informe guardado, historial borrado)
   // aunque el chico no vuelva a entrar.
   await closeExpiredTrials();
+  // Y a los 30 días, el nombre se reemplaza por un número.
+  await anonimizarVencidos();
   const [config, stats, ratings] = await Promise.all([
     getOpenClassroomConfig(),
     getOpenClassroomStats(),

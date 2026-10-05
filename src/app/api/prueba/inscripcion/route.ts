@@ -1,7 +1,11 @@
-import { NextRequest } from "next/server";
+import { NextRequest, after } from "next/server";
 import { getOpenClassroomStats, registerOpenClassroomStudent } from "@/lib/openClassroom";
+import { VERSION_CONDICIONES } from "@/lib/legal/condiciones";
+import { anonimizarVencidos } from "@/lib/privacidadPrueba";
 
 export async function GET() {
+  // De paso, anonimiza a quienes ya cumplieron 30 días (proceso automático).
+  after(() => anonimizarVencidos().catch(() => {}));
   const stats = await getOpenClassroomStats();
   return Response.json({
     open: stats.open,
@@ -9,16 +13,18 @@ export async function GET() {
     capacity: stats.capacity,
     trialDays: stats.trialDays,
     totalEnrolled: stats.totalEnrolled,
+    versionCondiciones: VERSION_CONDICIONES,
   });
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, consent, honeypot } = body as {
+    const { name, consent, honeypot, versionCondiciones } = body as {
       name?: string;
       consent?: boolean;
       honeypot?: string;
+      versionCondiciones?: string;
     };
 
     // Filtro anti-bots (campo trampa)
@@ -26,7 +32,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Solicitud rechazada." }, { status: 400 });
     }
 
-    if (!consent) {
+    if (consent !== true) {
       return Response.json(
         { error: "La persona adulta responsable debe aceptar las condiciones de la prueba." },
         { status: 400 }
@@ -35,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (!name || typeof name !== "string") {
       return Response.json(
-        { error: "Por favor indicá el nombre del estudiante." },
+        { error: "Por favor indicá un nombre de pila o apodo." },
         { status: 400 }
       );
     }
@@ -47,7 +53,7 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-real-ip") ||
       "127.0.0.1";
 
-    const result = await registerOpenClassroomStudent(name, clientIp);
+    const result = await registerOpenClassroomStudent(name, clientIp, { version: String(versionCondiciones ?? "") });
     if (!result.ok) {
       return Response.json({ error: result.error }, { status: result.status });
     }

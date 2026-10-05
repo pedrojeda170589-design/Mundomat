@@ -14,6 +14,7 @@ import { WorldDef, StudentProgress, WorldSubject, SUBJECT_INFO } from "@/types";
 import { getMedalTier, MEDAL_INFO } from "@/lib/medals";
 import { esSemanaDeDictado, getMundoDictado } from "@/lib/dictado/banco";
 import WorldMap from "@/components/WorldMap";
+import { EliminarCuenta, QuePasaA30Dias } from "@/components/prueba/DatosPrueba";
 import { tramosDelMapa, tramoActual } from "@/lib/mapa/modulos";
 import ActivityRunner from "@/components/ActivityRunner";
 import CoinBadge from "@/components/CoinBadge";
@@ -86,7 +87,12 @@ export default function StudentPlayPage() {
     const progressData = await progressRes.json();
     if (progressRes.status === 403 && progressData.trialExpired) {
       setTrialExpired(true);
-      if (progressData.student?.name) setName(progressData.student.name);
+      if (progressData.student?.name) {
+        setName(progressData.student.name);
+        try {
+          sessionStorage.setItem("mundomat_name", progressData.student.name);
+        } catch {}
+      }
       setTrialLength(getTrialLengthDays(progressData.student));
       setTrialReport(progressData.report ?? null);
       setLoading(false);
@@ -170,6 +176,11 @@ export default function StudentPlayPage() {
 
             <div className="print:hidden">
               <TrialRatingCard studentCode={code || ""} />
+            </div>
+
+            <div className="print:hidden text-left flex flex-col gap-2">
+              <QuePasaA30Dias claro />
+              {code && <EliminarCuenta code={code} claro />}
             </div>
 
             <div className="pt-2">
@@ -311,6 +322,17 @@ export default function StudentPlayPage() {
             </button>
           )}
         </div>
+        <details className="mt-1.5 rounded-xl bg-slate-900/70 border border-sky-400/40 text-sky-50 px-3 py-1.5 text-xs">
+          <summary className="cursor-pointer font-bold">🔒 Tus datos y qué pasa a los 30 días</summary>
+          <div className="mt-2 flex flex-col gap-2">
+            <QuePasaA30Dias />
+            <p>
+              Ver <Link href="/terminos" target="_blank" className="underline">Términos</Link> y{" "}
+              <Link href="/privacidad" target="_blank" className="underline">Política de privacidad</Link>.
+            </p>
+            <EliminarCuenta code={code} />
+          </div>
+        </details>
         </div>
       )}
 
