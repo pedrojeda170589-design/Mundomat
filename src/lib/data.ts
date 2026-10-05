@@ -577,7 +577,8 @@ export async function completeWeekendActivity(
     const chestCoins = FINAL_BONUS + computeSpecialChallengeReward(streak);
     coins += chestCoins;
     const owned = new Set(progress.seasonalCollection ?? []);
-    const accessoryId = WEEKEND_REWARD_IDS.find((id) => !owned.has(id));
+    const regalados = new Set(progress.objetosRegalados ?? []);
+    const accessoryId = WEEKEND_REWARD_IDS.find((id) => !owned.has(id) && !regalados.has(id));
     if (accessoryId) owned.add(accessoryId);
     next.reward = { coins: chestCoins, accessoryId };
     updated.seasonalCollection = [...owned];
@@ -801,7 +802,7 @@ export function applyDictationWorldAttempt(
     if (is100) {
       rewardEarned = true;
       bonusCoins = 20;
-      if (!seasonal.has("lapiz-dorado")) {
+      if (!seasonal.has("lapiz-dorado") && !(progress.objetosRegalados ?? []).includes("lapiz-dorado")) {
         seasonal.add("lapiz-dorado");
         lapizUnlocked = true;
       }

@@ -25,6 +25,7 @@ import {
 
 import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedLookup } from "@/lib/rateLimit";
 import { resolveDisplayNames } from "@/lib/studentNames";
+import { objetosRegalables, regalarObjeto, responderRegalo, vencerRegalos } from "@/lib/regalosObjetos";
 
 // GET ?code=  → buzón del alumno + compañeros (con quién está conectado).
 //               También marca al alumno como conectado.
@@ -78,11 +79,14 @@ export async function GET(request: NextRequest) {
 
   const mates = classmatesOf(me, students);
   const resolvedNames = resolveDisplayNames(mates);
-  const [, all, snapshot, presence] = await Promise.all([
+  // Primero, los regalos de objetos sin respuesta en 7 días vuelven a su dueño.
+  const regalos = await vencerRegalos();
+  const [, all, snapshot, presence, mine] = await Promise.all([
     touchPresence(me.code),
     getMessages(),
     getClassSnapshot(),
     getPresenceMap(mates.map((s) => s.code)),
+    getProgress(me.code),
   ]);
   presence[me.code] = new Date().toISOString();
   const classmates = mates
@@ -98,13 +102,22 @@ export async function GET(request: NextRequest) {
         background: p?.avatarBackground,
         online: isOnline(presence[s.code]),
         birthdayToday: isBirthdayToday(s.birthday),
+        // Para no ofrecer un objeto que ya tiene (o que ya le están regalando).
+        tiene: [
+          ...(p?.seasonalCollection ?? []),
+          ...regalos.filter((r) => r.estado === "pendiente" && r.to === s.code).map((r) => r.itemId),
+        ],
       };
     });
   classmates.sort((a, b) => Number(b.online) - Number(a.online) || a.name.localeCompare(b.name));
   const inbox = all
     .filter((m) => m.to === me.code)
     .slice(0, 30)
-    .map((m) => ({ ...m, fromName: classmates.find((c) => c.code === m.from)?.name ?? "Un compañero" }));
+    .map((m) => ({
+      ...m,
+      fromName: classmates.find((c) => c.code === m.from)?.name ?? "Un compañero",
+      ...(m.giftId ? { giftEstado: regalos.find((r) => r.id === m.giftId)?.estado } : {}),
+    }));
   const now = new Date().toISOString();
   const sentToday = all.filter((m) => m.from === me.code && sameArgDay(m.at, now));
   return Response.json({
@@ -114,6 +127,12 @@ export async function GET(request: NextRequest) {
     unread: inbox.filter((m) => !m.read).length,
     coinsSentToday: sentToday.filter((m) => m.kind === "monedas").reduce((s, m) => s + (m.amount ?? 0), 0),
     messagesSentToday: sentToday.length,
+    // Objetos ganados que puede regalar y los que tiene en camino.
+    regalables: objetosRegalables(mine),
+    enCamino: regalos
+      .filter((r) => r.estado === "pendiente" && r.from === me.code)
+      .map((r) => ({ id: r.id, itemId: r.itemId, toName: classmates.find((c) => c.code === r.to)?.name ?? "Un compañero" })),
+    objetosHoy: regalos.filter((r) => r.from === me.code && sameArgDay(r.at, now)).length,
   });
 }
 
@@ -139,7 +158,10 @@ export async function POST(request: NextRequest) {
     return Response.json({ ok: true, enabled: !!body.enabled });
   }
 
-  const { code, to, kind, presetId, amount, markRead } = body as {
+  const { code, to, kind, presetId, amount, markRead, itemId, giftId, respuesta } = body as {
+    itemId?: string;
+    giftId?: string;
+    respuesta?: "aceptar" | "rechazar";
     code?: string;
     to?: string;
     kind?: MessageKind;
@@ -164,6 +186,21 @@ export async function POST(request: NextRequest) {
 
   if (!(await isMessagingEnabled())) {
     return Response.json({ error: "El buzón está apagado por el docente." }, { status: 403 });
+  }
+
+  // Responder un regalo de objeto (aceptar o rechazar).
+  if (giftId) {
+    if (respuesta !== "aceptar" && respuesta !== "rechazar") return Response.json({ error: "Respuesta inválida." }, { status: 400 });
+    const r = await responderRegalo(me.code, giftId, respuesta === "aceptar");
+    if (!r.ok) return Response.json({ error: r.error }, { status: r.status ?? 400 });
+    return Response.json({ ok: true, estado: r.regalo.estado });
+  }
+  // Regalar uno de sus objetos ganados.
+  if (kind === "objeto") {
+    if (!to || !itemId) return Response.json({ error: "Elegí a un compañero y un objeto." }, { status: 400 });
+    const r = await regalarObjeto(me.code, to, itemId);
+    if (!r.ok) return Response.json({ error: r.error }, { status: r.status ?? 400 });
+    return Response.json({ ok: true, regalo: r.regalo });
   }
   const target = to ? await findStudentByCode(to) : undefined;
   if (!target || target.code === me.code || !sameClassroom(target, me)) {

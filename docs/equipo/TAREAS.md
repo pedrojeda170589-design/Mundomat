@@ -29,6 +29,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🔴 PENDIENTE |
+| CL-18 | Regalar objetos ganados a un compañero desde el buzón (🎀 Objeto): pasa a ser suyo cuando lo acepta; si lo rechaza o no responde en 7 días vuelve; sin comprados ni prestados; 3 por día; lo regalado no se vuelve a dar solo | Claude | 🟢 UNIDA A MAIN |
 | CL-17 | Torneo de las tablas: un objeto especial por mes, insignia ×2 en el perfil (se puede quitar) y accesorio Six-Seven prestado hasta el viernes para quienes están al día con los mundos habilitados; revisión de AG-17 | Claude | 🟢 UNIDA A MAIN |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-16 | Tabla pitagórica con el modelo de Pedro (0 a 10, colores), descargable en PDF e imagen; repaso de las tablas al azar desde julio de 3.º y todo el año desde 4.º | Claude | 🟢 UNIDA A MAIN |

@@ -167,6 +167,9 @@ export interface StudentProgress {
   vueltaTablas?: { tablas: Record<number, { ms: number; errores: number }>; desde: string };
   torneoPrestados?: { id: string; hastaVueltas: number; vence: string }[];
   insigniaTorneoOculta?: boolean;
+  // Objetos ganados que regaló a un compañero: no se le vuelven a dar solos
+  // (premios de temporada, del finde, lápiz dorado), así no se «copian».
+  objetosRegalados?: string[];
   // Accesorio Six-Seven prestado (torneo + al día con los mundos): se puede
   // usar hasta `hasta` (el viernes a la noche) y después se devuelve solo.
   prestamo67?: { id: string; hasta: string; semana: string };

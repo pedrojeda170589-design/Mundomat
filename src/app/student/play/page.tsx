@@ -390,6 +390,12 @@ export default function StudentPlayPage() {
             code={code}
             coins={progress.coins}
             onCoinsChange={(coins) => setProgress((p) => (p ? { ...p, coins } : p))}
+            onColeccionCambio={() =>
+              void fetch(`/api/progress?code=${encodeURIComponent(code)}&lite=1`)
+                .then((r) => (r.ok ? r.json() : null))
+                .then((d) => d?.progress && setProgress(d.progress))
+                .catch(() => {})
+            }
           />
           <button
             onClick={() => setCaminoOpen(true)}

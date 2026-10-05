@@ -448,7 +448,8 @@ export default function ProfileEditor({
           </p>
           <p className="text-slate-500 text-[11px] mb-2">
             Se ganan jugando durante cada estación o festividad, y quedan
-            para siempre.
+            para siempre. Los que ya son tuyos (no los prestados) se los
+            podés regalar a un compañero desde el 💌 Buzón → 🎀 Objeto.
           </p>
           <div className="grid grid-cols-4 gap-2">
             {[...ACCESSORY_CATALOG_TEMPORADA, ...ACCESSORY_CATALOG_PREMIO.filter((a) => owned.has(a.id))].map((acc) => {

@@ -310,7 +310,8 @@ export function collectActiveSeasonalRewards(
   now: Date = new Date(),
   birthday?: string
 ): { progress: StudentProgress; newRewards: string[] } {
-  const owned = new Set(progress.seasonalCollection ?? []);
+  // Los que regaló cuentan como «ya ganados»: no se le vuelven a dar.
+  const owned = new Set([...(progress.seasonalCollection ?? []), ...(progress.objetosRegalados ?? [])]);
   const newRewards: string[] = [];
   const eventIds = getActiveEvents(now).map((e) => e.id);
   // El cumpleaños no es un evento del calendario general: es de cada uno.
@@ -326,7 +327,7 @@ export function collectActiveSeasonalRewards(
   }
   if (newRewards.length === 0) return { progress, newRewards };
   return {
-    progress: { ...progress, seasonalCollection: [...owned] },
+    progress: { ...progress, seasonalCollection: [...(progress.seasonalCollection ?? []), ...newRewards] },
     newRewards,
   };
 }

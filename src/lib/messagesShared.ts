@@ -1,9 +1,13 @@
 // Buzón de la clase (parte que puede usarse también en el navegador): los alumnos se mandan SOLO mensajes ya establecidos
 // (no hay texto libre), regalitos y monedas, pensados para la buena
 // convivencia. El docente puede ver todo el historial y apagarlo.
+import { getAccessoryById } from "@/types";
+import { TEXTO_RESPUESTA } from "@/lib/regalosObjetosShared";
 
 
-export type MessageKind = "mensaje" | "regalo" | "monedas" | "desafio";
+// "objeto": un compañero te quiere regalar uno de sus objetos ganados (lo
+// aceptás o no); "objeto-respuesta": aviso a quien regaló (ver regalosObjetos.ts).
+export type MessageKind = "mensaje" | "regalo" | "monedas" | "desafio" | "objeto" | "objeto-respuesta";
 
 export interface PresetMessage {
   id: string;
@@ -73,6 +77,8 @@ export interface ClassMessage {
   presetId?: string;
   amount?: number;
   duelId?: string; // desafío: el duelo al que invita
+  giftId?: string; // objeto: el regalo (ver regalosObjetos.ts)
+  itemId?: string; // objeto: cuál
   read?: boolean;
 }
 
@@ -81,6 +87,13 @@ export function isOnline(iso: string | undefined, now = Date.now()): boolean {
 }
 
 export function describeMessage(m: ClassMessage): { emoji: string; text: string } {
+  if (m.kind === "objeto") {
+    return { emoji: "🎀", text: `te quiere regalar: ${getAccessoryById(m.itemId ?? "")?.label ?? "un objeto"}` };
+  }
+  if (m.kind === "objeto-respuesta") {
+    const t = TEXTO_RESPUESTA[(m.presetId ?? "aceptado") as keyof typeof TEXTO_RESPUESTA] ?? "respondió tu regalo";
+    return { emoji: m.presetId === "aceptado" ? "💝" : "↩️", text: `${t}: ${getAccessoryById(m.itemId ?? "")?.label ?? "un objeto"}` };
+  }
   if (m.kind === "monedas") return { emoji: "🪙", text: `te regaló ${m.amount} ${m.amount === 1 ? "moneda" : "monedas"}` };
   if (m.kind === "regalo") {
     const g = PRESET_GIFTS.find((x) => x.id === m.presetId);

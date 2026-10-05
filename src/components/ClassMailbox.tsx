@@ -16,7 +16,18 @@ import {
   PRESET_MESSAGES,
   describeMessage,
 } from "@/lib/messagesShared";
-import { AvatarAccessories } from "@/types";
+import Image from "next/image";
+import { AvatarAccessories, getAccessoryById, getAccessorySrc } from "@/types";
+import { DIAS_PARA_RESPONDER, MAX_REGALOS_OBJETO_POR_DIA, type EstadoRegalo } from "@/lib/regalosObjetosShared";
+
+function DibujoObjeto({ id, size = 40 }: { id?: string; size?: number }) {
+  const def = id ? getAccessoryById(id) : undefined;
+  return (
+    <span className="relative shrink-0 flex items-center justify-center text-2xl" style={{ width: size, height: size }}>
+      {def ? <Image src={getAccessorySrc(def.id)} alt={def.label} fill sizes={`${size}px`} className="object-contain" /> : "🎀"}
+    </span>
+  );
+}
 
 interface Classmate {
   code: string;
@@ -27,14 +38,18 @@ interface Classmate {
   background?: string;
   online: boolean;
   birthdayToday?: boolean;
+  tiene?: string[];
 }
 
 interface MailboxData {
   enabled: boolean;
   classmates: Classmate[];
-  inbox: (ClassMessage & { fromName: string })[];
+  inbox: (ClassMessage & { fromName: string; giftEstado?: EstadoRegalo })[];
   unread: number;
   coinsSentToday: number;
+  regalables?: string[];
+  enCamino?: { id: string; itemId: string; toName: string }[];
+  objetosHoy?: number;
 }
 
 function timeAgo(iso: string): string {
@@ -54,10 +69,13 @@ export default function ClassMailbox({
   code,
   coins,
   onCoinsChange,
+  onColeccionCambio,
 }: {
   code: string;
   coins: number;
   onCoinsChange: (coins: number) => void;
+  // Cambió la colección (regaló o aceptó un objeto): recargar el progreso.
+  onColeccionCambio?: () => void;
 }) {
   const router = useRouter();
   const [data, setData] = useState<MailboxData | null>(null);
@@ -68,6 +86,7 @@ export default function ClassMailbox({
   const [duelMode, setDuelMode] = useState<"turnos" | "vivo">("turnos");
   const [status, setStatus] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [objetoElegido, setObjetoElegido] = useState<string | null>(null);
 
   // Completo (compañeros, recibidos): solo cuando se abre el buzón.
   const load = useCallback(async () => {
@@ -111,7 +130,33 @@ export default function ClassMailbox({
     void loadLight();
   }
 
-  async function send(payload: { presetId?: string; amount?: number }) {
+  async function responder(giftId: string, respuesta: "aceptar" | "rechazar") {
+    setSending(true);
+    setStatus(null);
+    try {
+      const r = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, giftId, respuesta }),
+      });
+      const d = await r.json();
+      if (!r.ok) setStatus(`⚠️ ${d.error}`);
+      else
+        setStatus(
+          d.estado === "aceptado"
+            ? "💝 ¡Es tuyo! Ya te lo podés poner desde «Mi perfil»."
+            : d.estado === "devuelto"
+              ? "Ya lo tenías: volvió a tu compañero."
+              : "Listo: el objeto volvió a tu compañero."
+        );
+      await load();
+      onColeccionCambio?.();
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function send(payload: { presetId?: string; amount?: number; itemId?: string }) {
     if (!to) return;
     setSending(true);
     setStatus(null);
@@ -135,7 +180,12 @@ export default function ClassMailbox({
         router.push(`/student/competencia/jugar?duelo=${encodeURIComponent(d.duelId)}`);
       } else {
         if (typeof d.coins === "number") onCoinsChange(d.coins);
-        setStatus(`✅ ¡Listo! Se lo mandaste a ${to.name}.`);
+        if (kind === "objeto") onColeccionCambio?.();
+        setStatus(
+          kind === "objeto"
+            ? `🎀 ¡Listo! Le regalaste el objeto a ${to.name}. Cuando lo acepte, es suyo (si no lo acepta en ${DIAS_PARA_RESPONDER} días, vuelve a vos).`
+            : `✅ ¡Listo! Se lo mandaste a ${to.name}.`
+        );
         setTo(null);
         void load();
       }
@@ -216,7 +266,11 @@ export default function ClassMailbox({
                         key={m.id}
                         className="rounded-2xl bg-slate-800 px-3 py-2 flex items-center gap-3"
                       >
-                        <span className="text-3xl">{d.emoji}</span>
+                        {m.kind === "objeto" || m.kind === "objeto-respuesta" ? (
+                          <DibujoObjeto id={m.itemId} />
+                        ) : (
+                          <span className="text-3xl">{d.emoji}</span>
+                        )}
                         <span className="flex-1">
                           <span className="block text-amber-200 text-xs font-bold">
                             {m.fromName}
@@ -227,6 +281,29 @@ export default function ClassMailbox({
                         </span>
                         <span className="flex flex-col items-end gap-1">
                           <span className="text-[10px] text-slate-500">{timeAgo(m.at)}</span>
+                          {m.kind === "objeto" && m.giftId && m.giftEstado === "pendiente" && (
+                            <span className="flex gap-1">
+                              <button
+                                disabled={sending}
+                                onClick={() => void responder(m.giftId!, "aceptar")}
+                                className="rounded-lg bg-emerald-400 text-slate-900 text-[11px] font-black px-2 py-1"
+                              >
+                                Aceptar
+                              </button>
+                              <button
+                                disabled={sending}
+                                onClick={() => void responder(m.giftId!, "rechazar")}
+                                className="rounded-lg bg-slate-600 text-white text-[11px] font-bold px-2 py-1"
+                              >
+                                No, gracias
+                              </button>
+                            </span>
+                          )}
+                          {m.kind === "objeto" && m.giftEstado && m.giftEstado !== "pendiente" && (
+                            <span className="text-[10px] text-slate-400">
+                              {m.giftEstado === "aceptado" ? "✅ Aceptado" : m.giftEstado === "vencido" ? "Venció" : "Devuelto"}
+                            </span>
+                          )}
                           {m.kind === "desafio" && (
                             <Link
                               href="/student/competencia"
@@ -307,11 +384,12 @@ export default function ClassMailbox({
                       Cambiar
                     </button>
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-5 gap-1.5">
                     {(
                       [
                         ["mensaje", "💬 Mensaje"],
                         ["regalo", "🎁 Regalo"],
+                        ["objeto", "🎀 Objeto"],
                         ["monedas", "🪙 Monedas"],
                         ["desafio", "⚔️ Desafío"],
                       ] as const
@@ -399,6 +477,69 @@ export default function ClassMailbox({
                           {g.text}
                         </button>
                       ))}
+                    </div>
+                  )}
+                  {kind === "objeto" && (
+                    <div className="flex flex-col gap-2">
+                      <p className="text-slate-400 text-xs">
+                        Regalale uno de tus objetos ganados. Pasa a ser de {to.name} cuando lo acepte (si no lo acepta en{" "}
+                        {DIAS_PARA_RESPONDER} días, vuelve a vos). Los comprados y los prestados no se regalan. Hasta{" "}
+                        {MAX_REGALOS_OBJETO_POR_DIA} por día (hoy: {data.objetosHoy ?? 0}).
+                      </p>
+                      {(() => {
+                        const lista = (data.regalables ?? []).filter((id) => getAccessoryById(id));
+                        if (!lista.length) {
+                          return <p className="text-slate-300 text-sm text-center py-3">Todavía no tenés objetos ganados para regalar.</p>;
+                        }
+                        return (
+                          <div className="grid grid-cols-4 gap-2 max-h-[40vh] overflow-y-auto pr-1">
+                            {lista.map((id) => {
+                              const yaTiene = to.tiene?.includes(id);
+                              return (
+                                <button
+                                  key={id}
+                                  disabled={sending || yaTiene || (data.objetosHoy ?? 0) >= MAX_REGALOS_OBJETO_POR_DIA}
+                                  onClick={() => setObjetoElegido(id)}
+                                  title={yaTiene ? "Ya lo tiene" : getAccessoryById(id)?.label}
+                                  className={`relative aspect-square rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 flex items-center justify-center ${objetoElegido === id ? "ring-2 ring-pink-400" : ""}`}
+                                >
+                                  <DibujoObjeto id={id} size={52} />
+                                  {yaTiene && (
+                                    <span className="absolute bottom-0 inset-x-0 bg-black/70 text-[9px] text-white text-center">Ya lo tiene</span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+                      {objetoElegido && (
+                        <div className="rounded-xl bg-pink-950/70 border border-pink-300 p-2 flex items-center gap-2 text-xs text-white">
+                          <DibujoObjeto id={objetoElegido} />
+                          <span className="flex-1">
+                            ¿Regalarle <b>{getAccessoryById(objetoElegido)?.label}</b> a {to.name}? Deja de ser tuyo.
+                          </span>
+                          <button
+                            disabled={sending}
+                            onClick={() => {
+                              const id = objetoElegido;
+                              setObjetoElegido(null);
+                              void send({ itemId: id });
+                            }}
+                            className="rounded-lg bg-pink-400 text-slate-900 font-black px-2 py-1"
+                          >
+                            Sí, regalar
+                          </button>
+                          <button onClick={() => setObjetoElegido(null)} className="text-slate-300 underline">
+                            Cancelar
+                          </button>
+                        </div>
+                      )}
+                      {!!data.enCamino?.length && (
+                        <p className="text-[11px] text-slate-400">
+                          En camino: {data.enCamino.map((r) => `${getAccessoryById(r.itemId)?.label ?? r.itemId} → ${r.toName}`).join(" · ")}
+                        </p>
+                      )}
                     </div>
                   )}
                   {kind === "monedas" && (
