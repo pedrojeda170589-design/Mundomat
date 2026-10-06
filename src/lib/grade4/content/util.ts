@@ -121,9 +121,21 @@ export function makeOrder(
   hint: string,
   skills: string[]
 ): ActivitySpec {
-  const n = sequence.length;
-  const perm = n === 3 ? [1, 2, 0] : n === 4 ? [2, 0, 3, 1] : [1, 0, 2];
-  const items = perm.map((idx) => sequence[idx]);
+  const cleanSeq = sequence.map((it) => it.replace(/^\d{1,2}[.)]\s+/, "").trim());
+  const n = cleanSeq.length;
+  let perm: number[] = Array.from({ length: n }, (_, i) => i);
+  let isIdentical = true;
+  for (let attempt = 0; attempt < 50; attempt++) {
+    perm = shuffle(Array.from({ length: n }, (_, i) => i));
+    if (!perm.every((v, idx) => v === idx)) {
+      isIdentical = false;
+      break;
+    }
+  }
+  if (isIdentical && n > 1) {
+    perm = [perm[1], perm[0], ...perm.slice(2)];
+  }
+  const items = perm.map((idx) => cleanSeq[idx]);
   const correctOrder = Array.from({ length: n }, (_, k) => perm.indexOf(k));
   return {
     type: "order",

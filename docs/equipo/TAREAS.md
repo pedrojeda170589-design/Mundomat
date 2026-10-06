@@ -28,7 +28,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
-| AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🔴 PENDIENTE |
+| AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | CL-17 | Torneo de las tablas: un objeto especial por mes, insignia ×2 en el perfil (se puede quitar) y accesorio Six-Seven prestado hasta el viernes para quienes están al día con los mundos habilitados; revisión de AG-17 | Claude | 🟢 UNIDA A MAIN |
 | CL-12 | Colecciones de 10 días; Camino de premios con estilo de mapa de niveles; fondos ilustrados en las ventanas; portada completa en el celular y luna con la fase real | Claude | 🟢 UNIDA A MAIN |
 | CL-16 | Tabla pitagórica con el modelo de Pedro (0 a 10, colores), descargable en PDF e imagen; repaso de las tablas al azar desde julio de 3.º y todo el año desde 4.º | Claude | 🟢 UNIDA A MAIN |
@@ -40,6 +40,77 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-18 · Segunda corrección del contenido de 4.º grado (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` para revisión de Claude).
+
+#### 1. Críticos resueltos
+- **1.1 Ciencias Naturales: alineación estricta de bancos con `worlds.ts` [HECHO]**
+  - Se reasignó cada uno de los 26 bancos de `NATURALES_BANK` al tema exacto de su mundo en `worlds.ts` (fuente de la verdad curricular).
+  - Se redactaron desde cero con rigor pedagógico los 6 bancos faltantes: 5 (Cuatro reinos y microorganismos), 11 (Materiales naturales y manufacturados), 13 (Estados de la materia y partículas), 14 (Cambios de estado y escarcha), 15 (Mezclas homogéneas y heterogéneas), 16 (Métodos de separación de mezclas) y 17 (La luz, fuentes luminosas y sombras).
+  - Se ampliaron las actividades complementarias (`EXTRA_NATURALES`) con más de 3 actividades temáticas por mundo (clasificar, ordenar, verdadero/falso).
+  - *Comprobación:* `test-grado4.ts` verifica los 26 mundos con >= 15 preguntas cada uno y Check 5 valida la concordancia temática de cada pregunta con el título y contenidos del mundo (0 fallos).
+- **1.2 Ciencias Sociales: opciones desfasadas y coherencia con la pregunta [HECHO]**
+  - Se corrigió el desfasaje en los mundos 5 y 8 a 26: cada una de las 390 preguntas tiene en su índice 0 la respuesta correcta inequívoca, con sentido histórico/geográfico y concordancia con la pista.
+  - Se realineó `EXTRA_SOCIALES` (mundos 4 a 26) según la temática oficial de `worlds.ts` (relieve, hidrografía, recursos, minería, pueblos originarios, época colonial e instituciones de gobierno).
+  - *Comprobación:* Check 6 en `test-grado4.ts` comprueba que el 100% de las respuestas correctas comparten palabras clave con la pista (0 fallos).
+- **1.3 Opciones que delatan la respuesta [HECHO]**
+  - **Actividades de ordenar:** Se removieron los números ordinales de los ítems («1.», «2.»…) y se corrigió `makeOrder` en `util.ts` para asegurar permutaciones aleatorias no idénticas (`!correctOrder.every((v, i) => v === i)`).
+  - **Emojis en opciones:** Se reemplazaron todos los emojis indicadores (`✅`, `❌`, `✔`, `✖`) por iconos temáticos neutros.
+  - **Distractores plausibles:** Se eliminaron las opciones absurdas/de chiste; se introdujeron confusiones conceptuales afines para chicos de 9 años con longitud equilibrada.
+  - **Etiquetas neutrales:** Se eliminaron etiquetas que anticipaban la respuesta.
+  - *Comprobación:* En 500 vueltas simuladas (458.638 actividades), 0 ítems de ordenar inician con número, 0 ordenamientos resultan idénticos, y 0 opciones contienen emojis prohibidos.
+- **1.4 Matemática: opciones duplicadas y ambigüedades posicionales [HECHO]**
+  - **42005 (Romanos):** Reemplazada sustitución simple por generador que calcula números romanos cercanos válidos con distancias ±1 y ±10.
+  - **42003 (Valor posicional):** Forzadas cifras estrictamente distintas; eliminadas ambigüedades en preguntas posicionales.
+  - **Deduplicación:** Implementada la función `distinctChoices` en `matematica.ts` (mundos 42001, 42002, 42006, 42013, etc.) asegurando siempre opciones numéricas únicas.
+  - **Corrección de enunciados:** Eliminados casos como «6/3 de alfajor» (42016), «5/4 del mural» (42020) y «sumale a × 0» (42009).
+  - **Concordancia gramatical:** Corregido a singular cuando la cifra es 1 («1 centena», «1 unidad de mil», «1 decena de mil»).
+  - *Comprobación:* Check 1 de `test-grado4.ts` en 500 vueltas valida unicidad absoluta de opciones (0 duplicados).
+- **1.5 Variedad real en los bancos dentro de cada vuelta [HECHO]**
+  - Se añadieron bancos y generadores con variedad contextual en los mundos 42004, 42010, 42011, 42012, 42014, 42015, 42017, 42018, 42019, 42020, 42021, 42022, 42024, 42025, 42026, 42027 y 42028.
+  - *Comprobación:* Check 4 en `test-grado4.ts` valida que ninguna consigna se repite más de 2 veces en ninguna vuelta.
+
+#### 2. Errores de contenido específicos corregidos
+- **Lengua:**
+  - Pregunta 244: opciones correctas y plausibles («Monólogo», «Aparte», «Diálogo»).
+  - Pregunta 291: opción única con sangría, mayúscula y punto; distractores corregidos y diferenciados.
+  - Mundo 6: figuras históricas documentadas (Casimiro Biguá 1869, Francisco P. Moreno 1877 bautismo Lago Argentino y donación 1903 para el PN Nahuel Huapi de 1934; Grete Mostny contextualizada en la Patagonia chilena; Sara Braun empresaria en Punta Arenas; hidroavión *Tsingtau* de Gunther Plüschow).
+  - Eliminadas referencias a textos inexistentes (95); corregido «paratextual» (70), verbos destacados (509), tiempos narrativos (711), pronombres (707); respuestas que no repiten la consigna (183, 374, 380).
+  - Ortografía: «guion» sin tilde (397, 616), «el dígrafo» (599), «salidas de emergencia» (150), raya de diálogo (616), «Mar Argentino» (45), «tonina overa» (49).
+- **Ciencias Sociales:**
+  - Pregunta 154: el huemul como Monumento Natural Nacional en Argentina y en el escudo de Chile.
+  - Pregunta 92: el lago San Martín es el compartido con Chile (donde se llama lago O'Higgins).
+  - Pregunta 91: el glaciar Viedma alimenta al lago Viedma.
+  - Datos precisados: El Gorosito monumento de bronce; censo 2022 con poblaciones realistas; «Güer Aike» con diéresis; respuestas sin redundancia (117).
+- **Ciencias Naturales:**
+  - Fases lunares (688–690): en el hemisferio sur el cuarto creciente se observa como una **C** y el cuarto menguante como una **D**.
+  - Fauna: puma no ruge (267); notro polinizado por picaflor (95, 510); flor del michay amarillo-anaranjada (57); vértebras clasificadas como huesos irregulares (534, 536); pato vapor opción unívoca (29); jabalí especie exótica invasora omnívora; huemul adaptado a la cordillera andino-patagónica.
+  - Física y química: velocidad del sonido sólidos > líquidos > gases; petróleo recurso natural fósil no renovable; escarcha por sublimación inversa/cristalización; arrayán aclarado como no nativo de Santa Cruz; fitoplancton como base trófica marina.
+  - Vocabulario adaptado para 4.º grado (9 años), eliminando tecnicismos innecesarios (anemócora, mioglobina, etc.).
+- **Matemática:**
+  - Datos realistas: censos de localidades santacruceñas acordes a la provincia (Gregores ~6.000, Pico Truncado ~25.000); distancias y tiempos de viaje patagónicos coherentes.
+  - Temas cubiertos: proporcionalidad directa, números romanos, valor posicional y descomposición aditiva/polinómica, repertorio de cálculo mental, cuadriláteros, ángulos, fracciones y decimales con coma argentina.
+
+#### 3. Nuevas comprobaciones automáticas en `scripts/test-grado4.ts`
+Con 500 vueltas por cada uno de los 108 mundos curriculares + Dictado (54.500 ejecuciones / 458.638 actividades analizadas):
+1. **Check 1:** Opciones repetidas, vacías, `NaN` o `undefined` en todas las actividades: **0 fallos**.
+2. **Check 2:** Ítems de ordenar que comiencen con número (`/^\d+[.)]/`) o cuyo orden mezclado sea idéntico al correcto: **0 fallos**.
+3. **Check 3:** Emojis prohibidos (`✅`, `❌`, `✔`, `✖`) en tarjetas, ítems, consignas, títulos o pistas: **0 fallos**.
+4. **Check 4:** Consignas repetidas más de 2 veces en una misma vuelta: **0 fallos**.
+5. **Check 5:** Consignas de Sociales y Naturales comparten palabras clave con `worlds.ts` (`TOPIC_KEYWORDS`): **0 fallos** en las 780 preguntas de ambos bancos.
+6. **Check 6:** Opción correcta (índice 0) comparte palabras clave con la pista: **0 fallos** en las 780 preguntas de ambos bancos.
+
+#### 4. Verificación de entrega
+- `npx tsc --noEmit`: **0 errores** (TypeScript limpio).
+- `npx eslint src scripts/test-grado4.ts`: **0 errores y 0 warnings**.
+- `npx tsx scripts/test-grado4.ts`: **13/13 comprobaciones exitosas**.
+- `npx tsx scripts/test-modulos.ts`: **8 materias comprobadas exitosamente**.
+- `src/lib/grades.ts`: `publicado: false` permanece intacto (4.º grado continúa oculto).
+- **Cero git push**.
+
+---
 
 ### AG-17 · Corrección completa del contenido de 4.º grado (Antigravity)
 
