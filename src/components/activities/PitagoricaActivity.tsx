@@ -8,8 +8,11 @@ import { COLOR_COLUMNA, COLOR_FILA, TABLA_MAX } from "@/lib/tablaPitagorica";
 // colores; la fila es el primer número y la columna el segundo):
 // - "cruce": para a × b, tocar el casillero donde se cruzan la fila a y la
 //   columna b.
-// - "inversa": para D ÷ d, buscar el D en la fila d y después tocar el
-//   número de arriba de esa columna (el resultado).
+// - "inversa": para D ÷ d (pedido de Pedro, 6/10/2026): la COLUMNA del
+//   divisor d aparece marcada; se busca el D en esa columna y después se toca
+//   el número de la izquierda de esa fila (el resultado). Como en la tabla el
+//   D puede aparecer en varios lugares, también vale encontrarlo en la fila
+//   del d (y entonces el resultado es el número de arriba de esa columna).
 interface Props {
   prompt: string;
   modo: "cruce" | "inversa";
@@ -22,8 +25,13 @@ const N = TABLA_MAX;
 
 export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone }: Props) {
   const [tocado, setTocado] = useState<{ f: number; c: number } | null>(null);
-  const [dividendoOk, setDividendoOk] = useState(false);
+  // Inversa: dónde encontró el dividendo (null = todavía no).
+  const [elegido, setElegido] = useState<{ f: number; c: number } | null>(null);
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
+  const divisor = fila;
+  const cociente = columna;
+  const dividendo = divisor * cociente;
 
   function terminar(ok: boolean) {
     setResult(ok ? "correct" : "wrong");
@@ -35,31 +43,45 @@ export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone
     if (result) return;
     setTocado({ f, c });
     if (modo === "cruce") return terminar(f === fila && c === columna);
-    if (!dividendoOk) {
-      if (f === fila && c === columna) setDividendoOk(true);
-      else terminar(false);
+    if (!elegido) {
+      // El dividendo en la columna del divisor (o en su fila).
+      if (f >= 0 && c >= 0 && f * c === dividendo && (c === divisor || f === divisor)) {
+        setElegido({ f, c });
+        setAviso(null);
+      } else if (f >= 0 && c >= 0 && f * c === dividendo) {
+        // Es el mismo número, pero en otro lugar de la tabla: no cuenta como error.
+        setAviso(`Ese ${dividendo} está en la columna del ${c}. Buscá el ${dividendo} en la columna marcada, la del ${divisor}.`);
+      } else terminar(false);
       return;
     }
-    terminar(f === -1 && c === columna);
+    // El resultado: si lo encontró en la columna del divisor, el número de la
+    // izquierda de esa fila; si lo encontró en la fila, el de arriba de la columna.
+    const ok = elegido.c === divisor && c === -1 && f === elegido.f ? true : elegido.f === divisor && f === -1 && c === elegido.c;
+    terminar(ok);
   }
 
   const cuenta =
     modo === "cruce"
       ? `${fila} × ${columna} = ${fila * columna}`
-      : `${fila * columna} ÷ ${fila} = ${columna}, porque ${fila} × ${columna} = ${fila * columna}`;
+      : `${dividendo} ÷ ${divisor} = ${cociente}, porque ${cociente} × ${divisor} = ${dividendo}`;
   const ayuda =
     modo === "cruce"
       ? `En la fila está el primer número (${fila}) y en la columna el segundo (${columna}). Tocá donde se cruzan.`
-      : dividendoOk
-        ? `¡Bien! El ${fila * columna} está en la columna del ${columna}. Tocá el número de arriba de esa columna.`
-        : `Buscá el ${fila * columna} en la fila del ${fila} y tocalo.`;
+      : elegido
+        ? elegido.c === divisor
+          ? `¡Bien! El ${dividendo} está en la fila del ${elegido.f}. Tocá el número de la izquierda de esa fila.`
+          : `¡Bien! El ${dividendo} está en la columna del ${elegido.c}. Tocá el número de arriba de esa columna.`
+        : `La columna del ${divisor} está marcada: buscá el ${dividendo} en esa columna y tocalo.`;
 
-  const filaMarcada = modo === "inversa" || dividendoOk ? fila : -2;
+  // Inversa: la columna del divisor queda marcada (y su número de arriba resaltado).
+  const columnaMarcada = modo === "inversa" ? divisor : -2;
+  const filaElegida = elegido && elegido.c === divisor ? elegido.f : -2;
+  const columnaElegida = elegido && elegido.f === divisor && elegido.c !== divisor ? elegido.c : -2;
 
   return (
     <div className={cardBase}>
       <p className="text-lg font-bold text-white mb-1 text-center">{prompt}</p>
-      <p className="text-xs text-amber-200 text-center mb-3">{ayuda}</p>
+      <p className="text-xs text-amber-200 text-center mb-3">{aviso ?? ayuda}</p>
       <div
         className="grid gap-[2px] mx-auto select-none rounded-lg overflow-hidden p-[2px]"
         style={{ gridTemplateColumns: `repeat(${N + 2}, minmax(0, 1fr))`, maxWidth: 380, background: "#3f3a8c" }}
@@ -80,13 +102,20 @@ export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone
                   ? COLOR_COLUMNA[c].encabezado
                   : COLOR_COLUMNA[c].celda;
             let extra = "";
-            const enFila = f === filaMarcada && c >= 0;
-            if (enFila) extra = "ring-2 ring-inset ring-sky-600";
+            const enColumna = c === columnaMarcada && f >= -1;
+            if (enColumna) extra = "ring-2 ring-inset ring-sky-600";
+            if (encCol && c === columnaMarcada) {
+              bg = "#0284c7";
+              extra = "text-white ring-2 ring-sky-300";
+            }
+            if ((f === filaElegida && c >= -1) || (c === columnaElegida && f >= -1)) extra = "ring-2 ring-inset ring-emerald-500";
             const esRespuesta =
               result !== null &&
               ((modo === "cruce" && f === fila && c === columna) ||
-                (modo === "inversa" && ((f === -1 && c === columna) || (f === fila && c === columna))));
-            if (dividendoOk && f === fila && c === columna) {
+                (modo === "inversa" &&
+                  ((elegido ? f === elegido.f && c === elegido.c : f === cociente && c === divisor) ||
+                    (elegido && elegido.f === divisor && elegido.c !== divisor ? f === -1 && c === elegido.c : c === -1 && f === (elegido?.f ?? cociente)))));
+            if (elegido && f === elegido.f && c === elegido.c) {
               bg = "#22c55e";
               extra = "text-white";
             }
@@ -98,7 +127,7 @@ export default function PitagoricaActivity({ prompt, modo, fila, columna, onDone
               bg = "#ef4444";
               extra = "text-white";
             }
-            const clickeable = modo === "cruce" ? !encFila && !encCol && !esquina : !esquina && !encFila;
+            const clickeable = modo === "cruce" ? !encFila && !encCol && !esquina : !esquina;
             return (
               <button
                 key={`${f}:${c}`}

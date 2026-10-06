@@ -66,11 +66,13 @@ console.log("✅ Mundos 5 a 7: tabla pitagórica y regularidades OK.");
   const mundo1 = WORLDS.find((w) => w.id === 1)!; // 3.º, números
   assert.equal(repasoTablasActivo(mundo1, mayo), false, "3.º antes de julio: no");
   assert.equal(repasoTablasActivo(mundo1, julio), true, "3.º desde julio: sí");
-  assert.equal(repasoTablasActivo(WORLDS.find((w) => w.id === 15)!, julio), true, "también en Lengua");
+  assert.equal(repasoTablasActivo(WORLDS.find((w) => w.id === 15)!, julio), false, "solo en Matemática (no en Lengua)");
+  for (const w of WORLDS.filter((x) => x.subject !== "matematica")) assert.equal(repasoTablasActivo(w, julio), false, `no en ${w.subject}`);
   assert.equal(repasoTablasActivo(WORLDS.find((w) => w.id === 5)!, julio), false, "los mundos de tablas ya son de tablas");
   assert.equal(repasoTablasActivo(WORLDS.find((w) => w.storyId)!, julio), false, "no en los cuentos");
   assert.equal(repasoTablasActivo(GRADE1_WORLDS[0], julio), false, "1.º nunca");
-  assert.equal(repasoTablasActivo(GRADE4_WORLDS[0], mayo), true, "4.º todo el año");
+  assert.equal(repasoTablasActivo(GRADE4_WORLDS.find((w) => w.subject === "matematica")!, mayo), true, "4.º todo el año (Matemática)");
+  assert.equal(repasoTablasActivo(GRADE4_WORLDS.find((w) => w.subject === "naturales")!, mayo), false, "4.º: no en Naturales");
   // Aparece a veces (no siempre), nunca primera ni última.
   let con = 0;
   for (let v = 0; v < 2000; v++) {

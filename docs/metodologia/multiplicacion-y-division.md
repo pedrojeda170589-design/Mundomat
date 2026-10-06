@@ -14,7 +14,7 @@ Este documento dice cómo esa secuencia se convierte en mundos y actividades del
 3. **Consolidación con problemas y juego:** arreglos rectangulares, valor unitario y el juego de cartas españolas («quien dice primero el producto se lleva las cartas»).
 4. **Reparto con material concreto:** cajitas y tapitas, de a una por vez, con **sobrante** (resto).
 5. **Partes de la división:** dividendo, divisor, cociente y resto, con los signos ÷ y :.
-6. **La tabla pitagórica para dividir:** en la fila del divisor se busca el dividendo y se sube hasta el número de arriba de esa columna (el cociente). Por ejemplo, 18 ÷ 2 = 9 porque 2 × 9 = 18.
+6. **La tabla pitagórica para dividir:** se marca la **columna del divisor**, se busca el dividendo en esa columna y el cociente es el número de la izquierda de esa fila. Por ejemplo, 18 ÷ 2: en la columna del 2 el 18 está en la fila del 9, así que 18 ÷ 2 = 9 porque 9 × 2 = 18. (Como el 18 aparece en varios lugares de la tabla, también vale encontrarlo en la fila del 2 y subir al número de arriba.)
 7. **Familias de operaciones:** con 7, 8 y 56 salen cuatro cuentas.
 8. **Partición:** «de a cuántos». Por ejemplo, 35 cartas en montoncitos de 5.
 9. **Detectives de problemas:** datos que no sirven y problemas de dos pasos.
@@ -43,7 +43,8 @@ Las 10 actividades del mundo 8:
 Actividades nuevas:
 - `pitagorica`: una tabla de 10 × 10 que se puede tocar.
   - Modo «cruce»: se toca el casillero del producto.
-  - Modo «inversa»: primero se toca el dividendo en la fila del divisor y después el número de arriba de esa columna.
+  - Modo «inversa»: la columna del divisor aparece marcada; primero se toca el dividendo en esa columna y después el número de la izquierda de esa fila (también se acepta encontrarlo en la fila del divisor y tocar el número de arriba).
+  - El repaso de las tablas sale solo en los mundos de **Matemática** (desde julio de 3.º y todo el año desde 4.º).
 - `reparto`: cajitas y tapitas. Se toca una cajita para poner una tapita, y el juego no deja «adelantar» una cajita. Al final se responde cuánto le tocó a cada una y cuánto sobró.
 
 Las pruebas están en `scripts/test-division.ts`.

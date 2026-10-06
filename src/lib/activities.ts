@@ -191,7 +191,7 @@ export type ActivitySpec = (
     }
   | {
       // Tabla pitagórica interactiva: cruce de fila y columna (a × b) o
-      // búsqueda inversa para dividir (fila del divisor → dividendo → arriba).
+      // búsqueda inversa para dividir (columna del divisor marcada → dividendo → número de la izquierda de esa fila).
       type: "pitagorica";
       id: string;
       title: string;
@@ -1250,7 +1250,7 @@ function buildRepartoActivities(): ActivitySpec[] {
   acts.push({
     type: "pitagorica", id: "rep-inversa", title: n(), modo: "inversa", fila: d6, columna: q6,
     prompt: `¿Cuánto es ${d6 * q6} ÷ ${d6}? Usá la tabla pitagórica.`,
-    hint: `Pista: buscá el ${d6 * q6} en la fila del ${d6} y mirá qué número hay arriba de esa columna.`,
+    hint: `Pista: la columna del ${d6} está marcada. Buscá el ${d6 * q6} en esa columna y mirá qué número hay a la izquierda de esa fila.`,
   });
 
   // 7. Familias de operaciones.
@@ -7041,6 +7041,8 @@ export function repasoTablasActivo(world: WorldDef, now: Date = new Date()): boo
   if (grado < 3) return false;
   if (world.storyId || world.kind === "dictado" || world.category === "dictado") return false;
   if (world.category === "tabla" || world.category === "reparto") return false; // ya son de tablas
+  // Solo en los mundos de Matemática (Pedro, 6/10: le apareció en Ciencias Naturales).
+  if (world.subject !== "matematica") return false;
   if (grado > 3) return true;
   const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
   return mesAR >= 7;
@@ -7063,7 +7065,7 @@ export function actividadRepasoTablas(grado: number): ActivitySpec {
     return {
       type: "pitagorica", id: "repaso-tablas", title: titulo, modo: "inversa", fila: t, columna: m,
       prompt: `¡Repaso! ¿Cuánto es ${t * m} ÷ ${t}? Usá la tabla pitagórica.`,
-      hint: `Pista: buscá el ${t * m} en la fila del ${t} y mirá en qué columna está.`,
+      hint: `Pista: la columna del ${t} está marcada. Buscá el ${t * m} en esa columna y mirá en qué fila está.`,
     };
   }
   return mcFromAnswer(
