@@ -15,6 +15,7 @@ import { computeClassroomEvolution, computeStudentActivityMetrics } from "@/lib/
 import EvolutionChart from "@/components/admin/EvolutionChart";
 import SubjectBadge from "@/components/SubjectBadge";
 import { GRADES } from "@/lib/grades";
+import { haParticipadoMonteLeon, tieneMochilaCompleta } from "@/lib/monteLeon";
 
 interface CourseSummaryProps {
   students: Student[];
@@ -112,8 +113,35 @@ export default function CourseSummary({
     return computeClassroomEvolution(filteredStudents, progressMap);
   }, [filteredStudents, progressMap]);
 
+  // Métricas del Mundo Especial «Viaje a Monte León» (3.º grado)
+  const monteLeonMetrics = useMemo(() => {
+    const grado3Students = students.filter((s) => (s.grade ?? 3) === 3);
+    let participaron = 0;
+    let mochilaCompleta = 0;
+    for (const s of grado3Students) {
+      const p = progressMap[s.code];
+      if (!p) continue;
+      if (haParticipadoMonteLeon(p)) participaron++;
+      if (tieneMochilaCompleta(p)) mochilaCompleta++;
+    }
+    return { participaron, mochilaCompleta, total: grado3Students.length };
+  }, [students, progressMap]);
+
   return (
     <div className="flex flex-col gap-6">
+      {/* Resumen del viaje especial a Monte León (3.º grado) */}
+      <div className="parchment-panel rounded-2xl px-4 py-3 border-2 border-sky-400/40 bg-gradient-to-r from-sky-50 via-amber-50 to-sky-50 shadow-sm flex items-center justify-between gap-3 text-sm">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="text-xl shrink-0">🐧</span>
+          <span className="font-bold text-amber-950 truncate">
+            Viaje a Monte León: {monteLeonMetrics.participaron} {monteLeonMetrics.participaron === 1 ? "alumno participó" : "alumnos participaron"}, {monteLeonMetrics.mochilaCompleta} con la mochila completa.
+          </span>
+        </div>
+        <span className="text-xs text-sky-800 font-bold shrink-0 hidden sm:inline">
+          3.º grado · Viaje 28/10
+        </span>
+      </div>
+
       {/* 1. Métricas arriba */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {/* Promedio de aciertos del aula */}

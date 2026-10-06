@@ -4,6 +4,7 @@ import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
 import { DROPS } from "@/lib/coleccion/drops";
 import { OBJETOS_TORNEO_ANTERIORES, TODOS_LOS_PREMIOS_TORNEO } from "@/lib/torneo/vueltas";
 import { CAMINO } from "@/lib/coleccion/racha";
+import { AVATARES_MONTE_LEON, MASCOTA_MONTE_LEON, MEDALLA_MONTE_LEON, MOCHILA_MONTE_LEON } from "@/lib/monteLeon/arte";
 // Tipos compartidos de MundoMat
 
 export type StudentType = "aula" | "agregado" | "prueba";
@@ -173,6 +174,11 @@ export interface StudentProgress {
   // Accesorio Six-Seven prestado (torneo + al día con los mundos): se puede
   // usar hasta `hasta` (el viernes a la noche) y después se devuelve solo.
   prestamo67?: { id: string; hasta: string; semana: string };
+  // Mundo Especial «Viaje a Monte León» (3.º grado, octubre 2026).
+  monteLeon?: {
+    etapas: Record<number, { bestScore: number; completedAt: string }>;
+    medallaEntregada?: boolean;
+  };
 }
 
 export interface RoundInProgress {
@@ -239,6 +245,7 @@ export const AVATAR_OPTIONS: string[] = [
   // textos de comprensión: solo los que ya tienen imagen.
   ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => a.id)).filter((id) => IMAGENES_LISTAS.has(id)),
   ...AVATARES_LOGRO.map((l) => l.id).filter((id) => IMAGENES_LISTAS.has(id)),
+  ...AVATARES_MONTE_LEON.map((a) => a.id).filter((id) => IMAGENES_LISTAS.has(id)),
 ];
 
 // Avatares nuevos (colecciones y logros): personaje de siempre con el mismo
@@ -246,10 +253,14 @@ export const AVATAR_OPTIONS: string[] = [
 export const AVATAR_FIT_LIKE: Record<string, string> = Object.fromEntries([
   ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => [a.id, a.comoAvatar ?? "explorador"])),
   ...AVATARES_LOGRO.map((l) => [l.id, l.comoAvatar]),
+  ...AVATARES_MONTE_LEON.map((a) => [a.id, a.comoAvatar ?? "explorador"]),
 ]);
 
 // Avatares de logro: se ganan, no se compran (StudentProgress.achievementCollection).
-export const LOGRO_AVATAR_IDS = new Set(AVATARES_LOGRO.map((l) => l.id));
+export const LOGRO_AVATAR_IDS = new Set([
+  ...AVATARES_LOGRO.map((l) => l.id),
+  ...AVATARES_MONTE_LEON.map((a) => a.id),
+]);
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
 // respaldo si la imagen no llegara a cargar.
@@ -287,6 +298,9 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
     TEMPORADAS.flatMap((t) => t.avatares.map((a) => [a.id, { label: a.label, emoji: t.emoji }]))
   ),
   ...Object.fromEntries(AVATARES_LOGRO.map((l) => [l.id, { label: l.label, emoji: "🏆" }])),
+  "explorador-monte-leon": { label: "Explorador de Monte León", emoji: "🧭" },
+  "guardaparque-monte-leon": { label: "Guardaparque de Monte León", emoji: "🌳" },
+  "pinguino-monte-leon": { label: "Pingüino de Magallanes", emoji: "🐧" },
 };
 
 // --- Tienda ---
@@ -602,6 +616,32 @@ export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   ...AVATARES_LOGRO.filter((l) => l.mascota && IMAGENES_LISTAS.has(l.mascota.id)).map(
     (l): AccessoryDef => ({ id: l.mascota!.id, slot: "pet", label: l.mascota!.label, emoji: "🏆", group: "premio", logroDe: l.storyId })
   ),
+  // Viaje a Monte León (AG-19): mochila de viaje, medalla y mascota
+  ...[
+    ...MOCHILA_MONTE_LEON.map((o) => ({
+      id: o.id,
+      slot: o.slot,
+      label: o.label,
+      emoji: "🎒",
+      group: "premio" as const,
+      ...("molde" in o && o.molde ? { fitLike: o.molde } : {}),
+    })),
+    {
+      id: MEDALLA_MONTE_LEON.id,
+      slot: MEDALLA_MONTE_LEON.slot,
+      label: MEDALLA_MONTE_LEON.label,
+      emoji: "🏅",
+      group: "premio" as const,
+      fitLike: MEDALLA_MONTE_LEON.molde,
+    },
+    {
+      id: MASCOTA_MONTE_LEON.id,
+      slot: MASCOTA_MONTE_LEON.slot,
+      label: MASCOTA_MONTE_LEON.label,
+      emoji: "🐧",
+      group: "premio" as const,
+    },
+  ].filter((o) => IMAGENES_LISTAS.has(o.id)),
 ];
 
 export const WEEKEND_REWARD_IDS = ACCESSORY_CATALOG_TEMPORADA.filter(

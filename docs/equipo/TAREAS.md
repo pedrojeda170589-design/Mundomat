@@ -28,7 +28,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
-| AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🔴 PENDIENTE · URGENTE (en main antes del 15/10) · imágenes listas |
+| AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-19) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
 | AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🔴 PENDIENTE (después de AG-19) |
@@ -45,6 +45,66 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-19 · Mundo especial «Viaje a Monte León» (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (para que Claude revise y una a main antes del 15/10/2026).
+
+#### Resumen de implementación y puntos cumplidos
+
+1. **Cuándo y para quién [HECHO]**
+   - **Módulo de fechas puro (`src/lib/monteLeon/fechas.ts`):** con parámetro `now` inyectable para testing exacto en zona horaria de Argentina (`America/Argentina/Buenos_Aires`, UTC-3).
+   - **Ventanas temporales verificadas:**
+     - Tarjeta en el mapa y acceso al mundo especial visibles hasta el **27/10/2026 23:59:59.999 AR**. Desde el 28/10 ya no se muestra el acceso al juego (los alumnos están de viaje), pero los objetos ganados, la mascota y la medalla permanecen para siempre en el inventario/perfil.
+     - Ventana de saludo de buen viaje: activa desde el **27/10/2026 20:00:00 AR** hasta el **28/10/2026 23:59:59.999 AR**.
+     - Cuenta regresiva precisa («¡Faltan N días para el viaje!» / «¡Hoy es el viaje!»).
+   - **Público exclusivo:** Restringido a 3.º grado (`grade === 3` o sin grado explícito). El aula abierta de prueba (`isOpenClassroomStudent`) queda estrictamente excluida.
+   - *Cómo se probó:* `scripts/test-monte-leon.ts` (pruebas 1 y 2) evalúa los límites de milisegundos en UTC-3 antes y después de cada corte y la exclusión de alumnos del aula abierta.
+
+2. **Contenidos y 5 etapas [HECHO]**
+   - **Archivo `src/lib/monteLeon/contenido.ts`:**
+     - Banco de 16 preguntas para cada una de las etapas 1 a 4 basadas fielmente en el Google Doc de Pedro (clases 2, 3 y 4): recorrido Gregores → Piedrabuena (RP 25) → Monte León (RN 3, 380 km, este-sureste); parque nacional costero-marino creado en 2004, Cabeza del León; 60.000 parejas de pingüinos de Magallanes (primavera, cueva, 2 huevos), lobos marinos, cormoranes, guanacos y choiques; guardaparque y normas (pasarelas, no alimentar, basura cero, no llevarse nada).
+     - Etapa 5: Banco de dictado de 26 palabras con audio/voz y consigna en contexto de oración (`pingüino`, `guardaparque`, `acantilado`, `meseta`, `ruta`, `viaje`, `mochila`, `colectivo`, `playa`, `lobo marino`, `cormorán`, `guanaco`, `choique`, `parque`, `costa`, `huevo`, `nido`, `cueva`, `sendero`, `pasarela`, `basura`, `protector`, `gorra`, `botella`, `Piedrabuena`, `Monte León`).
+     - Cada ejecución de una etapa genera una vuelta de 8 actividades limpias, sin opciones de chiste, sin pistas delatoras ni ✅/❌.
+     - Escenas ilustradas asignadas como fondo de apoyo (`viaje-ruta`, `cabeza-del-leon`, `pinguinera`, `loberia`, `estepa`, `guardaparque`).
+   - *Cómo se probó:* `scripts/test-monte-leon.ts` (prueba 3) valida los bancos, que las 8 actividades generadas no tengan opciones duplicadas, contengan la respuesta correcta y no tengan signos ✅/❌.
+
+3. **Mochila de viaje y mascota [HECHO]**
+   - **Reglas de progresión (`src/lib/monteLeon/progreso.ts`):**
+     - 6 objetos en orden por superar cada etapa con 80 % o más: `botella-agua-ml`, `anteojos-sol-ml`, `gorra-explorador-ml`, `protector-solar-ml`, `bocadillos-ml`, `golosina-ml`.
+     - Se guardan en `seasonalCollection` y se integraron en `ACCESSORY_CATALOG_PREMIO` (catalogados como `face`, `head` u `object_left`).
+     - Al completar la mochila (6 objetos), se desbloquea la mascota `pinguino-peluche-ml` (`mascota_companion`).
+     - **Regla de regalos:** Si el alumno regala un objeto de la mochila a un compañero (registrado en `objetosRegalados`), cuenta como obtenido para completar la mochila y ganar la mascota, pero la temporada/etapa no se lo vuelve a entregar.
+   - **Componente `MochilaView.tsx`:** Muestra la mochila con los 6 casilleros, estado de la mascota, medalla y avatares desbloqueados con acceso directo a «Mi perfil».
+   - *Cómo se probó:* `scripts/test-monte-leon.ts` (pruebas 4, 7 y 8) valida la entrega secuencial, entrega de la mascota con mochila completa y respeto a `objetosRegalados`.
+
+4. **Avatares superespeciales [HECHO]**
+   - Se crearon los registros en `src/types/index.ts` (`AVATAR_OPTIONS`, `AVATAR_FIT_LIKE`, `LOGRO_AVATAR_IDS`, `AVATAR_INFO`):
+     - `explorador-monte-leon`: al superar etapas 1 y 2 con >= 80%.
+     - `guardaparque-monte-leon`: al superar etapa 4 con >= 80%.
+     - `pinguino-monte-leon`: al tener las 5 etapas superadas con 90% o más.
+   - Se guardan en `achievementCollection` y quedan disponibles en el selector de «Mi perfil».
+   - *Cómo se probó:* `scripts/test-monte-leon.ts` (prueba 5).
+
+5. **Ventana del 27/10 a la noche, cartel y medalla [HECHO]**
+   - **Cartel `BuenViajeDialog.tsx`:** Entre el 27/10 20:00 AR y el 28/10 23:59 AR, al ingresar a la app los alumnos de 3.º ven el mensaje del Profe saludando («¡Mañana viajamos a Monte León! Que tengan un muy buen viaje...») con anuncio de la medalla. Se almacena bandera en `sessionStorage` para mostrarlo amigablemente una sola vez por sesión.
+   - **Medalla de Monte León (`medalla-monte-leon`):** Se entrega de forma automática a todo alumno que haya participado (al menos una etapa completada), guardándose en `seasonalCollection`.
+   - **Script CLI docente (`scripts/monte-leon/entregar-medallas.ts`):** Permite a los docentes entregar masivamente la medalla a los alumnos participantes con soporte de `--dry-run`.
+   - **Panel docente (`src/components/admin/CourseSummary.tsx`):** Añadida la métrica en el resumen del curso: «Viaje a Monte León: N alumnos participaron, M con la mochila completa».
+   - *Cómo se probó:* `scripts/test-monte-leon.ts` (pruebas 6 y 9) verifica la entrega única de la medalla a participantes y el funcionamiento del script docente contra la base de datos simulada y real.
+
+6. **Catálogo de imágenes [HECHO]**
+   - Se actualizaron los 11 ítems de Monte León en `scripts/coleccion/listar-imagenes.ts` y se regeneró `src/lib/coleccion/imagenes-listas.ts` (271 ítems presentes en disco). No fue necesario generar ni dibujar ninguna imagen; todas las rutas de Claude en `src/lib/monteLeon/arte.ts` existen y cargan correctamente.
+
+7. **Batería de tests y verificación [HECHO]**
+   - `npx tsc --noEmit`: 0 errores.
+   - `npx eslint src`: 0 advertencias / errores.
+   - `npx tsx scripts/test-monte-leon.ts`: 9/9 bloques de prueba pasados exitosamente y restauración completa de la base de datos.
+   - `npx tsx scripts/test-torneo.ts`: OK.
+   - `npx tsx scripts/test-regalos.ts`: OK.
+   - `npx tsx scripts/test-colecciones.ts`: OK.
+   - `npx tsx scripts/test-privacidad.ts`: OK.
+   - Respeto total a `publicado: false` en `src/lib/grades.ts` (4.º grado continúa oculto).
 
 ### AG-18 · Segunda corrección del contenido de 4.º grado (Antigravity)
 

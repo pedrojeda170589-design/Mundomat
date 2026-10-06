@@ -10,6 +10,7 @@ import { AVATARES_LOGRO } from "../../src/lib/coleccion/logros";
 import { DROPS } from "../../src/lib/coleccion/drops";
 import { CAMINO } from "../../src/lib/coleccion/racha";
 import { OBJETOS_TORNEO_ANTERIORES, TODOS_LOS_PREMIOS_TORNEO } from "../../src/lib/torneo/vueltas";
+import { AVATARES_MONTE_LEON, MASCOTA_MONTE_LEON, MEDALLA_MONTE_LEON, MOCHILA_MONTE_LEON } from "../../src/lib/monteLeon/arte";
 
 const root = join(__dirname, "../..");
 const png = (carpeta: string, id: string) => existsSync(join(root, "public/theme", carpeta, `${id}.png`));
@@ -30,6 +31,9 @@ for (const l of AVATARES_LOGRO) {
   ver(l.id, "avatars");
   if (l.mascota) ver(l.mascota.id, "accessories-temporada");
 }
+// Viaje a Monte León (AG-19)
+for (const a of AVATARES_MONTE_LEON) ver(a.id, "avatars");
+for (const o of [...MOCHILA_MONTE_LEON, MEDALLA_MONTE_LEON, MASCOTA_MONTE_LEON]) ver(o.id, "accessories-temporada");
 
 writeFileSync(
   join(root, "src/lib/coleccion/imagenes-listas.ts"),
