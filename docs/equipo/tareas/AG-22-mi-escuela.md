@@ -1,6 +1,6 @@
 # AG-22 · «Mi escuela»: colorear y remodelar la escuela con lápices de colores
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Prioridad:** después de AG-21 y AG-20. **No empieces** hasta que Claude marque en `TAREAS.md` que las imágenes están listas (fila CL de imágenes de la escuela); mientras tanto podés armar la lógica y las pruebas con imágenes provisorias.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Prioridad:** después de AG-21, AG-23 y AG-20. **No empieces** hasta que Claude marque en `TAREAS.md` que las imágenes están listas (fila CL de imágenes de la escuela); mientras tanto podés armar la lógica y las pruebas con imágenes provisorias.
 
 ## El pedido de Pedro
 «Una visión tipo 3D de la escuela, en blanco y negro, y que los alumnos le vayan agregando las cosas con las que cuenta (espacios y áreas) y también cosas que les gustaría que tenga: un jardín, juegos, cambiar el color de la escuela. Los objetos y remodelaciones se habilitan a medida que interactúan con la app (como esos juegos de remodelar tipo Candy Crush). Al terminar un mundo el alumno gana **lápices**, que se usan para las remodelaciones. Los lápices ganados en una etapa/eje tienen que ser el **120 %** de los necesarios para remodelar toda la parte habilitada. Y que el avatar pueda **caminar** por la escuela.»
