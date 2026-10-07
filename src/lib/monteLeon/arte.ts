@@ -27,7 +27,7 @@ export const AVATARES_MONTE_LEON = [
 
 // Escenas (public/theme/monte-leon/escenas/<id>.jpg, 3:2) e isla del mapa.
 export const ESCENAS_MONTE_LEON = [
-  { id: "viaje-ruta", label: "El viaje en micro por la Ruta 3, pasando por Piedrabuena" },
+  { id: "viaje-ruta", label: "El viaje en micro por las rutas 27 y 3, pasando por Piedrabuena" },
   { id: "cabeza-del-leon", label: "La Cabeza del León, la roca que le da nombre al parque" },
   { id: "pinguinera", label: "La pingüinera de pingüinos de Magallanes" },
   { id: "loberia", label: "La lobería de lobos marinos de un pelo" },

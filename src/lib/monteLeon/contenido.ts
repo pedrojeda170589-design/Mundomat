@@ -104,7 +104,7 @@ const BANCO_ETAPA_1: readonly ActivitySpec[] = [
     ["Unos 240 kilómetros", "Unos 40 kilómetros", "Unos 1.200 kilómetros"],
     "Pista: son un poco menos de 250 kilómetros."),
   mc("ml-e1-tiempo", T1, "¿Cuánto dura el viaje en micro escolar, más o menos?",
-    ["Unas 4 horas", "Unos 40 minutos", "Unos 4 días"],
+    ["Unas 3 o 4 horas", "Unos 10 minutos", "Unos 4 días"],
     "Pista: salimos a la mañana y llegamos antes del almuerzo."),
   mc("ml-e1-direccion", T1, "Desde Gregores, ¿hacia dónde viajamos para llegar al mar?",
     ["Hacia el este y el sur", "Hacia el oeste", "Hacia el norte"],
@@ -348,7 +348,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "colectivo",
-    say: "Colectivo. El colectivo escolar va a tardar unas cuatro horas en llegar.",
+    say: "Colectivo. El colectivo escolar va a viajar varias horas por la ruta.",
     hint: "Pista: colectivo lleva c antes de la t y v corta.",
   },
   {
