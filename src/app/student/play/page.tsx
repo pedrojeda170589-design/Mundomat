@@ -43,6 +43,10 @@ import { getCuento } from "@/lib/cuentos/catalogo";
 import { TRIAL_WORLDS_PER_SUBJECT, TrialReport, getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
 import TrialReportCard from "@/components/prueba/TrialReportCard";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
+import MonteLeonCard from "@/components/monte-leon/MonteLeonCard";
+import MonteLeonModal from "@/components/monte-leon/MonteLeonModal";
+import BuenViajeDialog from "@/components/monte-leon/BuenViajeDialog";
+import { debeMostrarMonteLeon, debeMostrarBuenViaje } from "@/lib/monteLeon/fechas";
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -70,6 +74,7 @@ export default function StudentPlayPage() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const [caminoOpen, setCaminoOpen] = useState(false);
+  const [monteLeonOpen, setMonteLeonOpen] = useState(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
   const [oferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
@@ -540,6 +545,31 @@ export default function StudentPlayPage() {
             <span className="rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs px-3.5 py-2 shrink-0">🚀 ¡Jugar!</span>
           </button>
         </div>
+      )}
+
+      {debeMostrarMonteLeon({ grade, classroomId: isTrialStudent ? "abierta-3" : undefined }) && (
+        <MonteLeonCard
+          progress={progress}
+          onClick={() => setMonteLeonOpen(true)}
+        />
+      )}
+
+      {debeMostrarBuenViaje({ grade, classroomId: isTrialStudent ? "abierta-3" : undefined }) && code && progress && (
+        <BuenViajeDialog
+          studentCode={code}
+          progress={progress}
+          onProgressUpdated={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
+        />
+      )}
+
+      {monteLeonOpen && code && progress && (
+        <MonteLeonModal
+          studentCode={code}
+          progress={progress}
+          onClose={() => setMonteLeonOpen(false)}
+          onProgressUpdated={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
+          onOpenProfile={() => setEditingProfile(true)}
+        />
       )}
 
       <NewsBoard code={code} />
