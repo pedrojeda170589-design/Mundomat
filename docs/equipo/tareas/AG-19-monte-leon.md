@@ -26,12 +26,13 @@ Las **escenas** (`public/theme/monte-leon/escenas/*.jpg`) van como imagen de apo
 ## 3. La mochila de viaje
 - Imagen de la mochila vacía: `public/theme/monte-leon/mochila.png`. Pantalla «Mi mochila para Monte León» con 6 lugares.
 - Se gana **un objeto por etapa superada con 80 % o más** (la etapa 5, el dictado, da la golosina; las otras, en este orden): botella de agua → anteojos de sol → gorra → protector solar → bocadillos → golosina. Ids en `MOCHILA_MONTE_LEON` (`src/lib/monteLeon/arte.ts`).
+- **Regla definitiva (corrección de Claude, 7/10):** cada vuelta tiene 8 actividades y se supera con **7 u 8 bien**. Cada etapa da **su** objeto (1 botella, 2 anteojos, 3 gorra, 4 protector, 5 golosina) y los **bocadillos** se ganan con una **vuelta perfecta (8 de 8)** en cualquier etapa. El servidor recibe cuántas acertó (`correctas`), no un porcentaje. Constantes en `src/lib/monteLeon/progreso.ts` (`OBJETO_DE_ETAPA`, `ITEM_VUELTA_PERFECTA`, `MINIMO_PARA_SUPERAR`).
 - Los objetos se guardan en `seasonalCollection` y se pueden poner en el avatar (anteojos y gorra se usan puestos; los demás son objetos de mano). Agregalos al catálogo de premios (`ACCESSORY_CATALOG_PREMIO`) filtrando por `IMAGENES_LISTAS`, igual que los premios del torneo.
 - Con la mochila completa (6 objetos) se gana la **mascota** `pinguino-peluche-ml` (pingüino de peluche).
 - Cuidado: estos objetos se pueden **regalar** a un compañero (regla general de CL-18). Si lo regalan, no se les vuelve a dar solo (usá `objetosRegalados`, como hace la temporada).
 
 ## 4. Avatares superespeciales
-- `explorador-monte-leon`, `guardaparque-monte-leon`, `pinguino-monte-leon` (`AVATARES_MONTE_LEON`). Se desbloquean: el explorador al superar las etapas 1 y 2; la guardaparque al superar la 4; el pingüino con **todas** las etapas al 90 % o más. Van en `achievementCollection` (como los avatares de logro) y se eligen en «Mi perfil».
+- `explorador-monte-leon`, `guardaparque-monte-leon`, `pinguino-monte-leon` (`AVATARES_MONTE_LEON`). Se desbloquean: el explorador al superar las etapas 1 y 2; la guardaparque al superar la 4; el pingüino con **todas** las etapas al 90 % o más (con 8 actividades: 8 de 8 en cada una). Van en `achievementCollection` (como los avatares de logro) y se eligen en «Mi perfil».
 
 ## 5. El 27/10 a la noche: buen viaje y medalla
 - Desde el **27/10 a las 20:00** (AR) hasta el 28/10 a las 23:59, al entrar a la app los alumnos de 3.º ven un cartel con el profe (`<Profe pose="saluda" />`, o el traje `guardaparque` si existe la pose) que dice: «¡Mañana viajamos a Monte León! Que tengan un muy buen viaje: cuiden el parque, sigan al guardaparque y disfruten mucho de los pingüinos. ¡Buen viaje!» (Pedro puede cambiar el texto en una constante).

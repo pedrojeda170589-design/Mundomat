@@ -8,6 +8,14 @@ import {
   AVATARES_MONTE_LEON,
   MOCHILA_VACIA,
 } from "@/lib/monteLeon/arte";
+import { OBJETO_DE_ETAPA, ITEM_VUELTA_PERFECTA } from "@/lib/monteLeon/progreso";
+
+// Cómo se gana cada objeto (lo mismo que hace el servidor).
+function comoSeGana(id: string): string {
+  if (id === ITEM_VUELTA_PERFECTA) return "Vuelta perfecta: 8 de 8 en cualquier etapa";
+  const etapa = Object.entries(OBJETO_DE_ETAPA).find(([, obj]) => obj === id)?.[0];
+  return etapa ? `Superá la etapa ${etapa} (7 u 8 bien)` : "Superá una etapa";
+}
 
 interface MochilaItemStatus {
   id: string;
@@ -49,7 +57,7 @@ export default function MochilaView({
             className="object-contain p-1"
           />
           {completa && (
-            <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">
+            <span className="absolute top-2 right-2 bg-emerald-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow">
               ¡COMPLETA!
             </span>
           )}
@@ -62,7 +70,9 @@ export default function MochilaView({
             Mi mochila para Monte León
           </h3>
           <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
-            Superá cada etapa con <strong>80 % o más</strong> para guardar un objeto en tu mochila.
+            Cada etapa tiene 8 actividades. Si acertás <strong>7 u 8</strong>, la etapa queda
+            superada y guardás <strong>su</strong> objeto en la mochila (5 etapas, 5 objetos).
+            El sexto, los <strong>bocadillos</strong>, se gana con una <strong>vuelta perfecta (8 de 8)</strong>.
             Con los 6 objetos completos ganás el <strong>Pingüino de peluche</strong>.
           </p>
           <div className="mt-3 flex items-center gap-3">
@@ -112,12 +122,12 @@ export default function MochilaView({
                 <span className="text-xs font-black text-amber-950 leading-tight">
                   {idx + 1}. {it.label}
                 </span>
-                <span className="text-[10px] text-amber-900/70 mt-1">
+                <span className="text-[11px] text-amber-900/70 mt-1">
                   {it.regalado
                     ? "🎁 Regalado a un compañero"
                     : it.ganado
                       ? "✅ En tu mochila"
-                      : "Superá una etapa con 80%+"}
+                      : comoSeGana(it.id)}
                 </span>
               </div>
             );
@@ -150,7 +160,7 @@ export default function MochilaView({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800">
+            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800">
               Mascota especial
             </span>
             <h5 className="text-sm font-black text-amber-950 truncate">
@@ -187,7 +197,7 @@ export default function MochilaView({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-black uppercase tracking-wider text-amber-800">
+            <span className="text-[11px] font-black uppercase tracking-wider text-amber-800">
               Colgante conmemorativo
             </span>
             <h5 className="text-sm font-black text-amber-950 truncate">
@@ -196,7 +206,7 @@ export default function MochilaView({
             <p className="text-[11px] text-amber-900/80 leading-tight mt-0.5">
               {medallaGanada
                 ? "¡Entregada! Queda en tu colección para siempre."
-                : "Se entrega el 27/10 a la noche a todos los que participaron."}
+                : "Se entrega el 27/10 a la noche a quienes superaron al menos una etapa."}
             </p>
           </div>
         </div>
@@ -212,10 +222,10 @@ export default function MochilaView({
             const desbloqueado = achievementCollection.includes(av.id);
             const req =
               av.id === "explorador-monte-leon"
-                ? "Superar etapas 1 y 2 con 80%+"
+                ? "Superar las etapas 1 y 2"
                 : av.id === "guardaparque-monte-leon"
-                  ? "Superar etapa 4 con 80%+"
-                  : "Superar las 5 etapas con 90%+";
+                  ? "Superar la etapa 4"
+                  : "Vuelta perfecta (8 de 8) en las 5 etapas";
 
             return (
               <div
@@ -242,7 +252,7 @@ export default function MochilaView({
                 </div>
                 <div className="flex-1 min-w-0">
                   <h6 className="text-xs font-black text-amber-950 truncate">{av.label}</h6>
-                  <p className="text-[10px] text-amber-900/70 leading-tight mt-0.5">
+                  <p className="text-[11px] text-amber-900/70 leading-tight mt-0.5">
                     {desbloqueado ? "✅ Desbloqueado en Mi perfil" : req}
                   </p>
                 </div>

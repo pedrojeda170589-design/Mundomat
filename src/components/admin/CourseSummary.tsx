@@ -16,6 +16,7 @@ import EvolutionChart from "@/components/admin/EvolutionChart";
 import SubjectBadge from "@/components/SubjectBadge";
 import { GRADES } from "@/lib/grades";
 import { haParticipadoMonteLeon, tieneMochilaCompleta } from "@/lib/monteLeon";
+import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
 
 interface CourseSummaryProps {
   students: Student[];
@@ -115,7 +116,8 @@ export default function CourseSummary({
 
   // Métricas del Mundo Especial «Viaje a Monte León» (3.º grado)
   const monteLeonMetrics = useMemo(() => {
-    const grado3Students = students.filter((s) => (s.grade ?? 3) === 3);
+    // El viaje es solo de 3.º y nunca del aula abierta (misma regla que el alumno).
+    const grado3Students = students.filter((s) => (s.grade ?? 3) === 3 && !isOpenClassroomStudent(s));
     let participaron = 0;
     let mochilaCompleta = 0;
     for (const s of grado3Students) {
@@ -134,7 +136,7 @@ export default function CourseSummary({
         <div className="flex items-center gap-2.5 min-w-0">
           <span className="text-xl shrink-0">🐧</span>
           <span className="font-bold text-amber-950 truncate">
-            Viaje a Monte León: {monteLeonMetrics.participaron} {monteLeonMetrics.participaron === 1 ? "alumno participó" : "alumnos participaron"}, {monteLeonMetrics.mochilaCompleta} con la mochila completa.
+            Viaje a Monte León (3.º): {monteLeonMetrics.participaron} de {monteLeonMetrics.total} superaron al menos una etapa, {monteLeonMetrics.mochilaCompleta} con la mochila completa.
           </span>
         </div>
         <span className="text-xs text-sky-800 font-bold shrink-0 hidden sm:inline">

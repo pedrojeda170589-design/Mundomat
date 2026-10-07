@@ -1,6 +1,6 @@
 # AG-21 · Tercera corrección de 4.º grado (lo que quedó de AG-18)
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Prioridad:** después de AG-19 (Monte León es urgente). 4.º **sigue oculto** (`publicado: false`).
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Prioridad:** es la que sigue (AG-19 ya está unida a main). **Antes de empezar:** `git checkout antigravity && git merge main`, y leé la «Revisión de Claude» de AG-19 en `TAREAS.md`: allí aparecieron los mismos problemas (respuesta correcta siempre en la primera opción, distractores de chiste, dos respuestas correctas); para mezclar opciones podés usar el patrón de `mezclarActividad` en `src/lib/monteLeon/contenido.ts`. 4.º **sigue oculto** (`publicado: false`).
 
 AG-18 quedó unida a `main` (oculta): se corrigió mucho (bancos de Naturales en su mundo, Sociales sin opciones corridas, romanos, duplicados, singulares, sin ✅/❌, `makeOrder` al azar). La revisión de Claude (lectura completa de los 780 ítems de Naturales y Sociales y 3.000 a 20.000 vueltas por mundo de Matemática) encontró esto, que **bloquea la publicación**:
 

@@ -21,10 +21,19 @@ interface Props {
   onFinished: (resultado: {
     scorePct: number;
     objetoPremio?: string;
+    objetosPremio?: string[];
     mascotaPremio?: string;
     nuevosAvatares?: string[];
     medallaPremio?: string;
   }) => void;
+}
+
+// Etapa 3: la escena cambia según el animal de la pregunta.
+function escenaDe(id: string | undefined, porDefecto: string): string {
+  if (!id) return porDefecto;
+  if (/lobo|cormoran/.test(id)) return "/theme/monte-leon/escenas/loberia.jpg";
+  if (/guanaco|choique|estepa/.test(id)) return "/theme/monte-leon/escenas/estepa.jpg";
+  return porDefecto;
 }
 
 export default function StageRunner({
@@ -41,6 +50,7 @@ export default function StageRunner({
   const [resultadoFinal, setResultadoFinal] = useState<{
     scorePct: number;
     objetoPremio?: string;
+    objetosPremio?: string[];
     mascotaPremio?: string;
     nuevosAvatares?: string[];
     medallaPremio?: string;
@@ -60,39 +70,39 @@ export default function StageRunner({
       setIndex((prev) => prev + 1);
     } else {
       // Final de la vuelta
-      const scorePct = Math.round((nextCorrect / total) * 100);
-      void finishRound(scorePct);
+      void finishRound(nextCorrect);
     }
   }
 
-  async function finishRound(scorePct: number) {
+  const [errorGuardar, setErrorGuardar] = useState<string | null>(null);
+
+  async function finishRound(correctas: number) {
+    const scorePct = Math.round((correctas / total) * 100);
     setSubmitting(true);
     setFinished(true);
+    setErrorGuardar(null);
     try {
       const res = await fetch("/api/monte-leon", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: studentCode,
-          action: "completar-etapa",
-          etapa,
-          scorePct,
-        }),
+        body: JSON.stringify({ code: studentCode, action: "completar-etapa", etapa, correctas }),
       });
       const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "No se pudo guardar.");
       const resultado = {
-        scorePct,
+        scorePct: typeof data.resultado?.scorePct === "number" ? data.resultado.scorePct : scorePct,
         objetoPremio: data.resultado?.objetoPremio,
+        objetosPremio: data.resultado?.objetosPremio as string[] | undefined,
         mascotaPremio: data.resultado?.mascotaPremio,
         nuevosAvatares: data.resultado?.nuevosAvatares,
         medallaPremio: data.resultado?.medallaPremio,
       };
       setResultadoFinal(resultado);
       onFinished(resultado);
-    } catch {
-      const fallback = { scorePct };
-      setResultadoFinal(fallback);
-      onFinished(fallback);
+    } catch (e) {
+      // No se guardó: se muestra el puntaje, pero la etapa NO figura como superada.
+      setErrorGuardar(e instanceof Error ? e.message : "No se pudo guardar.");
+      setResultadoFinal({ scorePct });
     } finally {
       setSubmitting(false);
     }
@@ -100,11 +110,11 @@ export default function StageRunner({
 
   if (finished) {
     const scorePct = resultadoFinal?.scorePct ?? Math.round((correctCount / total) * 100);
-    const superada = scorePct >= 80;
+    const superada = !errorGuardar && scorePct >= 80;
     const pose: PoseProfe = superada ? "trofeo" : "animo";
-    const objetoInfo = resultadoFinal?.objetoPremio
-      ? MOCHILA_MONTE_LEON.find((m) => m.id === resultadoFinal.objetoPremio)
-      : null;
+    const objetosInfo = (resultadoFinal?.objetosPremio ?? (resultadoFinal?.objetoPremio ? [resultadoFinal.objetoPremio] : []))
+      .map((id) => MOCHILA_MONTE_LEON.find((m) => m.id === id))
+      .filter((m): m is (typeof MOCHILA_MONTE_LEON)[number] => !!m);
     const mascotaInfo = resultadoFinal?.mascotaPremio ? MASCOTA_MONTE_LEON : null;
     const medallaInfo = resultadoFinal?.medallaPremio ? MEDALLA_MONTE_LEON : null;
     const avataresInfo = (resultadoFinal?.nuevosAvatares ?? []).map((id) =>
@@ -131,18 +141,23 @@ export default function StageRunner({
           <p className="text-xs text-amber-950/80 my-3 leading-relaxed">
             {superada
               ? `¡Felicitaciones! Superaste «${infoEtapa.titulo}» con éxito.`
-              : `Acertaste el ${scorePct}%. Podés volver a jugar esta etapa cuando quieras para sumar más objetos.`}
+              : `Acertaste ${correctCount} de ${total}. Para superar la etapa hacen falta 7 u 8. ¡Podés volver a jugarla cuando quieras!`}
           </p>
+          {errorGuardar && (
+            <p className="text-xs font-bold text-red-700 bg-red-50 border border-red-300 rounded-xl px-3 py-2 mb-2">
+              ⚠️ No se pudo guardar el resultado ({errorGuardar}). Revisá la conexión y volvé a jugar la etapa.
+            </p>
+          )}
 
           {/* Premios obtenidos en esta vuelta */}
-          {(objetoInfo || mascotaInfo || medallaInfo || avataresInfo.length > 0) && (
+          {(objetosInfo.length > 0 || mascotaInfo || medallaInfo || avataresInfo.length > 0) && (
             <div className="w-full rounded-2xl bg-amber-100/80 border-2 border-amber-600/30 p-3 my-2 flex flex-col gap-2">
               <span className="text-[11px] font-black uppercase tracking-wider text-amber-900">
                 🎉 ¡Premios que guardaste!
               </span>
 
-              {objetoInfo && (
-                <div className="flex items-center gap-2.5 rounded-xl bg-white/80 p-2 border border-amber-600/20">
+              {objetosInfo.map((objetoInfo) => (
+                <div key={objetoInfo.id} className="flex items-center gap-2.5 rounded-xl bg-white/80 p-2 border border-amber-600/20">
                   <div className="relative w-10 h-10 shrink-0">
                     <Image
                       src={`/theme/accessories-temporada/${objetoInfo.id}.png`}
@@ -156,12 +171,12 @@ export default function StageRunner({
                     <span className="block text-xs font-black text-amber-950 truncate">
                       {objetoInfo.label}
                     </span>
-                    <span className="block text-[10px] text-amber-900/70">
-                      ¡Guardado en tu mochila de viaje!
+                    <span className="block text-[11px] text-amber-900/70">
+                      {objetoInfo.id === "bocadillos-ml" ? "¡Por tu vuelta perfecta! Ya está en tu mochila." : "¡Guardado en tu mochila de viaje!"}
                     </span>
                   </div>
                 </div>
-              )}
+              ))}
 
               {mascotaInfo && (
                 <div className="flex items-center gap-2.5 rounded-xl bg-emerald-100/80 p-2 border border-emerald-600/30">
@@ -258,7 +273,7 @@ export default function StageRunner({
       <div className="relative rounded-2xl overflow-hidden border-2 border-amber-800/30 shadow-md">
         <div className="relative h-28 sm:h-36 w-full">
           <Image
-            src={infoEtapa.escena}
+            src={escenaDe(currentActivity?.id, infoEtapa.escena)}
             alt={infoEtapa.titulo}
             fill
             sizes="(max-width: 768px) 100vw, 768px"

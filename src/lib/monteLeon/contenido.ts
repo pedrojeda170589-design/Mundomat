@@ -65,924 +65,240 @@ function shuffleArray<T>(items: readonly T[]): T[] {
 }
 
 // ============================================================================
-// BANCO ETAPA 1: EL VIAJE (16 actividades)
+// BANCOS DE PREGUNTAS (reescritos por Claude el 7/10/2026 tras la revisión de
+// AG-19): opciones plausibles y de largo parecido, sin opciones de chiste, con
+// vocabulario de 3.º grado. La respuesta correcta va PRIMERA en el banco; al
+// armar la vuelta se mezclan las opciones (ver mezclarActividad).
 // ============================================================================
-const BANCO_ETAPA_1: readonly ActivitySpec[] = [
-  {
-    type: "order",
-    id: "ml-e1-orden-recorrido",
-    title: "El viaje: recorrido",
-    prompt: "Ordená las paradas del viaje desde la salida en la escuela hasta la llegada al parque:",
-    items: [
-      "Salida desde Gobernador Gregores",
-      "Paso por Comandante Luis Piedrabuena",
-      "Entrada al Parque Nacional Monte León",
-    ],
-    correctOrder: [0, 1, 2],
-    hint: "Pista: salimos de Gregores por la Ruta 25, cruzamos Piedrabuena y bajamos por la Ruta 3 hacia Monte León.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-rutas-viaje",
-    title: "El viaje: las rutas",
-    prompt: "¿Por qué rutas viajamos desde Gobernador Gregores hasta la entrada de Monte León?",
-    choices: [
-      "Por la Ruta Provincial 25 y después por la Ruta Nacional 3",
-      "Únicamente por la Ruta Nacional 40 hacia el oeste",
-      "Por la Ruta Provincial 12 hasta la costa de Puerto Deseado",
-      "Por la Ruta Nacional 3 de punta a punta",
-    ],
-    answerIndex: 0,
-    hint: "Pista: primero tomamos la Ruta Provincial 25 hacia el este y luego la Ruta Nacional 3 hacia el sur.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-distancia-total",
-    title: "El viaje: distancia",
-    prompt: "¿Aproximadamente cuántos kilómetros recorremos en total desde Gregores hasta Monte León?",
-    choices: [
-      "Aproximadamente 380 kilómetros",
-      "Alrededor de 100 kilómetros",
-      "Cerca de 950 kilómetros",
-      "Menos de 50 kilómetros",
-    ],
-    answerIndex: 0,
-    hint: "Pista: son casi 400 kilómetros de viaje en micro escolar cruzando la provincia.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-tiempo-viaje",
-    title: "El viaje: tiempo",
-    prompt: "¿Cuánto tiempo estimado dura el viaje en micro escolar hasta llegar al parque?",
-    choices: [
-      "Unas 4 horas de viaje",
-      "Alrededor de 1 hora",
-      "Más de 12 horas",
-      "Aproximadamente 30 minutos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: a velocidad segura de micro escolar, el viaje toma unas 4 horas.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-direccion-cardinal",
-    title: "El viaje: orientación",
-    prompt: "En el mapa de Santa Cruz, ¿en qué dirección cardinal viajamos desde Gregores hacia Monte León?",
-    choices: [
-      "Hacia el este-sureste",
-      "Hacia el oeste cordillerano",
-      "Directo hacia el norte",
-      "Hacia el sudoeste cordillerano",
-    ],
-    answerIndex: 0,
-    hint: "Pista: vamos desde el centro de la provincia hacia la costa atlántica del sur.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-cambio-paisaje",
-    title: "El viaje: el paisaje",
-    prompt: "¿Cómo cambia el paisaje a medida que avanzamos desde Gregores hacia la costa del mar?",
-    choices: [
-      "Pasa de la meseta con coirón y cañadones a la costa con acantilados y playas",
-      "Pasa de una selva tupida a montañas nevadas permanentes",
-      "Se mantiene idéntico con bosques de lengas todo el camino",
-      "Pasa de médanos tropicales a llanuras verdes húmedas",
-    ],
-    answerIndex: 0,
-    hint: "Pista: salimos de la estepa de meseta y llegamos al paisaje marítimo con acantilados.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-donde-estamos-puente",
-    title: "¿Cerca de dónde estamos?",
-    prompt: "¿Cerca de qué lugar estamos si el micro cruza un gran puente sobre el río Santa Cruz?",
-    choices: [
-      "Comandante Luis Piedrabuena",
-      "La entrada de Monte León",
-      "Gobernador Gregores",
-      "El centro de la pingüinera",
-    ],
-    answerIndex: 0,
-    hint: "Pista: en Piedrabuena la ruta cruza el caudaloso río Santa Cruz por un puente destacado.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-donde-estamos-coiron",
-    title: "¿Cerca de dónde estamos?",
-    prompt: "¿En qué ambiente estamos si a los costados del camino vemos suelo pedregoso y matas de coirón?",
-    choices: [
-      "En la meseta patagónica",
-      "En la playa marina",
-      "Sobre la pasarela de la pingüinera",
-      "En el muelle de Piedrabuena",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el coirón y el suelo pedregoso son típicos de la meseta y la estepa patagónica.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-donde-estamos-acantilado",
-    title: "¿Cerca de dónde estamos?",
-    prompt: "¿En qué lugar estamos si divisamos acantilados altos frente a las olas del Mar Argentino?",
-    choices: [
-      "En la costa de Monte León",
-      "En la salida de Gobernador Gregores",
-      "En la plaza de Piedrabuena",
-      "En el medio de la meseta central",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los altos acantilados con vista al Mar Argentino caracterizan a Monte León.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-vegetacion-meseta",
-    title: "El viaje: vegetación",
-    prompt: "¿Qué tipo de vegetación es característica de la meseta que atravesamos al inicio del viaje?",
-    choices: [
-      "Matas bajas y coirón adaptados al viento y la aridez",
-      "Pastos muy altos y húmedos de pantano",
-      "Enredaderas frondosas y helechos gigantes",
-      "Árboles frutales de hojas grandes y tiernas",
-    ],
-    answerIndex: 0,
-    hint: "Pista: en la meseta patagónica crecen matas espinosas y coirones resistentes al viento.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-tipo-playa",
-    title: "El viaje: las playas",
-    prompt: "¿Qué tipo de playa encontramos al descender a la costa de Monte León?",
-    choices: [
-      "Playas de canto rodado con restingas y acantilados",
-      "Playas de arena fina blanca con palmeras",
-      "Costas de barro profundo sin olas ni viento",
-      "Barrancas de tierra blanda sin piedras",
-    ],
-    answerIndex: 0,
-    hint: "Pista: en nuestra costa patagónica predominan los cantos rodados (piedritas redondeadas).",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-relieve-canadones",
-    title: "El viaje: geoformas",
-    prompt: "Durante el recorrido por la meseta, ¿qué formaciones naturales del terreno solemos observar?",
-    choices: [
-      "Cañadones y mesetas escalonadas",
-      "Volcanes con lava activa",
-      "Grandes glaciares sobre el camino",
-      "Cataratas caudalosas de selva",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los cañadones son valles profundos labrados en la meseta por antiguos ríos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-rio-piedrabuena",
-    title: "El viaje: los ríos",
-    prompt: "¿Qué río importante bordea la localidad de Piedrabuena en nuestro trayecto hacia el mar?",
-    choices: [
-      "El río Santa Cruz",
-      "El río Chico",
-      "El río Paraná",
-      "El río Colorado",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el río Santa Cruz nace en el lago Argentino y desemboca en el Atlántico.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-seguridad-micro",
-    title: "El viaje: seguridad",
-    prompt: "¿Por qué es obligatorio viajar con el cinturón de seguridad abrochado en el micro?",
-    choices: [
-      "Porque nos protege ante cualquier frenada imprevista en la ruta",
-      "Porque nos ayuda a no quedarnos dormidos",
-      "Porque solo sirve para mirar por la ventanilla",
-      "Porque hace que el micro viaje a más velocidad",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el cinturón de seguridad salva vidas y nos cuida en cualquier viaje por ruta.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-hidratacion-viaje",
-    title: "El viaje: en el micro",
-    prompt: "¿Qué elemento conviene llevar a mano en el asiento durante las 4 horas de viaje?",
-    choices: [
-      "Una botella de agua para mantenernos hidratados",
-      "Una valija pesada y grande de viaje",
-      "Una carpa de campamento armada",
-      "Una pelota de fútbol inflada",
-    ],
-    answerIndex: 0,
-    hint: "Pista: hidratarse con agua durante viajes largos es fundamental para sentirse bien.",
-  },
-  {
-    type: "mc",
-    id: "ml-e1-viento-patagonico",
-    title: "El viaje: el clima",
-    prompt: "¿Qué factor del clima patagónico suele sentirse con más fuerza en la meseta y en la costa?",
-    choices: [
-      "El viento constante que sopla del oeste",
-      "La humedad tropical sin brisa",
-      "Las lluvias torrenciales de verano",
-      "El calor sofocante sin corrientes de aire",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el viento patagónico es constante y característico de toda nuestra región.",
-  },
-];
-
-// ============================================================================
-// BANCO ETAPA 2: EL PARQUE (16 actividades)
-// ============================================================================
-const BANCO_ETAPA_2: readonly ActivitySpec[] = [
-  {
-    type: "mc",
-    id: "ml-e2-que-es-parque",
-    title: "El parque: qué es",
-    prompt: "¿Qué es un Parque Nacional según las leyes argentinas?",
-    choices: [
-      "Un territorio protegido por ley nacional para conservar la naturaleza y el patrimonio",
-      "Una plaza pública de juegos en el centro de una ciudad",
-      "Un campo privado destinado a la cría comercial de ovejas",
-      "Un parque de diversiones con juegos mecánicos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: un Parque Nacional protege por ley la flora, fauna y paisajes para siempre.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-primer-costero-marino",
-    title: "El parque: su importancia",
-    prompt: "¿Por qué Monte León es un parque histórico en el sistema de áreas protegidas de Argentina?",
-    choices: [
-      "Porque es el primer parque nacional costero-marino del país",
-      "Porque es el parque más antiguo de Sudamérica",
-      "Porque es el único parque ubicado en la cordillera",
-      "Porque es el parque más pequeño del continente",
-    ],
-    answerIndex: 0,
-    hint: "Pista: fue el primer parque creado para proteger tanto la costa como el mar argentino.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-anio-creacion",
-    title: "El parque: año de creación",
-    prompt: "¿En qué año fue creado oficialmente el Parque Nacional Monte León por ley nacional?",
-    choices: [
-      "En el año 2004",
-      "En el año 1934",
-      "En el año 1810",
-      "En el año 2022",
-    ],
-    answerIndex: 0,
-    hint: "Pista: se creó a comienzos del siglo XXI, en el año 2004.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-provincia-ubicacion",
-    title: "El parque: ubicación",
-    prompt: "¿En qué provincia argentina se encuentra ubicado el Parque Nacional Monte León?",
-    choices: [
-      "En la provincia de Santa Cruz",
-      "En la provincia de Chubut",
-      "En la provincia de Río Negro",
-      "En la provincia de Buenos Aires",
-    ],
-    answerIndex: 0,
-    hint: "Pista: está en nuestra provincia de Santa Cruz, sobre el litoral del Mar Argentino.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-origen-nombre",
-    title: "El parque: el nombre",
-    prompt: "¿De dónde proviene el nombre «Monte León» que identifica al parque?",
-    choices: [
-      "De una geoforma costera que el viento y el mar desgastaron hasta parecer un león acostado",
-      "De antiguos exploradores que encontraron leones africanos en la playa",
-      "Del apellido del primer guardaparque de Santa Cruz",
-      "De una montaña alta cubierta por bosques de pinos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: una gran roca erosionada parece la figura de un león descansando frente al mar.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-billete-diez-pesos",
-    title: "El parque: en los billetes",
-    prompt: "¿En el reverso de qué billete apareció destacada la figura de la Cabeza del León?",
-    choices: [
-      "En el reverso del billete de $10 del Banco de la Patagonia",
-      "En el billete antiguo de $100 con la imagen de Roca",
-      "En una moneda de 50 centavos de curso legal",
-      "En el billete de $1000 del hornero",
-    ],
-    answerIndex: 0,
-    hint: "Pista: la Cabeza del León ilustró el reverso del billete de $10 del Banco de la Patagonia.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-fuerzas-erosion",
-    title: "El parque: modelado natural",
-    prompt: "¿Qué fuerzas de la naturaleza modelaron la silueta de la Cabeza del León?",
-    choices: [
-      "La erosión constante provocada por el viento patagónico y el choque de las olas",
-      "Máquinas excavadoras durante la inauguración del parque",
-      "Un terremoto repentino que partió el acantilado",
-      "El trabajo manual de antiguos pobladores con herramientas",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el viento y el agua del mar desgastaron la roca a lo largo de miles de años.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-ambiente-protegido",
-    title: "El parque: ambientes",
-    prompt: "¿Qué ambientes naturales abarca el Parque Nacional Monte León?",
-    choices: [
-      "Abarca tanto la estepa patagónica como la costa marina y el mar cercano",
-      "Únicamente una isla lejana sin costa en el continente",
-      "Solamente montañas altas de cordillera con nieve",
-      "Exclusivamente el fondo del océano profundo",
-    ],
-    answerIndex: 0,
-    hint: "Pista: protege la estepa terrestre, las playas y acantilados y el sector marítimo.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-que-es-costero-marino",
-    title: "El parque: costero-marino",
-    prompt: "¿Qué significa que un parque nacional sea clasificado como «costero-marino»?",
-    choices: [
-      "Que protege una porción de tierra en la costa y también un sector del mar con su vida marina",
-      "Que solo pueden ingresar barcos con turistas",
-      "Que los animales viven únicamente sumergidos en agua salada",
-      "Que está prohibido acercarse a la orilla del mar",
-    ],
-    answerIndex: 0,
-    hint: "Pista: integra la conservación de la costa terrestre y del mar adyacente.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-quien-administra",
-    title: "El parque: administración",
-    prompt: "¿Qué institución estatal custodia y administra los Parques Nacionales en la Argentina?",
-    choices: [
-      "La Administración de Parques Nacionales",
-      "Las empresas privadas de turismo",
-      "Los clubes deportivos de cada provincia",
-      "La policía de tránsito de las rutas",
-    ],
-    answerIndex: 0,
-    hint: "Pista: la APN (Administración de Parques Nacionales) cuida todas las áreas protegidas nacionales.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-historia-estancia",
-    title: "El parque: antes de 2004",
-    prompt: "Antes de ser declarado Parque Nacional en 2004, ¿qué actividad funcionaba en esas tierras?",
-    choices: [
-      "Una estancia ganadera dedicada a la cría de ovejas",
-      "Una fábrica con una gran ciudadela de edificios",
-      "Un puerto comercial internacional de barcos",
-      "Una base científica espacial de cohetes",
-    ],
-    answerIndex: 0,
-    hint: "Pista: funcionaba la antigua Estancia Monte León, productora de lana ovina.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-objetivo-conservar",
-    title: "El parque: conservación",
-    prompt: "¿Cuál es uno de los objetivos más importantes de conservar Monte León?",
-    choices: [
-      "Cuidar la biodiversidad del Mar Argentino y la estepa para las futuras generaciones",
-      "Construir grandes hoteles sobre los acantilados vírgenes",
-      "Permitir la caza deportiva de guanacos y choiques",
-      "Extraer piedras y arena de la playa con camiones",
-    ],
-    answerIndex: 0,
-    hint: "Pista: conservar significa proteger la naturaleza para que siga viva en el futuro.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-creacion-ley",
-    title: "El parque: cómo se crea",
-    prompt: "¿Cómo se aprueba la creación de un nuevo Parque Nacional en nuestro país?",
-    choices: [
-      "Mediante una ley votada en el Congreso de la Nación",
-      "Por decisión de una empresa turística",
-      "Por sorteo público en una fiesta provincial",
-      "Por una nota de un club náutico",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los Parques Nacionales se crean por ley sancionada por el Congreso Nacional.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-icono-cabeza-leon",
-    title: "El parque: íconos",
-    prompt: "¿Por qué la Cabeza del León es considerada el símbolo principal del parque?",
-    choices: [
-      "Porque es una geoforma única que le dio nombre al lugar y define su paisaje",
-      "Porque es el único lugar donde duermen los cóndores",
-      "Porque es una estatua de cemento fabricada por el hombre",
-      "Porque allí se colocó un cartel luminoso",
-    ],
-    answerIndex: 0,
-    hint: "Pista: su silueta natural esculpida en la roca representa la identidad de Monte León.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-patrimonio-arqueologico",
-    title: "El parque: arqueología",
-    prompt: "Además de la naturaleza, ¿qué patrimonio cultural protegen los cañadones de Monte León?",
-    choices: [
-      "Restos arqueológicos de pueblos originarios que vivieron en la costa hace miles de años",
-      "Castillos coloniales con puentes levadizos",
-      "Grandes pirámides antiguas de piedra pulida",
-      "Vagones de tren abandonados bajo tierra",
-    ],
-    answerIndex: 0,
-    hint: "Pista: grupos de cazadores-recolectores originarios habitaban y pescaban en esta costa.",
-  },
-  {
-    type: "mc",
-    id: "ml-e2-cuidado-visitantes",
-    title: "El parque: los visitantes",
-    prompt: "¿Qué oportunidad brinda visitar un Parque Nacional a los alumnos de las escuelas?",
-    choices: [
-      "Aprender a valorar y cuidar la naturaleza viéndola en su estado original",
-      "Comprar animales silvestres para llevar al aula",
-      "Cazar aves para hacer experimentos en ciencias",
-      "Llevarse recuerdos de plantas arrancadas",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el contacto directo con la naturaleza nos enseña a respetarla y defenderla.",
-  },
-];
-
-// ============================================================================
-// BANCO ETAPA 3: LOS ANIMALES (16 actividades)
-// ============================================================================
-const BANCO_ETAPA_3: readonly ActivitySpec[] = [
-  {
+function mc(id: string, title: string, prompt: string, opciones: [string, string, string], hint: string): ActivitySpec {
+  return { type: "mc", id, title, prompt, choices: [...opciones], answerIndex: 0, hint };
+}
+function orden(id: string, title: string, prompt: string, enOrden: string[], hint: string): ActivitySpec {
+  return { type: "order", id, title, prompt, items: [...enOrden], correctOrder: enOrden.map((_, i) => i), hint };
+}
+function clasif(id: string, title: string, prompt: string, categorias: [string, string], a: string[], b: string[], hint: string): ActivitySpec {
+  return {
     type: "classify",
-    id: "ml-e3-clasificar-ambientes",
-    title: "Los animales: ¿dónde viven?",
-    prompt: "Clasificá cada animal según el ambiente de Monte León donde pasa la mayor parte de su vida:",
-    categories: ["Animales de la costa marina", "Animales de la estepa"],
-    items: [
-      { label: "Pingüino de Magallanes", categoryIndex: 0 },
-      { label: "Lobo marino de un pelo", categoryIndex: 0 },
-      { label: "Cormorán imperial", categoryIndex: 0 },
-      { label: "Guanaco", categoryIndex: 1 },
-      { label: "Choique", categoryIndex: 1 },
-      { label: "Zorro colorado", categoryIndex: 1 },
-    ],
-    hint: "Pista: los que buscan su alimento en el mar son de la costa; guanacos, choiques y zorros recorren la estepa.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-cantidad-pinguinos",
-    title: "Los animales: pingüinos",
-    prompt: "¿Cuántas parejas de pingüinos de Magallanes anidan aproximadamente en Monte León?",
-    choices: [
-      "Más de 60.000 parejas reproductivas",
-      "Menos de 50 parejas",
-      "Apenas 100 pingüinos en total",
-      "Alrededor de 500 ejemplares",
-    ],
-    answerIndex: 0,
-    hint: "Pista: es una colonia inmensa con más de sesenta mil parejas de pingüinos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-epoca-pinguinos",
-    title: "Los animales: primavera",
-    prompt: "¿En qué época del año llegan los pingüinos de Magallanes a la costa de Monte León?",
-    choices: [
-      "En primavera, entre septiembre y octubre",
-      "En pleno invierno, durante las nevadas de julio",
-      "A fines de otoño para hibernar bajo tierra",
-      "Únicamente a mediados de febrero",
-    ],
-    answerIndex: 0,
-    hint: "Pista: llegan en primavera para aparearse, poner sus huevos y criar a sus pichones.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-donde-anidan",
-    title: "Los animales: el nido",
-    prompt: "¿Dónde construyen sus nidos los pingüinos de Magallanes en Monte León?",
-    choices: [
-      "Cavan cuevas en la tierra arcillosa bajo matas de arbustos",
-      "Sobre las copas de árboles frondosos de la costa",
-      "En la nieve acumulada sobre las piedras altas",
-      "Sobre balsas de algas flotando en el mar abierto",
-    ],
-    answerIndex: 0,
-    hint: "Pista: usan sus patas y pico para cavar cuevas protegidas del viento y los predadores.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-cuantos-huevos",
-    title: "Los animales: huevos",
-    prompt: "¿Cuántos huevos suele poner la hembra de pingüino de Magallanes en cada nido?",
-    choices: [
-      "Pone dos huevos",
-      "Pone un solo huevo",
-      "Pone entre diez y doce huevos",
-      "Pone más de veinte huevos pequeños",
-    ],
-    answerIndex: 0,
-    hint: "Pista: ponen habitualmente 2 huevos que incuban por turnos el macho y la hembra.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-comida-pinguinos",
-    title: "Los animales: alimentación marina",
-    prompt: "¿De qué se alimentan principalmente los pingüinos cuando nadan en el mar?",
-    choices: [
-      "De peces como anchoitas y sardinas, y de calamares",
-      "De pastos marinos y semillas de la orilla",
-      "De insectos de la meseta y raíces secas",
-      "De frutos silvestres de los arbustos costeros",
-    ],
-    answerIndex: 0,
-    hint: "Pista: son excelentes buceadores y cazan peces pequeños y calamares bajo el agua.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-lobos-marinos",
-    title: "Los animales: lobos marinos",
-    prompt: "¿Qué especie de lobo marino forma grandes colonias sobre las restingas y rocas de Monte León?",
-    choices: [
-      "El lobo marino de un pelo",
-      "La foca leopardo de la Antártida",
-      "El león marino de California",
-      "El oso polar costero",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el lobo marino de un pelo (o lobo común) habita las restingas patagónicas.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-cormoranes-acantilados",
-    title: "Los animales: cormoranes",
-    prompt: "¿Qué aves marinas de plumaje negro y blanco anidan en los paredones de los acantilados?",
-    choices: [
-      "Los cormoranes",
-      "Los tucanes",
-      "Los loros barranqueros",
-      "Los colibríes",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los cormoranes imperiales forman populosas colonias sobre los acantilados marinos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-guanaco-estepa",
-    title: "Los animales: el guanaco",
-    prompt: "¿Qué animal herbívoro de cuello largo y pelaje marrón recorre en manadas la estepa de Monte León?",
-    choices: [
-      "El guanaco",
-      "La vicuña del norte",
-      "El ciervo de los pantanos",
-      "El tapir misionero",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el guanaco es el mamífero silvestre terrestre más grande de la Patagonia.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-choique-patagonico",
-    title: "Los animales: el choique",
-    prompt: "¿Qué ave corredora patagónica no vuela y se desplaza a gran velocidad por la meseta?",
-    choices: [
-      "El choique",
-      "El pingüino rey",
-      "La perdiz colorada",
-      "El cóndor andino",
-    ],
-    answerIndex: 0,
-    hint: "Pista: el choique (o ñandú petiso) corre a gran velocidad por la estepa abierta.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-cuidado-turnos",
-    title: "Los animales: cuidado compartido",
-    prompt: "¿Cómo se organizan los pingüinos de Magallanes para empollar sus huevos y alimentarse?",
-    choices: [
-      "El macho y la hembra se turnan para cuidar el nido mientras el otro pesca en el mar",
-      "La madre se queda sola siempre y el padre nunca regresa",
-      "Los huevos quedan solos tapados con arena",
-      "Otros animales del parque cuidan los nidos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: forman parejas que comparten la crianza y la búsqueda de comida por turnos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-alas-aletas",
-    title: "Los animales: adaptaciones",
-    prompt: "¿Qué adaptación especial tienen las alas de los pingüinos?",
-    choices: [
-      "Tienen forma de aletas rígidas que les permiten propulsarse bajo el agua como si volaran",
-      "Tienen plumas largas para volar por encima de las nubes",
-      "Tienen garras filosas para trepar acantilados",
-      "Son membranas transparentes como las de los peces",
-    ],
-    answerIndex: 0,
-    hint: "Pista: sus alas se transformaron en aletas fuertes y rígidas para nadar velozmente.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-defensa-choique",
-    title: "Los animales: velocidad del choique",
-    prompt: "¿Cómo reacciona un choique cuando detecta peligro en la estepa abierta?",
-    choices: [
-      "Corre a toda velocidad realizando zigzags entre las matas",
-      "Levanta vuelo hacia las nubes altas",
-      "Se arroja al mar para nadar hacia una isla",
-      "Se entierra por completo bajo la tierra arcillosa",
-    ],
-    answerIndex: 0,
-    hint: "Pista: sus largas patas le permiten alcanzar velocidades de más de 45 km/h.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-plumas-impermeables",
-    title: "Los animales: abrigo natural",
-    prompt: "¿Por qué los pingüinos no se congelan al sumergirse en las frías aguas del Mar Argentino?",
-    choices: [
-      "Porque tienen plumas densas y aceitosas y una capa de grasa bajo la piel",
-      "Porque el agua de mar siempre está caliente en la costa",
-      "Porque tienen lana gruesa como las ovejas",
-      "Porque no sienten el frío debido a que no tienen nervios",
-    ],
-    answerIndex: 0,
-    hint: "Pista: una capa impermeable de plumas y una gruesa grasa aíslan su cuerpo del frío.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-descanso-lobos",
-    title: "Los animales: la lobería",
-    prompt: "¿Por qué los lobos marinos salen del agua para descansar sobre las rocas de la costa?",
-    choices: [
-      "Para calentarse con los rayos del sol, descansar y mudar su pelaje",
-      "Porque no saben nadar durante mucho tiempo",
-      "Para comer pastos de la meseta",
-      "Para escapar de los pingüinos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: como mamíferos, necesitan calentarse al sol y descansar en tierra firme.",
-  },
-  {
-    type: "mc",
-    id: "ml-e3-cormoran-buceo",
-    title: "Los animales: cormoranes buceadores",
-    prompt: "¿Cómo consiguen su alimento los cormoranes que anidan en Monte León?",
-    choices: [
-      "Se sumergen bajo el agua nadando con sus patas palmeadas para atrapar peces",
-      "Cazan ratones en la estepa de noche",
-      "Comen semillas que caen de los árboles",
-      "Esperan que los pingüinos les traigan comida",
-    ],
-    answerIndex: 0,
-    hint: "Pista: son aves zambullidoras expertas en perseguir peces bajo el agua.",
-  },
+    id,
+    title,
+    prompt,
+    categories: [...categorias],
+    items: [...a.map((label) => ({ label, categoryIndex: 0 })), ...b.map((label) => ({ label, categoryIndex: 1 }))],
+    hint,
+  };
+}
+
+// ETAPA 1: EL VIAJE (clase 2 del Doc de Pedro)
+const T1 = "El viaje";
+const BANCO_ETAPA_1: readonly ActivitySpec[] = [
+  orden("ml-e1-orden-recorrido", T1, "Ordená el recorrido del viaje, desde la escuela hasta el parque.",
+    ["Salimos de Gobernador Gregores", "Pasamos por Comandante Luis Piedrabuena", "Llegamos al Parque Nacional Monte León"],
+    "Pista: primero la Ruta 25 hasta Piedrabuena y después la Ruta 3 hacia el sur."),
+  clasif("ml-e1-meseta-costa", T1, "¿Dónde lo vemos durante el viaje? Clasificá.", ["En la meseta", "En la costa"],
+    ["Matas de coirón", "Cañadones", "Mesetas escalonadas"], ["Acantilados", "Playas de piedras", "Olas del mar"],
+    "Pista: cerca de Gregores todo es meseta; al llegar a Monte León aparece el mar."),
+  mc("ml-e1-rutas", T1, "¿Por qué rutas viajamos desde Gregores hasta Monte León?",
+    ["Ruta Provincial 25 y Ruta Nacional 3", "Ruta Nacional 40 y Ruta Provincial 27", "Ruta Nacional 3 y Ruta Nacional 40"],
+    "Pista: una ruta provincial nos lleva hasta Piedrabuena y una nacional baja por la costa."),
+  mc("ml-e1-distancia", T1, "¿Cuántos kilómetros recorremos, más o menos?",
+    ["Unos 380 kilómetros", "Unos 80 kilómetros", "Unos 1.300 kilómetros"],
+    "Pista: son casi 400 kilómetros."),
+  mc("ml-e1-tiempo", T1, "¿Cuánto dura el viaje en micro escolar, más o menos?",
+    ["Unas 4 horas", "Unos 40 minutos", "Unos 4 días"],
+    "Pista: salimos a la mañana y llegamos antes del almuerzo."),
+  mc("ml-e1-direccion", T1, "Desde Gregores, ¿hacia dónde viajamos para llegar al mar?",
+    ["Hacia el este y el sur", "Hacia el oeste", "Hacia el norte"],
+    "Pista: el mar está del lado por donde sale el sol."),
+  mc("ml-e1-transporte", T1, "¿En qué viajamos hasta Monte León?",
+    ["En micro escolar", "En avión", "En barco"],
+    "Pista: vamos todos juntos por la ruta."),
+  mc("ml-e1-rio", T1, "Al pasar por Piedrabuena cruzamos un puente. ¿Sobre qué río?",
+    ["El río Santa Cruz", "El río Chico", "El río Deseado"],
+    "Pista: es el río más grande de la provincia y le da su nombre."),
+  mc("ml-e1-paisaje", T1, "¿Cómo cambia el paisaje cuando nos acercamos al mar?",
+    ["De meseta con coirones a acantilados y playas", "De meseta a bosques de lengas", "De meseta a montañas con nieve"],
+    "Pista: el parque está en la costa del Mar Argentino."),
+  mc("ml-e1-donde-coiron", T1, "Por la ventanilla vemos matas de coirón y cañadones. ¿Dónde estamos?",
+    ["Todavía en la meseta, cerca de Gregores", "Llegando a Monte León", "En el puente de Piedrabuena"],
+    "Pista: el coirón crece en la meseta."),
+  mc("ml-e1-donde-acantilado", T1, "Ahora vemos un acantilado y olas. ¿Dónde estamos?",
+    ["Llegando a Monte León", "Saliendo de Gregores", "En el centro de Piedrabuena"],
+    "Pista: las olas son del mar."),
+  mc("ml-e1-campera", T1, "En la costa sopla mucho viento. ¿Qué ropa conviene llevar?",
+    ["Una campera rompevientos", "Un paraguas grande", "Ropa de verano liviana"],
+    "Pista: el paraguas se da vuelta con el viento patagónico."),
+  mc("ml-e1-calzado", T1, "¿Qué calzado conviene para caminar por los senderos?",
+    ["Zapatillas cerradas y cómodas", "Ojotas", "Zapatos de vestir"],
+    "Pista: vamos a caminar un buen rato por tierra y piedras."),
+  mc("ml-e1-botella", T1, "¿Para qué llevamos una botella reutilizable?",
+    ["Para tomar agua sin dejar basura", "Para juntar agua del mar", "Para guardar caracoles de la playa"],
+    "Pista: en el parque no se tira nada y no se lleva nada."),
+  mc("ml-e1-libreta", T1, "¿Para qué llevamos una libreta y un lápiz?",
+    ["Para anotar lo que observamos", "Para escribir en las rocas", "Para hacer la tarea de matemática"],
+    "Pista: somos exploradores que registran lo que ven."),
+  mc("ml-e1-micro", T1, "¿Cómo viajamos dentro del micro?",
+    ["Sentados y con el cinturón puesto", "Parados para ver mejor", "Con los brazos afuera de la ventanilla"],
+    "Pista: viajar seguros es lo primero."),
 ];
 
-// ============================================================================
-// BANCO ETAPA 4: LAS NORMAS Y EL GUARDAPARQUE (16 actividades)
-// ============================================================================
+// ETAPA 2: EL PARQUE (clase 3)
+const T2 = "El parque";
+const BANCO_ETAPA_2: readonly ActivitySpec[] = [
+  orden("ml-e2-orden-tamano", T2, "Ordená del más grande al más chico.",
+    ["La Argentina", "La provincia de Santa Cruz", "El Parque Nacional Monte León"],
+    "Pista: el parque está dentro de la provincia, y la provincia dentro del país."),
+  clasif("ml-e2-natural", T2, "¿Lo hizo la naturaleza o lo hicieron las personas? Clasificá.", ["Lo hizo la naturaleza", "Lo hicieron las personas"],
+    ["La Cabeza del León", "Los acantilados", "La playa de piedras"], ["La pasarela de madera", "Los carteles del sendero", "La Ruta Nacional 3"],
+    "Pista: el viento y el mar formaron las rocas; las personas construyeron caminos y carteles."),
+  mc("ml-e2-que-es", T2, "¿Qué es un parque nacional?",
+    ["Un lugar protegido por ley para cuidar la naturaleza", "Una plaza grande con juegos para chicos", "Un campo donde se crían ovejas"],
+    "Pista: allí se cuidan los animales, las plantas y los paisajes."),
+  mc("ml-e2-primero", T2, "¿Por qué Monte León es un parque muy especial?",
+    ["Fue el primer parque nacional de costa y mar del país", "Es el parque nacional más antiguo del país", "Es el único parque con glaciares"],
+    "Pista: protege la costa y también el mar."),
+  mc("ml-e2-anio", T2, "¿En qué año se creó el Parque Nacional Monte León?",
+    ["En 2004", "En 1904", "En 2024"],
+    "Pista: se creó a comienzos de este siglo, antes de que ustedes nacieran."),
+  mc("ml-e2-provincia", T2, "¿En qué provincia está Monte León?",
+    ["En Santa Cruz", "En Chubut", "En Tierra del Fuego"],
+    "Pista: es nuestra provincia."),
+  mc("ml-e2-nombre", T2, "¿Por qué el parque se llama Monte León?",
+    ["Por una roca que parece un león acostado", "Porque allí vivían leones africanos", "Por el apellido de un explorador"],
+    "Pista: mirá la forma de la roca más famosa del parque."),
+  mc("ml-e2-cabeza", T2, "¿Cómo tomó su forma la Cabeza del León?",
+    ["El viento y el mar la fueron gastando durante muchísimos años", "La talló una persona con herramientas", "La armaron con piedras traídas en camiones"],
+    "Pista: nadie la construyó: la naturaleza la fue gastando de a poco."),
+  mc("ml-e2-mar", T2, "¿Qué mar llega a la costa de Monte León?",
+    ["El Mar Argentino", "El océano Pacífico", "El lago Argentino"],
+    "Pista: es el mar que baña toda la costa de Santa Cruz."),
+  mc("ml-e2-quien-cuida", T2, "¿Quiénes cuidan el parque todos los días?",
+    ["Los guardaparques", "Los bomberos", "Los inspectores de tránsito"],
+    "Pista: llevan sombrero de ala ancha y uniforme verde."),
+  mc("ml-e2-billete", T2, "En clase vimos Monte León en un billete didáctico del Banco de la Patagonia. ¿De cuánto era?",
+    ["De $10", "De $100", "De $1.000"],
+    "Pista: en el frente tenía un pingüino de Magallanes."),
+  mc("ml-e2-de-todos", T2, "¿Por qué decimos que el parque es de todos los argentinos?",
+    ["Porque es un lugar público que cuidamos entre todos", "Porque cada uno puede llevarse lo que quiera", "Porque es de una sola familia"],
+    "Pista: lo que es de todos se cuida entre todos."),
+  mc("ml-e2-costa", T2, "¿Cómo es la costa del parque?",
+    ["Con acantilados altos y playas de piedras", "Con playas de arena blanca y palmeras", "Con hielo y glaciares"],
+    "Pista: las piedras redondeadas por el mar se llaman canto rodado."),
+  mc("ml-e2-antes", T2, "Antes de ser parque nacional, ¿qué había en Monte León?",
+    ["Una estancia de ovejas", "Una ciudad grande", "Un puerto de barcos pesqueros"],
+    "Pista: como muchos campos de Santa Cruz, allí se criaban ovejas."),
+  mc("ml-e2-ubicacion", T2, "Desde Piedrabuena, ¿hacia dónde queda Monte León?",
+    ["Hacia el sur, por la Ruta 3", "Hacia el norte, por la Ruta 3", "Hacia el oeste, por la Ruta 25"],
+    "Pista: bajamos por la costa."),
+  mc("ml-e2-protege", T2, "¿Qué se protege en un parque nacional?",
+    ["Los animales, las plantas y los paisajes", "Solo los caminos y los carteles", "Solo los edificios antiguos"],
+    "Pista: todo lo que la naturaleza nos regaló."),
+];
+
+// ETAPA 3: LOS ANIMALES (clase 3). Los ids con «lobo» o «cormoran» usan la
+// escena de la lobería; los de «guanaco», «choique» o «estepa», la de la estepa.
+const T3 = "Los animales";
+const BANCO_ETAPA_3: readonly ActivitySpec[] = [
+  clasif("ml-e3-costa-estepa", T3, "¿Dónde vive cada animal? Clasificá.", ["En la costa y el mar", "En la estepa"],
+    ["Pingüino de Magallanes", "Lobo marino de un pelo", "Cormorán"], ["Guanaco", "Choique", "Zorro colorado"],
+    "Pista: los que buscan su comida en el mar viven en la costa."),
+  mc("ml-e3-cantidad", T3, "¿Cuántas parejas de pingüinos de Magallanes llegan a Monte León?",
+    ["Más de 60.000 parejas", "Unas 600 parejas", "Unas 60 parejas"],
+    "Pista: son tantas que es una de las colonias más grandes de la costa."),
+  mc("ml-e3-cuando", T3, "¿En qué época llegan los pingüinos a la costa?",
+    ["En primavera, en septiembre y octubre", "En invierno, en junio y julio", "En otoño, en abril"],
+    "Pista: llegan cuando empieza a hacer menos frío."),
+  mc("ml-e3-nido", T3, "¿Dónde hacen su nido los pingüinos de Magallanes?",
+    ["En cuevas que cavan en la tierra", "En lo alto de los árboles", "Sobre el hielo del mar"],
+    "Pista: buscan tierra blanda cerca de la costa."),
+  mc("ml-e3-huevos", T3, "¿Cuántos huevos pone, por lo general, la pingüina?",
+    ["Dos huevos", "Un huevo", "Seis huevos"],
+    "Pista: son pocos, por eso hay que cuidar mucho los nidos."),
+  mc("ml-e3-comen", T3, "¿Qué comen los pingüinos?",
+    ["Peces y calamares", "Pasto y semillas", "Insectos de la estepa"],
+    "Pista: buscan su comida nadando en el mar."),
+  mc("ml-e3-nadan", T3, "¿Cómo se mueven los pingüinos en el agua?",
+    ["Nadan rápido usando sus aletas", "Vuelan bajito sobre las olas", "Caminan por el fondo del mar"],
+    "Pista: no vuelan, pero son grandes nadadores."),
+  mc("ml-e3-octubre", T3, "Cuando visitemos el parque a fines de octubre, ¿qué estarán haciendo los pingüinos?",
+    ["Cuidando sus huevos en las cuevas", "Enseñándoles a nadar a pichones grandes", "Viajando hacia el norte"],
+    "Pista: los pichones nacen recién en noviembre."),
+  mc("ml-e3-turnos", T3, "¿Quién cuida los huevos en la cueva?",
+    ["La mamá y el papá, por turnos", "Solo la mamá", "Nadie: los dejan solos"],
+    "Pista: mientras uno cuida el nido, el otro va al mar a comer."),
+  mc("ml-e3-pecho", T3, "¿Cómo es el pecho del pingüino de Magallanes?",
+    ["Blanco con bandas negras", "Todo negro", "Amarillo con manchas"],
+    "Pista: tiene franjas oscuras que parecen un collar."),
+  mc("ml-e3-lobo", T3, "¿Qué animal descansa en grupo sobre las rocas y el macho tiene una gran melena?",
+    ["El lobo marino de un pelo", "El guanaco", "El pingüino de Magallanes"],
+    "Pista: vive en la lobería, junto al mar."),
+  mc("ml-e3-cormoran", T3, "¿Qué ave marina se zambulle para pescar y hace su nido en los acantilados?",
+    ["El cormorán", "El choique", "El cóndor"],
+    "Pista: es negra y blanca y vive junto al mar."),
+  mc("ml-e3-guanaco", T3, "¿Qué animal de la estepa vive en manada y tiene el cuello largo?",
+    ["El guanaco", "El lobo marino", "El zorro colorado"],
+    "Pista: es pariente de la llama."),
+  mc("ml-e3-choique", T3, "¿Qué ave grande de la estepa corre muy rápido pero no vuela?",
+    ["El choique", "El cormorán", "La gaviota"],
+    "Pista: también lo llaman ñandú."),
+  mc("ml-e3-lejos", T3, "¿Por qué miramos a los pingüinos desde lejos?",
+    ["Para no asustarlos ni pisar sus cuevas", "Porque los pingüinos son peligrosos", "Para que vengan hacia nosotros"],
+    "Pista: sus nidos están debajo de la tierra."),
+  mc("ml-e3-estepa-comida", T3, "¿Qué comen los guanacos en la estepa?",
+    ["Pastos y arbustos", "Peces y calamares", "Huevos de pingüino"],
+    "Pista: son herbívoros."),
+];
+
+// ETAPA 4: LAS NORMAS Y EL GUARDAPARQUE (clase 4)
+const T4 = "Las normas";
 const BANCO_ETAPA_4: readonly ActivitySpec[] = [
-  {
-    type: "mc",
-    id: "ml-e4-rol-guardaparque",
-    title: "Normas: el guardaparque",
-    prompt: "¿Cuál es la función principal de los guardaparques en el Parque Nacional Monte León?",
-    choices: [
-      "Cuidar la flora y la fauna, mantener los senderos y hacer cumplir las leyes de conservación",
-      "Manejar los micros escolares de los visitantes",
-      "Vender golosinas y recuerdos en la ruta",
-      "Pescar calamares para abastecer a los hoteles",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los guardaparques son los custodios que protegen la naturaleza y educan a los visitantes.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-caminar-pasarelas",
-    title: "Normas: pasarelas y senderos",
-    prompt: "¿Por qué es fundamental caminar únicamente por las pasarelas y senderos autorizados?",
-    choices: [
-      "Para no pisar los nidos subterráneos de los pingüinos ni erosionar el suelo frágil",
-      "Porque fuera del sendero el suelo es de lava ardiente",
-      "Porque los senderos tienen alfombras para correr rápido",
-      "Para que el micro nos encuentre más fácil",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los pingüinos cavan cuevas bajo el suelo; pisar fuera del camino puede derrumbar sus nidos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-regla-oro",
-    title: "Normas: la regla de oro",
-    prompt: "¿Cuál es la regla de oro que debemos recordar en todos los Parques Nacionales?",
-    choices: [
-      "«No dejar nada más que huellas, no llevarse nada más que fotos y recuerdos»",
-      "«Llevarse todas las piedras brillantes que encontremos»",
-      "«Alimentar a todos los animales que se acerquen»",
-      "«Dejar la basura en la orilla del mar para que se la lleve la ola»",
-    ],
-    answerIndex: 0,
-    hint: "Pista: la regla de oro enseña a no alterar la naturaleza ni dejar ningún rastro dañino.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-basura-cero",
-    title: "Normas: basura cero",
-    prompt: "¿Qué debemos hacer con todos los residuos (papeles, botellas, cáscaras) durante la visita?",
-    choices: [
-      "Guardar todo en la mochila y traerlo de vuelta a la ciudad para tirarlo en un cesto",
-      "Dejar los envoltorios escondidos debajo de una mata",
-      "Tirar las cáscaras de fruta a los pingüinos porque son naturales",
-      "Enterrar las botellas de plástico en la arena",
-    ],
-    answerIndex: 0,
-    hint: "Pista: basura cero significa que todo lo que entra al parque en la mochila, vuelve en la mochila.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-caso-pichon",
-    title: "Dilema: el pichón de pingüino",
-    prompt: "Vemos un pichón cerca del sendero que parece solo. ¿Qué debemos hacer?",
-    choices: [
-      "No tocarlo ni acercarnos; avisar al guardaparque si parece en riesgo, recordando que sus padres suelen estar pescando",
-      "Alzarlo para abrigarlo adentro de nuestra campera",
-      "Llevarlo en la mochila al micro para adoptarlo en casa",
-      "Darle galletitas dulces para que no tenga hambre",
-    ],
-    answerIndex: 0,
-    hint: "Pista: tocar a un animal salvaje lo asusta y puede hacer que sus padres lo rechacen; nunca se tocan.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-caso-envase-vuela",
-    title: "Dilema: el envase que vuela",
-    prompt: "El viento patagónico levanta un paquete de galletitas que vuela hacia la restinga. ¿Qué hacemos?",
-    choices: [
-      "Ir a buscarlo de inmediato y guardarlo bien cerrado dentro de la mochila",
-      "Dejarlo volar porque el viento se lo lleva lejos del sendero",
-      "Tirarle piedras encima para que no se mueva",
-      "Ignorarlo porque no era nuestro paquete",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los plásticos que vuelan al mar son ingeridos por aves y peces y les causan la muerte.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-caso-piedra-fosil",
-    title: "Dilema: la piedra brillante o fósil",
-    prompt: "Encontramos una piedra marina hermosa con restos fosilizados de caracoles. ¿Qué hacemos?",
-    choices: [
-      "Observarla con admiración, sacarle una foto y dejarla exactamente en su lugar",
-      "Guardarla en el bolsillo para llevarla de adorno a casa",
-      "Romperla contra otra roca para ver qué tiene adentro",
-      "Llevarla para venderla a los compañeros en la escuela",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los fósiles y piedras son patrimonio de todos; deben quedar donde están para que otros los disfruten.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-no-alimentar",
-    title: "Normas: no alimentar animales",
-    prompt: "¿Por qué está terminantemente prohibido darle comida a los animales del parque?",
-    choices: [
-      "Porque la comida humana les causa enfermedades graves y altera su conducta natural",
-      "Porque los animales se acostumbran a pedir caramelos",
-      "Porque los animales se enojan si no les damos gaseosas",
-      "Porque a los pingüinos no les gusta comer nada",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los alimentos procesados enferman a la fauna silvestre y les impiden cazar su comida natural.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-silencio-miradores",
-    title: "Normas: en los miradores",
-    prompt: "¿Cómo debemos comportarnos al observar a los animales desde las pasarelas y miradores?",
-    choices: [
-      "Mantener silencio, hablar en voz baja y respetar la distancia sin movimientos bruscos",
-      "Gritar y aplaudir fuerte para que miren hacia la cámara",
-      "Hacer ruidos extraños para llamarlos cerca",
-      "Correr por las maderas para llegar primeros",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los ruidos fuertes asustan a los animales y pueden hacer que abandonen sus nidos con huevos.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-sin-mascotas",
-    title: "Normas: mascotas",
-    prompt: "¿Por qué no está permitido ingresar con mascotas (perros o gatos) al Parque Nacional?",
-    choices: [
-      "Porque pueden transmitir parásitos y enfermedades o atacar a las crías silvestres",
-      "Porque no hay veterinarias cerca del parque",
-      "Porque los perros se cansan mucho de caminar",
-      "Porque los pingüinos no quieren jugar con animales domésticos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los perros pueden cazar pingüinos o transmitir enfermedades letales a la fauna nativa.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-sendero-cerrado",
-    title: "Normas: cartelería",
-    prompt: "Si vemos un cartel que dice «Sendero cerrado por conservación», ¿qué debemos hacer?",
-    choices: [
-      "Respetar la indicación y continuar únicamente por los senderos habilitados",
-      "Saltar la soga para mirar por qué lo cerraron",
-      "Sacar el cartel para que nadie se confunda",
-      "Entrar rápido a sacar una foto y volver corriendo",
-    ],
-    answerIndex: 0,
-    hint: "Pista: los senderos se cierran para proteger pichones recién nacidos o recuperar el suelo desgastado.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-no-llevarse-caracoles",
-    title: "Normas: nada de la playa",
-    prompt: "¿Por qué no debemos juntar conchillas, caracoles ni huesos de la orilla marina?",
-    choices: [
-      "Porque forman parte del ciclo del ecosistema y aportan minerales al suelo marino",
-      "Porque son propiedad exclusiva de los barcos de pesca",
-      "Porque toman mal olor enseguida en la mochila",
-      "Porque pesan demasiado para el micro escolar",
-    ],
-    answerIndex: 0,
-    hint: "Pista: cada conchilla y caracol cumple una función natural y forma parte del paisaje costero.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-protegerse-sol",
-    title: "Normas: cuidado personal",
-    prompt: "¿Qué elementos son necesarios para protegernos del sol y el viento durante la caminata?",
-    choices: [
-      "Gorra, anteojos de sol, protector solar y una campera cortaviento",
-      "Un paraguas abierto frente al viento fuerte",
-      "Traje de baño y ojotas de goma para caminar",
-      "Ropa de lana pesada sin nada en la cabeza",
-    ],
-    answerIndex: 0,
-    hint: "Pista: en la costa patagónica el sol quema y el viento enfría; gorra, anteojos y protector son claves.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-prohibido-fuego",
-    title: "Normas: prohibido hacer fuego",
-    prompt: "¿Por qué está estrictamente prohibido encender fuego en las áreas no autorizadas?",
-    choices: [
-      "Porque el viento patagónico puede propagar chispas e iniciar incendios incontrolables",
-      "Porque el humo molesta únicamente a los barcos del mar",
-      "Porque el fuego gasta el aire del océano",
-      "Porque a los guardaparques no les gusta la leña",
-    ],
-    answerIndex: 0,
-    hint: "Pista: las chispas empujadas por el fuerte viento provocan incendios graves en la vegetación seca.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-visitante-responsable",
-    title: "Normas: el buen visitante",
-    prompt: "¿Qué actitud demuestra que somos visitantes respetuosos de la naturaleza?",
-    choices: [
-      "Escuchar a los guardaparques, cuidar el camino y regresar con todos nuestros residuos",
-      "Arrancar matas de arbustos para usarlas de bastón",
-      "Escribir nuestros nombres con piedras sobre la arena",
-      "Llevar parlantes con música fuerte por los senderos",
-    ],
-    answerIndex: 0,
-    hint: "Pista: cuidar, escuchar y no dejar basura demuestran respeto por la vida natural.",
-  },
-  {
-    type: "mc",
-    id: "ml-e4-agua-mochila",
-    title: "Normas: salud y caminatas",
-    prompt: "¿Por qué es tan importante llevar una botella con agua potable en nuestra mochila?",
-    choices: [
-      "Para beber periódicamente y mantenernos bien hidratados durante las caminatas",
-      "Para regar las plantas que encontremos secas",
-      "Para lavarnos los pies en los acantilados",
-      "Para dársela a los animales que tengan sed",
-    ],
-    answerIndex: 0,
-    hint: "Pista: caminar bajo el sol y con viento deshidrata rápido; tomar agua previene el dolor de cabeza.",
-  },
+  clasif("ml-e4-se-puede", T4, "¿Se puede o no se puede en el parque? Clasificá.", ["Se puede", "No se puede"],
+    ["Caminar por la pasarela", "Sacar fotos", "Guardar la basura en la mochila"], ["Darles comida a los animales", "Llevarse un caracol", "Salir del sendero"],
+    "Pista: regla de oro: no dejar nada más que huellas, no llevarse nada más que fotos y recuerdos."),
+  orden("ml-e4-orden-basura", T4, "Terminamos de almorzar. Ordená qué hacemos con los envoltorios.",
+    ["Juntamos todos los envoltorios", "Los guardamos en una bolsita", "Llevamos la bolsita en la mochila hasta volver"],
+    "Pista: en el parque no queda nada de basura."),
+  mc("ml-e4-guardaparque", T4, "¿Qué hace el guardaparque?",
+    ["Cuida los animales, las plantas y los senderos", "Maneja el micro de los visitantes", "Les da de comer a los pingüinos"],
+    "Pista: también hace cumplir las normas del parque."),
+  mc("ml-e4-regla-oro", T4, "¿Cuál es la regla de oro del visitante?",
+    ["No dejar nada más que huellas y no llevarse nada más que fotos", "Llevarse un recuerdo de cada lugar visitado", "Dejar algo nuestro para que nos recuerden"],
+    "Pista: lo único que nos llevamos son fotos y recuerdos."),
+  mc("ml-e4-pasarela", T4, "¿Por qué caminamos solo por las pasarelas y los senderos?",
+    ["Para no aplastar las cuevas de los pingüinos", "Para llegar más rápido al micro", "Para no ensuciarnos las zapatillas"],
+    "Pista: los nidos están bajo la tierra y no se ven."),
+  mc("ml-e4-no-alimentar", T4, "¿Por qué no les damos comida a los animales?",
+    ["Porque nuestra comida los puede enfermar", "Porque ya comieron en el desayuno", "Porque nos pueden pedir más"],
+    "Pista: cada animal tiene su propia comida en la naturaleza."),
+  mc("ml-e4-piedra", T4, "Encontramos una piedra brillante en la playa. ¿Qué hacemos?",
+    ["La dejamos donde está y le sacamos una foto", "Nos la guardamos de recuerdo", "Se la damos al docente para la escuela"],
+    "Pista: en el parque todo se queda en su lugar."),
+  mc("ml-e4-envase", T4, "El viento se lleva un envase vacío hacia la playa. ¿Qué hacemos?",
+    ["Sin salir del sendero, avisamos al docente o al guardaparque", "Corremos solos a buscarlo hacia el acantilado", "Lo dejamos: el mar lo va a limpiar"],
+    "Pista: nunca salimos del sendero y los adultos nos ayudan."),
+  mc("ml-e4-pinguino-cerca", T4, "Un pingüino está cerca del sendero. ¿Qué hacemos?",
+    ["Lo miramos en silencio, sin acercarnos", "Lo acariciamos despacito", "Lo llamamos para sacarle una foto de cerca"],
+    "Pista: es un animal silvestre: no se toca."),
+  mc("ml-e4-silencio", T4, "¿Cómo nos comportamos cerca de los animales?",
+    ["En silencio y con calma", "Aplaudiendo para que nos miren", "Corriendo para verlos mejor"],
+    "Pista: los ruidos fuertes los asustan."),
+  mc("ml-e4-envoltorios", T4, "¿Qué hacemos con los envoltorios de la merienda?",
+    ["Los guardamos en la mochila y los llevamos de vuelta", "Los dejamos en un rincón del sendero", "Los enterramos en la arena"],
+    "Pista: en el parque hay basura cero."),
+  mc("ml-e4-caracoles", T4, "¿Por qué no nos llevamos caracoles, plumas ni fósiles?",
+    ["Porque el parque los protege y son de todos", "Porque pesan mucho en la mochila", "Porque están sucios de arena"],
+    "Pista: si cada visitante se llevara uno, no quedaría ninguno."),
+  mc("ml-e4-fuego", T4, "¿Se puede hacer fuego en el parque?",
+    ["No, con el viento se puede provocar un incendio", "Sí, en cualquier lugar del parque", "Sí, si hace mucho frío"],
+    "Pista: el viento patagónico es muy fuerte."),
+  mc("ml-e4-autoridad", T4, "En el parque, ¿quién es la autoridad que nos indica qué hacer?",
+    ["El guardaparque", "El chofer del micro", "El primer alumno que llega"],
+    "Pista: nos recibe en la entrada del parque."),
+  mc("ml-e4-ver-basura", T4, "Vemos a un visitante tirar basura. ¿Qué hacemos?",
+    ["Le contamos al docente o al guardaparque", "Hacemos lo mismo", "No decimos nada"],
+    "Pista: cuidar el parque es tarea de todos."),
+  mc("ml-e4-para-que", T4, "¿Para qué sirven las normas del parque?",
+    ["Para que los animales vivan tranquilos y el lugar se conserve", "Para que el viaje sea más corto", "Para que no podamos divertirnos"],
+    "Pista: las normas no prohíben disfrutar: cuidan el lugar."),
 ];
 
 // ============================================================================
@@ -1012,7 +328,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "meseta",
-    say: "Meseta. Durante el viaje cruzamos la meseta patagónica con matas de coirón.",
+    say: "Meseta. Durante el viaje vamos a cruzar la meseta patagónica.",
     hint: "Pista: meseta se escribe con s.",
   },
   {
@@ -1022,7 +338,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "viaje",
-    say: "Viaje. Todos los chicos de tercer grado disfrutamos de este gran viaje.",
+    say: "Viaje. Todos los chicos de tercer grado nos preparamos para este gran viaje.",
     hint: "Pista: viaje se escribe con v corta y con j.",
   },
   {
@@ -1032,7 +348,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "colectivo",
-    say: "Colectivo. El colectivo escolar tardó unas cuatro horas en llegar a destino.",
+    say: "Colectivo. El colectivo escolar va a tardar unas cuatro horas en llegar.",
     hint: "Pista: colectivo lleva c antes de la t y v corta.",
   },
   {
@@ -1042,8 +358,8 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "lobo marino",
-    say: "Lobo marino. En las restingas descansan familias de lobo marino.",
-    hint: "Pista: lobo marino se escribe con b larga y v corta.",
+    say: "Lobo marino. Sobre las rocas descansa un lobo marino con su cría.",
+    hint: "Pista: lobo se escribe con b larga; son dos palabras separadas.",
   },
   {
     palabra: "cormorán",
@@ -1052,7 +368,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "guanaco",
-    say: "Guanaco. Vimos una manada de guanacos pastando en la estepa.",
+    say: "Guanaco. En la estepa vamos a ver una manada de guanacos.",
     hint: "Pista: guanaco empieza con gua y termina con co.",
   },
   {
@@ -1062,7 +378,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "parque",
-    say: "Parque. Monte León es el primer parque costero-marino del país.",
+    say: "Parque. Monte León es un parque nacional junto al mar.",
     hint: "Pista: parque se escribe con qu.",
   },
   {
@@ -1077,12 +393,12 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "nido",
-    say: "Nido. Los pingüinos cuidan con dedicación su nido bajo tierra.",
+    say: "Nido. Los pingüinos cuidan su nido debajo de la tierra.",
     hint: "Pista: nido se escribe con n y d.",
   },
   {
     palabra: "cueva",
-    say: "Cueva. Cada pareja de pingüinos cava una cueva profunda.",
+    say: "Cueva. Cada pareja de pingüinos cava una cueva en la tierra.",
     hint: "Pista: cueva se escribe con c y con v corta.",
   },
   {
@@ -1092,7 +408,7 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "pasarela",
-    say: "Pasarela. Nos asomamos a la pingüinera desde la pasarela de madera.",
+    say: "Pasarela. Miramos la pingüinera desde la pasarela de madera.",
     hint: "Pista: pasarela se escribe con s.",
   },
   {
@@ -1102,27 +418,37 @@ const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
   },
   {
     palabra: "protector",
-    say: "Protector. Nos pusimos protector solar en la cara antes de caminar.",
+    say: "Protector. Antes de caminar nos ponemos protector solar en la cara.",
     hint: "Pista: protector lleva c antes de la t final.",
   },
   {
     palabra: "gorra",
-    say: "Gorra. Nos pusimos una gorra para protegernos del sol del mediodía.",
+    say: "Gorra. Llevamos una gorra para protegernos del sol.",
     hint: "Pista: gorra lleva doble r entre vocales.",
   },
   {
     palabra: "botella",
-    say: "Botella. Llevamos una botella de agua fresca para la excursión.",
+    say: "Botella. Llevamos una botella de agua para la excursión.",
     hint: "Pista: botella se escribe con b larga y con doble l.",
   },
   {
+    palabra: "también",
+    say: "También. En el parque también vamos a ver lobos marinos.",
+    hint: "Pista: antes de b se escribe m: también. Lleva tilde en la e.",
+  },
+  {
+    palabra: "envase",
+    say: "Envase. Guardamos el envase vacío en la mochila.",
+    hint: "Pista: antes de v se escribe n: envase.",
+  },
+  {
     palabra: "Piedrabuena",
-    say: "Piedrabuena. Cruzamos el gran puente al pasar por Piedrabuena.",
+    say: "Piedrabuena. Al pasar por Piedrabuena cruzamos un gran puente.",
     hint: "Pista: Piedrabuena es nombre propio, empieza con mayúscula y lleva b larga.",
   },
   {
     palabra: "Monte León",
-    say: "Monte León. Qué hermosa expedición vivimos en Monte León.",
+    say: "Monte León. ¡Qué hermosa excursión nos espera en Monte León!",
     hint: "Pista: Monte León son dos palabras con mayúscula y León lleva tilde en la o.",
   },
 ];
@@ -1153,43 +479,37 @@ export const ACTIVIDADES_POR_VUELTA = 8;
  *   Si existe una actividad interactiva clave (order o classify), se garantiza su inclusión.
  * - Etapa 5: selecciona 8 palabras distintas del banco de 26 palabras del Doc.
  */
+// Mezcla lo que se muestra de una actividad (las opciones, los ítems de
+// ordenar y de clasificar), para que la respuesta no esté siempre en el mismo
+// lugar. En los bancos la correcta va primera y los ítems de ordenar, en orden.
+export function mezclarActividad(a: ActivitySpec): ActivitySpec {
+  if (a.type === "mc") {
+    const idx = shuffleArray(a.choices.map((_, i) => i));
+    return { ...a, choices: idx.map((i) => a.choices[i]), answerIndex: idx.indexOf(a.answerIndex) };
+  }
+  if (a.type === "order") {
+    let idx = shuffleArray(a.items.map((_, i) => i));
+    while (idx.every((v, i) => v === i) && idx.length > 1) idx = shuffleArray(idx);
+    // correctOrder: en qué posición quedó cada ítem del orden correcto.
+    return { ...a, items: idx.map((i) => a.items[i]), correctOrder: a.correctOrder.map((k) => idx.indexOf(k)) };
+  }
+  if (a.type === "classify") {
+    return { ...a, items: shuffleArray(a.items) };
+  }
+  return a;
+}
+
 export function buildMonteLeonActivities(etapa: number): ActivitySpec[] {
   if (etapa === 5) {
     const elegidas = shuffleArray(PALABRAS_DICTADO_VIAJE).slice(0, ACTIVIDADES_POR_VUELTA);
     return elegidas.map((item, idx) => crearActividadDictado(item, idx));
   }
-
-  let banco: readonly ActivitySpec[];
-  switch (etapa) {
-    case 1:
-      banco = BANCO_ETAPA_1;
-      break;
-    case 2:
-      banco = BANCO_ETAPA_2;
-      break;
-    case 3:
-      banco = BANCO_ETAPA_3;
-      break;
-    case 4:
-      banco = BANCO_ETAPA_4;
-      break;
-    default:
-      banco = BANCO_ETAPA_1;
-      break;
-  }
-
-  // Si la primera actividad del banco es un juego interactivo (order o classify),
-  // nos aseguramos de que siempre esté presente en la vuelta de 8 actividades.
-  const interactiva = banco.find((a) => a.type === "order" || a.type === "classify");
-  const resto = banco.filter((a) => a !== interactiva);
-  const mezcladasResto = shuffleArray(resto);
-
-  if (interactiva) {
-    const elegidas = [interactiva, ...mezcladasResto.slice(0, ACTIVIDADES_POR_VUELTA - 1)];
-    return shuffleArray(elegidas);
-  }
-
-  return mezcladasResto.slice(0, ACTIVIDADES_POR_VUELTA);
+  const banco = etapa === 2 ? BANCO_ETAPA_2 : etapa === 3 ? BANCO_ETAPA_3 : etapa === 4 ? BANCO_ETAPA_4 : BANCO_ETAPA_1;
+  // Siempre una actividad interactiva (ordenar o clasificar) y el resto al azar.
+  const interactivas = shuffleArray(banco.filter((a) => a.type === "order" || a.type === "classify"));
+  const resto = shuffleArray(banco.filter((a) => a.type !== "order" && a.type !== "classify"));
+  const elegidas = [...interactivas.slice(0, 1), ...resto.slice(0, ACTIVIDADES_POR_VUELTA - 1)];
+  return shuffleArray(elegidas).map(mezclarActividad);
 }
 
 /**

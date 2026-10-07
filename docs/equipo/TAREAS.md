@@ -28,10 +28,11 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-15 | [Seguimiento de AG-07 a AG-12: detalles menores](./tareas/AG-15-seguimiento-panel.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude) |
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
-| AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-19) |
+| AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-21) |
+| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-21) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
-| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🔴 PENDIENTE (después de AG-19) |
+| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🔴 PENDIENTE: **es la que sigue** |
+| CL-21 | Revisión de AG-19 (Monte León): bancos de las etapas 1 a 4 reescritos (respuestas mezcladas, distractores creíbles, una sola correcta, vocabulario de 3.º, casos del pingüino y del envase corregidos), dictado en presente/futuro con «también» y «envase»; el servidor calcula el puntaje con `correctas` de 8 y valida grado, fecha y etapa; cada etapa da su objeto y los bocadillos salen con 8 de 8; medalla solo a quien superó una etapa y en la ventana; GET de solo lectura; error al guardar ya no figura como «Superada»; panel docente sin aula abierta; diálogos accesibles | Claude | 🟢 UNIDA A MAIN |
 | CL-20 | Repaso de las tablas solo en mundos de Matemática; tabla pitagórica para dividir con la columna del divisor marcada (y vale el dividendo en la fila o en la columna del divisor); dragón (mascota y avatar) con los dos ojos opacos | Claude | 🟢 UNIDA A MAIN |
 | CL-19 | Repaso de las tablas como actividad especial de TODOS los días (página /student/tablas y tarjeta en el mapa); imágenes de Monte León (mochila, medalla, mascota, 3 avatares, 6 escenas, isla), premios del torneo en tres metales, tortuga del cuento corregida; repertorio `docs/equipo/IMAGENES.md`; tareas AG-19 y AG-20 | Claude | 🟢 UNIDA A MAIN |
 | CL-18 | Regalar objetos ganados a un compañero desde el buzón (🎀 Objeto): pasa a ser suyo cuando lo acepta; si lo rechaza o no responde en 7 días vuelve; sin comprados ni prestados; 3 por día; lo regalado no se vuelve a dar solo | Claude | 🟢 UNIDA A MAIN |
@@ -49,7 +50,21 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 
 ### AG-19 · Mundo especial «Viaje a Monte León» (Antigravity)
 
-**Estado:** ✅ LISTA PARA REVISAR (para que Claude revise y una a main antes del 15/10/2026).
+**Estado:** 🟢 UNIDA A MAIN el 7/10/2026 con arreglos de Claude (CL-21).
+
+#### Revisión de Claude (7/10/2026)
+Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablarlo; si tocás Monte León, respetá estas reglas):
+- **Respuestas siempre en la opción A:** `answerIndex` era 0 en todas. Ahora `mezclarActividad` mezcla opciones, ítems de ordenar (nunca aparecen ya ordenados) y de clasificar en cada vuelta.
+- **Contenido:** preguntas con dos respuestas correctas, unos 30 distractores de chiste, palabras difíciles para 3.º y pistas que repetían la respuesta. Se reescribieron los bancos 1 a 4. El caso del «pichón» no sirve para el 28/10 (los pichones nacen en noviembre): ahora es «un pingüino cerca del sendero». El envase que vuela: se avisa a la seño o al guardaparque **sin salir del sendero**.
+- **El servidor confiaba en el cliente:** recibía `scorePct`. Ahora recibe `correctas` (entero de 0 a 8) y calcula; además valida grado, fecha (`debeMostrarMonteLeon`) y que `etapa` sea entera.
+- **Premios distintos a lo que se mostraba:** ahora cada etapa da SU objeto, bocadillos con 8 de 8, mascota con los 6, y la pantalla lo explica igual.
+- **«Participó»** = superó al menos una etapa (antes bastaba con un puntaje mayor que 0). La medalla se da solo en la ventana del buen viaje.
+- GET escribía datos: ahora es de solo lectura. Códigos inexistentes usan `recordFailedCodeAttempt`.
+- `StageRunner`: si falla el guardado ya no muestra «Superada». `BuenViajeDialog`: `sessionStorage` con try/catch y un solo pedido de medalla (antes el efecto se repetía). Panel docente: sin el aula abierta. Diálogos con `role="dialog"` y `aria-modal`; textos de 11 px como mínimo.
+- La etapa 3 ahora usa las escenas `loberia` y `estepa` según la pregunta.
+
+**Quedan para más adelante (no urgente):** el botón «Escuchar» lee solo la consigna, no las opciones; foco del teclado dentro del modal.
+
 
 #### Resumen de implementación y puntos cumplidos
 

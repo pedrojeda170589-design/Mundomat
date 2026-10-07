@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Profe from "@/components/Profe";
 import Burst from "@/components/weekend/Burst";
@@ -22,18 +22,30 @@ export default function BuenViajeDialog({
 }: Props) {
   const [open, setOpen] = useState(() => {
     if (typeof window === "undefined") return false;
-    return !sessionStorage.getItem("buen_viaje_ml_visto");
+    try {
+      return !sessionStorage.getItem("buen_viaje_ml_visto");
+    } catch {
+      return true;
+    }
   });
+  // Se pide la medalla UNA sola vez por apertura (antes el efecto se repetía
+  // cada vez que el padre pasaba una función nueva).
+  const pedida = useRef(false);
+  const avisar = useRef(onProgressUpdated);
+  useEffect(() => {
+    avisar.current = onProgressUpdated;
+  }, [onProgressUpdated]);
   const [medallaEntregadaAhora, setMedallaEntregadaAhora] = useState(false);
 
   const participo = haParticipadoMonteLeon(progress);
   const tieneMedalla = alumnoTieneORegalo(progress, MEDALLA_MONTE_LEON.id);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || pedida.current) return;
 
     // Si participó y aún no tenía la medalla, reclamarla en el backend
     if (participo && !tieneMedalla) {
+      pedida.current = true;
       void fetch("/api/monte-leon", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,23 +59,32 @@ export default function BuenViajeDialog({
           if (d.ok && d.entregada) {
             setMedallaEntregadaAhora(true);
             if (d.progress) {
-              onProgressUpdated?.(d.progress);
+              avisar.current?.(d.progress);
             }
           }
         })
         .catch(() => {});
     }
-  }, [open, studentCode, participo, tieneMedalla, onProgressUpdated]);
+  }, [open, studentCode, participo, tieneMedalla]);
 
   function handleClose() {
-    sessionStorage.setItem("buen_viaje_ml_visto", "1");
+    try {
+      sessionStorage.setItem("buen_viaje_ml_visto", "1");
+    } catch {
+      /* sin almacenamiento: se cierra igual */
+    }
     setOpen(false);
   }
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 animate-fadeIn backdrop-blur-xs">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="¡Buen viaje a Monte León!"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 animate-fadeIn backdrop-blur-xs"
+    >
       <div className="relative w-full max-w-md parchment-panel rounded-3xl border-4 border-amber-500 shadow-2xl p-6 sm:p-8 text-center my-auto flex flex-col items-center">
         {(tieneMedalla || medallaEntregadaAhora) && <Burst big count={20} />}
 
@@ -103,7 +124,7 @@ export default function BuenViajeDialog({
               <span className="block text-xs font-black text-amber-950 truncate">
                 {MEDALLA_MONTE_LEON.label}
               </span>
-              <span className="block text-[10px] text-amber-900/80 leading-tight mt-0.5">
+              <span className="block text-[11px] text-amber-900/80 leading-tight mt-0.5">
                 Por participar en las actividades del viaje. ¡Queda en tu perfil para siempre!
               </span>
             </div>

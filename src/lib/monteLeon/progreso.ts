@@ -12,18 +12,38 @@ import {
 } from "./arte";
 import { esMomentoBuenViaje } from "./fechas";
 
-export const ORDEN_MOCHILA_GENERAL = [
-  "botella-agua-ml",
-  "anteojos-sol-ml",
-  "gorra-ml",
-  "protector-solar-ml",
-  "bocadillos-ml",
-] as const;
+// Reglas (revisadas por Claude el 7/10/2026, para que lo que ve el alumno y lo
+// que da el servidor sean lo mismo):
+// - Cada vuelta tiene 8 actividades. Una etapa se SUPERA con 7 u 8 bien
+//   (80 % o más); el servidor recibe cuántas acertó, no un porcentaje.
+// - Cada etapa da SU objeto la primera vez que se supera (ETAPAS_MONTE_LEON):
+//   1 botella, 2 anteojos, 3 gorra, 4 protector solar, 5 (dictado) golosina.
+// - Los bocadillos se ganan con una vuelta PERFECTA (8 de 8) en cualquier etapa.
+// - Con los 6 objetos: la mascota (pingüino de peluche).
+// - Avatares: explorador (etapas 1 y 2), guardaparque (etapa 4), pingüino
+//   (las 5 etapas con 90 % o más; con 8 actividades eso es 8 de 8 en cada una).
+// - «Participó» = superó al menos una etapa. La medalla se da solo a quien
+//   participó y solo en la ventana del buen viaje (27/10 20:00 a 28/10).
+export const ACTIVIDADES_POR_ETAPA = 8;
+export const MINIMO_PARA_SUPERAR = 7; // 7 de 8 = 87,5 % (≥ 80 %)
+export const ITEM_VUELTA_PERFECTA = "bocadillos-ml";
+export const OBJETO_DE_ETAPA: Record<number, string> = {
+  1: "botella-agua-ml",
+  2: "anteojos-sol-ml",
+  3: "gorra-ml",
+  4: "protector-solar-ml",
+  5: "golosina-ml",
+};
+export const ITEM_DICTADO = OBJETO_DE_ETAPA[5];
 
-export const ITEM_DICTADO = "golosina-ml";
+export function etapaSuperada(e: { bestScore?: number } | undefined): boolean {
+  return (e?.bestScore ?? 0) >= 80;
+}
 
 export interface ResultadoRegistroEtapa {
   nextProgress: StudentProgress;
+  scorePct: number;
+  objetosPremio: string[];
   objetoPremio?: string;
   mascotaPremio?: string;
   nuevosAvatares: string[];
@@ -66,37 +86,25 @@ export function cantidadObjetosMochila(
  */
 export function haParticipadoMonteLeon(progress: StudentProgress): boolean {
   if (!progress.monteLeon?.etapas) return false;
-  return Object.values(progress.monteLeon.etapas).some(
-    (e) => typeof e?.bestScore === "number" && e.bestScore > 0
-  );
+  return Object.values(progress.monteLeon.etapas).some((e) => etapaSuperada(e));
 }
 
 /**
- * Registra el resultado de una vuelta en una etapa de Monte León.
- * - Actualiza el mejor puntaje de la etapa en `monteLeon.etapas[etapa]`.
- * - Si puntaje >= 80%:
- *   - Etapa 5 (dictado): entrega la golosina (`golosina-ml`). Si ya la tiene, entrega el próximo de la lista general.
- *   - Etapas 1..4: entrega el siguiente objeto en orden: botella -> anteojos -> gorra -> protector -> bocadillos.
- *   - Con los 6 objetos completados: entrega la mascota `pinguino-peluche-ml`.
- * - Desbloquea avatares:
- *   - `explorador-monte-leon`: al superar etapas 1 y 2 (ambas >= 80%).
- *   - `guardaparque-monte-leon`: al superar etapa 4 (>= 80%).
- *   - `pinguino-monte-leon`: al superar las 5 etapas con 90% o más.
- * - Si estamos en la ventana de buen viaje y participó: entrega la `medalla-monte-leon`.
+ * Registra una vuelta de una etapa (1..5) con `correctas` respuestas bien de 8.
  */
 export function registrarResultadoEtapa(
   progress: StudentProgress,
   etapa: number,
-  scorePct: number,
+  correctas: number,
   now: Date = new Date()
 ): ResultadoRegistroEtapa {
+  const bien = Math.max(0, Math.min(ACTIVIDADES_POR_ETAPA, Math.floor(correctas)));
+  const scorePct = Math.round((bien / ACTIVIDADES_POR_ETAPA) * 100);
   const currentMonteLeon = progress.monteLeon ?? { etapas: {} };
   const currentEtapas = { ...(currentMonteLeon.etapas ?? {}) };
-  const prevEtapaRecord = currentEtapas[etapa];
-
-  const newBestScore = Math.max(prevEtapaRecord?.bestScore ?? 0, scorePct);
+  const prev = currentEtapas[etapa];
   currentEtapas[etapa] = {
-    bestScore: newBestScore,
+    bestScore: Math.max(prev?.bestScore ?? 0, scorePct),
     completedAt: now.toISOString(),
   };
 
@@ -107,67 +115,41 @@ export function registrarResultadoEtapa(
   let objetoPremio: string | undefined;
   let mascotaPremio: string | undefined;
   let medallaPremio: string | undefined;
+  const premios: string[] = [];
 
-  // Entrega de objetos de la mochila si superó la etapa con 80% o más
-  if (scorePct >= 80) {
-    let candidato: string | undefined;
-
-    if (etapa === 5) {
-      if (!yaObtenido(ITEM_DICTADO)) {
-        candidato = ITEM_DICTADO;
-      } else {
-        candidato = ORDEN_MOCHILA_GENERAL.find((id) => !yaObtenido(id));
-      }
-    } else {
-      candidato = ORDEN_MOCHILA_GENERAL.find((id) => !yaObtenido(id));
-      if (!candidato && !yaObtenido(ITEM_DICTADO)) {
-        candidato = ITEM_DICTADO;
-      }
+  if (bien >= MINIMO_PARA_SUPERAR) {
+    const propio = OBJETO_DE_ETAPA[etapa];
+    if (propio && !yaObtenido(propio)) {
+      ownedSeasonal.add(propio);
+      premios.push(propio);
     }
-
-    if (candidato && !yaObtenido(candidato)) {
-      ownedSeasonal.add(candidato);
-      objetoPremio = candidato;
+    if (bien === ACTIVIDADES_POR_ETAPA && !yaObtenido(ITEM_VUELTA_PERFECTA)) {
+      ownedSeasonal.add(ITEM_VUELTA_PERFECTA);
+      premios.push(ITEM_VUELTA_PERFECTA);
     }
-
-    // Chequeo de mochila completa para entregar la mascota pingüino de peluche
-    const todosObjetosListos = MOCHILA_MONTE_LEON.every((item) => yaObtenido(item.id));
-    if (todosObjetosListos && !yaObtenido(MASCOTA_MONTE_LEON.id)) {
+    objetoPremio = premios[0];
+    if (MOCHILA_MONTE_LEON.every((item) => yaObtenido(item.id)) && !yaObtenido(MASCOTA_MONTE_LEON.id)) {
       ownedSeasonal.add(MASCOTA_MONTE_LEON.id);
       mascotaPremio = MASCOTA_MONTE_LEON.id;
     }
   }
 
-  // Desbloqueo de avatares superespeciales
   const achievements = new Set(progress.achievementCollection ?? []);
   const nuevosAvatares: string[] = [];
-
-  // 1. Explorador: superar etapas 1 y 2 con 80%+
-  const e1Superada = (currentEtapas[1]?.bestScore ?? 0) >= 80;
-  const e2Superada = (currentEtapas[2]?.bestScore ?? 0) >= 80;
-  if (e1Superada && e2Superada && !achievements.has("explorador-monte-leon")) {
-    achievements.add("explorador-monte-leon");
-    nuevosAvatares.push("explorador-monte-leon");
-  }
-
-  // 2. Guardaparque: superar etapa 4 con 80%+
-  const e4Superada = (currentEtapas[4]?.bestScore ?? 0) >= 80;
-  if (e4Superada && !achievements.has("guardaparque-monte-leon")) {
-    achievements.add("guardaparque-monte-leon");
-    nuevosAvatares.push("guardaparque-monte-leon");
-  }
-
-  // 3. Pingüino: TODAS las 5 etapas con 90%+
-  const todas90 = [1, 2, 3, 4, 5].every((e) => (currentEtapas[e]?.bestScore ?? 0) >= 90);
-  if (todas90 && !achievements.has("pinguino-monte-leon")) {
-    achievements.add("pinguino-monte-leon");
-    nuevosAvatares.push("pinguino-monte-leon");
-  }
+  const sup = (e: number) => etapaSuperada(currentEtapas[e]);
+  const dar = (id: string, cond: boolean) => {
+    if (cond && !achievements.has(id)) {
+      achievements.add(id);
+      nuevosAvatares.push(id);
+    }
+  };
+  dar("explorador-monte-leon", sup(1) && sup(2));
+  dar("guardaparque-monte-leon", sup(4));
+  dar("pinguino-monte-leon", [1, 2, 3, 4, 5].every((e) => (currentEtapas[e]?.bestScore ?? 0) >= 90));
 
   let medallaEntregada = currentMonteLeon.medallaEntregada ?? false;
-
-  // Entrega automática de medalla si estamos en la ventana de buen viaje y participó
-  if (esMomentoBuenViaje(now) && !yaObtenido(MEDALLA_MONTE_LEON.id)) {
+  const participo = Object.values(currentEtapas).some((e) => etapaSuperada(e));
+  if (esMomentoBuenViaje(now) && participo && !yaObtenido(MEDALLA_MONTE_LEON.id)) {
     ownedSeasonal.add(MEDALLA_MONTE_LEON.id);
     medallaPremio = MEDALLA_MONTE_LEON.id;
     medallaEntregada = true;
@@ -177,20 +159,9 @@ export function registrarResultadoEtapa(
     ...progress,
     seasonalCollection: [...ownedSeasonal],
     achievementCollection: [...achievements],
-    monteLeon: {
-      ...currentMonteLeon,
-      etapas: currentEtapas,
-      medallaEntregada,
-    },
+    monteLeon: { ...currentMonteLeon, etapas: currentEtapas, medallaEntregada },
   };
-
-  return {
-    nextProgress,
-    objetoPremio,
-    mascotaPremio,
-    nuevosAvatares,
-    medallaPremio,
-  };
+  return { nextProgress, objetoPremio, objetosPremio: premios, mascotaPremio, nuevosAvatares, medallaPremio, scorePct };
 }
 
 /**

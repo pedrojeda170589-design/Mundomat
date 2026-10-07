@@ -13,6 +13,7 @@ import {
   MOCHILA_MONTE_LEON,
 } from "@/lib/monteLeon/arte";
 import { textoCuentaRegresiva } from "@/lib/monteLeon/fechas";
+import { etapaSuperada } from "@/lib/monteLeon/progreso";
 import type { ActivitySpec } from "@/lib/activities";
 import type { StudentProgress } from "@/types";
 
@@ -60,7 +61,12 @@ export default function MonteLeonModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-5 overflow-y-auto animate-fadeIn backdrop-blur-xs">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Viaje a Monte León"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-5 overflow-y-auto animate-fadeIn backdrop-blur-xs"
+    >
       <div className="relative w-full max-w-2xl parchment-panel rounded-3xl border-2 border-amber-800/40 shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
         {/* Cabecera del modal */}
         <div className="relative p-4 sm:p-5 border-b-2 border-amber-800/20 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 flex items-center justify-between gap-3">
@@ -75,7 +81,7 @@ export default function MonteLeonModal({
               />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-900/70">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-900/70">
                 Mundo especial de 3.º grado
               </span>
               <h2 className="text-lg sm:text-xl font-black text-amber-950 truncate flex items-center gap-1.5">
@@ -121,7 +127,7 @@ export default function MonteLeonModal({
               }`}
             >
               <span>🎒</span> Mi mochila
-              <span className="ml-1 rounded-full bg-amber-500/20 px-1.5 py-0.2 text-[10px] text-amber-950">
+              <span className="ml-1 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[11px] text-amber-950">
                 {ganadosMochila}/6
               </span>
             </button>
@@ -149,7 +155,8 @@ export default function MonteLeonModal({
                 };
 
                 const nextSeasonal = new Set(currentProgress.seasonalCollection ?? []);
-                if (resultado.objetoPremio) nextSeasonal.add(resultado.objetoPremio);
+                const ganados = resultado.objetosPremio ?? (resultado.objetoPremio ? [resultado.objetoPremio] : []);
+                ganados.forEach((id) => nextSeasonal.add(id));
                 if (resultado.mascotaPremio) nextSeasonal.add(resultado.mascotaPremio);
                 if (resultado.medallaPremio) nextSeasonal.add(resultado.medallaPremio);
 
@@ -176,14 +183,16 @@ export default function MonteLeonModal({
               <div className="text-center sm:text-left mb-1">
                 <p className="text-xs text-amber-950/80 leading-relaxed">
                   Repasá todo sobre el viaje de estudio en estas 5 etapas de 8 actividades.
-                  ¡Podés repetirlas todas las veces que quieras para completar tu mochila!
+                  Una etapa se supera con <b>7 u 8 bien</b> y te da su objeto para la mochila.
+                  Con una <b>vuelta perfecta (8 de 8)</b> en cualquier etapa ganás los bocadillos.
+                  ¡Podés repetirlas todas las veces que quieras!
                 </p>
               </div>
 
               {ETAPAS_MONTE_LEON.map((et) => {
                 const rec = currentProgress.monteLeon?.etapas?.[et.id];
                 const bestScore = rec?.bestScore ?? 0;
-                const superada = bestScore >= 80;
+                const superada = etapaSuperada(rec);
                 const premioInfo = MOCHILA_MONTE_LEON.find((m) => m.id === et.objetoId);
                 const premioGanado = premioInfo ? yaObtenido(premioInfo.id) : false;
 
@@ -201,7 +210,7 @@ export default function MonteLeonModal({
                         sizes="(max-width: 640px) 100vw, 112px"
                         className="object-cover"
                       />
-                      <span className="absolute top-1 left-1 bg-black/70 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md">
+                      <span className="absolute top-1 left-1 bg-black/70 text-white text-[11px] font-black px-1.5 py-0.5 rounded-md">
                         Etapa {et.id}
                       </span>
                     </div>
@@ -213,12 +222,12 @@ export default function MonteLeonModal({
                           {et.titulo}
                         </h4>
                         {superada && (
-                          <span className="rounded-full bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 shadow-xs">
+                          <span className="rounded-full bg-emerald-600 text-white text-[11px] font-black px-2 py-0.5 shadow-xs">
                             ⭐ Superada ({bestScore}%)
                           </span>
                         )}
                         {!superada && bestScore > 0 && (
-                          <span className="rounded-full bg-amber-500/20 text-amber-950 text-[10px] font-bold px-2 py-0.5 border border-amber-600/30">
+                          <span className="rounded-full bg-amber-500/20 text-amber-950 text-[11px] font-bold px-2 py-0.5 border border-amber-600/30">
                             Mejor intento: {bestScore}%
                           </span>
                         )}
@@ -236,7 +245,7 @@ export default function MonteLeonModal({
                         {premioGanado ? (
                           <span className="text-emerald-700 font-bold">✅ ¡En tu mochila!</span>
                         ) : (
-                          <span className="text-amber-800/70">(80% o más)</span>
+                          <span className="text-amber-800/70">(superá con 7 de 8)</span>
                         )}
                       </div>
                     </div>

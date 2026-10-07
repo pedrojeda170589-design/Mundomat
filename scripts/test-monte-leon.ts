@@ -128,7 +128,8 @@ async function main() {
     assert.ok(banco2.length >= 15, `Etapa 2 debe tener 15+ preguntas (tiene ${banco2.length})`);
     assert.ok(banco3.length >= 15, `Etapa 3 debe tener 15+ preguntas (tiene ${banco3.length})`);
     assert.ok(banco4.length >= 15, `Etapa 4 debe tener 15+ preguntas (tiene ${banco4.length})`);
-    assert.equal(banco5.length, 26, `Etapa 5 debe tener exactamente las 26 palabras solicitadas (tiene ${banco5.length})`);
+    // Las 26 palabras pedidas por Pedro + las que se sumaron (mb/nv: también, envase).
+    assert.ok(banco5.length >= 26, `Etapa 5 debe tener las 26 palabras pedidas o más (tiene ${banco5.length})`);
 
     // Cada etapa arma exactamente 8 actividades sin repetirse
     for (let e = 1; e <= 5; e++) {
@@ -161,10 +162,33 @@ async function main() {
       }
     }
 
-    console.log("   ✅ Bancos de 15+ y 26 palabras; 8 actividades por vuelta sin opciones repetidas ni ✅/❌.");
+    // Las respuestas correctas no quedan siempre en el mismo lugar y los
+    // «ordenar» nunca aparecen ya ordenados.
+    const posiciones = new Set<number>();
+    for (let n = 0; n < 40; n++) {
+      for (const e of [1, 2, 3, 4]) {
+        for (const act of buildMonteLeonActivities(e)) {
+          if (act.type === "mc") posiciones.add(act.answerIndex);
+          if (act.type === "order") {
+            assert.ok(
+              act.correctOrder.some((v, i) => v !== i),
+              `Etapa ${e}: ${act.id} aparece ya ordenado`
+            );
+          }
+        }
+      }
+    }
+    assert.ok(posiciones.size >= 3, `La respuesta correcta debe variar de lugar (posiciones: ${[...posiciones]})`);
+    // Cada vuelta trae exactamente una actividad interactiva (ordenar o clasificar)
+    for (const e of [1, 2, 3, 4]) {
+      const inter = buildMonteLeonActivities(e).filter((a) => a.type === "order" || a.type === "classify");
+      assert.equal(inter.length, 1, `Etapa ${e}: debe haber una actividad interactiva`);
+    }
+
+    console.log("   ✅ Bancos de 15+ y 26 palabras; 8 actividades por vuelta sin opciones repetidas ni ✅/❌; respuestas mezcladas.");
 
     // ========================================================================
-    // 4. MOCHILA: OBJETOS EN ORDEN Y MASCOTA AL COMPLETARLA (6 OBJETOS)
+    // 4. MOCHILA: CADA ETAPA DA SU OBJETO; BOCADILLOS CON 8 DE 8; MASCOTA CON LOS 6
     // ========================================================================
     console.log("\n4. Verificando progresión de la mochila y mascota pingüino...");
 
@@ -177,100 +201,92 @@ async function main() {
       achievementCollection: [],
     };
 
-    // Etapa 1 superada al 85% -> entrega botella de agua
-    const r1 = registrarResultadoEtapa(mockProgress, 1, 85, t15Oct);
-    assert.equal(r1.objetoPremio, "botella-agua-ml", "Etapa 1 debe entregar botella de agua");
-    assert.ok(r1.nextProgress.seasonalCollection?.includes("botella-agua-ml"));
-    mockProgress = r1.nextProgress;
+    // 6 de 8 (75 %) NO supera: no da nada
+    const r0 = registrarResultadoEtapa(mockProgress, 1, 6, t15Oct);
+    assert.equal(r0.scorePct, 75);
+    assert.deepEqual(r0.objetosPremio, [], "6 de 8 no supera la etapa");
+    assert.equal(haParticipadoMonteLeon(r0.nextProgress), false, "Jugar sin superar no cuenta como participar");
+    mockProgress = r0.nextProgress;
 
-    // Etapa 2 superada al 80% -> entrega anteojos de sol
-    const r2 = registrarResultadoEtapa(mockProgress, 2, 80, t15Oct);
-    assert.equal(r2.objetoPremio, "anteojos-sol-ml", "Etapa 2 debe entregar anteojos de sol");
-    mockProgress = r2.nextProgress;
+    // 7 de 8 supera: cada etapa da SU objeto
+    const esperados: Record<number, string> = {
+      1: "botella-agua-ml",
+      2: "anteojos-sol-ml",
+      3: "gorra-ml",
+      4: "protector-solar-ml",
+      5: "golosina-ml",
+    };
+    // Orden distinto al de las etapas, para comprobar que el premio depende de la etapa.
+    for (const e of [3, 1, 5, 2]) {
+      const r = registrarResultadoEtapa(mockProgress, e, 7, t15Oct);
+      assert.equal(r.scorePct, 88);
+      assert.deepEqual(r.objetosPremio, [esperados[e]], `Etapa ${e} debe dar ${esperados[e]}`);
+      mockProgress = r.nextProgress;
+    }
+    // Repetir una etapa ya superada con 7 no da nada nuevo
+    const rRep = registrarResultadoEtapa(mockProgress, 3, 7, t15Oct);
+    assert.deepEqual(rRep.objetosPremio, [], "Repetir sin vuelta perfecta no da objetos nuevos");
+    mockProgress = rRep.nextProgress;
 
-    // Etapa 3 superada al 90% -> entrega gorra
-    const r3 = registrarResultadoEtapa(mockProgress, 3, 90, t15Oct);
-    assert.equal(r3.objetoPremio, "gorra-ml", "Etapa 3 debe entregar gorra");
-    mockProgress = r3.nextProgress;
-
-    // Etapa 4 superada al 85% -> entrega protector solar
-    const r4 = registrarResultadoEtapa(mockProgress, 4, 85, t15Oct);
-    assert.equal(r4.objetoPremio, "protector-solar-ml", "Etapa 4 debe entregar protector solar");
-    mockProgress = r4.nextProgress;
-
-    // Repetir etapa 1 con 85% -> entrega bocadillos (el siguiente en la lista general)
-    const rExtra = registrarResultadoEtapa(mockProgress, 1, 85, t15Oct);
-    assert.equal(rExtra.objetoPremio, "bocadillos-ml", "Siguiente entrega debe ser bocadillos");
-    mockProgress = rExtra.nextProgress;
-
-    // Mochila todavía no completa (faltan golosina y mascota)
-    assert.equal(tieneMochilaCompleta(mockProgress), false, "Aún falta la golosina");
+    // Vuelta perfecta (8 de 8) en una etapa ya superada: bocadillos
+    const rPerf = registrarResultadoEtapa(mockProgress, 1, 8, t15Oct);
+    assert.deepEqual(rPerf.objetosPremio, ["bocadillos-ml"], "8 de 8 da los bocadillos");
+    mockProgress = rPerf.nextProgress;
+    assert.equal(tieneMochilaCompleta(mockProgress), false, "Falta el protector solar (etapa 4)");
     assert.equal(mockProgress.seasonalCollection?.includes(MASCOTA_MONTE_LEON.id), false);
 
-    // Etapa 5 (dictado) superada al 80% -> entrega golosina y ¡MASCOTA!
-    const r5 = registrarResultadoEtapa(mockProgress, 5, 80, t15Oct);
-    assert.equal(r5.objetoPremio, "golosina-ml", "Etapa 5 debe entregar golosina");
-    assert.equal(r5.mascotaPremio, "pinguino-peluche-ml", "Completar la mochila debe entregar el pingüino de peluche");
-    assert.ok(r5.nextProgress.seasonalCollection?.includes("pinguino-peluche-ml"));
-    assert.equal(tieneMochilaCompleta(r5.nextProgress), true, "La mochila debe estar completa con los 6 objetos");
-    mockProgress = r5.nextProgress;
+    // Etapa 4 con 8 de 8: protector solar (los bocadillos ya estaban) y ¡mascota!
+    const r4 = registrarResultadoEtapa(mockProgress, 4, 8, t15Oct);
+    assert.deepEqual(r4.objetosPremio, ["protector-solar-ml"]);
+    assert.equal(r4.mascotaPremio, "pinguino-peluche-ml", "Completar la mochila da el pingüino de peluche");
+    assert.equal(tieneMochilaCompleta(r4.nextProgress), true);
+    mockProgress = r4.nextProgress;
 
-    console.log("   ✅ Mochila entrega los objetos en orden y la mascota al completar los 6.");
+    // Una sola vuelta perfecta en una etapa nueva da los dos objetos juntos
+    const rDoble = registrarResultadoEtapa(
+      { code: "TEST-ML-02", coins: 0, completedWorlds: [], activityLog: [] },
+      2,
+      8,
+      t15Oct
+    );
+    assert.deepEqual(rDoble.objetosPremio, ["anteojos-sol-ml", "bocadillos-ml"]);
+
+    console.log("   ✅ Cada etapa da su objeto (7 de 8), bocadillos con 8 de 8 y mascota con los 6.");
 
     // ========================================================================
     // 5. AVATARES SUPERESPECIALES Y SUS REGLAS
     // ========================================================================
     console.log("\n5. Verificando desbloqueo de avatares superespeciales...");
 
-    // En mockProgress ya superamos etapas 1, 2 y 4 con 80%+.
-    // Por lo tanto, explorador y guardaparque ya deben estar desbloqueados.
-    assert.ok(
-      mockProgress.achievementCollection?.includes("explorador-monte-leon"),
-      "Explorador se desbloquea con etapas 1 y 2"
-    );
-    assert.ok(
-      mockProgress.achievementCollection?.includes("guardaparque-monte-leon"),
-      "Guardaparque se desbloquea con etapa 4"
-    );
-    // Pero el pingüino requiere TODAS las 5 etapas con 90%+ (etapa 2 y 5 tuvieron 80%).
+    let pAv: StudentProgress = { code: "TEST-AV", coins: 0, completedWorlds: [], activityLog: [] };
+    pAv = registrarResultadoEtapa(pAv, 1, 7, t15Oct).nextProgress;
+    assert.equal(pAv.achievementCollection?.includes("explorador-monte-leon"), false, "Falta la etapa 2");
+    const rAv2 = registrarResultadoEtapa(pAv, 2, 7, t15Oct);
+    assert.deepEqual(rAv2.nuevosAvatares, ["explorador-monte-leon"]);
+    pAv = rAv2.nextProgress;
+    const rAv4 = registrarResultadoEtapa(pAv, 4, 7, t15Oct);
+    assert.deepEqual(rAv4.nuevosAvatares, ["guardaparque-monte-leon"]);
+    pAv = rAv4.nextProgress;
+    pAv = registrarResultadoEtapa(pAv, 3, 7, t15Oct).nextProgress;
+    pAv = registrarResultadoEtapa(pAv, 5, 7, t15Oct).nextProgress;
     assert.equal(
-      mockProgress.achievementCollection?.includes("pinguino-monte-leon"),
+      pAv.achievementCollection?.includes("pinguino-monte-leon"),
       false,
-      "Pingüino NO debe desbloquearse si alguna etapa tuvo menos de 90%"
+      "Pingüino NO con 7 de 8 (hace falta 90 % o más = 8 de 8 en cada etapa)"
     );
+    for (const e of [1, 2, 3, 4]) pAv = registrarResultadoEtapa(pAv, e, 8, t15Oct).nextProgress;
+    assert.equal(pAv.achievementCollection?.includes("pinguino-monte-leon"), false, "Falta la etapa 5 perfecta");
+    const rAv5 = registrarResultadoEtapa(pAv, 5, 8, t15Oct);
+    assert.ok(rAv5.nuevosAvatares.includes("pinguino-monte-leon"), "Pingüino con 8 de 8 en las 5 etapas");
+    pAv = rAv5.nextProgress;
 
-    // Subimos todas las etapas a 90%+
-    const rP1 = registrarResultadoEtapa(mockProgress, 1, 100, t15Oct);
-    const rP2 = registrarResultadoEtapa(rP1.nextProgress, 2, 95, t15Oct);
-    const rP3 = registrarResultadoEtapa(rP2.nextProgress, 3, 90, t15Oct);
-    const rP4 = registrarResultadoEtapa(rP3.nextProgress, 4, 90, t15Oct);
-    const rP5 = registrarResultadoEtapa(rP4.nextProgress, 5, 95, t15Oct);
+    assert.equal(canUseAvatar("pinguino-monte-leon", [], pAv.achievementCollection), true);
+    assert.equal(canUseAvatar("pinguino-monte-leon", [], []), false);
 
-    assert.ok(
-      rP5.nextProgress.achievementCollection?.includes("pinguino-monte-leon"),
-      "Pingüino se desbloquea con todas las 5 etapas con 90%+"
-    );
-    assert.ok(
-      rP5.nuevosAvatares.includes("pinguino-monte-leon"),
-      "Debe figurar en nuevosAvatares"
-    );
-
-    // Verificar que canUseAvatar valida correctamente contra achievementCollection
-    assert.equal(
-      canUseAvatar("pinguino-monte-leon", [], rP5.nextProgress.achievementCollection),
-      true,
-      "Avatar desbloqueado es válido en perfil"
-    );
-    assert.equal(
-      canUseAvatar("pinguino-monte-leon", [], []),
-      false,
-      "Avatar bloqueado es rechazado"
-    );
-
-    console.log("   ✅ Avatares: explorador (1 y 2), guardaparque (4) y pingüino (todas 90%+).");
+    console.log("   ✅ Avatares: explorador (1 y 2), guardaparque (4) y pingüino (8 de 8 en las 5).");
 
     // ========================================================================
-    // 6. MEDALLA: SE DA UNA SOLA VEZ Y SOLO A QUIEN PARTICIPÓ
+    // 6. MEDALLA: SOLO EN LA VENTANA, SOLO A QUIEN SUPERÓ ALGUNA ETAPA, UNA VEZ
     // ========================================================================
     console.log("\n6. Verificando entrega de la medalla de Monte León...");
 
@@ -281,68 +297,51 @@ async function main() {
       activityLog: [],
       seasonalCollection: [],
     };
-
     assert.equal(haParticipadoMonteLeon(alumnoNoParticipo), false);
-    const entregaNo = entregarMedallaBuenViaje(alumnoNoParticipo);
-    assert.equal(entregaNo.entregada, false, "No debe recibir medalla si no participó");
+    assert.equal(entregarMedallaBuenViaje(alumnoNoParticipo).entregada, false, "Sin participar no hay medalla");
 
-    // Alumno participante sí recibe medalla
+    // Jugar en la ventana sin superar: no hay medalla
+    const rSinSuperar = registrarResultadoEtapa(alumnoNoParticipo, 1, 5, tInicioBuenViaje);
+    assert.equal(rSinSuperar.medallaPremio, undefined, "Sin superar una etapa no hay medalla");
+    // Superar FUERA de la ventana: tampoco (llega con el cartel del 27/10)
+    const rFuera = registrarResultadoEtapa(alumnoNoParticipo, 1, 7, t15Oct);
+    assert.equal(rFuera.medallaPremio, undefined, "Antes del 27/10 20:00 no se da la medalla");
+    // Superar DENTRO de la ventana: sí
+    const rDentro = registrarResultadoEtapa(alumnoNoParticipo, 1, 7, tInicioBuenViaje);
+    assert.equal(rDentro.medallaPremio, MEDALLA_MONTE_LEON.id);
+
     assert.equal(haParticipadoMonteLeon(mockProgress), true);
     const entregaSi = entregarMedallaBuenViaje(mockProgress);
     assert.equal(entregaSi.entregada, true, "Alumno participante recibe medalla");
-    assert.ok(entregaSi.nextProgress.seasonalCollection?.includes(MEDALLA_MONTE_LEON.id));
-
-    // Si se vuelve a llamar, no se duplica
     const entregaSegunda = entregarMedallaBuenViaje(entregaSi.nextProgress);
     assert.equal(entregaSegunda.entregada, false, "La medalla no se entrega dos veces");
-    const cantidadMedallas = entregaSegunda.nextProgress.seasonalCollection?.filter(
-      (id) => id === MEDALLA_MONTE_LEON.id
-    ).length;
-    assert.equal(cantidadMedallas, 1, "Debe figurar una sola vez en la colección");
+    assert.equal(
+      entregaSegunda.nextProgress.seasonalCollection?.filter((id) => id === MEDALLA_MONTE_LEON.id).length,
+      1
+    );
 
-    console.log("   ✅ Medalla entregada una sola vez y únicamente a quien participó.");
+    console.log("   ✅ Medalla solo en la ventana, solo a quien superó una etapa, una sola vez.");
 
     // ========================================================================
     // 7. OBJETO REGALADO NO SE VUELVE A DAR (REGLA GENERAL CL-18)
     // ========================================================================
     console.log("\n7. Verificando que un objeto regalado no se vuelve a ganar automáticamente...");
 
-    // Simulamos que el alumno regaló la botella de agua
     const alumnoRegalador: StudentProgress = {
       code: "REGALADOR-01",
       coins: 20,
       completedWorlds: [],
       activityLog: [],
-      seasonalCollection: [], // ya no tiene la botella
-      objetosRegalados: ["botella-agua-ml"], // quedó en regalados
+      seasonalCollection: [],
+      objetosRegalados: ["botella-agua-ml"],
       monteLeon: { etapas: {} },
     };
+    assert.equal(alumnoTieneORegalo(alumnoRegalador, "botella-agua-ml"), true);
+    const rRegalo = registrarResultadoEtapa(alumnoRegalador, 1, 8, t15Oct);
+    assert.deepEqual(rRegalo.objetosPremio, ["bocadillos-ml"], "La botella regalada no vuelve; sí los bocadillos");
+    assert.equal(rRegalo.nextProgress.seasonalCollection?.includes("botella-agua-ml"), false);
 
-    assert.equal(
-      alumnoTieneORegalo(alumnoRegalador, "botella-agua-ml"),
-      true,
-      "Se reconoce como obtenido históricamente para la mochila"
-    );
-
-    // Juega y supera la etapa 1 de nuevo con 100%
-    const rRegalo = registrarResultadoEtapa(alumnoRegalador, 1, 100, t15Oct);
-    assert.notEqual(
-      rRegalo.objetoPremio,
-      "botella-agua-ml",
-      "No debe volver a entregar la botella regalada"
-    );
-    assert.equal(
-      rRegalo.objetoPremio,
-      "anteojos-sol-ml",
-      "Debe avanzar al siguiente objeto que nunca tuvo"
-    );
-    assert.equal(
-      rRegalo.nextProgress.seasonalCollection?.includes("botella-agua-ml"),
-      false,
-      "La botella no debe reaparecer en seasonalCollection"
-    );
-
-    console.log("   ✅ Objeto regalado registrado en objetosRegalados no se vuelve a entregar.");
+    console.log("   ✅ Objeto regalado no se vuelve a entregar.");
 
     // ========================================================================
     // 8. CATÁLOGO DE PREMIOS Y CATÁLOGO DE IMÁGENES
@@ -390,7 +389,7 @@ async function main() {
     await saveProgress({
       ...pReal,
       monteLeon: {
-        etapas: { 1: { bestScore: 90, completedAt: t15Oct.toISOString() } },
+        etapas: { 1: { bestScore: 88, completedAt: t15Oct.toISOString() } },
       },
     });
 
