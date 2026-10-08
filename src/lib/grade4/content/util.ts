@@ -149,6 +149,15 @@ export function makeOrder(
   };
 }
 
+// Formateo decimal en español rioplatense (con coma y sin ruido flotante).
+export function decimalAR(n: number, cifras = 2): string {
+  const factor = Math.pow(10, cifras);
+  const rounded = Math.round((n + Number.EPSILON) * factor) / factor;
+  const s = rounded.toFixed(cifras);
+  // Quitar ceros decimales innecesarios (ej. 7,20 -> 7,2)
+  return s.replace(/\.?0+$/, "").replace(".", ",");
+}
+
 export function makeClassify(
   id: string,
   prompt: string,
@@ -157,13 +166,32 @@ export function makeClassify(
   hint: string,
   skills: string[]
 ): ActivitySpec {
+  const mapped = items.map((it) => ({ label: it.label, categoryIndex: it.cat }));
+  let shuffled = shuffle(mapped);
+  if (shuffled.length >= 3 && categories.length >= 2) {
+    const isAlternating = (arr: typeof mapped) => {
+      const c0 = arr[0].categoryIndex;
+      const c1 = arr[1].categoryIndex;
+      if (c0 === c1) return false;
+      return arr.every((it, idx) => it.categoryIndex === (idx % 2 === 0 ? c0 : c1));
+    };
+    for (let attempt = 0; attempt < 20; attempt++) {
+      if (!isAlternating(shuffled)) break;
+      shuffled = shuffle(mapped);
+    }
+    if (isAlternating(shuffled) && shuffled.length >= 4) {
+      const temp = shuffled[1];
+      shuffled[1] = shuffled[2];
+      shuffled[2] = temp;
+    }
+  }
   return {
     type: "classify",
     id,
     title: "Actividad",
     prompt,
     categories,
-    items: items.map((it) => ({ label: it.label, categoryIndex: it.cat })),
+    items: shuffled,
     hint: hint.startsWith("Pista:") ? hint : `Pista: ${hint}`,
     skills,
   };

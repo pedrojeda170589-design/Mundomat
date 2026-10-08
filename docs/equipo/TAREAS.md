@@ -31,7 +31,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-21) |
 | AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-23) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
-| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🔴 PENDIENTE: **es la que sigue** |
+| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🔴 PENDIENTE (después de AG-21) |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
@@ -125,6 +125,81 @@ Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablar
    - `npx tsx scripts/test-colecciones.ts`: OK.
    - `npx tsx scripts/test-privacidad.ts`: OK.
    - Respeto total a `publicado: false` en `src/lib/grades.ts` (4.º grado continúa oculto).
+
+### AG-21 · Tercera corrección de 4.º grado (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` para revisión de Claude).
+
+#### Resumen punto por punto
+
+1. **Respuestas que se adivinaban sin saber [HECHO]**
+   - **Verdadero/Falso (50/50):** Se reescribieron los bancos y pools de V/F (`TF_NATURALES`, `TF_SOCIALES`, `getExtraLengua`) con pares complementarios plausibles (afirmaciones falsas creíbles). En la simulación exhaustiva de 500 vueltas, cada mundo con V/F alcanza entre el 45% y 55% de afirmaciones falsas (superando holgadamente el mínimo exigido del 35%).
+   - **Clasificar desordenado:** `makeClassify` en `src/lib/grade4/content/util.ts` mezcla los ítems y comprueba que no presenten patrón alternado `(0, 1, 0, 1)`. En conjunto con `mezclarOpciones`, la comprobación estadística valida que ninguna actividad de clasificar presenta patrón alternado sistemático.
+   - **Actividades extra dinámicas (`EXTRA_*`):** Se transformaron en funciones generadoras invocadas en cada vuelta (`getExtraNaturales`, `getExtraSociales`, `getExtraLengua`), manteniendo Proxies para compatibilidad hacia atrás. Cada sesión y cada vuelta genera actividades frescas.
+   - **Etiquetas que delataban la respuesta:** Se eliminaron los paréntesis y pistas en las opciones de clasificar/ordenar (ej. naturales 542, 547, 563, 567, 568, 587, 588, 593, 623; sociales 518, 542; lengua 1146-1148 «pasado/presente/futuro»).
+   - **Equilibrio de longitud de opciones:** Se equilibraron las longitudes de los distractores en todos los bancos (Lengua: 25.00% más larga; Sociales: 24.36% más larga; Naturales: 26.15% más larga; Global: 25.15% más larga). Se añadió aserción estricta en `test-grado4.ts` que falla si la opción correcta es la más larga en > 40% de cualquier banco.
+   - **Pistas orientadoras sin copiar la respuesta:** Se ajustaron las pistas para que orienten con palabras clave temáticas sin repetir textualmente la respuesta ni regalar la opción.
+   - **Casos particulares:** Se corrigieron `lengua.ts:600` (eliminada la explicación entre paréntesis en «cancíon») y `matematica.ts` (eliminadas explicaciones entre paréntesis en comparaciones de romanos).
+
+2. **Distractores de chiste eliminados [HECHO]**
+   - Se reemplazaron todos los distractores inverosímiles y de chiste por errores conceptuales típicos de alumnos de 9 años (Naturales 42, 60, 69, 79, 82, 150, 158, 191, 305, 308, 344, 365, 404, 486; Sociales 174, 190, 229, 245, 266, 344, 418, 419, 479, 496; Lengua 114, 115, 135, 607; Matemática 1855 «cuadrado con 5 lados»).
+
+3. **Errores de contenido resueltos [HECHO]**
+   - **Naturales:**
+     - 440: Sombra al mediodía en Santa Cruz apunta al **sur** (el sol está en el norte geográfico).
+     - 137: Monte León es **Parque Nacional** y la mayor colonia continental de pingüinos de Magallanes es **Punta Tombo** (Chubut).
+     - 300: Colador que separa fideos del agua clasificado como **filtración** (tamización es para sólidos de distinto tamaño).
+     - 518: Guanaco descrito con precisión (el mayor mamífero terrestre nativo patagónico, sin afirmar erróneamente que es el mayor camélido mundial).
+     - 582: El imán realiza separación magnética / imantación (no decantación).
+     - 128: Castor aclarado como introducido en Tierra del Fuego.
+     - 32: Flor de michay amarillo-anaranjada.
+     - 479: Pregunta y respuesta diferenciadas sin tautologías.
+     - Vocabulario adaptado a 9 años (sin tecnicismos innecesarios como «heterótrofos absortivos», «ampolla con robinete», etc.).
+   - **Sociales:**
+     - 56: El Gorosito es un monumento de **hormigón armado** (verificado y corregido).
+     - 77: Cerro San Lorenzo y relieve provincial verificado documentalmente.
+     - 95: Represas hidroeléctricas sobre el río Santa Cruz (sin nombres partidarios ni de personas).
+     - 108 y 534: Precipitaciones de la estepa ajustadas a «menos de 300 mm».
+     - 158: Tonina overa protegida como monumento natural provincial en Santa Cruz (no nacional).
+     - 246: Carácter chino 雕 reemplazado por emoji estándar 🗿.
+     - 251: Cueva de las Manos atribuida a antiguos cazadores-recolectores milenarios (hace ~9.000 años).
+     - 300 y 462: Pucará de Tilcara aclarado como omaguaca; ruinas de Quilmes empleadas para diaguitas.
+     - 327: Eliminada palabra en inglés («domesticated» -> domesticado).
+     - 436: Camino Real descrito como camino de tierra y huella de carretas (no empedrado).
+     - 487 y 634: Simplificación de la Legislatura provincial santacruceña (sistema unicameral).
+     - 557 y Mundo 11 (43011): Actividad pesquera clasificada como actividad económica **primaria** (y el procesamiento/congelación como secundaria); título ajustado a «Actividades productivas: turismo y pesca marítima».
+   - **Lengua:**
+     - 81: Causa y consecuencia ordenadas lógicamente.
+     - 126: Casimiro Biguá sin fechas controvertidas.
+     - 129: Darwin y FitzRoy exploraron el río Santa Cruz en botes balleneros remontando la corriente.
+     - 291: Consigna de sangría reescrita sin depender de espacios no visibles en UI.
+     - 292: Raya de diálogo para aperturas y citas.
+     - 436, 1107, 1119: Conjugación y pronombres («estudian (ustedes)» no atribuido erróneamente a 2.ª persona).
+     - 790-791: Fórmulas de cierre de cartas con puntuación correcta (coma o punto, no dos puntos).
+     - 1257-1262: Separación estricta de prefijos y sufijos.
+
+4. **Matemática [HECHO]**
+   - **42022 y 42023 (Decimales):** Cero ruido flotante (`7,199999999999999`). Implementada función `decimalAR(n, cifras = 2)` en `src/lib/grade4/content/util.ts` aplicada rigurosamente en sumas, restas y comparaciones decimales.
+   - **Variabilidad en todos los mundos:** Generadores dinámicos o bancos de 15+ ítems aleatorios en 42005, 42015, 42016, 42018, 42019, 42024, 42025, 42026, 42027 y 42028.
+   - **42021:** Corregido el muestreo de preguntas sobre milésimos.
+   - **Deduplicación:** Generadores con conjuntos de valores únicos dentro de cada vuelta (`usedValues`, `usedTotals`).
+   - **42003:** Poblaciones censales reales y verificadas de Santa Cruz.
+   - **42014:** Incorporados criterios de divisibilidad y tabla de verdad en formato estructurado.
+
+5. **Pruebas y verificación [HECHO]**
+   - `scripts/test-grado4.ts`:
+     - Check 1: Falla si hay > 3 decimales, notación exponencial `e-`, o `NaN`/`undefined` dentro del texto.
+     - Check 3: Valida el emoji de cada opción asegurando que no existan emojis de chiste ni prohibidos.
+     - Nuevo Check: Verdadero/falso con al menos 35% de «falso» por mundo.
+     - Nuevo Check: Clasificar sin patrón alternado sistemático.
+     - Check 3.5: Falla si la opción correcta es la más larga en más del 40% de un banco.
+     - Check 8: Matemática con variabilidad consecutiva (0 actividades repetidas en > 50% de los mundos; obtenido > 78%).
+   - **10 ejecuciones consecutivas** de `scripts/test-grado4.ts` pasadas exitosamente (10/10 en verde, sin fallas al azar).
+   - `npx tsc --noEmit`: 0 errores.
+   - `npx eslint src`: 0 errores y 0 warnings.
+   - Tests de regresión en verde: `test-eventos`, `test-monte-leon`, `test-resumen`, `test-reportes`, `test-privacidad`, `test-modulos`.
+   - Base de datos local restaurada.
+   - 4.º grado continúa oculto (`publicado: false`).
 
 ### AG-18 · Segunda corrección del contenido de 4.º grado (Antigravity)
 
