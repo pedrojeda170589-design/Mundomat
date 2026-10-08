@@ -7,7 +7,6 @@ import PanelShell, { ErrorNote, NotConfigured, Panel, usePanelSession } from "@/
 import { platform } from "@/lib/platform/client";
 import {
   EnrollmentStatus,
-  SKILL_INFO,
   STATUS_LABEL,
   SkillLevel,
   formatMinutes,
@@ -21,6 +20,8 @@ import DictationReportByCode from "@/components/admin/DictationReportByCode";
 import TorneoReportByCode from "@/components/admin/TorneoReportByCode";
 import { proposeDisplayName } from "@/lib/studentNames";
 import { AvatarAccessories } from "@/types";
+import { contenidosAReforzar } from "@/lib/reforzar";
+import ReforzarPorEje from "@/components/admin/ReforzarPorEje";
 
 interface Student {
   id: string;
@@ -173,10 +174,40 @@ export default function StudentRecordPage() {
     return {
       year: lastYear,
       items: [...agg]
-        .map(([worldId, v]) => ({ worldId, subject: v.subject, level: skillLevel(v.correct, v.incorrect), total: v.correct + v.incorrect }))
+        .map(([worldId, v]) => ({
+          worldId,
+          subject: v.subject,
+          level: skillLevel(v.correct, v.incorrect),
+          correct: v.correct,
+          incorrect: v.incorrect,
+          total: v.correct + v.incorrect,
+          precision: v.correct + v.incorrect > 0 ? Math.round((v.correct / (v.correct + v.incorrect)) * 100) : undefined,
+        }))
         .sort((a, b) => order.indexOf(a.level) - order.indexOf(b.level)),
     };
   }, [worlds]);
+
+  const reforzarGrupos = useMemo(() => {
+    const toReinforce = skills.items
+      .filter((s) => s.level === "practica-guiada" || s.level === "necesita-practica")
+      .map((s) => ({
+        worldId: s.worldId,
+        nivel: s.level,
+        precision: s.precision,
+      }));
+    return contenidosAReforzar(toReinforce);
+  }, [skills]);
+
+  const fortalezasGrupos = useMemo(() => {
+    const toStrengthen = skills.items
+      .filter((s) => s.level === "consolidado")
+      .map((s) => ({
+        worldId: s.worldId,
+        nivel: s.level,
+        precision: s.precision,
+      }));
+    return contenidosAReforzar(toStrengthen);
+  }, [skills]);
 
   if (state === "off") return <PanelShell title="Legajo"><NotConfigured /></PanelShell>;
   const current = steps.find((s) => s.status === "active");
@@ -325,23 +356,33 @@ export default function StudentRecordPage() {
 
           <Panel>
             <p className="font-black mb-1">🎯 Fortalezas y aspectos a reforzar {skills.year ? `(${skills.year})` : ""}</p>
-            <p className="text-xs opacity-70 mb-2">
+            <p className="text-xs opacity-70 mb-3">
               Según su práctica en cada mundo de MundoTest26. No es un diagnóstico.
             </p>
             {skills.items.length === 0 ? (
               <p className="text-sm opacity-70">Todavía no hay práctica suficiente.</p>
             ) : (
-              <ul className="grid sm:grid-cols-2 gap-1 text-sm">
-                {skills.items.map((s) => {
-                  const info = SKILL_INFO[s.level];
-                  const w = getWorld(s.worldId);
-                  return (
-                    <li key={s.worldId} className={info.className}>
-                      {info.emoji} <b>{w?.name ?? `Mundo ${s.worldId}`}</b> — {info.label}
-                    </li>
-                  );
-                })}
-              </ul>
+              <div className="space-y-4">
+                {reforzarGrupos.length > 0 && (
+                  <div>
+                    <p className="font-bold text-xs uppercase tracking-wider text-rose-800 mb-2 flex items-center gap-1.5">
+                      <span>🎯</span> Aspectos a reforzar
+                    </p>
+                    <ReforzarPorEje grupos={reforzarGrupos} />
+                  </div>
+                )}
+                {fortalezasGrupos.length > 0 && (
+                  <div>
+                    <p className="font-bold text-xs uppercase tracking-wider text-emerald-800 mb-2 flex items-center gap-1.5">
+                      <span>⭐</span> Fortalezas
+                    </p>
+                    <ReforzarPorEje grupos={fortalezasGrupos} />
+                  </div>
+                )}
+                {reforzarGrupos.length === 0 && fortalezasGrupos.length === 0 && (
+                  <p className="text-sm opacity-70">En desarrollo inicial sin contenidos críticos.</p>
+                )}
+              </div>
             )}
           </Panel>
 

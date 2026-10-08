@@ -32,7 +32,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-23) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
 | AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🔴 PENDIENTE (después de AG-21) |
+| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
 | CL-23 | Opciones de las actividades mezcladas en todos los grados (en 3.º la correcta quedaba primera en el 89 % de las de opción múltiple y casi todas las de «encontrá el error» y justificaciones); pestaña «🗓️ Desafíos y eventos» del panel: cada desafío, festividad, estación, temporada de la tienda y drop se pone en Automático / Siempre / Entre fechas / Apagado, con días de la semana y grados; mundos de 4.º en «Habilitar Mundos»; el servidor no acredita mundos bloqueados | Claude | 🟢 UNIDA A MAIN |
@@ -125,6 +125,75 @@ Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablar
    - `npx tsx scripts/test-colecciones.ts`: OK.
    - `npx tsx scripts/test-privacidad.ts`: OK.
    - Respeto total a `publicado: false` en `src/lib/grades.ts` (4.º grado continúa oculto).
+
+### AG-23 · Panel docente: qué contenidos reforzar, por eje (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (para revisión de Claude y Pedro).
+
+#### Resumen punto por punto
+
+1. **Función pura `contenidosAReforzar(...)` en `src/lib/reforzar.ts` [HECHO]**
+   - Entrada: mundos/habilidades a reforzar o tupla `{ student, progress, enabledWorldIds }` con los umbrales pedagógicos de siempre (`needs_help` / `practica-guiada`, `in_progress` / `necesita-practica`), currículo activo (`getCurriculoActivo()`, Santa Cruz o NAP) con entradas validadas por el docente, y catálogo de mundos.
+   - Salida estructurada agrupada por materia y eje:
+     ```ts
+     { materia: string; materiaId: string; eje: string; items: ContenidoRefuerzoItem[] }[]
+     ```
+   - Materias ordenadas según el mapa oficial: Matemática (0), Lengua (1), Ciencias Naturales (2), Ciencias Sociales (3).
+   - Ejes ordenados según la secuencia de aparición de los mundos en el mapa.
+   - `contenido`: texto curricular sintético extraído prioritariamente de `WorldDef.description` (o habilidad/currículo). Si un mundo no posee entrada curricular (cuentos, dictados, zonas de práctica o complementarios), se clasifica bajo el eje `«Otros»` con su `description`.
+   - **Deduplicación estricta:** Si dos mundos del mismo eje abordan el mismo contenido curricular, se consolidan en una única entrada conservando el peor nivel (`LEVEL_SEVERITY`: `practica-guiada` > `necesita-practica` > `en-desarrollo` > `sin-datos` > `consolidado`) y la menor precisión porcentual.
+   - Helpers: `resumirEjes(grupos)` para listas compactas («Matemática · Número y Operaciones (2)») y `formatWorldRefuerzoCSV(id)` / `formatWorldsRefuerzoCSV(ids)` para exportación «eje: contenido».
+
+2. **Componente unificado `ReforzarPorEje` en `src/components/admin/ReforzarPorEje.tsx` [HECHO]**
+   - Jerarquía visual fiel a la especificación:
+     - Cabecera: `Materia · Eje (cantidad de contenidos)`
+     - Viñetas de contenido con emoji de nivel (`🔴` práctica guiada, `🟠` necesita práctica, `🟢` consolidado).
+     - Contenido sintético claro (ej. «Sumar y restar para agregar, quitar, ganar o perder»).
+     - Precisión porcentual entre paréntesis (`(52 % de aciertos)`) cuando existen intentos.
+     - Nombre del mundo discreto al final en gris (`— mundo: La Aldea de los Números`) como referencia de ubicación en el mapa.
+     - Acordeón interactivo: al tocar un ítem despliega el texto completo del diseño curricular, la fuente bibliográfica (`📖 DC Santa Cruz 1.er ciclo, p. 89`) y la advertencia si el vínculo no fue validado (`⚠️ Vínculo curricular sin validar`).
+     - Modo imprimible (`printable={true}`): despliega automáticamente todos los contenidos y detalles sin botones, adaptado para impresión nítida en hoja A4.
+
+3. **Resumen del curso (`src/components/admin/CourseSummary.tsx`, «A quién ayudar primero») [HECHO]**
+   - Se reemplazó la lista de nombres de mundos por los ejes curriculares y la cantidad de contenidos afectados («Matemática · Número y Operaciones (2)»).
+   - Se añadió `redWorldIds` a `StudentHelpPriority` en `courseSummary.ts` para mapear directamente los mundos en rojo del alumno sin mostrar nombres aislados de mundos.
+
+4. **Reporte imprimible del curso (`src/app/admin/reporte/curso/page.tsx`) [HECHO]**
+   - En la Sección 2 («Prioridades Pedagógicas / A quién ayudar primero»), se integró `<ReforzarPorEje grupos={grupos} printable={true} />`.
+   - El docente visualiza exactamente los contenidos curriculares y fuentes oficiales de cada estudiante en riesgo, sin nombres sueltos de mundos y listo para imprimir en A4.
+
+5. **Legajo del alumno (`src/app/docente/alumno/page.tsx`, «Fortalezas y aspectos a reforzar») [HECHO]**
+   - Tanto la sección de «Aspectos a reforzar» (`practica-guiada` y `necesita-practica`) como la de «Fortalezas» (`consolidado`) se agrupan por eje curricular utilizando el componente `ReforzarPorEje`.
+
+6. **CSV del curso (`src/lib/courseExport.ts`) [HECHO]**
+   - Las columnas «Mundos a Fortalecer» y «Mundos Pendientes de Refuerzo» ahora exportan en formato `eje: contenido` (ej. `Número y Operaciones: Sumar y restar para agregar, quitar, ganar o perder; Lectura: Comprensión de textos narrativos`).
+   - Se eliminaron los nombres aislados de mundos del archivo descargable.
+
+7. **Compatibilidad total con todos los grados (1.º, 2.º, 3.º y 4.º) [HECHO]**
+   - Funciona de forma consistente en los 395 mundos del catálogo (1.º, 2.º, 3.º, 4.º, dictados y zonas de práctica).
+   - Admite etiquetas y descripciones de habilidades (`SkillDef`) cuando la pantalla trabaja a nivel habilidad.
+   - 4.º grado continúa oculto (`publicado: false` en `src/lib/grades.ts`).
+
+8. **Suite de pruebas de regresión y verificación [HECHO]**
+   - Creado `scripts/test-reforzar.ts` con 6 bloques de prueba exhaustivos:
+     1. Agrupamiento por materia y eje en orden del mapa y fallback a «Otros» con `description`.
+     2. Deduplicación por contenido en el mismo eje y retención del peor nivel pedagógico (`practica-guiada` > `necesita-practica` > `consolidado`).
+     3. Cambio de currículo activo: con `curriculoId: "nap"` o `setCurriculoActivo("nap")` adopta los ejes y fuentes textuales de los NAP («En relación con el número y las operaciones» y «NAP Matemática 1.er ciclo»).
+     4. Verificación en 395 mundos de que NINGÚN texto de salida es solo el nombre del mundo.
+     5. Coincidencia exacta de umbrales con `computeStudentsNeedingHelp` en base local y caso sintético con mundos en rojo.
+     6. Verificación de formato CSV delimitado por `;`.
+   - `npx tsc --noEmit`: 0 errores.
+   - `npx eslint src`: 0 advertencias / 0 errores.
+   - Tests de regresión todos en verde:
+     - `npx tsx scripts/test-reforzar.ts` (6/6 bloques OK)
+     - `npx tsx scripts/test-grado4.ts` (14/14 checks OK)
+     - `npx tsx scripts/test-eventos.ts` (9/9 bloques OK)
+     - `npx tsx scripts/test-monte-leon.ts` (9/9 bloques OK)
+     - `npx tsx scripts/test-resumen.ts` (5/5 bloques OK)
+     - `npx tsx scripts/test-reportes.ts` (OK)
+     - `npx tsx scripts/test-privacidad.ts` (OK)
+     - `npx tsx scripts/test-curriculo.ts` (OK)
+   - Base de datos local `.data/db.json` protegida y restaurada intacta.
 
 ### AG-21 · Tercera corrección de 4.º grado (Antigravity)
 

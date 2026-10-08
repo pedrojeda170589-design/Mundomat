@@ -17,6 +17,7 @@ import SubjectBadge from "@/components/SubjectBadge";
 import { GRADES } from "@/lib/grades";
 import { haParticipadoMonteLeon, tieneMochilaCompleta } from "@/lib/monteLeon";
 import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
+import { contenidosAReforzar, resumirEjes } from "@/lib/reforzar";
 
 interface CourseSummaryProps {
   students: Student[];
@@ -108,6 +109,19 @@ export default function CourseSummary({
   const studentsNeedingHelp = useMemo(() => {
     return computeStudentsNeedingHelp(filteredStudents, progressMap, activeGradeEnabledIds);
   }, [filteredStudents, progressMap, activeGradeEnabledIds]);
+
+  const helpItemsWithEjes = useMemo(() => {
+    return studentsNeedingHelp.map((item) => {
+      const ids = item.redWorldIds ?? [];
+      const grupos = ids.length > 0 ? contenidosAReforzar(ids, { worlds: gridWorlds }) : [];
+      const ejesList = resumirEjes(grupos);
+      return {
+        ...item,
+        grupos,
+        ejesList,
+      };
+    });
+  }, [studentsNeedingHelp, gridWorlds]);
 
   // Evolución semanal del aula (últimas 6 semanas)
   const classroomEvolution = useMemo(() => {
@@ -237,7 +251,7 @@ export default function CourseSummary({
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {studentsNeedingHelp.map((item) => (
+            {helpItemsWithEjes.map((item) => (
               <div
                 key={item.student.code}
                 onClick={() => onSelectStudent(item.student.code)}
@@ -266,11 +280,11 @@ export default function CourseSummary({
                       </span>
                     ))}
                   </div>
-                  {item.redWorldNames.length > 0 && (
-                    <p className="text-[11px] text-rose-900/80 mt-1.5 line-clamp-1">
-                      ⚠️ {item.redWorldNames.join(", ")}
+                  {item.ejesList.length > 0 ? (
+                    <p className="text-[11px] text-rose-900/80 mt-1.5 line-clamp-2">
+                      ⚠️ {item.ejesList.join(" · ")}
                     </p>
-                  )}
+                  ) : null}
                 </div>
                 <div className="mt-2.5 pt-2 border-t border-rose-100 flex items-center justify-between text-[11px]">
                   <span className="text-amber-900/60">
