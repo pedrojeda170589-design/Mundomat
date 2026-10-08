@@ -1,3 +1,4 @@
+import { eventosConfigActual } from "@/lib/eventos/config";
 import { NextRequest } from "next/server";
 import { findStudentByCode, getEnabledWorldIdsFor, getGradeWorldsConfig, getProgress, getWorldsConfig, saveGradeWorldsConfig, saveWorldsConfig } from "@/lib/data";
 import { DEFAULT_GRADE, GRADES, gradeOf } from "@/lib/grades";
@@ -30,9 +31,10 @@ export async function GET(request: NextRequest) {
     if (isOpenClassroomStudent(student)) {
       // Aula de prueba: hasta 5 mundos superados por materia.
       const progress = await getProgress(student.code);
-      return Response.json({ config: { enabledWorldIds: filterTrialWorlds(enabled, progress), trialAllEnabledIds: enabled } });
+      return Response.json({ config: { enabledWorldIds: filterTrialWorlds(enabled, progress), trialAllEnabledIds: enabled }, eventos: eventosConfigActual() });
     }
-    return Response.json({ config: { enabledWorldIds: enabled }, grade: gradeOf(student) });
+    // `eventos`: desafíos y eventos del panel (el mapa los usa para decidir qué mostrar).
+    return Response.json({ config: { enabledWorldIds: enabled }, grade: gradeOf(student), eventos: eventosConfigActual() });
   }
   const grade = Number(params.get("grade") ?? DEFAULT_GRADE);
   if (grade !== DEFAULT_GRADE && GRADES.some((g) => g.grade === grade)) {

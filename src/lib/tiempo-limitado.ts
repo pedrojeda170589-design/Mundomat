@@ -5,6 +5,7 @@
 // Para el cartel de la tienda calcula la ventana de fechas de cada
 // festividad: si está activa, cuántos días le quedan; si todavía no empezó,
 // en cuántos días llega. Todo en hora argentina.
+import { configDe, eventoActivo, idEstacion, idTemporada } from "@/lib/eventos/config";
 import { easterSunday, getArgentinaDate, getSeasonalEventById, type ArgDate } from "@/lib/seasons";
 import { ACCESSORY_CATALOG_TIENDA, SHOP_AVATARS } from "@/types";
 import { DIAS_TEMPORADA, TEMPORADAS, type Temporada } from "@/lib/coleccion/temporadas";
@@ -22,6 +23,11 @@ const DAY = 86_400_000;
 function toArg(n: number): ArgDate {
   const d = new Date(n * DAY);
   return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate() };
+}
+
+function argDe(s: string): ArgDate {
+  const [year, month, day] = s.split("-").map(Number);
+  return { year, month, day };
 }
 
 function dayNum(d: ArgDate): number {
@@ -57,8 +63,31 @@ export function getTemporada(id: string): Temporada | undefined {
 
 // ¿Está a la venta hoy? Para las temporadas de la tienda, por su ventana de
 // 15 días; si no, por la festividad de siempre (src/lib/seasons.ts).
+// Id de la configuración del panel que manda sobre esta temporada/festividad
+// (o null si las dos están en «automático»). Halloween, Tradición, Navidad,
+// Carnaval y Verano son a la vez festividad y temporada de la tienda: manda
+// la de la temporada y, si está en automático, la de la festividad.
+function configManual(eventId: string): string | null {
+  const ids = getTemporada(eventId) ? [idTemporada(eventId), idEstacion(eventId)] : [idEstacion(eventId)];
+  for (const id of ids) {
+    const c = configDe(id);
+    if (c && c.modo !== "auto") return id;
+  }
+  return null;
+}
+
+// Mediodía argentino del día `n` (para evaluar la configuración del panel).
+const mediodia = (n: number) => new Date(n * DAY + 15 * 3600 * 1000);
+
 function activaFn(eventId: string): ((n: number) => boolean) | null {
   const t = getTemporada(eventId);
+  // Configuración del panel (Desafíos y eventos): una temporada en pausa se
+  // puede abrir eligiendo «siempre» o «entre fechas».
+  const idCfg = configManual(eventId);
+  if (idCfg) {
+    if (configDe(idCfg)!.modo === "apagado") return null;
+    return (n: number) => eventoActivo(idCfg, undefined, mediodia(n), () => false, null);
+  }
   if (t?.pausada) return null; // en pausa: no se vende ni se anuncia
   if (t) {
     return (n: number) => {
@@ -84,6 +113,18 @@ export function ventanaDe(eventId: string, now: Date = new Date(), horizonte = 4
   const on = activaFn(eventId);
   if (!on) return null;
   const today = dayNum(getArgentinaDate(now));
+  // Configurada en el panel: la ventana sale de sus fechas («siempre» = el
+  // año en curso, para que el contador y la clave del año tengan sentido).
+  const idCfg = configManual(eventId);
+  if (idCfg) {
+    const c = configDe(idCfg)!;
+    const hoy = getArgentinaDate(now);
+    const desde = c.modo === "fechas" && c.desde ? dayNum(argDe(c.desde)) : dayNum({ year: hoy.year, month: 1, day: 1 });
+    const hasta = c.modo === "fechas" && c.hasta ? dayNum(argDe(c.hasta)) : dayNum({ year: hoy.year, month: 12, day: 31 });
+    if (today > hasta) return null;
+    const activa = today >= desde && on(today);
+    return { eventId, activa, desde: toArg(desde), hasta: toArg(hasta), dias: activa ? hasta - today + 1 : Math.max(1, desde - today) };
+  }
   let start: number | null = null;
   if (on(today)) {
     start = today;

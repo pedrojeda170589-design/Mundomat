@@ -15,7 +15,7 @@ import {
   FINAL_BONUS,
   PERFECT_BONUS,
   buildWeekendPlan,
-  getWeekendDay,
+  aventuraDelDia,
   maxPointsForDay,
 } from "@/lib/weekend/plan";
 import { WEEKEND_REWARD_IDS } from "@/types";
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   }
   const progress = await getProgress(student.code);
   const now = new Date();
-  const today = getWeekendDay(now);
+  const today = aventuraDelDia(now, gradeOf(student));
   const streak = getDisplayStreak(progress, now);
   if (!today) {
     return Response.json({ available: false, streak });

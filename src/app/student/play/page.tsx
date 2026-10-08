@@ -1,5 +1,6 @@
 "use client";
 
+import { DESAFIOS, gradoPermitido, usarEventosConfig } from "@/lib/eventos/config";
 import HeroFondo from "@/components/HeroFondo";
 
 import { useCallback, useEffect, useState } from "react";
@@ -76,7 +77,7 @@ export default function StudentPlayPage() {
   const [caminoOpen, setCaminoOpen] = useState(false);
   const [monteLeonOpen, setMonteLeonOpen] = useState(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
-  const [oferta] = useState(() => ofertaVigente());
+  const [oferta, setOferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
   const [isTrialStudent, setIsTrialStudent] = useState(false);
   const [trialEndsAt, setTrialEndsAt] = useState<string | undefined>(undefined);
@@ -107,6 +108,9 @@ export default function StudentPlayPage() {
       return;
     }
     const worldsData = await worldsRes.json();
+    // Desafíos y eventos configurados en el panel (fechas, días y grados).
+    usarEventosConfig(worldsData.eventos);
+    setOferta(ofertaVigente());
     setProgress(progressData.progress);
     setBirthday(progressData.student?.birthday);
     if (progressData.student) {
@@ -281,7 +285,7 @@ export default function StudentPlayPage() {
   // Mundo del Dictado (2.º y 3.º grado): aparece en Lengua y Matemática
   if ((grade === 2 || grade === 3) && (subject === "lengua" || subject === "matematica")) {
     const dictWorld = getMundoDictado(grade);
-    const activa = esSemanaDeDictado();
+    const activa = esSemanaDeDictado(new Date(), grade);
     if (activa) {
       playableIds = [dictWorld.id, ...playableIds];
     } else {
@@ -523,7 +527,7 @@ export default function StudentPlayPage() {
         onOpenProfile={() => setEditingProfile(true)}
       />
 
-      {weekend?.available && grade === DEFAULT_GRADE && (
+      {weekend?.available && (
         <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
       )}
 
@@ -574,7 +578,7 @@ export default function StudentPlayPage() {
 
       <NewsBoard code={code} />
 
-      {!isTrialStudent && grade === DEFAULT_GRADE && <CompetitionBanner code={code} />}
+      {!isTrialStudent && gradoPermitido(DESAFIOS.competencia.id, grade, [...DESAFIOS.competencia.grados]) && <CompetitionBanner code={code} />}
 
       <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {

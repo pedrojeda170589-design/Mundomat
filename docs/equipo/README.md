@@ -55,3 +55,23 @@ rama, así nunca se pisan los archivos.
   funcionando sin las variables de Supabase.
 - No romper lo que existe: 3.º grado, mundos, aventura del finde, competencia,
   buzón, pizarrón, tienda, avatares.
+- **Opciones mezcladas (desde el 8/10/2026):** `buildActivitiesForWorld` pasa
+  todas las actividades por `mezclarOpciones` (`src/lib/activities.ts`): las
+  opciones de `mc`, `find-error`, `shape-identify`, `timed`, las
+  justificaciones de `true-false`, `count` y `classify` se mezclan en cada
+  vuelta. En los bancos se puede seguir escribiendo la correcta primero, pero
+  **nunca** escribas una opción que dependa de su lugar («todas las
+  anteriores», «la de arriba»). Si armás actividades fuera de esa función
+  (como Monte León), mezclalas vos.
+- **Desafíos y eventos (desde el 8/10/2026):** todo lo que aparece por fecha o
+  por día (aventura de fin de semana, repaso de las tablas, dictado, Monte
+  León, competencia, zonas de práctica, festividades, temporadas de la tienda
+  y drops) se configura en el panel, pestaña «🗓️ Desafíos y eventos»
+  (`src/lib/eventos/`). Si sumás un desafío o un evento nuevo, agregalo a
+  `DESAFIOS` (`src/lib/eventos/config.ts`) y a `catalogoEventos()`
+  (`src/lib/eventos/catalogo.ts`), y decidí si está activo con
+  `desafioActivo(...)` / `eventoActivo(...)` con la regla de siempre como
+  «automático». Prueba: `scripts/test-eventos.ts`.
+- **Mundos bloqueados:** el servidor no acredita un mundo común que el
+  docente bloqueó (`mundoHabilitadoPara` en `src/lib/data.ts`, usado por
+  `/api/world-attempt` y `/api/round`).

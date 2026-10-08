@@ -1,3 +1,4 @@
+import { gradeOfWorld } from "@/lib/grades";
 import { NextRequest, after } from "next/server";
 import { recordAchievement, recordWorldAttempt } from "@/lib/platform/server";
 import { getMedalTier } from "@/lib/medals";
@@ -13,7 +14,7 @@ import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
 import { addNews, newsForWorldProgress } from "@/lib/news";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
 import { endTrialNow, isTrialWorldBlocked, trialAllSubjectsDone } from "@/lib/openClassroom";
-import { getEnabledWorldIdsFor } from "@/lib/data";
+import { getEnabledWorldIdsFor, mundoHabilitadoPara } from "@/lib/data";
 import { resolveDisplayNames } from "@/lib/studentNames";
 
 import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedCodeAttempt } from "@/lib/rateLimit";
@@ -55,6 +56,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   }
 
+  // Un mundo que el docente bloqueó no suma (aunque alguien lo abra a mano).
+  if (!(await mundoHabilitadoPara(student, worldId))) {
+    return Response.json({ error: "Este mundo no está habilitado.", disabled: true }, { status: 403 });
+  }
+
   // La vuelta terminó: ya no hay nada que retomar en este mundo.
   const progress = terminarVuelta(await getProgress(student.code), worldId);
   const isTrial = isOpenClassroomStudent(student);
@@ -64,7 +70,7 @@ export async function POST(request: NextRequest) {
 
   if (isDictationWorld(worldId)) {
     // Fuera de la semana de dictado el mundo está apagado: no se acredita nada.
-    if (!esSemanaDeDictado()) {
+    if (!esSemanaDeDictado(new Date(), gradeOfWorld(worldId))) {
       return Response.json({ error: "El Mundo del Dictado vuelve la semana que viene." }, { status: 403 });
     }
     // La vuelta siempre tiene 10 dictados: no se confía en el total que manda el navegador.

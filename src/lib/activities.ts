@@ -1,3 +1,4 @@
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 import { WorldDef } from "@/types";
 import { buildGrade1Activities } from "@/lib/grade1/content";
 import { buildGrade2Activities } from "@/lib/grade2/content";
@@ -7032,7 +7033,51 @@ export function buildDictationWorldActivities(world: WorldDef): ActivitySpec[] {
 // aparece una actividad de repaso de multiplicación o división con la tabla
 // pitagórica, para que no se olviden.
 export function buildActivitiesForWorld(world: WorldDef, now: Date = new Date()): ActivitySpec[] {
-  return conRepasoDeTablas(world, armarVuelta(world), now);
+  return conRepasoDeTablas(world, armarVuelta(world), now).map(mezclarOpciones);
+}
+
+// Pedro (8/10/2026): en 3.º la respuesta correcta quedaba casi siempre en la
+// primera opción (89 % de las de opción múltiple, 99 % de «encontrá el
+// error» y todas las justificaciones de verdadero/falso), porque los bancos
+// se escribieron con la correcta primero. Acá se mezclan SIEMPRE, para todos
+// los grados, en cada vuelta: así no depende de cómo esté escrito el banco.
+function mezclarIndices(n: number): number[] {
+  const idx = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [idx[i], idx[j]] = [idx[j], idx[i]];
+  }
+  return idx;
+}
+function mezclarConRespuesta<T>(choices: T[], answerIndex: number): { choices: T[]; answerIndex: number } {
+  if (choices.length < 2 || answerIndex < 0 || answerIndex >= choices.length) return { choices, answerIndex };
+  const idx = mezclarIndices(choices.length);
+  return { choices: idx.map((i) => choices[i]), answerIndex: idx.indexOf(answerIndex) };
+}
+export function mezclarOpciones(a: ActivitySpec): ActivitySpec {
+  switch (a.type) {
+    case "mc":
+    case "find-error": {
+      const m = mezclarConRespuesta(a.choices, a.answerIndex);
+      return { ...a, ...m };
+    }
+    case "shape-identify": {
+      const m = mezclarConRespuesta(a.choices, a.answerIndex);
+      return { ...a, ...m };
+    }
+    case "timed":
+      return { ...a, questions: a.questions.map((q) => ({ ...q, ...mezclarConRespuesta(q.choices, q.answerIndex) })) };
+    case "true-false":
+      return a.justification
+        ? { ...a, justification: { ...a.justification, ...mezclarConRespuesta(a.justification.choices, a.justification.answerIndex) } }
+        : a;
+    case "count":
+      return { ...a, choices: mezclarIndices(a.choices.length).map((i) => a.choices[i]) };
+    case "classify":
+      return { ...a, items: mezclarIndices(a.items.length).map((i) => a.items[i]) };
+    default:
+      return a;
+  }
 }
 
 export const REPASO_TABLAS_PROBABILIDAD = 0.4;
@@ -7043,9 +7088,12 @@ export function repasoTablasActivo(world: WorldDef, now: Date = new Date()): boo
   if (world.category === "tabla" || world.category === "reparto") return false; // ya son de tablas
   // Solo en los mundos de Matemática (Pedro, 6/10: le apareció en Ciencias Naturales).
   if (world.subject !== "matematica") return false;
-  if (grado > 3) return true;
-  const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
-  return mesAR >= 7;
+  // Configurable desde el panel (Desafíos y eventos).
+  return desafioActivo(DESAFIOS.repasoEnMundos, grado, now, () => {
+    if (grado > 3) return true;
+    const mesAR = new Date(now.getTime() - 3 * 3600 * 1000).getUTCMonth() + 1;
+    return mesAR >= 7;
+  });
 }
 
 export function actividadRepasoTablas(grado: number): ActivitySpec {

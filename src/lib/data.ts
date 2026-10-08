@@ -1,3 +1,4 @@
+import { cargarEventosConfig } from "@/lib/eventos/server";
 import {
   AVATAR_OPTIONS,
   AccessorySlot,
@@ -41,7 +42,7 @@ import {
   ACTIVITIES_PER_DAY,
   FINAL_BONUS,
   buildWeekendPlan,
-  getWeekendDay,
+  aventuraDelDia,
   scoreActivity,
 } from "@/lib/weekend/plan";
 import { getArgentinaDate } from "@/lib/seasons";
@@ -216,6 +217,9 @@ export async function setMultipleStudentDisplayNames(
 export async function findStudentByCode(
   code: string
 ): Promise<Student | undefined> {
+  // Todas las rutas del alumno pasan por acá: se carga la configuración de
+  // desafíos y eventos del panel (con caché corta) para que las reglas la usen.
+  await cargarEventosConfig();
   const students = await getStudents();
   const found = students.find((s) => s.code.toUpperCase() === code.toUpperCase());
   if (found || !isPlatformEnabled()) return found;
@@ -228,6 +232,7 @@ export async function findStudentByCode(
 // falta y actualiza su aula actual (tras una promoción, un cambio de aula
 // o un traslado) y su fecha de nacimiento. No toca su progreso.
 export async function syncStudentWithPlatform(code: string): Promise<Student | undefined> {
+  await cargarEventosConfig();
   const students = await getStudents();
   const idx = students.findIndex((s) => s.code.toUpperCase() === code.toUpperCase());
   const current = idx >= 0 ? students[idx] : undefined;
@@ -547,7 +552,8 @@ export async function completeWeekendActivity(
   errors: number,
   now: Date = new Date()
 ): Promise<WeekendActivityResult | null> {
-  const today = getWeekendDay(now);
+  const alumno = await findStudentByCode(code);
+  const today = aventuraDelDia(now, gradeOf(alumno));
   if (!today) return null;
   const progress = await getProgress(code);
   const record = getTodayWeekendRecord(progress, today.dayKey);
@@ -622,6 +628,19 @@ export async function getWorldsConfig(): Promise<WorldsConfig> {
 
 // Mundos habilitados para un alumno: los de su aula en la plataforma, o
 // los del aula abierta de prueba, o los del aula piloto (configuración de siempre).
+// ¿El docente tiene habilitado este mundo para el alumno? Solo se controla
+// en los mundos comunes de su grado: el dictado, las zonas de práctica y los
+// mundos especiales tienen su propia regla (Desafíos y eventos).
+export async function mundoHabilitadoPara(student: Student, worldId: number): Promise<boolean> {
+  if (isDictationWorld(worldId)) return true;
+  // Las aulas de la plataforma tienen su propio control (y si la plataforma
+  // no responde no hay que perderle la vuelta al alumno).
+  if (student.classroomId && !isOpenClassroomStudent(student)) return true;
+  const esDelGrado = getGrade(gradeOf(student)).worlds.some((w) => w.id === worldId);
+  if (!esDelGrado) return true;
+  return (await getEnabledWorldIdsFor(student)).includes(worldId);
+}
+
 export async function getEnabledWorldIdsFor(student: Student | undefined): Promise<number[]> {
   const grade = gradeOf(student);
   if (grade !== DEFAULT_GRADE) {
@@ -706,6 +725,9 @@ export async function getGradeWorldsConfig(grade: number): Promise<WorldsConfig>
   const all = gradeWorldIds(grade);
   const cfg = await getJSON<WorldsConfig | null>(`${WORLDS_CONFIG_KEY}:g${grade}`, null);
   const ids = cfg?.enabledWorldIds?.filter((id) => all.includes(id));
+  // Si lo guardado es de otro catálogo (p. ej. 4.º guardado mientras estaba
+  // oculto y veía los mundos de 3.º), al publicarse arranca con todo habilitado.
+  if (cfg && cfg.enabledWorldIds.length > 0 && ids && ids.length === 0) return { enabledWorldIds: all };
   return { enabledWorldIds: cfg ? ids ?? [] : all };
 }
 

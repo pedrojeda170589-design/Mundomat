@@ -1,5 +1,6 @@
 // Configuración de tiempos, metas y premios para el Torneo de las tablas (todos los días desde el 5/10/2026; antes, solo el fin de semana).
 // Pedro puede ajustar los valores de referencia directamente desde estas constantes.
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 
 export const META_ORO_BASE = 35; // segundos para la tabla del 2
 export const META_ORO_INCREMENTO = 3; // +3s por cada tabla adicional (35s, 38s, 41s... hasta 59s en la del 10)
@@ -72,5 +73,6 @@ export function mesAR(now: Date = new Date()): number {
 export const TORNEO_GRADO_MINIMO = 3;
 export const TORNEO_DESDE_MES = 7; // julio
 export function torneoHabilitado(grade: number, now: Date = new Date()): boolean {
-  return grade >= TORNEO_GRADO_MINIMO && mesAR(now) >= TORNEO_DESDE_MES;
+  // Configurable desde el panel (Desafíos y eventos): fechas, días y grados.
+  return desafioActivo(DESAFIOS.repasoTablas, grade, now, () => grade >= TORNEO_GRADO_MINIMO && mesAR(now) >= TORNEO_DESDE_MES);
 }

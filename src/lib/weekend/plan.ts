@@ -10,6 +10,7 @@
 // `kind` acá, sus casilleros en DAY_SLOTS y su componente en
 // src/components/weekend/registry.ts.
 
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 import { getArgentinaDate } from "@/lib/seasons";
 import {
   CONCEPT_PAIRS,
@@ -191,6 +192,18 @@ export function buildWeekendPlan(dayKey: string, day: WeekendDay): WeekendPlan {
     title: day === "sabado" ? "Desafío del sábado" : "Desafío del domingo",
     activities,
   };
+}
+
+// Aventura de fin de semana con la configuración del panel (fechas, días y
+// grados). En un día de semana habilitado por el docente se juega el plan
+// «del sábado».
+export function aventuraDelDia(now: Date = new Date(), grade?: number): { day: WeekendDay; dayKey: string } | null {
+  const finde = getWeekendDay(now);
+  if (!desafioActivo(DESAFIOS.finDeSemana, grade, now, () => !!finde)) return null;
+  if (finde) return finde;
+  const d = getArgentinaDate(now);
+  const dayKey = `${d.year}-${String(d.month).padStart(2, "0")}-${String(d.day).padStart(2, "0")}`;
+  return { day: "sabado", dayKey };
 }
 
 export function getWeekendDay(now: Date = new Date()): { day: WeekendDay; dayKey: string } | null {

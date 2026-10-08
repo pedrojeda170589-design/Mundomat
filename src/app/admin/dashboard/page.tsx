@@ -20,6 +20,7 @@ import CourseSummary from "@/components/admin/CourseSummary";
 import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
+import EventosAdmin from "@/components/admin/EventosAdmin";
 import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
@@ -48,11 +49,12 @@ export default function AdminDashboardPage() {
   const [worldsGrade, setWorldsGrade] = useState(3);
   const [g1Enabled, setG1Enabled] = useState<number[]>([]);
   const [g2Enabled, setG2Enabled] = useState<number[]>([]);
+  const [g4Enabled, setG4Enabled] = useState<number[]>([]);
   const [adding, setAdding] = useState(false);
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedProgress, setSelectedProgress] =
     useState<StudentProgress | null>(null);
-  const [tab, setTab] = useState<"resumen" | "alumnos" | "mundos" | "registro">(
+  const [tab, setTab] = useState<"resumen" | "alumnos" | "mundos" | "desafios" | "registro">(
     "resumen"
   );
 
@@ -73,6 +75,10 @@ export default function AdminDashboardPage() {
     fetch("/api/worlds?grade=2")
       .then((r) => r.json())
       .then((d) => setG2Enabled(d.config?.enabledWorldIds ?? []))
+      .catch(() => {});
+    fetch("/api/worlds?grade=4")
+      .then((r) => r.json())
+      .then((d) => setG4Enabled(d.config?.enabledWorldIds ?? []))
       .catch(() => {});
     setStudents(studentsData.students ?? []);
     setProgressMap(studentsData.progressMap ?? {});
@@ -232,6 +238,22 @@ export default function AdminDashboardPage() {
     });
   }
 
+  async function toggleG4World(ids: number[], on: boolean) {
+    if (!adminPassword) return;
+    const set = new Set(g4Enabled);
+    for (const id of ids) {
+      if (on) set.add(id);
+      else set.delete(id);
+    }
+    const next = [...set].sort((a, b) => a - b);
+    setG4Enabled(next);
+    await fetch("/api/worlds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabledWorldIds: next, adminPassword, grade: 4 }),
+    });
+  }
+
   async function toggleG2World(ids: number[], on: boolean) {
     if (!adminPassword) return;
     const set = new Set(g2Enabled);
@@ -331,6 +353,7 @@ export default function AdminDashboardPage() {
             { id: "resumen", label: "📋 Resumen del curso" },
             { id: "alumnos", label: "👥 Alumnos" },
             { id: "mundos", label: "🗺️ Habilitar Mundos" },
+            { id: "desafios", label: "🗓️ Desafíos y eventos" },
             { id: "registro", label: "📊 Registro y Fortalezas" },
           ].map((t) => (
             <button
@@ -497,7 +520,6 @@ export default function AdminDashboardPage() {
             )}
             <NewsAdmin adminPassword={adminPassword} />
             <MailboxAdmin adminPassword={adminPassword} />
-            <CompetitionAdmin adminPassword={adminPassword} />
             <OpenClassroomAdmin adminPassword={adminPassword} />
           </div>
         )}
@@ -530,7 +552,7 @@ export default function AdminDashboardPage() {
 
         {tab === "mundos" && (
           <div className="flex gap-2 mb-4">
-            {[3, 2, 1].map((g) => (
+            {[4, 3, 2, 1].map((g) => (
               <button
                 key={g}
                 onClick={() => setWorldsGrade(g)}
@@ -573,6 +595,64 @@ export default function AdminDashboardPage() {
                         objective={w.objective}
                         enabled={g2Enabled.includes(w.id)}
                         onToggle={() => toggleG2World([w.id], !g2Enabled.includes(w.id))}
+                        curr={curriculumEntries[String(w.id)]}
+                        onValidate={() => handleValidateCurriculum(w.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {tab === "desafios" && adminPassword && (
+          <div className="flex flex-col gap-4">
+            <EventosAdmin adminPassword={adminPassword} />
+            <CompetitionAdmin adminPassword={adminPassword} />
+          </div>
+        )}
+
+        {tab === "mundos" && (
+          <p className="text-amber-950/80 text-xs parchment-panel rounded-xl p-3 mb-4">
+            Los mundos especiales (Dictado semanal, Viaje a Monte León, Repaso de las tablas, Aventura de fin de semana y Zonas de práctica)
+            se prenden, se apagan y se les ponen fechas en la pestaña{" "}
+            <button type="button" onClick={() => setTab("desafios")} className="underline font-bold">🗓️ Desafíos y eventos</button>.
+          </p>
+        )}
+
+        {tab === "mundos" && worldsGrade === 4 && (
+          <div className="flex flex-col gap-8">
+            <p className="text-amber-950/80 text-sm parchment-panel rounded-xl p-3">
+              {getGrade(4).grade === 4
+                ? "Elegí qué mundos de 4.º están disponibles (por defecto, todos)."
+                : "4.º todavía está oculto (se está corrigiendo su contenido): mientras tanto, los alumnos de 4.º ven los mundos de 3.º. Acá elegís cuáles de esos mundos tienen disponibles (por defecto, todos)."}
+            </p>
+            {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((subject) => {
+              const ws = getGrade(4).worlds.filter((w) => w.subject === subject);
+              if (!ws.length) return null;
+              const allOn = ws.every((w) => g4Enabled.includes(w.id));
+              return (
+                <div key={subject}>
+                  <h2 className="text-amber-950 font-black text-lg mb-3 flex items-center gap-2 flex-wrap">
+                    <SubjectBadge subject={subject} size={30} />
+                    {SUBJECT_INFO[subject].label} · 4.º
+                    <button
+                      onClick={() => toggleG4World(ws.map((w) => w.id), !allOn)}
+                      className="ml-auto text-xs font-bold rounded-full bg-white/80 border border-amber-700/30 px-3 py-1"
+                    >
+                      {allOn ? "Bloquear todos" : "Habilitar todos"}
+                    </button>
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {ws.map((w) => (
+                      <AdminWorldCard
+                        key={w.id}
+                        emoji={w.emoji}
+                        title={w.worldNumber ? `${w.worldNumber}. ${w.name}` : w.name}
+                        objective={w.objective ?? w.description}
+                        enabled={g4Enabled.includes(w.id)}
+                        onToggle={() => toggleG4World([w.id], !g4Enabled.includes(w.id))}
                         curr={curriculumEntries[String(w.id)]}
                         onValidate={() => handleValidateCurriculum(w.id)}
                       />

@@ -10,6 +10,7 @@
 // a partir de la fecha de Pascua de cada año; el Día de las Infancias es el
 // tercer domingo de agosto.
 
+import { eventoActivo, idEstacion } from "@/lib/eventos/config";
 import {
   ACCESSORY_CATALOG_TEMPORADA,
   AUTO_BACKGROUND,
@@ -255,7 +256,8 @@ export function getSeasonalEventById(id: string): SeasonalEvent | undefined {
 // después la estación.
 export function getActiveEvents(now: Date = new Date()): SeasonalEvent[] {
   const d = getArgentinaDate(now);
-  const active = SEASONAL_EVENTS.filter((e) => e.isActive(d));
+  // Cada festividad/estación se puede apagar o mover de fecha desde el panel.
+  const active = SEASONAL_EVENTS.filter((e) => eventoActivo(idEstacion(e.id), undefined, now, () => e.isActive(d), null));
   return [
     ...active.filter((e) => e.kind === "festividad"),
     ...active.filter((e) => e.kind === "estacion"),

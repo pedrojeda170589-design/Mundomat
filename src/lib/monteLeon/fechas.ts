@@ -1,5 +1,6 @@
 // Reglas de tiempo y fechas para el Mundo Especial «Viaje a Monte León» (3.º grado).
 // Todo en hora de Argentina (UTC-3), con `now` inyectable para pruebas.
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 import { getArgentinaDate } from "@/lib/seasons";
 import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
 
@@ -70,10 +71,9 @@ export function debeMostrarMonteLeon(
   now: Date = new Date()
 ): boolean {
   if (!student) return false;
-  if (!estaActivoMonteLeon(now)) return false;
   if (isOpenClassroomStudent(student)) return false;
-  const grade = student.grade;
-  return grade === undefined || grade === 3;
+  // Configurable desde el panel (Desafíos y eventos): fechas, días y grados.
+  return desafioActivo(DESAFIOS.monteLeon, student.grade ?? 3, now, () => estaActivoMonteLeon(now));
 }
 
 /**

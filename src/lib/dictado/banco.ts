@@ -1,4 +1,5 @@
 // Banco de dictados y progresión por grado para 2.º y 3.º grado.
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 import { WorldDef } from "@/types";
 import { numeroEnLetras } from "./numero-letras";
 
@@ -42,8 +43,9 @@ export function getISOWeek(date: Date): number {
 }
 
 // El Mundo del Dictado aparece semana por medio (semanas ISO pares)
-export function esSemanaDeDictado(fecha: Date = new Date()): boolean {
-  return getISOWeek(fecha) % 2 === 0;
+// Configurable desde el panel (Desafíos y eventos): fechas, días y grados.
+export function esSemanaDeDictado(fecha: Date = new Date(), grade?: number): boolean {
+  return desafioActivo(DESAFIOS.dictado, grade, fecha, () => getISOWeek(fecha) % 2 === 0);
 }
 
 // Clave única de la semana de dictado para registrar intentos y premios: "2026-W40"

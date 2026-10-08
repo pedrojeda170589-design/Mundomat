@@ -2,6 +2,7 @@
 // "aprendiendo" después de varios intentos, aparece en el mapa una zona con
 // actividades de esa habilidad, tomadas de los mundos que ya jugó. No cuenta
 // como mundo: es práctica extra, sin bloqueos.
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 import { StudentProgress, WorldDef, WorldSubject } from "@/types";
 import { skillLevel } from "@/lib/progressLogic";
 import { getGrade } from "@/lib/grades";
@@ -16,6 +17,8 @@ export function isPracticeWorldId(id: number): boolean {
 }
 
 export function practiceZonesFor(progress: StudentProgress, subject: WorldSubject, grade: number = 1): WorldDef[] {
+  // Se pueden apagar desde el panel (Desafíos y eventos), por grado.
+  if (!desafioActivo(DESAFIOS.zonasPractica, grade, new Date(), () => true)) return [];
   const g = getGrade(grade);
   const skills = g.skills ?? (grade === 1 ? GRADE1_SKILLS : []);
   const worlds = g.worlds;

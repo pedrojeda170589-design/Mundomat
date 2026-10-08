@@ -1,3 +1,5 @@
+import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
+import { gradeOf } from "@/lib/grades";
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
 import { classmatesOf, findStudentByCode, getClassSnapshot, getEnabledWorldIdsFor, getProgress, getStudents, sameClassroom, saveProgress } from "@/lib/data";
@@ -145,7 +147,8 @@ export async function GET(request: NextRequest) {
   }
   // En el aula abierta de prueba no hay duelos entre desconocidos.
   const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
-  const canPlayToday = config.enabled && (config.anyDay || isWeekendNow());
+  // Días y grados configurables desde el panel (Desafíos y eventos).
+  const canPlayToday = config.enabled && desafioActivo(DESAFIOS.competencia, gradeOf(me), new Date(), () => config.anyDay || isWeekendNow());
 
   // Consulta liviana (desde el mapa, cada pocos segundos): ¿alguien me
   // invitó a un duelo en vivo recién?
@@ -277,7 +280,7 @@ export async function POST(request: NextRequest) {
   if (isTrialExpired(me)) return Response.json({ error: "Tu período de prueba terminó.", trialExpired: true }, { status: 403 });
   const config = isOpenClassroomStudent(me) ? { ...(await getCompetitionConfig()), enabled: false } : await getCompetitionConfig();
   if (!config.enabled) return Response.json({ error: "La competencia está apagada por el docente." }, { status: 403 });
-  const canPlayToday = config.anyDay || isWeekendNow();
+  const canPlayToday = desafioActivo(DESAFIOS.competencia, gradeOf(me), new Date(), () => config.anyDay || isWeekendNow());
   const notEligible = () =>
     Response.json(
       { error: `Para competir tenés que estar al día: completá tus mundos (podés tener hasta ${MAX_PENDING_WORLDS} sin terminar).` },
@@ -287,6 +290,10 @@ export async function POST(request: NextRequest) {
   // ---- Desafiar a un compañero ----
   if (action === "challenge") {
     const { to, mode, presetId } = body as { to?: string; mode?: DuelMode; presetId?: string };
+    // Apagada, fuera de fechas o de otro grado (Desafíos y eventos del panel).
+    if (!desafioActivo(DESAFIOS.competencia, gradeOf(me), new Date(), () => true)) {
+      return Response.json({ error: "La competencia no está disponible ahora." }, { status: 403 });
+    }
     if (!(await getEligibility(me.code)).eligible) return notEligible();
     const target = to ? await findStudentByCode(to) : undefined;
     if (!target || target.code === me.code || !sameClassroom(target, me)) {

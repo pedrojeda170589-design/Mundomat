@@ -10,6 +10,7 @@
 //
 // Solo datos y reglas puras (sin imports de la app salvo tipos), así lo usan
 // el servidor (compra) y la tienda (qué mostrar).
+import { configDe, diaPermitido, idDrop, ventanaConfigurada } from "@/lib/eventos/config";
 import type { StudentProgress } from "@/types";
 import type { ItemColeccion } from "./temporadas";
 
@@ -81,13 +82,19 @@ function inicioAR(fecha: string): number {
 }
 
 export function ventanaDrop(d: Drop): { desde: number; hasta: number } {
+  // Fechas configuradas en el panel (Desafíos y eventos).
+  const v = ventanaConfigurada(idDrop(d.id));
+  if (v === "apagado") return { desde: 0, hasta: 0 };
+  if (v) return v;
   const desde = inicioAR(d.desde);
   return { desde, hasta: desde + d.dias * DAY };
 }
 
 export function dropActivo(d: Drop, now: Date = new Date()): boolean {
   const { desde, hasta } = ventanaDrop(d);
-  return now.getTime() >= desde && now.getTime() < hasta;
+  if (!(now.getTime() >= desde && now.getTime() < hasta)) return false;
+  const cfg = configDe(idDrop(d.id));
+  return !cfg || cfg.modo === "auto" || diaPermitido(cfg, now);
 }
 
 // Lo que queda: «quedan 2 días», «¡último día!», «quedan 5 horas».

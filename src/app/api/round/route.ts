@@ -1,6 +1,6 @@
 import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt, recordFailedLookup } from "@/lib/rateLimit";
 import { NextRequest } from "next/server";
-import { findStudentByCode, getProgress, saveProgress } from "@/lib/data";
+import { findStudentByCode, getProgress, mundoHabilitadoPara, saveProgress } from "@/lib/data";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { empezarVuelta, saltarEnVuelta, validRoundId, vueltaEnCurso } from "@/lib/vuelta";
 
@@ -44,6 +44,9 @@ export async function POST(request: NextRequest) {
   if (!student) await recordFailedCodeAttempt(ip);
   if (!student) return Response.json({ error: "Código no encontrado." }, { status: 404 });
   if (isTrialExpired(student)) return Response.json({ error: "Tu período de prueba terminó." }, { status: 403 });
+  if (typeof body.skipIndex !== "number" && !(await mundoHabilitadoPara(student, worldId))) {
+    return Response.json({ error: "Este mundo no está habilitado.", disabled: true }, { status: 403 });
+  }
   const progress = await getProgress(student.code);
   const next =
     typeof body.skipIndex === "number"
