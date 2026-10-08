@@ -64,11 +64,18 @@ Además, los premios anteriores (vincha-relampago, lentes-turbo, medalla-rayo, s
 
 Las escenas son 1536×1024 (3:2), en JPG.
 
+## 6 bis. Islas de 4.º grado (`public/theme/grados/4/islas/mundo-<id>.png`)
+Las 108 islas de 4.º (8/10/2026), estilo «glaciares»: isla flotante con hielo celeste, carámbanos, lengas y un hilo de agua turquesa, y el tema de cada mundo arriba. Ambiente `THEMES.glaciar` (`src/lib/grades.ts`). Se hicieron en 12 láminas sobre fondo magenta y se procesaron con `scripts/coleccion/islas_lamina.py <lámina> 4 <id1> … <id9>`; las láminas quedan en `Descargas/cuentos_mm/islas4/`. El fondo del mapa de 4.º usa los paisajes de Santa Cruz de cada módulo.
+
 ## 7. Cuentos
 - `public/theme/grados/1/cuentos/tortuga-gigante-2.jpg`: corregida (la tortuga tenía tres ojos).
 
 ## 8. Anteojos y antifaces (regla del 5/10/2026)
 Todo lo que se pone en la cara se dibuja **de frente, sin patillas y sin vidrio** (nada que «se vea a través» y que debería tapar la cabeza), sobre fondo verde, y se procesa con `scripts/coleccion/anteojos_verde.py <lámina> <id1> … <id9>`. Las versiones anteriores quedan en `arte/coleccion/anteojos-viejos/`.
+
+## Estado (8/10/2026)
+- Islas de 4.º: 108 de 108.
+- Pendiente: «Mi escuela» (AG-22/CL-22), cuando lleguen las fotos de Pedro.
 
 ## Estado (6/10/2026)
 - **Colecciones: 260 de 260 ítems con imagen** (láminas 0 a 21 completas).

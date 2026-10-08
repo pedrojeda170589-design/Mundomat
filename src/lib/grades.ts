@@ -45,6 +45,18 @@ export const THEMES: Record<string, GradeTheme> = {
     dayBg: "bg-costa-day",
     nightBg: "bg-costa-night",
   },
+  // 4.º: islas con hielo glaciar (hechas por Claude en ChatGPT el 8/10/2026).
+  // El fondo del mapa usa los paisajes de Santa Cruz de cada módulo; si no
+  // hay módulos, el de la meseta.
+  glaciar: {
+    id: "glaciar",
+    label: "Glaciares y lagos",
+    island: (id) => (id === 48001 ? "/theme/grados/2/islas/practica.png" : `/theme/grados/4/islas/mundo-${id}.png`),
+    map: (stage) => `/theme/map/etapa-${stage}.jpg`,
+    scenery: "mountains",
+    dayBg: "bg-explorer-day",
+    nightBg: "bg-explorer-night",
+  },
   bosque: {
     id: "bosque",
     label: "Bosque de lengas",
@@ -74,7 +86,7 @@ export const GRADES: GradeDef[] = [
   { grade: 1, label: "1.º grado", theme: THEMES.costa, worlds: GRADE1_WORLDS, skills: GRADE1_SKILLS, masteryPct: 80, unlockPct: 60 },
   { grade: 2, label: "2.º grado", theme: THEMES.bosque, worlds: GRADE2_WORLDS, skills: GRADE2_SKILLS, masteryPct: 85, unlockPct: 60 },
   { grade: 3, label: "3.º grado", theme: THEMES.meseta, worlds: WORLDS, masteryPct: 90, unlockPct: 0 },
-  { grade: 4, label: "4.º grado", theme: THEMES.meseta, worlds: GRADE4_WORLDS, skills: GRADE4_SKILLS, masteryPct: 90, unlockPct: 60, publicado: false },
+  { grade: 4, label: "4.º grado", theme: THEMES.glaciar, worlds: GRADE4_WORLDS, skills: GRADE4_SKILLS, masteryPct: 90, unlockPct: 60, publicado: false },
 ];
 
 export const DEFAULT_GRADE = 3;
