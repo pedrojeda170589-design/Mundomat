@@ -75,3 +75,12 @@ rama, así nunca se pisan los archivos.
 - **Mundos bloqueados:** el servidor no acredita un mundo común que el
   docente bloqueó (`mundoHabilitadoPara` en `src/lib/data.ts`, usado por
   `/api/world-attempt` y `/api/round`).
+- **Apoyos visuales (desde el 8/10/2026):** en 1.º a 3.º toda actividad de
+  Matemática que hable de números, cálculos, medidas o la hora tiene que traer
+  un `apoyo` (`src/lib/activities.ts`, tipo `Apoyo`): `fila` («la fila del 80»
+  con toda la secuencia), `cuadro`, `recta` (con `salto` para sumar/restar o
+  multiplicar), `bloques`, `reloj`, `dinero` o `grupos`. Lo dibuja
+  `src/components/activities/Apoyos.tsx`. Si un apoyo daría la respuesta de
+  regalo, usá `ocultar` para poner un «?» en ese casillero.
+- **Cuentos:** se narran siempre con la voz del navegador, oración por
+  oración (no se usan audios grabados).

@@ -5,6 +5,13 @@ import type { ActivityCard, ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
 import { Q, fromBank, numberChoices, numberWord, numbered, pickOne, q, randInt, sample, shuffle } from "./util";
 
+// Fila de 10 (la decena del número) para mirar la serie: «la fila del 10»,
+// «la fila del 20»… En 1.º se muestra toda la secuencia (pedido de Pedro).
+function filaDe(n: number, marcar: number[] = [n], ocultar: number[] = []) {
+  const desde = Math.floor(n / 10) * 10;
+  return { tipo: "fila" as const, desde, hasta: desde + 9, marcar, ocultar, titulo: `La fila del ${desde}` };
+}
+
 const OBJ = ["🍎", "⭐", "🐟", "🎈", "🧸", "🌸", "🚗", "🐑", "🍪", "⚽", "🐧", "🦙"];
 
 function numCards(nums: number[], say = true): ActivityCard[] {
@@ -89,6 +96,7 @@ function compareNumbers(id: string, max: number): ActivitySpec {
     title: "",
     prompt: "¿Cuál es el número mayor?",
     cards: numCards([a, b]),
+    apoyo: { tipo: "recta", desde: 0, hasta: max, marcar: [a, b], etiquetasCada: max > 10 ? 5 : 1 },
     answerIds: [String(Math.max(a, b))],
     hint: "Pista: el mayor está más lejos en la fila de números.",
     skills: ["m-comparar"],
@@ -103,8 +111,11 @@ function afterBefore(id: string, max: number, kind: "despues" | "antes"): Activi
     id,
     title: "",
     prompt: kind === "despues" ? `¿Qué número viene después del ${n}?` : `¿Qué número viene antes del ${n}?`,
-    promptBig: kind === "despues" ? `${n} → ?` : `? → ${n}`,
     cards: numCards(numberChoices(ans, 3, 0, max + 1)),
+    apoyo:
+      Math.floor(ans / 10) === Math.floor(n / 10)
+        ? filaDe(n)
+        : { tipo: "fila", desde: Math.max(0, Math.min(n, ans) - 4), hasta: Math.max(n, ans) + 4, marcar: [n] },
     answerIds: [String(ans)],
     hint: kind === "despues" ? "Pista: después es uno más." : "Pista: antes es uno menos.",
     skills: ["m-orden"],
@@ -122,8 +133,8 @@ function missingInRow(id: string, max: number, step = 1): ActivitySpec {
     id,
     title: "",
     prompt: "¿Qué número falta?",
-    promptBig: row.map((x, i) => (i === hole ? "?" : String(x))).join("  "),
     cards: numCards(numberChoices(ans, 3, 0, max + step).map((x) => x)),
+    apoyo: { tipo: "fila", desde: row[0], hasta: row[3], paso: step, ocultar: [ans], titulo: step === 1 ? "Contá de a uno" : `De ${step} en ${step}` },
     answerIds: [String(ans)],
     hint: step === 1 ? "Pista: contá de a uno desde el primero." : `Pista: van de ${step} en ${step}.`,
     skills: step === 1 ? ["m-orden"] : ["m-numeros-100", "m-patrones"],
@@ -139,6 +150,7 @@ function orderNumbers(id: string, max: number): ActivitySpec {
     id,
     title: "",
     prompt: "Ordená de menor a mayor.",
+    apoyo: { tipo: "recta", desde: 0, hasta: max, etiquetasCada: max > 10 ? 5 : 1, titulo: "Los números en la recta: el menor está más cerca del 0" },
     items,
     correctOrder: sorted.map((s) => items.indexOf(s)),
     hint: "Pista: buscá primero el más chico.",
@@ -201,6 +213,10 @@ function calcPick(id: string, a: number, op: "+" | "−", b: number, skill: stri
     prompt: "¿Cuánto da?",
     promptBig: `${a} ${op} ${b}`,
     say: `¿Cuánto es ${numberWord(a)} ${op === "+" ? "más" : "menos"} ${numberWord(b)}?`,
+    apoyo:
+      Math.max(a, ans) <= 20
+        ? { tipo: "recta", desde: 0, hasta: Math.max(10, a, ans), marcar: [a], salto: { desde: a, cantidad: op === "+" ? b : -b } }
+        : { tipo: "recta", desde: 0, hasta: Math.ceil(Math.max(a, ans) / 10) * 10, paso: 10, marcar: [a] },
     cards: numCards(numberChoices(ans, 3, 0, 100)),
     answerIds: [String(ans)],
     hint,
@@ -233,7 +249,7 @@ function tensAndOnes(id: string): ActivitySpec {
     id,
     title: "",
     prompt: `Hay ${d} ${d === 1 ? "billete" : "billetes"} de $10 y ${u} ${u === 1 ? "moneda" : "monedas"} de $1. ¿Cuánta plata es?`,
-    promptBig: `${"💵".repeat(d)} ${"🪙".repeat(u)}`,
+    apoyo: { tipo: "dinero", piezas: [{ valor: 10, cantidad: d }, { valor: 1, cantidad: u }] },
     cards: numCards(
       shuffle([
         n,
@@ -255,7 +271,7 @@ function hundredChart(id: string): ActivitySpec {
     id,
     title: "",
     prompt: `En el cuadro de números, ¿qué número está ${kind === "derecha" ? "a la derecha" : kind} del ${n}?`,
-    promptBig: kind === "derecha" ? `${n} → ?` : kind === "abajo" ? `${n}\n↓\n?` : `?\n↑\n${n}`,
+    apoyo: { tipo: "cuadro", desde: Math.max(0, Math.floor(n / 10) * 10 - 10), hasta: Math.min(99, Math.floor(n / 10) * 10 + 19), marcar: [n], titulo: "El cuadro de números" },
     cards: numCards(shuffle([ans, kind === "derecha" ? n + 10 : n + 1, kind === "arriba" ? n + 10 : n - 1])),
     answerIds: [String(ans)],
     hint: "Pista: hacia abajo se suma 10, hacia arriba se resta 10, a la derecha se suma 1.",
@@ -275,6 +291,7 @@ function buildNumber(id: string, max: number): ActivitySpec {
     say: `Escribí el número ${numberWord(n)}.`,
     target: digits,
     tiles: shuffle([...digits, ...extra]),
+    apoyo: { tipo: "bloques", n },
     hint: `Pista: ${numberWord(n)} empieza con ${numberWord(Math.floor(n / 10) * 10)}.`,
     skills: ["m-numeros-100"],
   };
@@ -347,6 +364,7 @@ function boardGame(id: string): ActivitySpec {
     title: "",
     prompt: `Estoy en el casillero ${pos} y ${fwd ? "avanzo" : "retrocedo"} ${d}. ¿En qué casillero quedo?`,
     promptBig: `🎲 ${"⚀⚁⚂⚃⚄⚅"[d - 1]}`,
+    apoyo: { tipo: "fila", desde: 0, hasta: 24, marcar: [pos], titulo: "El tablero" },
     cards: numCards(numberChoices(ans, 3, 0, 25)),
     answerIds: [String(ans)],
     hint: fwd ? "Pista: avanzar es contar hacia adelante." : "Pista: retroceder es contar hacia atrás.",
