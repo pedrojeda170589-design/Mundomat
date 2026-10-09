@@ -29,7 +29,28 @@ export interface ActivityCard {
 }
 
 // Campos comunes a todas las actividades (opcionales).
+// Apoyo visual que se dibuja arriba de la consigna (pedido de Pedro,
+// 8/10/2026: «en 1.º y 2.º dar una imagen ilustrativa del tema: si dice "en
+// la fila del 80, ¿qué número termina en 3?", arriba tiene que estar la fila
+// del 80 con toda la secuencia»). Lo dibuja src/components/activities/VisualAid.tsx.
+export type Apoyo =
+  // Una tira de casilleros numerados (de a `paso`), con marcados y ocultos («?»).
+  | { tipo: "fila"; desde: number; hasta: number; paso?: number; marcar?: number[]; ocultar?: number[]; titulo?: string }
+  // Un pedazo del cuadro de números (10 columnas), con marcados y ocultos.
+  | { tipo: "cuadro"; desde: number; hasta: number; marcar?: number[]; ocultar?: number[]; titulo?: string }
+  // Recta numérica con marcas y, opcionalmente, un salto (para sumar o restar).
+  | { tipo: "recta"; desde: number; hasta: number; paso?: number; etiquetasCada?: number; marcar?: number[]; salto?: { desde: number; cantidad: number; paso?: number }; titulo?: string }
+  // Bloques de base 10 (centenas, decenas y unidades); con `mas`/`menos`, dos números.
+  | { tipo: "bloques"; n: number; mas?: number; menos?: number }
+  // Reloj de agujas.
+  | { tipo: "reloj"; h: number; m: number }
+  // Billetes y monedas.
+  | { tipo: "dinero"; piezas: { valor: number; cantidad: number }[] }
+  // Grupos de puntos (para sumar, repartir, multiplicar).
+  | { tipo: "grupos"; grupos: number[]; tachados?: number; titulo?: string };
+
 export interface ActivityCommon {
+  apoyo?: Apoyo; // apoyo visual arriba de la consigna
   skills?: string[]; // habilidades que trabaja (seguimiento por habilidad)
   say?: string; // consigna para escuchar (si difiere del texto)
   audio?: string; // consigna grabada
@@ -324,22 +345,23 @@ const NUMEROS_EN_PALABRAS: [number, string][] = [
 function buildNumerosActivities(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
 
-  // 1-2: reconocimiento — valor posicional
+  // 1-2: reconocimiento — valor posicional (con los bloques de base 10 de apoyo)
   for (let i = 0; i < 2; i++) {
     const n = randInt(100, 999);
     const digits = String(n).split("").map(Number);
     const posIdx = i === 0 ? 0 : 1; // centenas, luego decenas
     const posName = posIdx === 0 ? "centenas" : "decenas";
-    acts.push(
-      mcFromAnswer(
+    acts.push({
+      ...mcFromAnswer(
         `numeros-pos-${i}`,
         `Actividad ${i + 1}`,
         `En el número ${n}, ¿qué dígito está en el lugar de las ${posName}?`,
         digits[posIdx],
         `Pista: en ${n}, de izquierda a derecha están las centenas, las decenas y las unidades.`,
         3
-      )
-    );
+      ),
+      apoyo: { tipo: "bloques", n },
+    });
   }
 
   // 3: práctica — ordenar de menor a mayor
@@ -437,6 +459,9 @@ function buildNumerosActivities(): ActivitySpec[] {
       ? `¿Qué número va justo después de ${base}?`
       : `¿Qué número va justo antes de ${base + 1}?`,
     answer: isNext ? base + 1 : base,
+    apoyo: isNext
+      ? { tipo: "fila", desde: base - 4, hasta: base + 1, marcar: [base], ocultar: [base + 1] }
+      : { tipo: "fila", desde: base, hasta: base + 5, marcar: [base + 1], ocultar: [base] },
     hint: "Pista: fijate qué pasa con las decenas y las centenas al pasar de un número redondo al siguiente.",
   });
 
@@ -473,6 +498,7 @@ function buildNumerosActivities(): ActivitySpec[] {
     prompt: `Desafío: ¿cuál de estos dos números es mayor, ${bigA} o ${bigB}?`,
     choices: finalOpts.map(String),
     answerIndex: finalOpts.indexOf(bigger),
+    apoyo: { tipo: "recta", desde: 1000, hasta: 1500, paso: 50, etiquetasCada: 100, marcar: [bigA, bigB], titulo: "El mayor está más a la derecha" },
     hint: "Pista: comparalos cifra por cifra, empezando por la de los miles.",
   });
 

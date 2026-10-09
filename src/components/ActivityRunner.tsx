@@ -341,7 +341,7 @@ export default function ActivityRunner({
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-4">
         {phase === "question" && (
           <>
-            {world.grade !== 1 && !world.storyId && activity.type !== "pitagorica" && activity.type !== "reparto" && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
+            {(activity.apoyo || (world.grade !== 1 && !world.storyId && activity.type !== "pitagorica" && activity.type !== "reparto")) && <VisualAid key={`aid-${index}`} activity={activity} world={world} />}
             {activity.type === "pick" && (
               <PickActivity
                 key={`pick-${index}`}

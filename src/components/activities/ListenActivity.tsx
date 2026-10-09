@@ -3,10 +3,10 @@
 import Profe from "@/components/Profe";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { playClip, stopClip } from "@/lib/audio";
+import { stopClip } from "@/lib/audio";
 import { speak } from "@/lib/tts";
 import { bajarMusica } from "@/lib/musica";
-import { oraciones as sentences, vozUrl } from "@/lib/cuentos/voz";
+import { oraciones as sentences } from "@/lib/cuentos/voz";
 
 type Genre = "cuento" | "leyenda" | "fabula";
 
@@ -36,10 +36,10 @@ const LABEL: Record<Genre, { art: string; icon: string }> = {
 
 // Texto narrativo ilustrado, como diapositivas: cada escena muestra su
 // imagen y su texto, y mientras se lee en voz alta se resalta la oración
-// que suena (correspondencia imagen–texto–voz). Si hay audio grabado
-// (/audio/cuentos/<id>-<n>.mp3) se usa ese; si no, la voz del navegador
-// lee oración por oración. Al final se habilitan las preguntas. No suma
-// ni resta puntos.
+// que suena (correspondencia imagen–texto–voz). Lee SIEMPRE la voz del
+// navegador, oración por oración (pedido de Pedro, 8/10/2026: las voces
+// grabadas no siempre coincidían con los textos largos). Al final se
+// habilitan las preguntas. No suma ni resta puntos.
 export default function ListenActivity({
   title,
   storyId,
@@ -52,6 +52,7 @@ export default function ListenActivity({
   onCoinsChange,
   onFinish,
 }: Props) {
+  void storyId; // ya no se usa: no hay audios grabados por escena
   const reader = mode === "read";
   const [paid, setPaid] = useState(voiceCost <= 0);
   const [notice, setNotice] = useState<string | null>(null);
@@ -65,11 +66,10 @@ export default function ListenActivity({
   const parts = useMemo(() => scenes.map((s) => sentences(s.text)), [scenes]);
   const label = LABEL[genre];
 
-  // Una oración: voz grabada (Kokoro) si existe; si no, la del navegador.
+  // Una oración, con la voz del navegador (así lo que se escucha es
+  // exactamente lo que está escrito).
   function say(text: string, onDone: () => void) {
-    const url = vozUrl(text);
-    if (url) playClip({ audio: url, onEnd: onDone, onFallback: () => speak(text, onDone) });
-    else speak(text, onDone);
+    speak(text, onDone);
   }
 
   function read(k: number, advance: boolean) {
@@ -96,8 +96,7 @@ export default function ListenActivity({
       if (k === 0 && n === 0) say(title, () => token.current === my && say(parts[k][n], next));
       else say(parts[k][n], next);
     };
-    setCurrent("all");
-    playClip({ audio: `/audio/cuentos/${storyId}-${k + 1}.mp3`, onEnd: finish, onFallback: () => bySentence(0) });
+    bySentence(0);
   }
 
   useEffect(() => {

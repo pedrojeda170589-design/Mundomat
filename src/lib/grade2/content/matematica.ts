@@ -61,6 +61,7 @@ function buildMundo1(): ActivitySpec[] {
       say: `Buscá el número de la fila de los ${d} que termina en ${u}.`,
       cards: numCards(choices),
       answerIds: [String(target)],
+      apoyo: { tipo: "fila", desde: d, hasta: d + 9, titulo: `La fila del ${d}` },
       hint: `Pista: buscá en la fila del ${d} y avanzá hasta la columna del ${u}.`,
       skills: ["m2-numeros-100"],
     });
@@ -96,10 +97,10 @@ function buildMundo2(): ActivitySpec[] {
       id: `m2-${i}`,
       title: "",
       prompt: label,
-      promptBig: String(n),
       say: label,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "cuadro", desde: Math.floor(n / 10) * 10 - 10, hasta: Math.floor(n / 10) * 10 + 19, marcar: [n], titulo: "El cuadro de números" },
       hint: `Pista: fijate cómo cambian los dieces o los unos al moverte en el cuadro.`,
       skills: ["m2-numeros-100", "m2-calculo-mental"],
     });
@@ -122,6 +123,7 @@ function buildMundo3(): ActivitySpec[] {
       say: `Tocá el ${numberWord(target)}.`,
       cards: numCards(choices),
       answerIds: [String(target)],
+      apoyo: { tipo: "recta", desde: 0, hasta: 1000, paso: 100, titulo: "Los cienes en la recta" },
       hint: `Pista: el número tiene 3 cifras y termina con dos ceros.`,
       skills: ["m2-numeros-1000"],
     });
@@ -144,10 +146,10 @@ function buildMundo4(): ActivitySpec[] {
         id: `m4-${i}`,
         title: "",
         prompt,
-        promptBig: String(n),
         say: prompt,
         cards: numCards(choices),
         answerIds: [String(ans)],
+        apoyo: { tipo: "fila", desde: Math.floor(n / 10) * 10, hasta: Math.floor(n / 10) * 10 + 9 + (n % 10 === 9 ? 1 : 0), marcar: [n], titulo: `La fila del ${Math.floor(n / 10) * 10}` },
         hint: `Pista: sumá o restá 1 a la última cifra.`,
         skills: ["m2-numeros-1000", "m2-comparar-ordenar"],
       });
@@ -162,6 +164,7 @@ function buildMundo4(): ActivitySpec[] {
         prompt: `¿Cuál de estos dos números es el mayor?`,
         cards: numCards([a, b]),
         answerIds: [String(ans)],
+        apoyo: { tipo: "recta", desde: 100, hasta: 500, paso: 50, etiquetasCada: 100, marcar: [a, b], titulo: "El mayor está más a la derecha" },
         hint: `Pista: mirá primero la cifra de los cienes; si son iguales, mirá los dieces.`,
         skills: ["m2-comparar-ordenar"],
       });
@@ -199,6 +202,7 @@ function buildMundo5(): ActivitySpec[] {
       say: `Buscá el ${numberWord(target)}.`,
       cards: numCards(choices),
       answerIds: [String(target)],
+      apoyo: { tipo: "bloques", n: target },
       hint: `Pista: escuchá el nombre: empieza con los cienes y sigue con los dieces y unos.`,
       skills: ["m2-numeros-1000", "m2-comparar-ordenar"],
     });
@@ -224,6 +228,7 @@ function buildMundo6(): ActivitySpec[] {
         promptBig: String(num),
         cards: numCards([c * 100, c * 10, c]),
         answerIds: [String(c * 100)],
+        apoyo: { tipo: "bloques", n: num },
         hint: `Pista: está en el lugar de los cienes, así que vale ${c * 100}.`,
         skills: ["m2-valor-posicional"],
       });
@@ -236,6 +241,7 @@ function buildMundo6(): ActivitySpec[] {
         promptBig: String(num),
         cards: numCards([d * 10, d * 100, d]),
         answerIds: [String(d * 10)],
+        apoyo: { tipo: "bloques", n: num },
         hint: `Pista: está en el lugar de los dieces, así que vale ${d * 10}.`,
         skills: ["m2-valor-posicional"],
       });
@@ -251,6 +257,7 @@ function buildMundo6(): ActivitySpec[] {
         prompt: `¿Cuál es el desarme correcto de ${num}?`,
         cards: opts.map((o) => ({ id: o, big: o })),
         answerIds: [correct],
+        apoyo: { tipo: "bloques", n: num },
         hint: `Pista: ${c} cienes son ${c * 100}, ${d} dieces son ${d * 10} y ${u} unos son ${u}.`,
         skills: ["m2-valor-posicional"],
       });
@@ -295,16 +302,15 @@ function buildMundo8(): ActivitySpec[] {
     const seq = [start, start + step, start + 2 * step, start + 3 * step];
     const missingIdx = randInt(1, 2);
     const ans = seq[missingIdx];
-    const shown = seq.map((v, idx) => (idx === missingIdx ? "___" : String(v))).join(" - ");
     const choices = numberChoices(ans, 3, 0, 1000);
     acts.push({
       type: "pick",
       id: `m8-${i}`,
       title: "",
       prompt: `¿Qué número falta en la escala que va de ${step} en ${step}?`,
-      promptBig: shown,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "fila", desde: seq[0], hasta: seq[3], paso: step, ocultar: [ans], titulo: `De ${step} en ${step}` },
       hint: `Pista: sumale ${step} al número anterior.`,
       skills: ["m2-comparar-ordenar"],
     });
@@ -327,6 +333,7 @@ function buildMundo9(): ActivitySpec[] {
         prompt: `¿Cuál es el doble de ${base}?`,
         say: `¿Cuál es el doble de ${base}?`,
         cards: numCards(choices),
+        apoyo: base <= 20 ? { tipo: "grupos", grupos: [base, base], titulo: `Dos veces ${base}` } : { tipo: "bloques", n: base, mas: base },
         answerIds: [String(ans)],
         hint: `Pista: el doble es sumar dos veces el mismo número: ${base} + ${base}.`,
         skills: ["m2-calculo-mental"],
@@ -342,6 +349,7 @@ function buildMundo9(): ActivitySpec[] {
         prompt: `¿Cuál es la mitad de ${base}?`,
         say: `¿Cuál es la mitad de ${base}?`,
         cards: numCards(choices),
+        apoyo: { tipo: "grupos", grupos: [base], titulo: `Partí los ${base} en dos grupos iguales` },
         answerIds: [String(ans)],
         hint: `Pista: repartí ${base} en dos partes exactamente iguales.`,
         skills: ["m2-calculo-mental"],
@@ -365,6 +373,7 @@ function buildMundo10(): ActivitySpec[] {
       title: "",
       prompt: `¿Cuánto le falta a ${a} para llegar a 100?`,
       promptBig: `${a} + ___ = 100`,
+      apoyo: { tipo: "recta", desde: 0, hasta: 100, paso: 10, marcar: [a, 100], titulo: "Contá los saltos de 10 hasta el 100" },
       say: `¿Cuánto le falta a ${a} para completar 100?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
@@ -391,6 +400,7 @@ function buildMundo11(): ActivitySpec[] {
       promptBig: `${a} + ${b} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "recta", desde: 0, hasta: 1000, paso: 100, marcar: [a], salto: { desde: a, cantidad: b, paso: 100 } },
       hint: `Pista: sumá los primeros números (${Math.floor(a / 100)} + ${Math.floor(b / 100)}) y agregale los dos ceros.`,
       skills: ["m2-calculo-mental"],
     });
@@ -420,6 +430,7 @@ function buildMundo12(): ActivitySpec[] {
       promptBig: `${a} + ${b} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "bloques", n: a, mas: b },
       hint: `Pista: sumá unos con unos (${u1}+${u2}), dieces con dieces (${d1*10}+${d2*10}) y cienes con cienes.`,
       skills: ["m2-suma-algoritmos"],
     });
@@ -448,6 +459,7 @@ function buildMundo13(): ActivitySpec[] {
       promptBig: `${a} + ${b} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "bloques", n: a, mas: b },
       hint: `Pista: los unos suman ${u1 + u2}, que es 1 diez y ${ (u1 + u2) % 10 } unos. ¡Sumale ese diez a los dieces!`,
       skills: ["m2-suma-algoritmos"],
     });
@@ -475,6 +487,7 @@ function buildMundo14(): ActivitySpec[] {
       promptBig: `${a} − ${b} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "bloques", n: a, menos: b },
       hint: `Pista: a los dieces sacale dieces (${d1*10} - ${d2*10}) y a los unos sacale unos (${u1} - ${u2}).`,
       skills: ["m2-resta-algoritmos"],
     });
@@ -503,6 +516,7 @@ function buildMundo15(): ActivitySpec[] {
       promptBig: `${a} − ${b} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "bloques", n: a, menos: b },
       hint: `Pista: como a ${u1} no le podés sacar ${u2}, desarmá un diez de ${d1 * 10}. Quedan ${u1 + 10} unos.`,
       skills: ["m2-resta-algoritmos"],
     });
@@ -583,6 +597,7 @@ function buildMundo17(): ActivitySpec[] {
       promptBig: `${sumStr} = ?`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "grupos", grupos: Array(times).fill(n), titulo: `${times} grupos de ${n}` },
       hint: `Pista: sumá ${n} de forma repetida ${times} veces.`,
       skills: ["m2-multiplicacion-inicio"],
     });
@@ -606,6 +621,7 @@ function buildMundo18(): ActivitySpec[] {
       say: `Calculá cuántos cuadraditos hay en ${rows} filas de ${cols}.`,
       cards: numCards(choices),
       answerIds: [String(ans)],
+      apoyo: { tipo: "grupos", grupos: Array(rows).fill(cols), titulo: `${rows} filas de ${cols}` },
       hint: `Pista: podés multiplicar filas por columnas: ${rows} × ${cols}.`,
       skills: ["m2-multiplicacion-inicio"],
     });
@@ -626,6 +642,7 @@ function buildMundo19(): ActivitySpec[] {
       title: "",
       prompt: `¿Cuánto es 2 × ${factor}?`,
       promptBig: `2 × ${factor} = ?`,
+      apoyo: { tipo: "recta", desde: 0, hasta: 20, paso: 2, salto: { desde: 0, cantidad: 2 * factor, paso: 2 }, titulo: "Saltos de 2 en 2" },
       cards: numCards(choices),
       answerIds: [String(ans)],
       hint: `Pista: es el doble de ${factor}: ${factor} + ${factor}.`,
@@ -648,6 +665,7 @@ function buildMundo20(): ActivitySpec[] {
       title: "",
       prompt: `¿Cuánto es 5 × ${factor}?`,
       promptBig: `5 × ${factor} = ?`,
+      apoyo: { tipo: "recta", desde: 0, hasta: 50, paso: 5, salto: { desde: 0, cantidad: 5 * factor, paso: 5 }, titulo: "Saltos de 5 en 5" },
       cards: numCards(choices),
       answerIds: [String(ans)],
       hint: `Pista: contá de 5 en 5: todos los resultados de la tabla del 5 terminan en 0 o en 5.`,
@@ -670,6 +688,7 @@ function buildMundo21(): ActivitySpec[] {
       title: "",
       prompt: `¿Cuánto es 10 × ${factor}?`,
       promptBig: `10 × ${factor} = ?`,
+      apoyo: { tipo: "recta", desde: 0, hasta: 100, paso: 10, salto: { desde: 0, cantidad: 10 * factor, paso: 10 }, titulo: "Saltos de 10 en 10" },
       cards: numCards(choices),
       answerIds: [String(ans)],
       hint: `Pista: para multiplicar por 10, agregale un cero al ${factor}.`,
@@ -785,7 +804,9 @@ function buildMundo26(): ActivitySpec[] {
     q("Si un camino de piedras mide 2 metros, ¿cuántos centímetros son?", [["2️⃣0️⃣0️⃣", "200 cm"], ["2️⃣0️⃣", "20 cm"], ["2️⃣0️⃣0️⃣0️⃣", "2000 cm"]], 0, "Pista: si 1 m son 100 cm, 2 m son el doble: 200 cm."),
     q("¿Cuál de estas cosas mide aproximadamente 1 centímetro?", [["🐜", "El ancho de una uña o un bichito chico"], ["🚪", "La altura de una puerta"], ["🚗", "El largo de un auto"]], 0, "Pista: 1 centímetro es una medida chiquita en la regla."),
   ];
+  const regla = new Set([0, 3, 5, 6]);
   return qList.map((item, i) => ({
+    ...(regla.has(i) ? { apoyo: { tipo: "recta" as const, desde: 0, hasta: 100, paso: 10, titulo: "1 metro = 100 centímetros" } } : {}),
     type: "pick",
     id: `m26-${i}`,
     title: "",
@@ -833,16 +854,40 @@ function buildMundo28(): ActivitySpec[] {
     q("Si hoy es martes, ¿qué día fue ayer?", [["📅", "Lunes"], ["📅", "Miércoles"], ["📅", "Jueves"]], 0, "Pista: el día anterior al martes es el primer día de la semana escolar."),
     q("¿Qué mes del año tiene solo 28 o 29 días?", [["❄️", "Febrero"], ["☀️", "Enero"], ["🍂", "Marzo"]], 0, "Pista: es el mes más corto del año."),
   ];
-  return qList.map((item, i) => ({
+  // Relojes dibujados (apoyo visual) para las preguntas de la hora.
+  const relojDe: Record<number, { h: number; m: number }> = { 0: { h: 10, m: 10 }, 1: { h: 4, m: 0 }, 2: { h: 2, m: 30 }, 3: { h: 12, m: 0 } };
+  const banco: ActivitySpec[] = qList.map((item, i) => ({
     type: "pick",
     id: `m28-${i}`,
     title: "",
     prompt: item.prompt,
     cards: shuffle(item.options.map(([emoji, label], idx) => ({ id: `o${idx}`, emoji, label }))),
     answerIds: [`o${item.answer}`],
+    ...(relojDe[i] ? { apoyo: { tipo: "reloj" as const, ...relojDe[i] } } : {}),
     hint: item.hint ?? "Pista: recordá cómo leemos el reloj y los días en el calendario.",
     skills: ["m2-tiempo-reloj"],
   }));
+  // Y tres «¿qué hora marca?» con un reloj distinto en cada vuelta.
+  const leer: ActivitySpec[] = [0, 1, 2].map((k) => {
+    const h = randInt(1, 12);
+    const media = k === 2 || Math.random() < 0.4;
+    const m = media ? 30 : 0;
+    const txt = (hh: number, mm: number) => `${hh === 1 ? "La 1" : `Las ${hh}`} ${mm === 30 ? "y media" : "en punto"}`;
+    const otras = shuffle([txt(h, m === 30 ? 0 : 30), txt(h === 12 ? 1 : h + 1, m), txt(h === 1 ? 12 : h - 1, m)]).slice(0, 2);
+    const opciones = shuffle([txt(h, m), ...otras]);
+    return {
+      type: "pick",
+      id: `m28-reloj-${k}`,
+      title: "",
+      prompt: "¿Qué hora marca el reloj?",
+      apoyo: { tipo: "reloj", h, m },
+      cards: opciones.map((o) => ({ id: o, label: o, emoji: "🕒" })),
+      answerIds: [txt(h, m)],
+      hint: m === 30 ? "Pista: la aguja larga en el 6 es «y media»; la corta está pasando un número." : "Pista: la aguja larga en el 12 es «en punto»; la corta marca la hora.",
+      skills: ["m2-tiempo-reloj"],
+    };
+  });
+  return [...leer, ...shuffle(banco).slice(0, 5)];
 }
 
 // Despachador principal de actividades de Matemática de 2.º grado

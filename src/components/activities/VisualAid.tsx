@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
+import ApoyoVisual from "./Apoyos";
 
 // Ilustraciones que acompañan a cada actividad para que sea más amena y,
 // cuando se puede, ayuden a resolverla: grupos de fichas para sumar y
@@ -42,6 +43,39 @@ const KEYWORD_ICONS: [RegExp, string, string][] = [
   [/mate\b/i, "mate", "Mate"],
   [/pelota/i, "pelota", "Pelota"],
 ];
+
+// Dibujos (emoji) para ilustrar el tema de la consigna en las actividades
+// de texto de 2.º y 3.º (pedido de Pedro, 8/10/2026: «una imagen
+// ilustrativa del tema»). Se muestran como mucho tres, grandes.
+const EMOJI_TEMA: [RegExp, string][] = [
+  [/\bagua\b|\bríos?\b|\blagos?\b/i, "💧"], [/\blluvia|llueve/i, "🌧️"], [/\bnieve|nevad/i, "❄️"], [/\bviento/i, "🌬️"],
+  [/\bsol\b/i, "☀️"], [/\bluna\b/i, "🌙"], [/estrella/i, "⭐"], [/\bnube/i, "☁️"], [/planeta|tierra gira|la tierra\b/i, "🌍"],
+  [/\bplantas?\b|semilla|germin/i, "🌱"], [/\bárbol|\bárboles/i, "🌳"], [/\bflor(es)?\b/i, "🌸"], [/\bhojas?\b/i, "🍃"], [/hongo/i, "🍄"],
+  [/\boveja|\blana\b|esquila/i, "🐑"], [/\bvaca|\bleche\b/i, "🐄"], [/\bcaballo/i, "🐎"], [/\bperro/i, "🐕"], [/\bgato\b|\bgatos\b/i, "🐈"],
+  [/\bpájaro|\baves?\b/i, "🐦"], [/\bpez\b|\bpeces\b|pesca/i, "🐟"], [/\binsecto|\bhormiga/i, "🐜"], [/\bmariposa/i, "🦋"], [/\babeja|\bmiel\b/i, "🐝"],
+  [/\bhuevo/i, "🥚"], [/\bpan\b|panader/i, "🍞"], [/\bfruta|\bmanzana/i, "🍎"], [/\bverdura|\bhuerta/i, "🥕"], [/\bcomida|aliment/i, "🍽️"],
+  [/\bdientes?\b|cepill/i, "🦷"], [/\bcorazón/i, "❤️"], [/\bhuesos?\b|esqueleto/i, "🦴"], [/\bmúsculo/i, "💪"], [/\bojos?\b|\bvista\b/i, "👀"], [/\boído|\boreja/i, "👂"],
+  [/\bimán|magnet/i, "🧲"], [/\bluz\b|linterna|lámpara/i, "💡"], [/\bsonido|\bmúsica|instrumento/i, "🎵"], [/\bsombra/i, "🌗"], [/\bhielo\b/i, "🧊"], [/\bfuego\b|calor/i, "🔥"],
+  [/\bmadera\b/i, "🪵"], [/\bmetal\b|hierro/i, "⚙️"], [/\bvidrio|botella/i, "🍾"], [/\bplástico/i, "🧴"], [/\bpiedra|\broca\b/i, "🪨"],
+  [/colectivo|ómnibus|\bmicro\b/i, "🚌"], [/\btren\b|ferrocarril/i, "🚂"], [/\bbarco|\bpuerto\b|\bnavega/i, "⛵"], [/\bavión|aeropuerto/i, "✈️"], [/\bauto\b|\bautos\b|camión/i, "🚗"], [/\bbicicleta/i, "🚲"],
+  [/\bescuela\b|\baula\b/i, "🏫"], [/\bhospital|\bmédic/i, "🏥"], [/\bcasa\b|\bcasas\b|vivienda/i, "🏠"], [/\bplaza\b/i, "🛝"], [/\bciudad/i, "🏙️"], [/\bcampo\b|\bestancia|rural/i, "🌾"],
+  [/montaña|cordillera|\bcerro/i, "🏔️"], [/\bmar\b|\bcosta\b|\bplaya/i, "🌊"], [/\bglaciar/i, "🧊"], [/\bmeseta|estepa/i, "🏜️"], [/\bbosque/i, "🌲"], [/\bvolcán/i, "🌋"],
+  [/\bbandera/i, "🇦🇷"], [/\bmapa\b|\bplano\b/i, "🗺️"], [/\bcalendario|\bmes(es)?\b|\bsemana/i, "📅"], [/\bcarta\b|\bcorreo|\bsobre\b/i, "✉️"], [/\bdiario|noticia/i, "📰"],
+  [/\bcuento|\blibro|leyenda|fábula/i, "📖"], [/\bpoesía|\bpoema|\bverso/i, "🪶"], [/\bteatro\b/i, "🎭"], [/\breceta|cocina/i, "🍳"], [/\btrabaj/i, "🧑‍🔧"],
+  [/herbívor/i, "🥬"], [/carnívor/i, "🥩"], [/\banimal(es)?\b|seres vivos|ser vivo/i, "🐾"], [/urban|\bciudad/i, "🏙️"], [/\bclima\b|temperatura/i, "🌤️"],
+  [/lavar|jabón|higiene/i, "🧼"], [/paisaje/i, "🏞️"], [/transporte/i, "🚌"], [/cerebro/i, "🧠"], [/pulmon|respira/i, "🫁"], [/\bsalud\b|vacuna/i, "🩺"],
+  [/familia/i, "👨‍👩‍👧"], [/\bjuego|\bjugar/i, "🧸"], [/\bnormas?\b|\breglas?\b/i, "📋"], [/\bvoto|\belecci/i, "🗳️"], [/historia|antiguo/i, "⏳"],
+  [/\bbasura|recicl/i, "♻️"], [/\bplata\b|\bdinero|\bprecio|\bmonedas?\b|\bbillete/i, "💰"], [/\bmedir|\bregla\b|\bmetros?\b|centímetro/i, "📏"], [/\bpesa\b|\bpesar\b|\bkilos?\b|balanza/i, "⚖️"], [/\blitros?\b|capacidad/i, "🥛"],
+];
+
+function emojisDelTema(text: string): string[] {
+  const out: string[] = [];
+  for (const [re, e] of EMOJI_TEMA) {
+    if (re.test(text) && !out.includes(e)) out.push(e);
+    if (out.length >= 3) break;
+  }
+  return out;
+}
 
 const COLORS = ["#3b82f6", "#f97316", "#10b981", "#ec4899", "#8b5cf6", "#eab308"];
 
@@ -193,10 +227,32 @@ function mathAid(text: string, world: WorldDef): React.ReactNode | null {
 }
 
 export default function VisualAid({ activity, world }: { activity: ActivitySpec; world: WorldDef }) {
+  // Apoyo explícito de la actividad (fila, cuadro, recta, bloques, reloj…).
+  if (activity.apoyo) {
+    return (
+      <div className="w-full max-w-md rounded-2xl bg-white/90 border-2 border-sky-200 px-3 py-2 flex items-center justify-center shadow-sm">
+        <ApoyoVisual apoyo={activity.apoyo} />
+      </div>
+    );
+  }
+  // En 1.º solo se usan los apoyos explícitos (sus actividades ya traen dibujos).
+  if ((world.grade ?? 3) === 1) return null;
   const text = textOf(activity);
   const math = world.subject === "matematica" ? mathAid(text, world) : null;
   const icons = KEYWORD_ICONS.filter(([re]) => re.test(text)).slice(0, 3);
-  if (!math && icons.length === 0) return null;
+  // Si no hay apoyo de matemática ni dibujo propio, un dibujo del tema.
+  const yaTieneDibujo = activity.type === "pick" && (!!activity.promptEmoji || activity.cards.some((c) => c.emoji || c.image));
+  const tema = !math && icons.length === 0 && !yaTieneDibujo ? emojisDelTema(text) : [];
+  if (!math && icons.length === 0 && tema.length === 0) return null;
+  if (tema.length) {
+    return (
+      <div className="w-full max-w-md rounded-2xl bg-white/85 border-2 border-amber-200 px-3 py-1.5 flex items-center justify-center gap-5 shadow-sm" aria-hidden>
+        {tema.map((e) => (
+          <span key={e} className="text-5xl leading-none">{e}</span>
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="w-full max-w-md rounded-2xl bg-white/85 border-2 border-amber-200 px-3 py-2 flex items-center justify-center gap-4 flex-wrap shadow-sm">
       {math}
