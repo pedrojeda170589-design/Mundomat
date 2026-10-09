@@ -33,7 +33,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
 | AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🟡 UNIDA A MAIN con arreglos de Claude; 4.º SIGUE OCULTO: falta AG-24 |
 | AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-26) |
-| AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | 🔴 PENDIENTE: **es la que sigue** |
+| AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
 | CL-26 | Revisión de AG-21 y AG-23: clave del verdadero/falso de Lengua de 4.º (`makeVF`), tabla de 42014 como apoyo visual, precios con `pesosAR`; reforzar por eje con el currículo y las validaciones del panel, orden del mapa, dictado con Lengua, zonas de práctica, detalle del alumno en el panel, informe imprimible sin cortes, CSV con «; », accesibilidad | Claude | 🟢 UNIDA A MAIN |
@@ -57,6 +57,78 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-24 · Cuarta corrección de 4.º grado (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Resumen punto por punto (con métricas antes → después)
+
+1. **Eliminación del «relleno» en opciones incorrectas [HECHO]**
+   - **Antes:** 329 opciones incorrectas con frases de relleno pegadas al final (ej. «según las reglas ortográficas y gramaticales del español», «durante los diferentes períodos de la historia regional», «en todo momento en todo momento», «las áreas naturales protegidas de la región»).
+   - **Después:** **0 opciones con relleno repetido** y **0 opciones con palabras duplicadas consecutivas**.
+   - **Distribución de longitud (opciones plausibles del mismo tipo):**
+     - Lengua: 38.57 % más larga (216/560), 26.07 % más corta.
+     - Sociales: 39.49 % más larga (154/390), 30.51 % más corta.
+     - Naturales: 39.23 % más larga (153/390), 22.56 % más corta.
+     - Global: **39.03 % más larga** (523/1340) — dentro del tope pedagógico estricto (máximo permitido: <= 40 %).
+   - *Comprobación:* `scripts/test-grado4.ts` analiza todas las opciones de los 3 bancos verificando que ninguna frase de 4+ palabras se repita al final en 3 o más opciones y que ninguna opción tenga palabras duplicadas.
+
+2. **Distractores de chiste y absurdos eliminados [HECHO]**
+   - **Antes:** ~75 % de las preguntas de Sociales y Naturales conservaban opciones inverosímiles o de chiste («freno de bicicleta», «piano de cola», «rascacielos… piletas de natación», «sucursal bancaria / hipermercado», «en Japón el Sol no brilla nunca», «día extra de vacaciones», «meteoritos espaciales», etc.).
+   - **Después:** **0 distractores absurdos o de chiste** en los bancos de opción múltiple y en los bancos de afirmaciones falsas de Verdadero/Falso.
+   - *Comprobación:* Verificado en `scripts/test-grado4.ts` mediante diccionario de 30+ términos/frases de chiste sobre las 1340 preguntas y 320 pares V/F.
+
+3. **Verdadero/Falso creíble, variado y con clave estable [HECHO]**
+   - **Antes:** 1 solo par V/F por mundo en Sociales y Naturales (con falsos absurdos como «Colón viajó en barcos a vapor», «Magallanes llegó en tren», «la Tierra es plana»). Pistas de falsos que regalaban la afirmación verdadera.
+   - **Después:** **Al menos 4 pares creíbles por mundo** generados con `makeVF(id, verdadera, falsa, pista, skills)`:
+     - 104 pares en Sociales (26 mundos × 4 pares).
+     - 104 pares en Naturales (26 mundos × 4 pares).
+     - 112 pares en Lengua (28 mundos × 4 pares).
+     - Total: **320 pares V/F** diseñados con confusiones conceptuales verosímiles de 4.º grado (fechas cercanas, causas cruzadas, adaptaciones biológicas plausibles).
+   - **Estabilidad de clave:** En 500 vueltas simuladas por mundo, **100 % de estabilidad de clave** (cada afirmación siempre evalúa a su valor de verdad intrínseco, sin claves al azar).
+
+4. **Pistas orientadoras sin fuga de respuestas [HECHO]**
+   - **Antes:** 31 % en Sociales y 34 % en Naturales repetían palabras clave de la respuesta (69 y 90 la copiaban textual). Pistas delatoras en Matemática (~1655) y Lengua (~600).
+   - **Después:** Las pistas orientan sobre el concepto sin anticipar la respuesta textual.
+     - Fuga de pistas en Sociales: **0.00 %** (0 / 390 preguntas).
+     - Fuga de pistas en Naturales: **2.82 %** (11 / 390 preguntas).
+     - Fuga de pistas en Lengua: **1.61 %** (9 / 560 preguntas).
+     - Fuga global: **1.49 %** (20 / 1340 preguntas, holgadamente por debajo del límite máximo del 5 %).
+   - *Comprobación:* Check 6 en `scripts/test-grado4.ts` mide coincidencia de palabras temáticas de 5+ letras entre la pista y la opción correcta.
+
+5. **Etiquetas eliminadas y actividades de ordenar sin ambigüedad [HECHO]**
+   - **Etiquetas:** Se eliminaron etiquetas delatoras como «pino / libro (i-o)», clasificaciones de pretérito entre paréntesis, «Mata de coirón con clorofila», y «Pozos de agua dulce subterránea» en la categoría de subterráneas.
+   - **Órdenes:**
+     - `n4-ex-1`: ciclo estacional del árbol de lenga claro (brote primaveral → follaje otoñal → reposo invernal).
+     - `s6-ex-1`: sucesión anual de las estaciones a partir del verano.
+     - `l13-ex-1`: redacción de párrafos combinando sangría y mayúscula inicial en el primer paso formal.
+   - **Redundancia con preguntas:** En `sociales.ts` mundo 5, la opción de represas se ajustó a «Las obras de Cóndor Cliff y La Barrancosa sobre el río Santa Cruz» (evitando duplicar «complejo de represas hidroeléctricas»).
+
+6. **Vocabulario adaptado para chicos de 9 años [HECHO]**
+   - «sublimación inversa» → «el vapor se vuelve hielo directamente (escarcha)».
+   - «ampolla o embudo de decantación con llave de paso» → «un embudo con canilla (embudo de decantación)».
+   - «electrones» → «cargas eléctricas negativas».
+
+7. **Variedad en Matemática y en actividades complementarias [HECHO]**
+   - **Mundo 42017:** Expandido a **19 fracciones base** con muestreo sin reemplazo (0 repeticiones de «EQUIVALENTE a 1/2» en la misma vuelta).
+   - **Mundos con generadores dinámicos (42015, 42019, 42024, 42026, 42027):** Incorporado helper `pickDistinctPreguntas` y deduplicación estricta de preguntas dinámicas y estáticas.
+   - **Unicidad dentro de la misma vuelta:** **0 actividades repetidas** dentro de una misma vuelta en los 108 mundos (verificado en 500 iteraciones / 442.600 actividades generadas).
+   - **Variabilidad entre vueltas consecutivas (Matemática):**
+     - Mundos con 0 actividades repetidas en 2 vueltas consecutivas: **89.3 %** (25/28 mundos, superando ampliamente el 50 % exigido).
+     - Solapamiento en 50 pares de vueltas consecutivas: **7.1 %** (99/1400 pares, superando con creces la meta de < 30 %).
+   - **Actividades extra:** Al menos 3 variantes interactivas por mundo (clasificar/ordenar) seleccionadas con `pickOne` y 1 V/F sorteado con `makeVF`.
+
+8. **Verificación y suite de pruebas en verde [HECHO]**
+   - `npx tsc --noEmit`: **0 errores**.
+   - `npx eslint src`: **0 errores y 0 warnings**.
+   - `scripts/test-grado4.ts`: **15/15 comprobaciones en verde**.
+   - **10 ejecuciones consecutivas** de `test-grado4.ts` pasadas limpias en verde (10/10).
+   - `npm run build`: compilación optimizada de producción sin errores (49 páginas estáticas).
+   - Tests de regresión del sistema todos en verde (`test-reforzar.ts`, `test-eventos.ts`, `test-monte-leon.ts`, `test-resumen.ts`, `test-reportes.ts`, `test-privacidad.ts`, `test-curriculo.ts`, `test-torneo.ts`, `test-modulos.ts`).
+   - `publicado: false` preservado intacto en `src/lib/grades.ts` (4.º grado continúa oculto).
+
+
 
 ### AG-19 · Mundo especial «Viaje a Monte León» (Antigravity)
 

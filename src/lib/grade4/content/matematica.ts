@@ -45,6 +45,19 @@ function pluralize(n: number, singular: string, plural: string): string {
   return `${n} ${n === 1 ? singular : plural}`;
 }
 
+function pickDistinctPreguntas<T extends { p: string }>(items: T[], count: number): T[] {
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const it of shuffle(items)) {
+    if (!seen.has(it.p)) {
+      seen.add(it.p);
+      out.push(it);
+      if (out.length >= count) break;
+    }
+  }
+  return out;
+}
+
 function distinctChoices<T>(correct: T, candidates: T[], count = 3): T[] {
   const set = new Set<T>([correct]);
   for (const c of shuffle(candidates)) {
@@ -64,12 +77,22 @@ function distinctChoices<T>(correct: T, candidates: T[], count = 3): T[] {
 function buildMundo42001(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-num-100k"];
+  const usedScales = new Set<string>();
+  const usedFormados = new Set<string>();
+  const usedAnterior = new Set<number>();
+
   for (let i = 0; i < 8; i++) {
     if (i % 3 === 0) {
-      const step = pickOne([1000, 2000, 5000]);
-      const base = randInt(10, 70) * 1000;
+      let step = pickOne([1000, 2000, 5000]);
+      let base = randInt(10, 70) * 1000;
+      let missingIdx = randInt(1, 2);
+      while (usedScales.has(`${step}-${base}-${missingIdx}`)) {
+        step = pickOne([1000, 2000, 5000]);
+        base = randInt(10, 70) * 1000;
+        missingIdx = randInt(1, 2);
+      }
+      usedScales.add(`${step}-${base}-${missingIdx}`);
       const seq = [base, base + step, base + step * 2, base + step * 3];
-      const missingIdx = randInt(1, 2);
       const target = seq[missingIdx];
       const promptSeq = seq.map((v, idx) => (idx === missingIdx ? "___" : v.toLocaleString("es-AR"))).join(" — ");
       const choices = numberChoices(target, 3, 10000, 99999, step);
@@ -87,7 +110,9 @@ function buildMundo42001(): ActivitySpec[] {
         )
       );
     } else if (i % 3 === 1) {
-      const n = randInt(10001, 99998);
+      let n = randInt(10001, 99998);
+      while (usedAnterior.has(n)) n = randInt(10001, 99998);
+      usedAnterior.add(n);
       const isPosterior = Math.random() > 0.5;
       const target = isPosterior ? n + 1 : n - 1;
       const choices = numberChoices(target, 3, 10000, 99999);
@@ -97,7 +122,7 @@ function buildMundo42001(): ActivitySpec[] {
             `¿Cuál es el número ${isPosterior ? "posterior (el siguiente)" : "anterior"} de ${n.toLocaleString("es-AR")}?`,
             choices.map((c) => ["📍", c.toLocaleString("es-AR")]),
             choices.indexOf(target),
-            `Pista: restale 1 para el anterior o sumale 1 para el posterior.`
+            "Pista: restale 1 para el anterior o sumale 1 para el posterior."
           ),
           `m42001-${i}`,
           "",
@@ -105,12 +130,19 @@ function buildMundo42001(): ActivitySpec[] {
         )
       );
     } else {
-      // Garantizar cifras distintas para que jamás se dupliquen las opciones
-      const dm = randInt(2, 9);
+      let dm = randInt(2, 9);
       let um = randInt(1, 9);
       while (um === dm) um = randInt(1, 9);
       let c = randInt(1, 9);
       while (c === dm || c === um) c = randInt(1, 9);
+      while (usedFormados.has(`${dm}-${um}-${c}`)) {
+        dm = randInt(2, 9);
+        um = randInt(1, 9);
+        while (um === dm) um = randInt(1, 9);
+        c = randInt(1, 9);
+        while (c === dm || c === um) c = randInt(1, 9);
+      }
+      usedFormados.add(`${dm}-${um}-${c}`);
 
       const target = dm * 10000 + um * 1000 + c * 100;
       const fake1 = dm * 10000 + c * 1000 + um * 100;
@@ -143,13 +175,24 @@ function buildMundo42001(): ActivitySpec[] {
 function buildMundo42002(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-num-1m"];
+  const usedLana = new Set<string>();
+  const usedSeries = new Set<string>();
+
   for (let i = 0; i < 8; i++) {
     if (i % 2 === 0) {
-      const cm = randInt(1, 8);
+      let cm = randInt(1, 8);
       let dm = randInt(1, 9);
       while (dm === cm) dm = randInt(1, 9);
       let um = randInt(1, 9);
       while (um === cm || um === dm) um = randInt(1, 9);
+      while (usedLana.has(`${cm}-${dm}-${um}`)) {
+        cm = randInt(1, 8);
+        dm = randInt(1, 9);
+        while (dm === cm) dm = randInt(1, 9);
+        um = randInt(1, 9);
+        while (um === cm || um === dm) um = randInt(1, 9);
+      }
+      usedLana.add(`${cm}-${dm}-${um}`);
 
       const target = cm * 100000 + dm * 10000 + um * 1000;
       const fake1 = cm * 100000 + um * 10000 + dm * 1000;
@@ -167,7 +210,7 @@ function buildMundo42002(): ActivitySpec[] {
             `Un cargamento de lana en el puerto pesa ${cmStr}, ${dmStr} y ${umStr} kilos. ¿A cuántos kilos equivale?`,
             choices.map((c) => ["⚖️", `${c.toLocaleString("es-AR")} kg`]),
             choices.indexOf(target),
-            `Pista: una centena de mil equivale a 100.000 unidades.`
+            "Pista: una centena de mil equivale a 100.000 unidades."
           ),
           `m42002-${i}`,
           "",
@@ -175,9 +218,16 @@ function buildMundo42002(): ActivitySpec[] {
         )
       );
     } else {
-      const base = randInt(100, 800) * 1000;
-      const step = pickOne([10000, 50000]);
-      const missingIdx = randInt(1, 3);
+      let base = randInt(100, 800) * 1000;
+      let step = pickOne([10000, 50000]);
+      let missingIdx = randInt(1, 3);
+      while (usedSeries.has(`${base}-${step}-${missingIdx}`)) {
+        base = randInt(100, 800) * 1000;
+        step = pickOne([10000, 50000]);
+        missingIdx = randInt(1, 3);
+      }
+      usedSeries.add(`${base}-${step}-${missingIdx}`);
+
       const seq = [base, base + step, base + step * 2, base + step * 3];
       const target = seq[missingIdx];
       const promptSeq = seq.map((v, idx) => (idx === missingIdx ? "___" : v.toLocaleString("es-AR"))).join(" — ");
@@ -217,12 +267,17 @@ function buildMundo42003(): ActivitySpec[] {
     { nombre: "Puerto San Julián", min: 10500, max: 12000 },
   ];
 
+  const usedNumbers = new Set<number>();
   for (let i = 0; i < 8; i++) {
     const ciu = ciudadesRealistas[i % ciudadesRealistas.length];
     if (i % 3 === 0) {
       // Descomposición polinómica multiplicativa
       // Usar población realista dentro del rango [ciu.min, ciu.max]
-      const n = randInt(Math.floor(ciu.min / 10), Math.floor(ciu.max / 10)) * 10;
+      let n = randInt(Math.floor(ciu.min / 10), Math.floor(ciu.max / 10)) * 10;
+      while (usedNumbers.has(n)) {
+        n = randInt(Math.floor(ciu.min / 10), Math.floor(ciu.max / 10)) * 10;
+      }
+      usedNumbers.add(n);
       const strN = String(n);
       const terms: { d: number; f: number; s: string }[] = [];
       for (let pos = 0; pos < strN.length; pos++) {
@@ -252,9 +307,15 @@ function buildMundo42003(): ActivitySpec[] {
       );
     } else if (i % 3 === 1) {
       // Valor posicional con cifras ÚNICAS (sin ambigüedades)
-      const digits: number[] = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 5);
-      const [dm, um, c, d, u] = digits;
-      const n = dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+      let digits: number[] = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 5);
+      let [dm, um, c, d, u] = digits;
+      let n = dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+      while (usedNumbers.has(n)) {
+        digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 5);
+        [dm, um, c, d, u] = digits;
+        n = dm * 10000 + um * 1000 + c * 100 + d * 10 + u;
+      }
+      usedNumbers.add(n);
 
       // Preguntar por dm o um
       const askDm = i % 2 === 1;
@@ -281,9 +342,15 @@ function buildMundo42003(): ActivitySpec[] {
       );
     } else {
       // Descomposición aditiva
-      const digits: number[] = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
-      const [d1, d2, d3, d4] = digits;
-      const n = d1 * 10000 + d2 * 1000 + d3 * 100 + d4;
+      let digits: number[] = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
+      let [d1, d2, d3, d4] = digits;
+      let n = d1 * 10000 + d2 * 1000 + d3 * 100 + d4;
+      while (usedNumbers.has(n)) {
+        digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4);
+        [d1, d2, d3, d4] = digits;
+        n = d1 * 10000 + d2 * 1000 + d3 * 100 + d4;
+      }
+      usedNumbers.add(n);
       const targetStr = `${(d1 * 10000).toLocaleString("es-AR")} + ${(d2 * 1000).toLocaleString("es-AR")} + ${(d3 * 100).toLocaleString("es-AR")} + ${d4}`;
       const fake1 = `${(d1 * 1000).toLocaleString("es-AR")} + ${(d2 * 100).toLocaleString("es-AR")} + ${(d3 * 10).toLocaleString("es-AR")} + ${d4}`;
       const fake2 = `${(d2 * 10000).toLocaleString("es-AR")} + ${(d1 * 1000).toLocaleString("es-AR")} + ${(d3 * 100).toLocaleString("es-AR")} + ${d4}`;
@@ -367,6 +434,7 @@ function buildMundo42004(): ActivitySpec[] {
 function buildMundo42005(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-romanos"];
+  const usedCompPairs = new Set<string>();
 
   // Gran variedad de valores para números romanos (más de 25 opciones)
   const valores = [
@@ -419,10 +487,16 @@ function buildMundo42005(): ActivitySpec[] {
         )
       );
     } else {
-      // Comparación de números romanos sin revelar las cifras decimales en las opciones
+      // Comparación de números romanos sin duplicar en la misma vuelta
       const pairType = pickOne(["menor", "mayor"]);
       let a = pickOne([15, 40, 60, 90, 110, 140, 250, 400, 600, 900]);
       let b = a + pickOne([10, 25, 50, 100]);
+      while (usedCompPairs.has(`${Math.min(a, b)}-${Math.max(a, b)}`)) {
+        a = pickOne([15, 40, 60, 90, 110, 140, 250, 400, 600, 900]);
+        b = a + pickOne([10, 25, 50, 100]);
+      }
+      usedCompPairs.add(`${Math.min(a, b)}-${Math.max(a, b)}`);
+
       if (pairType === "mayor") {
         const temp = a;
         a = b;
@@ -438,7 +512,7 @@ function buildMundo42005(): ActivitySpec[] {
       acts.push(
         qToPick(
           q(
-            `¿Cuál de las siguientes relaciones de comparación entre números romanos es CORRECTA?`,
+            `Al comparar los números romanos ${romA} y ${romB}, ¿cuál de las siguientes relaciones es la CORRECTA?`,
             choices.map((c) => ["⚖️", c]),
             choices.indexOf(correctText),
             "Pista: convertí mentalmente cada número romano a decimal para comparar cuál es mayor o menor."
@@ -620,37 +694,52 @@ function buildMundo42008(): ActivitySpec[] {
 function buildMundo42009(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-mult-2cifras"];
+  const usedMental = new Set<string>();
+  const usedKM = new Set<number>();
+  const usedCine = new Set<number>();
+
   for (let i = 0; i < 8; i++) {
     if (i % 3 === 0) {
-      // Multiplicación por 2 cifras con input numérico
-      const a = randInt(120, 350);
-      // Decena entre 1 y 3, unidad entre 2 y 9 para que NUNCA sea 0 (evita pista "sumale a x 0")
+      let a = randInt(120, 350);
+      while (usedKM.has(a)) a = randInt(120, 350);
+      usedKM.add(a);
       const decenas = randInt(1, 3);
       const unidades = randInt(2, 9);
       const b = decenas * 10 + unidades;
       const prod = a * b;
+      const transportes = ["colectivo de larga distancia", "camión de reparto de encomiendas", "vehículo de mantenimiento vial"];
+      const tr = transportes[i % transportes.length];
       acts.push(
         makeInput(
           `m42009-in-${i}`,
-          `Un colectivo de larga distancia recorre ${a} km por día en las rutas de Santa Cruz. ¿Cuántos km recorrerá en ${b} días?`,
+          `Un ${tr} recorre ${a} km por día en las rutas de Santa Cruz. ¿Cuántos km recorrerá en ${b} días?`,
           prod,
           `Pista: calculá ${a} × ${decenas * 10} (${a * decenas * 10}) y sumale ${a} × ${unidades} (${a * unidades}).`,
           skills
         )
       );
     } else if (i % 3 === 1) {
-      // Problema con opciones
-      const filas = randInt(15, 30);
-      const asientos = randInt(12, 25);
+      let filas = randInt(14, 32);
+      let asientos = randInt(12, 28);
+      while (usedCine.has(filas * asientos)) {
+        filas = randInt(14, 32);
+        asientos = randInt(12, 28);
+      }
+      usedCine.add(filas * asientos);
       const total = filas * asientos;
       const choices = distinctChoices(total, [total + 100, Math.max(50, total - 100), total + 50], 3);
+      const recintos = [
+        `En el cine teatro de Río Gallegos hay ${filas} filas con ${asientos} butacas cada una. ¿Cuántas butacas hay en total?`,
+        `En el polideportivo de Caleta Olivia instalaron ${filas} hileras con ${asientos} sillas para un acto. ¿Cuántas sillas hay en total?`,
+        `En el centro cultural de El Calafate colocaron ${filas} filas de ${asientos} asientos para un festival. ¿Cuántas localidades hay en total?`,
+      ];
       acts.push(
         qToPick(
           q(
-            `En el cine teatro de Río Gallegos hay ${filas} filas con ${asientos} butacas cada una. ¿Cuántas butacas hay en total?`,
-            choices.map((c) => ["🪑", `${c.toLocaleString("es-AR")} butacas`]),
+            recintos[Math.floor(i / 3) % recintos.length],
+            choices.map((c) => ["🪑", `${c.toLocaleString("es-AR")} asientos`]),
             choices.indexOf(total),
-            `Pista: multiplicá la cantidad de filas por la cantidad de butacas (${filas} × ${asientos}).`
+            `Pista: multiplicá la cantidad de filas por la cantidad de asientos (${filas} × ${asientos}).`
           ),
           `m42009-${i}`,
           "",
@@ -658,13 +747,15 @@ function buildMundo42009(): ActivitySpec[] {
         )
       );
     } else {
-      // Repertorio de cálculo mental
-      const baseA = pickOne([15, 25, 30, 45, 50]);
-      const baseB = pickOne([4, 6, 8]);
+      let baseA: number, baseB: number;
+      do {
+        baseA = pickOne([12, 14, 15, 16, 18, 20, 24, 25, 30, 32, 35, 40, 45, 50, 60]);
+        baseB = pickOne([3, 4, 5, 6, 7, 8, 9]);
+      } while (usedMental.has(`${baseA}x${baseB}`));
+      usedMental.add(`${baseA}x${baseB}`);
       const prodBase = baseA * baseB;
       const mult10 = prodBase * 10;
       const choices = distinctChoices(mult10, [prodBase * 100, prodBase + 10, prodBase * 2], 3);
-
       acts.push(
         qToPick(
           q(
@@ -930,6 +1021,11 @@ function buildMundo42013(): ActivitySpec[] {
 function buildMundo42014(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-proporcionalidad", "m4-multiplos-divisores"];
+  const usedBases = new Set<number>();
+  const usedDivNums = new Set<number>();
+  const tablaShuffled = shuffle([0, 1, 2]);
+  let tablaIdx = 0;
+
   for (let i = 0; i < 8; i++) {
     const mod = i % 4;
     if (mod === 0) {
@@ -978,28 +1074,28 @@ function buildMundo42014(): ActivitySpec[] {
       const choices = distinctChoices(unitario, [unitario + 2, Math.max(2, unitario - 2), unitario * 2], 3);
       const tablaEscenarios = [
         {
-          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántos alfajores contiene 1 caja?`,
+          pregunta: "Mirá la tabla de proporcionalidad directa. ¿Cuántos alfajores contiene 1 caja?",
           columnas: ["Cajas", "Alfajores"],
           icono: "📦",
           item: "alfajores por caja",
           pista: `Pista: calculá el valor de una caja dividiendo ${total2} ÷ 2 o ${totalCajas} ÷ ${cantCajas}.`,
         },
         {
-          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántas botellas contiene 1 cajón?`,
+          pregunta: "Mirá la tabla de proporcionalidad directa. ¿Cuántas botellas contiene 1 cajón?",
           columnas: ["Cajones", "Botellas de jugo"],
           icono: "🧃",
           item: "botellas por cajón",
           pista: `Pista: dividí las botellas entre los cajones para encontrar cuántas van en 1 solo (${total2} ÷ 2).`,
         },
         {
-          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántas medialunas hay en 1 bandeja?`,
+          pregunta: "Mirá la tabla de proporcionalidad directa. ¿Cuántas medialunas hay en 1 bandeja?",
           columnas: ["Bandejas", "Medialunas"],
           icono: "🥐",
           item: "medialunas por bandeja",
           pista: `Pista: dividí la cantidad total por el número de bandejas para hallar la unidad (${total2} ÷ 2).`,
         },
       ];
-      const tEsc = pickOne(tablaEscenarios);
+      const tEsc = tablaEscenarios[tablaShuffled[tablaIdx++]];
       acts.push({
         ...qToPick(
           q(
@@ -1016,7 +1112,11 @@ function buildMundo42014(): ActivitySpec[] {
       });
     } else if (mod === 2) {
       // Múltiplos
-      const base = pickOne([6, 7, 8, 9, 12, 15]);
+      let base: number;
+      do {
+        base = pickOne([6, 7, 8, 9, 12, 15, 14, 18, 20]);
+      } while (usedBases.has(base));
+      usedBases.add(base);
       const factor = pickOne([4, 5, 6, 7, 8]);
       const mult = base * factor;
       const nonMult1 = mult + 1;
@@ -1038,7 +1138,11 @@ function buildMundo42014(): ActivitySpec[] {
       );
     } else {
       // Divisores
-      const num = pickOne([24, 30, 36, 40, 48, 60]);
+      let num: number;
+      do {
+        num = pickOne([24, 30, 36, 40, 48, 60, 42, 54, 72]);
+      } while (usedDivNums.has(num));
+      usedDivNums.add(num);
       const allDivs = [2, 3, 4, 5, 6, 8, 10, 12].filter((d) => num % d === 0);
       const allNonDivs = [7, 9, 11, 13, 14, 17, 19].filter((d) => num % d !== 0);
       const divCorrect = pickOne(allDivs);
@@ -1051,7 +1155,7 @@ function buildMundo42014(): ActivitySpec[] {
             `¿Cuál de los siguientes números es DIVISOR de ${num}?`,
             choices.map((c) => ["➗", String(c)]),
             choices.indexOf(divCorrect),
-            `Pista: un divisor de ${num} lo divide en partes exactas sin que sobre resto.`
+            `Pista: un divisor de ${num} divide al número de forma exacta, sin dejar resto.`
           ),
           `m42014-${i}`,
           "",
@@ -1071,114 +1175,86 @@ function buildMundo42014(): ActivitySpec[] {
 function buildMundo42015(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-frac-parte"];
-  const preguntas = [
-    {
-      p: "¿Cuántos paquetes de 1/4 kg de yerba mate se necesitan para completar 1 kg?",
-      opts: ["4 paquetes", "2 paquetes", "8 paquetes"],
-      ans: "4 paquetes",
-      hint: "En 1 kilo entran 4 cuartos (1/4 + 1/4 + 1/4 + 1/4 = 1).",
-    },
-    {
-      p: "¿Cuántos vasos de 1/2 litro de agua se necesitan para llenar una botella de 2 litros?",
-      opts: ["4 vasos", "2 vasos", "8 vasos"],
-      ans: "4 vasos",
-      hint: "En cada litro entran 2 medios litros. En 2 litros entran 2 × 2 = 4.",
-    },
-    {
-      p: "Una pizza se cortó en 8 porciones iguales y Tomás comió 3 porciones. ¿Qué fracción de la pizza comió?",
-      opts: ["3/8 de la pizza", "5/8 de la pizza", "3/4 de la pizza"],
-      ans: "3/8 de la pizza",
-      hint: "El numerador es la cantidad de porciones comidas (3) y el denominador el total (8).",
-    },
-    {
-      p: "Si comprás dos paquetes de 1/4 kg de café y un paquete de 1/2 kg, ¿cuánto café compraste en total?",
-      opts: ["1 kg de café", "3/4 kg de café", "1 1/2 kg de café"],
-      ans: "1 kg de café",
-      hint: "Dos paquetes de 1/4 kg suman 1/2 kg. Sumado a otro 1/2 kg forman 1 kg entero.",
-    },
-    {
-      p: "¿Cuántos octavos (1/8) forman medio kilo (1/2)?",
-      opts: ["4 octavos", "2 octavos", "8 octavos"],
-      ans: "4 octavos",
-      hint: "Un medio equivale a 4 octavos (4/8 = 1/2).",
-    },
-    {
-      p: "En una receta de cocina se piden 3/4 kg de harina. Si tenemos paquetes de 1/4 kg, ¿cuántos paquetes debemos usar?",
-      opts: ["3 paquetes", "4 paquetes", "2 paquetes"],
-      ans: "3 paquetes",
-      hint: "3/4 son exactamente tres partes de 1/4.",
-    },
-    {
-      p: "Si de una torta entera cortada en 4 porciones iguales queda solo 1 porción, ¿qué fracción se comió?",
-      opts: ["3/4 de la torta", "1/4 de la torta", "2/4 de la torta"],
-      ans: "3/4 de la torta",
-      hint: "Si queda 1 de 4, se comieron las otras 3: 3/4.",
-    },
-    {
-      p: "¿Cuál de las siguientes fracciones representa la MITAD exacta de una unidad?",
-      opts: ["1/2", "1/4", "3/4"],
-      ans: "1/2",
-      hint: "1/2 significa una parte de dos iguales: la mitad.",
-    },
-    {
-      p: "¿Cuántos potes de 1/4 kg de dulce de leche se necesitan para reunir 1 1/2 kg?",
-      opts: ["6 potes", "4 potes", "8 potes"],
-      ans: "6 potes",
-      hint: "En 1 kg entran 4 cuartos y en medio kilo entran 2 cuartos más.",
-    },
-    {
-      p: "Si una jarra contiene 3/4 litro de jugo y se consume 1/4 litro, ¿cuánto jugo queda?",
-      opts: ["1/2 litro", "1/4 litro", "3/4 litro"],
-      ans: "1/2 litro",
-      hint: "A tres cuartos le restás un cuarto y quedan dos cuartos, que equivalen a un medio.",
-    },
-    {
-      p: "Para preparar masa de pan casero se mezclan 1/2 kg de harina leudante y 1/4 kg de harina integral. ¿Cuánto pesa la mezcla?",
-      opts: ["3/4 kg", "1 kg", "2/4 kg"],
-      ans: "3/4 kg",
-      hint: "Un medio equivale a 2/4. Al sumarle 1/4 se obtienen 3/4.",
-    },
-    {
-      p: "Una tableta de chocolate tiene 8 barritas iguales. Si Ana come 4 barritas, ¿qué fracción comió?",
-      opts: ["1/2 de la tableta", "1/4 de la tableta", "3/8 de la tableta"],
-      ans: "1/2 de la tableta",
-      hint: "4 de 8 barritas es exactamente la mitad de la tableta (4/8 = 1/2).",
-    },
-    {
-      p: "¿Cuántos cuartos (1/4) forman 2 unidades enteras?",
-      opts: ["8 cuartos", "4 cuartos", "6 cuartos"],
-      ans: "8 cuartos",
-      hint: "Cada unidad tiene 4 cuartos; en dos unidades hay el doble.",
-    },
-    {
-      p: "Si compraste cuatro paquetes de 1/2 kg de yerba, ¿cuántos kilos compraste en total?",
-      opts: ["2 kg", "1 kg", "3 kg"],
-      ans: "2 kg",
-      hint: "Dos medios hacen 1 kilo, y cuatro medios hacen 2 kilos.",
-    },
-    {
-      p: "¿Qué fracción representa 2 porciones de una pizza cortada en 8 partes iguales?",
-      opts: ["1/4 de la pizza", "1/2 de la pizza", "2/4 de la pizza"],
-      ans: "1/4 de la pizza",
-      hint: "2/8 es una fracción equivalente a 1/4.",
-    },
-    {
-      p: "¿Cuántos vasos de 1/4 litro se pueden llenar con una jarra de 1 litro de jugo?",
-      opts: ["4 vasos", "2 vasos", "8 vasos"],
-      ans: "4 vasos",
-      hint: "En 1 litro entran exactamente 4 cuartos de litro.",
-    },
+  const staticPreguntas = [
+    
+    
+    { p: "Una pizza se cortó en 8 porciones iguales y Tomás comió 3 porciones. ¿Qué fracción de la pizza comió?", opts: ["3/8 de la pizza", "5/8 de la pizza", "3/4 de la pizza"], ans: "3/8 de la pizza", hint: "Pista: el numerador indica las porciones tomadas y el denominador el total." },
+    { p: "Si comprás dos paquetes de 1/4 kg de café y un paquete de 1/2 kg, ¿cuánto café compraste en total?", opts: ["1 kg de café", "3/4 kg de café", "1 1/2 kg de café"], ans: "1 kg de café", hint: "Pista: sumá primero los dos paquetes chicos para formar medio kilo." },
+    { p: "¿Cuántos octavos (1/8) forman medio kilo (1/2)?", opts: ["4 octavos", "2 octavos", "8 octavos"], ans: "4 octavos", hint: "Pista: buscá la fracción con denominador 8 que sea equivalente a la mitad." },
+    { p: "En una receta de cocina se piden 3/4 kg de harina. Si tenemos paquetes de 1/4 kg, ¿cuántos paquetes debemos usar?", opts: ["3 paquetes", "4 paquetes", "2 paquetes"], ans: "3 paquetes", hint: "Pista: fijate cuántas unidades de un cuarto se necesitan para reunir tres cuartos." },
+    { p: "Si de una torta entera cortada en 4 porciones iguales queda solo 1 porción, ¿qué fracción se comió?", opts: ["3/4 de la torta", "1/4 de la torta", "2/4 de la torta"], ans: "3/4 de la torta", hint: "Pista: restale al total de cuatro partes la única porción que sobró." },
+    { p: "¿Cuál de las siguientes fracciones representa la MITAD exacta de una unidad?", opts: ["1/2", "1/4", "3/4"], ans: "1/2", hint: "Pista: buscá la expresión donde el numerador sea la mitad del denominador." },
+    { p: "¿Cuántos potes de 1/4 kg de dulce de leche se necesitan para reunir 1 1/2 kg?", opts: ["6 potes", "4 potes", "8 potes"], ans: "6 potes", hint: "Pista: calculá los cuartos del entero y sumale los cuartos del medio kilo restante." },
+    { p: "Si una jarra contiene 3/4 litro de jugo y se consume 1/4 litro, ¿cuánto jugo queda?", opts: ["1/2 litro", "1/4 litro", "3/4 litro"], ans: "1/2 litro", hint: "Pista: restá los numeradores manteniendo el mismo denominador y simplificá." },
+    { p: "Para preparar masa de pan casero se mezclan 1/2 kg de harina leudante y 1/4 kg de harina integral. ¿Cuánto pesa la mezcla?", opts: ["3/4 kg", "1 kg", "2/4 kg"], ans: "3/4 kg", hint: "Pista: expresá el medio kilo en cuartos y sumá el cuarto restante." },
+    { p: "Una tableta de chocolate tiene 8 barritas iguales. Si Ana come 4 barritas, ¿qué fracción comió?", opts: ["1/2 de la tableta", "1/4 de la tableta", "3/8 de la tableta"], ans: "1/2 de la tableta", hint: "Pista: compará la cantidad comida con la mitad del total de barritas." },
+    { p: "¿Cuántos cuartos (1/4) forman 2 unidades enteras?", opts: ["8 cuartos", "4 cuartos", "6 cuartos"], ans: "8 cuartos", hint: "Pista: si cada entero tiene cuatro cuartos, multiplicá por dos." },
+    { p: "Si en una jarra de 1 litro agregamos 1/4 litro de leche y 1/2 litro de café, ¿cuánto líquido hay?", opts: ["3/4 litro", "1 litro", "1/2 litro"], ans: "3/4 litro", hint: "Pista: convertí el medio litro a dos cuartos para sumar fracciones homogéneas." },
+    { p: "Un bidón contiene 3 litros de agua mineral. ¿Cuántas botellitas de 1/2 litro se pueden llenar?", opts: ["6 botellitas", "3 botellitas", "8 botellitas"], ans: "6 botellitas", hint: "Pista: cada litro rinde dos botellitas de esa medida." },
+    { p: "¿Cuántos paquetes de 1/8 kg de levadura se precisan para reunir 1/2 kg?", opts: ["4 paquetes", "2 paquetes", "8 paquetes"], ans: "4 paquetes", hint: "Pista: calculá la mitad de las ocho partes que integran el entero." },
+    { p: "Si una bolsa de manzanas pesa 2 1/4 kg, ¿cuántos cuartos de kilo (1/4 kg) contiene?", opts: ["9 cuartos", "8 cuartos", "7 cuartos"], ans: "9 cuartos", hint: "Pista: calculá cuántos cuartos hay en dos enteros y agregá el cuarto suelto." },
+    { p: "Una horma de queso se dividió en 8 trozos iguales y se vendieron 6. ¿Qué fracción quedó sin vender?", opts: ["2/8 de la horma", "6/8 de la horma", "1/4 de la horma"], ans: "2/8 de la horma", hint: "Pista: restá los trozos vendidos del total inicial de porciones." },
+    { p: "Para hornear galletitas se usan 1/4 kg de manteca y 3/4 kg de azúcar. ¿Cuánto pesan ambos ingredientes juntos?", opts: ["1 kg", "1 1/2 kg", "2/4 kg"], ans: "1 kg", hint: "Pista: sumá los cuartos indicados para verificar si completan la unidad entera." },
+    { p: "¿Cuántos medios litros (1/2 L) hay en 5 litros de agua?", opts: ["10 medios litros", "5 medios litros", "15 medios litros"], ans: "10 medios litros", hint: "Pista: duplicá la cantidad de litros para obtener los medios litros equivalentes." },
+    { p: "Si cortamos una cinta de 1 metro en 8 pedacitos iguales, ¿cuánto mide cada pedacito?", opts: ["1/8 de metro", "1/4 de metro", "1/2 de metro"], ans: "1/8 de metro", hint: "Pista: cuando se fracciona en ocho partes iguales, cada sección recibe ese nombre." },
+    { p: "En una fiesta se consumieron 2 botellas y media de gaseosa. ¿Cuántos medios litros son?", opts: ["5 medios litros", "4 medios litros", "6 medios litros"], ans: "5 medios litros", hint: "Pista: pasá las dos botellas enteras a medios litros y sumá la fracción restante." },
+    { p: "Si tenemos 3 paquetes de 1/4 kg de fideos y compramos 1 paquete más de 1/4 kg, ¿cuánto reunimos?", opts: ["1 kg de fideos", "3/4 kg de fideos", "1 1/4 kg de fideos"], ans: "1 kg de fideos", hint: "Pista: reuní los cuatro paquetes de un cuarto para ver qué unidad forman." },
+    { p: "¿Qué fracción representa MENOS que medio kilo (1/2 kg)?", opts: ["1/4 kg", "3/4 kg", "1 kg"], ans: "1/4 kg", hint: "Pista: buscá la opción cuya porción sea inferior a la mitad del entero." },
+    { p: "¿Qué fracción representa MÁS que medio kilo (1/2 kg)?", opts: ["3/4 kg", "1/4 kg", "1/8 kg"], ans: "3/4 kg", hint: "Pista: buscá la alternativa que supere la mitad de la unidad de medida." },
+    { p: "Si de una barra de pan de 1 metro se corta 1/2 metro y luego 1/4 metro, ¿cuánto se cortó en total?", opts: ["3/4 de metro", "1/4 de metro", "1 metro"], ans: "3/4 de metro", hint: "Pista: sumá medio metro y un cuarto de metro unificando denominadores." },
+    { p: "¿Cuántos octavos (1/8) se necesitan para formar 1 unidad entera?", opts: ["8 octavos", "4 octavos", "16 octavos"], ans: "8 octavos", hint: "Pista: el propio denominador te señala la cantidad necesaria para completar el entero." },
+    { p: "Un paquete de té pesa 1/8 kg. ¿Cuánto pesan 2 paquetes juntos?", opts: ["1/4 kg", "1/2 kg", "1/8 kg"], ans: "1/4 kg", hint: "Pista: sumá los dos octavos y simplificá la fracción resultante." },
+    { p: "Si de una pizza de 8 porciones quedan 4 porciones, ¿qué fracción de pizza queda?", opts: ["1/2 de la pizza", "1/4 de la pizza", "3/4 de la pizza"], ans: "1/2 de la pizza", hint: "Pista: observá qué proporción representan cuatro porciones respecto de ocho." },
+    { p: "¿Cuántos vasos de 1/4 litro se pueden llenar con una jarra de 1 litro de jugo?", opts: ["4 vasos", "2 vasos", "8 vasos"], ans: "4 vasos", hint: "Pista: pensá en cuántas medidas de un cuarto completan un litro entero." },
+    { p: "Si una receta pide 1 1/4 kg de papas, ¿cuántos paquetes de 1/4 kg debemos comprar?", opts: ["5 paquetes", "4 paquetes", "6 paquetes"], ans: "5 paquetes", hint: "Pista: transformá el kilo entero a cuartos y agregá el cuarto suelto." },
+    { p: "En un taller de costura quedan 6 octavos (6/8) de metro de tela. ¿A cuántos cuartos equivale?", opts: ["3/4 de metro", "2/4 de metro", "4/4 de metro"], ans: "3/4 de metro", hint: "Pista: dividí numerador y denominador por dos para hallar la fracción equivalente." },
+    { p: "¿Cuántos cuartos de kilo (1/4 kg) equivalen a 3 kilos enteros?", opts: ["12 cuartos", "6 cuartos", "8 cuartos"], ans: "12 cuartos", hint: "Pista: multiplicá la cantidad de enteros por los cuatro cuartos que tiene cada uno." },
+    { p: "Si se juntan 4 paquetes de 1/2 kg de azúcar, ¿cuántos kilos se obtienen?", opts: ["2 kg de azúcar", "1 kg de azúcar", "3 kg de azúcar"], ans: "2 kg de azúcar", hint: "Pista: agrupá de a dos paquetes para formar kilos enteros." },
+    { p: "¿Qué fracción es equivalente a 2 cuartos (2/4)?", opts: ["1/2", "1/4", "3/4"], ans: "1/2", hint: "Pista: simplificá la fracción dividiendo ambos términos por dos." },
+    { p: "Una caminata de 1 km se divide en 4 tramos iguales. ¿Qué fracción del camino es cada tramo?", opts: ["1/4 del camino", "1/2 del camino", "1/8 del camino"], ans: "1/4 del camino", hint: "Pista: dividir el recorrido en cuatro partes iguales genera esa fracción." }
   ];
 
-  const seleccionadas = shuffle(preguntas).slice(0, 8);
+  const dynGenerators = [
+    () => {
+      const k = randInt(1, 6);
+      const ans = `${k * 4} paquetes`;
+      return { p: `¿Cuántos paquetes de 1/4 kg de yerba mate se necesitan para completar ${k} kg?`, ans, opts: [ans, `${k * 2} paquetes`, `${k * 8} paquetes`], hint: `Pista: cada kilo requiere 4 cuartos; calculá ${k} × 4.` };
+    },
+    () => {
+      const L = randInt(2, 7);
+      const ans = `${L * 2} vasos`;
+      return { p: `¿Cuántos vasos de 1/2 litro de agua se necesitan para llenar una botella de ${L} litros?`, ans, opts: [ans, `${L} vasos`, `${L * 4} vasos`], hint: `Pista: en cada litro entran 2 medios litros; calculá ${L} × 2.` };
+    },
+    () => {
+      const tot = pickOne([6, 8, 10, 12]);
+      const com = randInt(2, tot - 1);
+      const ans = `${com}/${tot} de la tarta`;
+      return { p: `Una tarta se cortó en ${tot} porciones iguales y se consumieron ${com} porciones. ¿Qué fracción se consumió?`, ans, opts: [ans, `${tot - com}/${tot} de la tarta`, `1/${tot} de la tarta`], hint: "Pista: el numerador indica las porciones consumidas y el denominador el total." };
+    },
+    () => {
+      const potes = randInt(2, 8) * 2;
+      const kg = potes / 2;
+      const ans = `${kg} kg`;
+      return { p: `Si se juntan ${potes} potes de 1/2 kg de dulce de leche, ¿cuántos kilos se obtienen en total?`, ans, opts: [ans, `${potes} kg`, `${kg + 2} kg`], hint: `Pista: cada 2 potes de medio kilo forman 1 kilo entero (${potes} ÷ 2).` };
+    },
+    () => {
+      const L = randInt(2, 6);
+      const ans = `${L * 4} vasos`;
+      return { p: `¿Cuántos vasos de 1/4 litro se pueden llenar con un bidón de ${L} litros de jugo?`, ans, opts: [ans, `${L * 2} vasos`, `${L * 8} vasos`], hint: `Pista: cada litro equivale a 4 vasos de un cuarto; calculá ${L} × 4.` };
+    }
+  ];
+
+  const dynItems = dynGenerators.map((gen) => gen());
+  const allPreguntas = [...dynItems, ...staticPreguntas];
+  const seleccionadas = pickDistinctPreguntas(allPreguntas, 8);
   for (let i = 0; i < 8; i++) {
     const item = seleccionadas[i];
-    const choices = shuffle([...item.opts]);
+    const choices = distinctChoices(item.ans, item.opts.filter(o => o !== item.ans), 3);
     acts.push(
       qToPick(
         q(
           item.p,
-          choices.map((c) => ["🧉", c]),
+          choices.map((c) => ["🥧", c]),
           choices.indexOf(item.ans),
           item.hint
         ),
@@ -1196,7 +1272,6 @@ function buildMundo42016(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-fracciones-reparto"];
 
-  // Casos donde alfajores % chicos !== 0 (¡NUNCA 6/3 de alfajor!)
   const casosReparto = [
     { item: "alfajores santacruceños", cant: 4, chicos: 3, frac: "4/3", ico: "🍫" },
     { item: "alfajores santacruceños", cant: 5, chicos: 3, frac: "5/3", ico: "🍫" },
@@ -1216,23 +1291,45 @@ function buildMundo42016(): ActivitySpec[] {
     { item: "tortas individuales", cant: 13, chicos: 6, frac: "13/6", ico: "🍰" },
     { item: "turrones artesanales", cant: 9, chicos: 8, frac: "9/8", ico: "🥜" },
     { item: "alfajores de dulce de leche", cant: 11, chicos: 8, frac: "11/8", ico: "🍫" },
+    { item: "bizcochuelos caseros", cant: 2, chicos: 3, frac: "2/3", ico: "🥧" },
+    { item: "tartas de manzana", cant: 4, chicos: 5, frac: "4/5", ico: "🍎" },
+    { item: "pizzetas caseras", cant: 5, chicos: 6, frac: "5/6", ico: "🍕" },
+    { item: "budines de limón", cant: 7, chicos: 8, frac: "7/8", ico: "🍋" },
+    { item: "paquetes de galletitas", cant: 10, chicos: 3, frac: "10/3", ico: "🍪" },
+    { item: "paquetes de galletitas", cant: 11, chicos: 3, frac: "11/3", ico: "🍪" },
+    { item: "chocolates con almendras", cant: 13, chicos: 4, frac: "13/4", ico: "🍫" },
+    { item: "chocolates con almendras", cant: 15, chicos: 4, frac: "15/4", ico: "🍫" },
+    { item: "alfajores de maicena", cant: 13, chicos: 5, frac: "13/5", ico: "🧁" },
+    { item: "alfajores de maicena", cant: 14, chicos: 5, frac: "14/5", ico: "🧁" },
+    { item: "barras energéticas", cant: 17, chicos: 6, frac: "17/6", ico: "⚡" },
+    { item: "barras energéticas", cant: 19, chicos: 6, frac: "19/6", ico: "⚡" },
+    { item: "obleas rellenas", cant: 13, chicos: 8, frac: "13/8", ico: "🧇" },
+    { item: "obleas rellenas", cant: 15, chicos: 8, frac: "15/8", ico: "🧇" },
+    { item: "tortas fritas", cant: 5, chicos: 3, frac: "5/3", ico: "🫓" },
+    { item: "pastafrolas caseras", cant: 7, chicos: 5, frac: "7/5", ico: "🥧" },
+    { item: "panes caseros", cant: 8, chicos: 6, frac: "8/6", ico: "🍞" },
+    { item: "chocolates calientes en barra", cant: 11, chicos: 4, frac: "11/4", ico: "🍫" },
   ];
 
   const seleccionados = shuffle(casosReparto).slice(0, 8);
   for (let i = 0; i < 8; i++) {
     const { item, cant, chicos, frac, ico } = seleccionados[i];
     const choices = distinctChoices(
-      `${frac} de unidad`,
-      [`${cant + 1}/${chicos} de unidad`, `${cant}/${chicos + 1} de unidad`, `${chicos}/${cant} de unidad`],
+      `${frac} de ${item.split(" ")[0]}`,
+      [
+        `${chicos}/${cant} de ${item.split(" ")[0]}`,
+        `${cant}/${chicos + 1} de ${item.split(" ")[0]}`,
+        `${cant + 1}/${chicos} de ${item.split(" ")[0]}`,
+      ],
       3
     );
     acts.push(
       qToPick(
         q(
-          `Se reparten ${cant} ${item} entre ${chicos} chicos en partes iguales sin que sobre nada. ¿Cuánto le corresponde a cada uno?`,
+          `Se reparten ${cant} ${item} entre ${chicos} chicos en partes iguales sin que sobre nada. ¿Cuánto recibe cada uno?`,
           choices.map((c) => [ico, c]),
-          choices.indexOf(`${frac} de unidad`),
-          "Pista: pensá cada unidad dividida en tantas partes iguales como chicos haya para que nadie reciba de más ni de menos."
+          choices.indexOf(`${frac} de ${item.split(" ")[0]}`),
+          `Pista: la cantidad a repartir (${cant}) es el numerador y la cantidad de chicos (${chicos}) es el denominador.`
         ),
         `m42016-${i}`,
         "",
@@ -1247,29 +1344,49 @@ function buildMundo42016(): ActivitySpec[] {
 function buildMundo42017(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-frac-equivalentes"];
-  const equivalencias: [string, string, string[]][] = [
-    ["1/2", "2/4", ["3/5", "1/3"]],
-    ["1/2", "4/8", ["3/8", "5/8"]],
-    ["2/3", "4/6", ["3/6", "5/6"]],
-    ["3/4", "6/8", ["5/8", "7/8"]],
-    ["1/3", "2/6", ["3/8", "1/4"]],
-    ["2/5", "4/10", ["3/10", "5/10"]],
-    ["3/5", "6/10", ["5/10", "7/10"]],
-    ["1/4", "2/8", ["3/8", "1/6"]],
-    ["4/5", "8/10", ["7/10", "9/10"]],
-    ["1/5", "2/10", ["3/10", "1/8"]],
+
+  const baseFracs: [number, number][] = [
+    [1, 2], [1, 3], [2, 3], [1, 4], [3, 4],
+    [1, 5], [2, 5], [3, 5], [4, 5],
+    [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8],
+    [1, 10], [3, 10], [7, 10], [9, 10]
   ];
 
-  const shuffledPairs = shuffle([...equivalencias]);
+  const pickedBases = shuffle(baseFracs).slice(0, 8);
   for (let i = 0; i < 8; i++) {
-    const [base, equiv, fakes] = shuffledPairs[i];
-    const choices = distinctChoices(equiv, fakes, 3);
+    const [num, den] = pickedBases[i];
+    const isAmpliar = Math.random() < 0.6;
+    let baseStr: string;
+    let equivStr: string;
+    let fakes: string[];
+
+    if (isAmpliar) {
+      const mult = pickOne([2, 3, 4, 5]);
+      baseStr = `${num}/${den}`;
+      equivStr = `${num * mult}/${den * mult}`;
+      fakes = [
+        `${num * mult + 1}/${den * mult}`,
+        `${num}/${den * mult}`,
+        `${num * mult}/${den * mult + 1}`
+      ];
+    } else {
+      const mult = pickOne([2, 3, 4]);
+      baseStr = `${num * mult}/${den * mult}`;
+      equivStr = `${num}/${den}`;
+      fakes = [
+        `${num + 1}/${den}`,
+        `${num}/${den * mult}`,
+        `${Math.max(1, num - 1)}/${den}`
+      ];
+    }
+
+    const choices = distinctChoices(equivStr, fakes, 3);
     acts.push(
       qToPick(
         q(
-          `¿Cuál de las siguientes fracciones es EQUIVALENTE a ${base}?`,
+          `¿Cuál de las siguientes fracciones es EQUIVALENTE a ${baseStr}?`,
           choices.map((c) => ["🍰", c]),
-          choices.indexOf(equiv),
+          choices.indexOf(equivStr),
           "Pista: multiplicá o dividí el numerador y el denominador por el mismo número."
         ),
         `m42017-${i}`,
@@ -1341,144 +1458,103 @@ function buildMundo42019(): ActivitySpec[] {
   const skills = ["m4-frac-recta"];
 
   const ordenes = [
-    {
-      id: "ord-1",
-      prompt: "Ordená estas fracciones con denominador 4 de MENOR a MAYOR:",
-      items: ["1/4", "1/2", "3/4", "5/4"],
-      hint: "1/4 es un cuarto, 1/2 son dos cuartos, 3/4 son tres cuartos y 5/4 supera la unidad.",
-    },
-    {
-      id: "ord-2",
-      prompt: "Ordená estas fracciones de MENOR a MAYOR:",
-      items: ["1/8", "1/4", "1/2", "1"],
-      hint: "Un octavo es la parte más chica, luego un cuarto, luego medio y finalmente el entero.",
-    },
-    {
-      id: "ord-3",
-      prompt: "Ordená estas fracciones con tercios de MENOR a MAYOR:",
-      items: ["1/3", "2/3", "1", "4/3"],
-      hint: "1/3 es menor que 2/3; 3/3 es 1 entero; 4/3 es mayor que 1.",
-    },
-    {
-      id: "ord-4",
-      prompt: "Ordená estas fracciones de MENOR a MAYOR:",
-      items: ["1/6", "1/3", "1/2", "2/3"],
-      hint: "1/6 es menor que 1/3 (2/6), y 1/2 (3/6) es menor que 2/3 (4/6).",
-    },
-    {
-      id: "ord-5",
-      prompt: "Ordená estas fracciones con quintos de MENOR a MAYOR:",
-      items: ["1/5", "2/5", "4/5", "6/5"],
-      hint: "A igual denominador, menor numerador indica menor fracción.",
-    },
-    {
-      id: "ord-6",
-      prompt: "Ordená estas fracciones respecto a la unidad de MENOR a MAYOR:",
-      items: ["1/10", "1/2", "3/4", "1"],
-      hint: "1/10 es un décimo, 1/2 es la mitad, 3/4 supera la mitad y 1 es el entero completo.",
-    },
+    { id: "ord-1", prompt: "Ordená estas fracciones con denominador 4 de MENOR a MAYOR:", items: ["1/4", "1/2", "3/4", "5/4"], hint: "Pista: ordená de acuerdo al avance progresivo sobre la recta numérica." },
+    { id: "ord-2", prompt: "Ordená estas fracciones de MENOR a MAYOR:", items: ["1/8", "1/4", "1/2", "1"], hint: "Pista: pensá qué porción es más pequeña al dividir el entero en más partes." },
+    { id: "ord-3", prompt: "Ordená estas fracciones con tercios de MENOR a MAYOR:", items: ["1/3", "2/3", "1", "4/3"], hint: "Pista: compará cuáles quedan antes de la unidad y cuál la supera." },
+    { id: "ord-4", prompt: "Ordená estas fracciones de MENOR a MAYOR:", items: ["1/6", "1/3", "1/2", "2/3"], hint: "Pista: llevá mentalmente cada fracción a un denominador común." },
+    { id: "ord-5", prompt: "Ordená estas fracciones con quintos de MENOR a MAYOR:", items: ["1/5", "2/5", "4/5", "6/5"], hint: "Pista: a igual denominador, el orden depende del valor del numerador." },
+    { id: "ord-6", prompt: "Ordená estas fracciones respecto a la unidad de MENOR a MAYOR:", items: ["1/10", "1/2", "3/4", "1"], hint: "Pista: ordená desde la fracción más cercana al cero hasta el entero." },
+    { id: "ord-7", prompt: "Ordená estas fracciones menores y mayores que 1 de MENOR a MAYOR:", items: ["1/2", "3/4", "1", "3/2"], hint: "Pista: ubicá primero las fracciones propias y luego la fracción impropia." },
+    { id: "ord-8", prompt: "Ordená estas fracciones de menor a mayor en la recta:", items: ["1/8", "3/8", "5/8", "7/8"], hint: "Pista: ordená directamente según el numerador creciente." },
+    { id: "ord-9", prompt: "Ordená estas fracciones con décimos de MENOR a MAYOR:", items: ["2/10", "5/10", "8/10", "10/10"], hint: "Pista: observá el avance de los décimos hacia la unidad completa." },
+    { id: "ord-10", prompt: "Ordená estas fracciones de uso cotidiano de MENOR a MAYOR:", items: ["1/4", "1/2", "1", "5/4"], hint: "Pista: compará las distancias de cada número respecto del origen cero." },
+    { id: "ord-11", prompt: "Ordená estas fracciones mayores que 1 de MENOR a MAYOR:", items: ["1", "5/4", "3/2", "2"], hint: "Pista: analizá cuántos enteros y partes contiene cada número mixto." },
+    { id: "ord-12", prompt: "Ordená estas fracciones con sextos de MENOR a MAYOR:", items: ["1/6", "2/6", "4/6", "5/6"], hint: "Pista: ordená las porciones según crecen los numeradores." }
   ];
 
-  const preguntasRecta = [
-    {
-      p: "¿Qué fracción se ubica exactamente a mitad de camino entre 0 y 1 en la recta numérica?",
-      opts: ["1/2", "1/4", "3/4"],
-      ans: "1/2",
-      hint: "La mitad justa entre 0 y 1 es 1/2.",
-    },
-    {
-      p: "¿Cuál de las siguientes fracciones se ubica a la DERECHA del 1 (es mayor que 1) en la recta numérica?",
-      opts: ["5/4", "3/4", "2/4"],
-      ans: "5/4",
-      hint: "Cuando el numerador es mayor que el denominador, la fracción es mayor que 1.",
-    },
-    {
-      p: "¿Entre qué dos números enteros se ubica la fracción 7/4 en la recta numérica?",
-      opts: ["Entre 1 y 2", "Entre 0 y 1", "Entre 2 y 3"],
-      ans: "Entre 1 y 2",
-      hint: "7/4 equivale a 1 entero y 3/4 (1 3/4), por lo que está entre 1 y 2.",
-    },
-    {
-      p: "¿Cuál de estas fracciones está más CERCA del 0 en la recta numérica?",
-      opts: ["1/8", "1/4", "1/2"],
-      ans: "1/8",
-      hint: "Al dividir el entero en 8 partes, cada parte (1/8) es más pequeña y está más cerca del 0.",
-    },
-    {
-      p: "¿Qué fracción se encuentra ubicada entre 1/2 y 1 en la recta numérica?",
-      opts: ["3/4", "1/4", "5/4"],
-      ans: "3/4",
-      hint: "3/4 es mayor que 1/2 (2/4) y menor que 1 (4/4).",
-    },
-    {
-      p: "¿Cuál de estas fracciones se encuentra más CERCA del 1 en la recta numérica?",
-      opts: ["7/8", "1/2", "1/4"],
-      ans: "7/8",
-      hint: "7/8 está a solo 1/8 de completar la unidad entera (1).",
-    },
-    {
-      p: "¿Entre qué dos números enteros se ubica la fracción 9/4 en la recta numérica?",
-      opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"],
-      ans: "Entre 2 y 3",
-      hint: "9/4 equivale a 2 enteros y 1/4 (2 1/4), ubicado entre 2 y 3.",
-    },
-    {
-      p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la primera división?",
-      opts: ["1/4", "1/2", "3/4"],
-      ans: "1/4",
-      hint: "La primera de cuatro divisiones iguales corresponde a 1/4.",
-    },
-    {
-      p: "¿Cuál de estas fracciones es MENOR que 1/2 en la recta numérica?",
-      opts: ["1/4", "3/4", "5/8"],
-      ans: "1/4",
-      hint: "1/4 (un cuarto) es menor que 1/2 (dos cuartos).",
-    },
-    {
-      p: "¿Qué fracción coincide exactamente con el número 1 en la recta numérica?",
-      opts: ["4/4", "3/4", "5/4"],
-      ans: "4/4",
-      hint: "Cuando el numerador y el denominador son iguales, la fracción vale 1 entero.",
-    },
-    {
-      p: "¿Entre qué números enteros se ubica la fracción 5/2 en la recta numérica?",
-      opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"],
-      ans: "Entre 2 y 3",
-      hint: "5/2 son 2 enteros y 1/2 (2,5), ubicado entre el 2 y el 3.",
-    },
-    {
-      p: "¿Qué fracción está ubicada a la izquierda del 1/2 (más cerca del 0)?",
-      opts: ["1/3", "2/3", "3/4"],
-      ans: "1/3",
-      hint: "1/3 es aproximadamente 0,33, menor que 1/2 (0,50).",
-    },
+  const staticPreguntas = [
+    { p: "¿Qué fracción se ubica exactamente a mitad de camino entre 0 y 1 en la recta numérica?", opts: ["1/2", "1/4", "3/4"], ans: "1/2", hint: "Pista: buscá la fracción que divide al intervalo unitario en dos partes iguales." },
+    { p: "¿Cuál de las siguientes fracciones se ubica a la DERECHA del 1 (es mayor que 1) en la recta numérica?", opts: ["5/4", "3/4", "2/4"], ans: "5/4", hint: "Pista: observá qué fracción tiene el numerador superior a su denominador." },
+    
+    { p: "¿Cuál de estas fracciones está más CERCA del 0 en la recta numérica?", opts: ["1/8", "1/4", "1/2"], ans: "1/8", hint: "Pista: mayor denominador en fracciones unitarias indica menor distancia al origen." },
+    { p: "¿Qué fracción se encuentra ubicada entre 1/2 y 1 en la recta numérica?", opts: ["3/4", "1/4", "5/4"], ans: "3/4", hint: "Pista: buscá el valor intermedio que supere la mitad sin llegar al entero." },
+    { p: "¿Cuál de estas fracciones se encuentra más CERCA del 1 en la recta numérica?", opts: ["7/8", "1/2", "1/4"], ans: "7/8", hint: "Pista: calculá cuál está a menor diferencia de completar la unidad entera." },
+    
+    { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la primera división?", opts: ["1/4", "1/2", "3/4"], ans: "1/4", hint: "Pista: la primera marca de un reparto en cuatro indica un cuarto." },
+    { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la segunda división?", opts: ["2/4 (1/2)", "1/4", "3/4"], ans: "2/4 (1/2)", hint: "Pista: dos divisiones de cuatro equivalen al punto medio del recorrido." },
+    { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la tercera división?", opts: ["3/4", "2/4", "4/4"], ans: "3/4", hint: "Pista: contá tres divisiones unitarias desde el punto de inicio." },
+    { p: "¿Qué punto de la recta numérica representa la fracción 4/4?", opts: ["El número 1", "El número 0", "El número 2"], ans: "El número 1", hint: "Pista: cuando numerador y denominador coinciden, señalan la unidad entera." },
+    { p: "¿Entre qué enteros se ubica la fracción 5/2 en la recta numérica?", opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"], ans: "Entre 2 y 3", hint: "Pista: calculá cuántas veces entra el dos en el cinco." },
+    { p: "¿Qué fracción con denominador 8 se ubica exactamente en la misma posición que 1/2 en la recta?", opts: ["4/8", "2/8", "6/8"], ans: "4/8", hint: "Pista: buscá la fracción reducible que coincida con la mitad." },
+    { p: "¿Cuál de estas fracciones se ubica a la IZQUIERDA de 1/2 en la recta numérica?", opts: ["1/4", "3/4", "5/8"], ans: "1/4", hint: "Pista: identificá qué número representa una porción menor que la mitad." },
+    { p: "¿Cuál de estas fracciones se ubica a la DERECHA de 1/2 en la recta numérica?", opts: ["3/4", "1/4", "1/8"], ans: "3/4", hint: "Pista: elegí la opción que se posicione más próxima a la unidad." },
+    { p: "¿Qué fracción representa el punto medio entre 0 y 1/2 en la recta numérica?", opts: ["1/4", "1/8", "3/8"], ans: "1/4", hint: "Pista: calculá la mitad exacta de medio entero." },
+    { p: "¿Entre qué enteros se ubica 11/4 en la recta numérica?", opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"], ans: "Entre 2 y 3", hint: "Pista: pensá cuántos cuartos hacen dos enteros y cuántos sobran." },
+    { p: "¿Cuál de las siguientes fracciones es MENOR que 1?", opts: ["5/6", "7/6", "6/5"], ans: "5/6", hint: "Pista: si el numerador es menor al denominador, no alcanza la unidad." },
+    { p: "¿Cuál de las siguientes fracciones es MAYOR que 1?", opts: ["8/5", "4/5", "5/8"], ans: "8/5", hint: "Pista: una fracción impropia se sitúa a la derecha del número uno." },
+    { p: "¿Qué número entero equivale a la fracción 8/4 en la recta numérica?", opts: ["2", "1", "4"], ans: "2", hint: "Pista: resolvé la división entre numerador y denominador." },
+    { p: "¿Qué número entero equivale a la fracción 6/2 en la recta numérica?", opts: ["3", "2", "4"], ans: "3", hint: "Pista: calculá el cociente exacto de la fracción aparente." },
+    { p: "En la recta de 0 a 1 dividida en 8 partes, ¿cuántas partes avanzamos para marcar 3/8?", opts: ["3 partes", "4 partes", "5 partes"], ans: "3 partes", hint: "Pista: observá el número superior de la fracción." },
+    { p: "En la recta de 0 a 1 dividida en 8 partes, ¿cuántas partes avanzamos para marcar 5/8?", opts: ["5 partes", "3 partes", "6 partes"], ans: "5 partes", hint: "Pista: el numerador indica la cantidad de saltos unitarios a recorrer." },
+    { p: "¿Qué fracción está ubicada más lejos del 0: 2/3 o 1/3?", opts: ["2/3", "1/3", "Están igual"], ans: "2/3", hint: "Pista: a denominadores iguales, mayor numerador implica mayor distancia." },
+    { p: "¿Qué fracción está ubicada más cerca del 1: 5/6 o 1/6?", opts: ["5/6", "1/6", "Están igual"], ans: "5/6", hint: "Pista: evaluá cuál le falta solo una porción para llegar a la unidad." },
+    { p: "¿Entre qué enteros se ubica 7/3 en la recta numérica?", opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"], ans: "Entre 2 y 3", hint: "Pista: estimá cuántas veces entra el tres en siete." },
+    { p: "¿Qué fracción se ubica exactamente en el mismo punto que 1 entero?", opts: ["5/5", "4/5", "6/5"], ans: "5/5", hint: "Pista: numerador y denominador deben ser idénticos." },
+    { p: "¿Cuál de estas fracciones es más cercana a 1/2 en la recta numérica?", opts: ["4/10", "1/10", "9/10"], ans: "4/10", hint: "Pista: pensá qué decimal se aproxima más a cinco décimos." }
   ];
 
-  // Elegir 2 ordenes y 6 preguntas al azar
-  const ordSeleccionados = shuffle(ordenes).slice(0, 2);
-  const pregSeleccionadas = shuffle(preguntasRecta).slice(0, 6);
+  const dynGenerators = [
+    () => {
+      const entero = randInt(1, 6);
+      const r = randInt(1, 3);
+      const num = entero * 4 + r;
+      const ans = `Entre ${entero} y ${entero + 1}`;
+      return { p: `¿Entre qué dos números enteros se ubica la fracción ${num}/4 en la recta numérica?`, ans, opts: [ans, `Entre ${entero - 1} y ${entero}`, `Entre ${entero + 1} y ${entero + 2}`], hint: `Pista: ${num}/4 equivale a ${entero} enteros y ${r}/4.` };
+    },
+    () => {
+      const d = pickOne([2, 3, 4, 5]);
+      const k = randInt(2, 7);
+      const ans = `${k}`;
+      return { p: `¿Qué número entero equivale exactamente a la fracción ${k * d}/${d} en la recta numérica?`, ans, opts: [ans, `${k - 1}`, `${k + 1}`], hint: `Pista: dividí el numerador ${k * d} por el denominador ${d}.` };
+    },
+    () => {
+      const d = pickOne([5, 6, 8, 10]);
+      const n = randInt(2, d - 1);
+      const ans = `${n} partes`;
+      return { p: `En una recta numérica de 0 a 1 dividida en ${d} partes iguales, ¿cuántas partes avanzamos desde el 0 para marcar ${n}/${d}?`, ans, opts: [ans, `${d - n} partes`, `${n + 1} partes`], hint: "Pista: el numerador indica la cantidad de divisiones que se avanzan." };
+    },
+    () => {
+      const n = randInt(3, 9);
+      const d = n + randInt(1, 4);
+      const ans = "A la izquierda del 1 (es menor)";
+      return { p: `¿La fracción ${n}/${d} se ubica a la izquierda o a la derecha del 1 en la recta numérica?`, ans, opts: [ans, "A la derecha del 1 (es mayor)", "Exactamente sobre el 1"], hint: "Pista: como el numerador es menor que el denominador, es menor a 1." };
+    },
+    () => {
+      const d = randInt(2, 6);
+      const n = d + randInt(1, 5);
+      const ans = "A la derecha del 1 (es mayor)";
+      return { p: `¿La fracción ${n}/${d} se ubica a la izquierda o a la derecha del 1 en la recta numérica?`, ans, opts: [ans, "A la izquierda del 1 (es menor)", "Exactamente sobre el 1"], hint: "Pista: como el numerador es mayor que el denominador, supera a la unidad." };
+    }
+  ];
 
-  ordSeleccionados.forEach((ord, idx) => {
-    acts.push(makeOrder(`m42019-${ord.id}-${idx}`, ord.prompt, ord.items, ord.hint, skills));
-  });
+  const ordItem = pickOne(ordenes);
+  acts.push(makeOrder(`m42019-${ordItem.id}`, ordItem.prompt, ordItem.items, ordItem.hint, skills));
 
-  pregSeleccionadas.forEach((item, idx) => {
-    const choices = shuffle([...item.opts]);
+  const dynItems = dynGenerators.map((gen) => gen());
+  const allPreguntas = [...dynItems, ...staticPreguntas];
+  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
+  for (let i = 0; i < 7; i++) {
+    const item = seleccionadas[i];
+    const choices = distinctChoices(item.ans, item.opts.filter(o => o !== item.ans), 3);
     acts.push(
       qToPick(
-        q(
-          item.p,
-          choices.map((c) => ["📍", c]),
-          choices.indexOf(item.ans),
-          item.hint
-        ),
-        `m42019-q-${idx}`,
+        q(item.p, choices.map((c) => ["📍", c]), choices.indexOf(item.ans), item.hint),
+        `m42019-q-${i}`,
         "",
         skills
       )
     );
-  });
-
+  }
   return numbered(acts);
 }
 
@@ -1581,11 +1657,35 @@ function buildMundo42020(): ActivitySpec[] {
 function buildMundo42021(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-decimales-dinero"];
+  const usedDinero = new Set<string>();
+  const usedLong = new Set<string>();
+
+  const milesimosPreguntas = [
+    { p: "¿Cómo se escribe 'cinco milésimos' en número decimal?", ans: "0,005", fakes: ["0,05", "0,5", "0,500"], hint: "Pista: los milésimos ocupan el tercer lugar después de la coma." },
+    { p: "¿Cuántos milésimos se necesitan para formar 1 centésimo (0,01)?", ans: "10 milésimos", fakes: ["100 milésimos", "5 milésimos", "1000 milésimos"], hint: "Pista: cada posición decimal inmediata a la izquierda es diez veces mayor." },
+    { p: "En el número decimal 3,487, ¿qué cifra ocupa el lugar de los MILÉSIMOS?", ans: "La cifra 7", fakes: ["La cifra 8", "La cifra 4", "La cifra 3"], hint: "Pista: buscá la cifra en la tercera posición a la derecha de la coma." },
+    { p: "¿Cómo se escribe 'doce milésimos' en notación decimal?", ans: "0,012", fakes: ["0,12", "0,120", "1,2"], hint: "Pista: se necesitan tres posiciones decimales tras la coma." },
+    { p: "¿Cuántos milésimos equivalen a 1 unidad entera?", ans: "1.000 milésimos", fakes: ["100 milésimos", "10 milésimos", "10.000 milésimos"], hint: "Pista: pensá en cuántas partes de una milésima integran la unidad completa." },
+    { p: "En el número decimal 5,209, ¿qué valor posicional tiene la cifra 9?", ans: "Milésimos", fakes: ["Centésimos", "Décimos", "Unidades"], hint: "Pista: observá qué lugar ocupa contando desde la coma hacia la derecha." },
+    { p: "¿Cómo se escribe 'veinticinco milésimos' en número decimal?", ans: "0,025", fakes: ["0,25", "0,250", "2,5"], hint: "Pista: los milésimos abarcan tres cifras después de la coma." },
+    { p: "En el número decimal 6,158, ¿qué cifra representa los centésimos?", ans: "La cifra 5", fakes: ["La cifra 1", "La cifra 8", "La cifra 6"], hint: "Pista: buscá la segunda posición a la derecha de la coma decimal." },
+    { p: "¿Qué número decimal es mayor: 0,4 o 0,395?", ans: "0,4 (equivale a 0,400)", fakes: ["0,395", "Son exactamente iguales"], hint: "Pista: compará en primer lugar los décimos de cada número." },
+    { p: "¿Cuántos milésimos hay en 0,08?", ans: "80 milésimos", fakes: ["8 milésimos", "800 milésimos", "8.000 milésimos"], hint: "Pista: agregá un cero al final para expresar en milésimos equivalentes." },
+    { p: "¿Cómo se lee el número decimal 0,007?", ans: "Siete milésimos", fakes: ["Siete centésimos", "Siete décimos", "Siete enteros"], hint: "Pista: la cifra se ubica en el tercer lugar decimal." },
+    { p: "Si a 0,009 le sumamos 0,001, ¿qué número decimal obtenemos?", ans: "0,010 (1 centésimo)", fakes: ["0,001", "0,100", "0,019"], hint: "Pista: diez milésimos se agrupan formando un centésimo completo." }
+  ];
+  const milPool = shuffle([...milesimosPreguntas]);
+  let milIdx = 0;
+
   for (let i = 0; i < 8; i++) {
     if (i % 3 === 0) {
-      // Dinero cotidiano con centavos en formato argentino ($12,50, $25,75)
-      const pesos = randInt(5, 50);
-      const centavos = pickOne([10, 25, 50, 75]);
+      let pesos = randInt(5, 80);
+      let centavos = pickOne([10, 20, 25, 40, 50, 60, 75, 80]);
+      while (usedDinero.has(`${pesos},${centavos}`)) {
+        pesos = randInt(5, 80);
+        centavos = pickOne([10, 20, 25, 40, 50, 60, 75, 80]);
+      }
+      usedDinero.add(`${pesos},${centavos}`);
       const centStr = centavos < 10 ? "0" + centavos : String(centavos);
       const target = `$${pesos},${centStr}`;
       const fake1 = `$${pesos + 1},${centStr}`;
@@ -1595,12 +1695,12 @@ function buildMundo42021(): ActivitySpec[] {
         `En el almacén de barrio, un alfajor cuesta ${pesos} pesos con ${centavos} centavos. ¿Cómo se escribe en número decimal?`,
         `En la librería escolar, un cuaderno cuesta ${pesos} pesos con ${centavos} centavos. ¿Cómo se escribe su precio decimal?`,
         `En la panadería artesanal, un pan casero cuesta ${pesos} pesos con ${centavos} centavos. ¿Cuál es su expresión decimal?`,
+        `En la verdulería local, un kilo de manzanas cuesta ${pesos} pesos con ${centavos} centavos. ¿Cómo se anota en el ticket?`,
       ];
-      const prText = dinEscenarios[Math.floor(i / 3) % dinEscenarios.length];
       acts.push(
         qToPick(
           q(
-            prText,
+            dinEscenarios[i % dinEscenarios.length],
             choices.map((c) => ["🏷️", c]),
             choices.indexOf(target),
             "Pista: los centavos van después de la coma decimal como centésimos."
@@ -1611,9 +1711,13 @@ function buildMundo42021(): ActivitySpec[] {
         )
       );
     } else if (i % 3 === 1) {
-      // Longitud en metros y centímetros (1,25 m, 2,50 m)
-      const m = randInt(1, 3);
-      const cm = pickOne([15, 25, 40, 50, 75, 80]);
+      let m = randInt(1, 5);
+      let cm = pickOne([15, 20, 25, 30, 40, 50, 60, 75, 80]);
+      while (usedLong.has(`${m},${cm}`)) {
+        m = randInt(1, 5);
+        cm = pickOne([15, 20, 25, 30, 40, 50, 60, 75, 80]);
+      }
+      usedLong.add(`${m},${cm}`);
       const decStr = `${m},${cm < 10 ? "0" + cm : cm} m`;
       const fake1 = `${m + 1},${cm < 10 ? "0" + cm : cm} m`;
       const fake2 = `${m},${(cm + 20) % 100 || 60} m`;
@@ -1623,12 +1727,12 @@ function buildMundo42021(): ActivitySpec[] {
         `Una tabla de lenga fueguina mide ${m} metros y ${cm} centímetros de largo. ¿Cuál es su medida expresada en metros con coma decimal?`,
         `Un rollo de alambre de campo mide ${m} metros y ${cm} centímetros. ¿Cómo se escribe esa longitud en metros con coma?`,
         `Una soga para trekking mide ${m} metros y ${cm} centímetros de extensión. ¿Cuál es su medida expresada en metros decimales?`,
+        `Una varilla de madera para maqueta mide ${m} metros y ${cm} centímetros. ¿Cómo se anota en metros decimales?`,
       ];
-      const prText = longEscenarios[Math.floor(i / 3) % longEscenarios.length];
       acts.push(
         qToPick(
           q(
-            prText,
+            longEscenarios[i % longEscenarios.length],
             choices.map((c) => ["📏", c]),
             choices.indexOf(decStr),
             "Pista: 1 metro tiene 100 centímetros, por lo que cada centímetro representa un centésimo de metro."
@@ -1639,56 +1743,12 @@ function buildMundo42021(): ActivitySpec[] {
         )
       );
     } else {
-      // Milésimos
-      const milesimosPreguntas = [
-        {
-          p: "¿Cómo se escribe 'cinco milésimos' en número decimal?",
-          ans: "0,005",
-          fakes: ["0,05", "0,5", "0,500"],
-          hint: "Los milésimos ocupan el tercer lugar después de la coma.",
-        },
-        {
-          p: "¿Cuántos milésimos se necesitan para formar 1 centésimo (0,01)?",
-          ans: "10 milésimos",
-          fakes: ["100 milésimos", "5 milésimos", "1000 milésimos"],
-          hint: "Cada posición decimal es 10 veces mayor que la que tiene a la derecha.",
-        },
-        {
-          p: "En el número decimal 3,487, ¿qué cifra ocupa el lugar de los MILÉSIMOS?",
-          ans: "La cifra 7",
-          fakes: ["La cifra 8", "La cifra 4", "La cifra 3"],
-          hint: "El primer lugar tras la coma es décimos (4), el segundo centésimos (8) y el tercero milésimos (7).",
-        },
-        {
-          p: "¿Cómo se escribe 'doce milésimos' en notación decimal?",
-          ans: "0,012",
-          fakes: ["0,12", "0,120", "1,2"],
-          hint: "Los milésimos tienen tres cifras decimales tras la coma (0,012).",
-        },
-        {
-          p: "¿Cuántos milésimos equivalen a 1 unidad entera?",
-          ans: "1.000 milésimos",
-          fakes: ["100 milésimos", "10 milésimos", "10.000 milésimos"],
-          hint: "La unidad entera se divide en 1.000 milésimos.",
-        },
-        {
-          p: "En el número decimal 5,209, ¿qué valor posicional tiene la cifra 9?",
-          ans: "Milésimos",
-          fakes: ["Centésimos", "Décimos", "Unidades"],
-          hint: "El 2 es décimos, el 0 centésimos y el 9 milésimos.",
-        },
-      ];
-      const milItem = shuffle(milesimosPreguntas)[i % milesimosPreguntas.length];
+      const milItem = milPool[milIdx++];
       const choices = distinctChoices(milItem.ans, milItem.fakes, 3);
       acts.push(
         qToPick(
-          q(
-            milItem.p,
-            choices.map((c) => ["🔬", c]),
-            choices.indexOf(milItem.ans),
-            milItem.hint
-          ),
-          `m42021-mil-${i}`,
+          q(milItem.p, choices.map((c) => ["🔬", c]), choices.indexOf(milItem.ans), milItem.hint),
+          `m42021-${i}`,
           "",
           skills
         )
@@ -1916,7 +1976,7 @@ function buildMundo42024(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-rectas-angulos-rectos"];
 
-  acts.push(
+  const clasificaciones = [
     makeClassify(
       "m42024-cla-1",
       "Clasificá las relaciones entre pares de rectas según su posición:",
@@ -1931,127 +1991,109 @@ function buildMundo42024(): ActivitySpec[] {
       ],
       "Pista: las perpendiculares forman cuatro ángulos rectos de 90°.",
       skills
+    ),
+    makeClassify(
+      "m42024-cla-2",
+      "Clasificá los tipos de rectas secantes:",
+      ["Secantes perpendiculares", "Secantes oblicuas"],
+      [
+        { label: "Cruce en cruz perfecta con cuatro ángulos rectos", cat: 0 },
+        { label: "Lados adyacentes de un marco de ventana", cat: 0 },
+        { label: "Cruce en X inclinada con ángulos desiguales", cat: 1 },
+        { label: "Tijera abierta formando ángulos agudos y obtusos", cat: 1 },
+      ],
+      "Pista: las perpendiculares forman 90°, las oblicuas no.",
+      skills
+    ),
+    makeClassify(
+      "m42024-cla-3",
+      "Clasificá los elementos cotidianos según el tipo de líneas que muestran:",
+      ["Líneas paralelas", "Líneas perpendiculares"],
+      [
+        { label: "Peldaños sucesivos de una escalera", cat: 0 },
+        { label: "Cables paralelos del tendido eléctrico", cat: 0 },
+        { label: "Marco superior y lateral de una puerta", cat: 1 },
+        { label: "Poste de luz clavado recto sobre la vereda", cat: 1 },
+      ],
+      "Pista: las paralelas mantienen siempre la misma distancia.",
+      skills
     )
-  );
-
-  const preguntas = [
-    {
-      p: "¿Cómo se llaman dos rectas que, por más que se prolonguen en el plano, nunca se cruzan ni se tocan?",
-      ans: "Rectas paralelas",
-      fakes: ["Rectas perpendiculares", "Rectas secantes oblicuas"],
-      hint: "Tienen siempre la misma distancia entre sí, como los rieles de un tren.",
-    },
-    {
-      p: "¿Cómo se llaman dos rectas que al cruzarse forman cuatro ángulos rectos de 90° exactos?",
-      ans: "Rectas perpendiculares",
-      fakes: ["Rectas paralelas", "Rectas secantes oblicuas"],
-      hint: "Forman una cruz perfecta que se comprueba con la escuadra.",
-    },
-    {
-      p: "¿Cómo se llaman dos rectas que se cortan en un punto pero NO forman ángulos rectos de 90°?",
-      ans: "Rectas secantes oblicuas",
-      fakes: ["Rectas perpendiculares", "Rectas paralelas"],
-      hint: "Se cortan de manera inclinada, formando dos ángulos agudos y dos obtusos.",
-    },
-    {
-      p: "¿Qué instrumento de geometría es el más adecuado para trazar y verificar ángulos rectos entre rectas perpendiculares?",
-      ans: "La escuadra",
-      fakes: ["El compás", "La cinta métrica"],
-      hint: "La escuadra tiene un ángulo recto de 90° que coincide con la esquina.",
-    },
-    {
-      p: "Los bordes opuestos de una ventana rectangular son un ejemplo de:",
-      ans: "Líneas paralelas",
-      fakes: ["Líneas perpendiculares", "Líneas curvas"],
-      hint: "Mantienen la misma distancia a lo largo de todo su recorrido.",
-    },
-    {
-      p: "El marco de un cuadro en la unión de su lado superior con el lado lateral forma:",
-      ans: "Ángulo recto de 90°",
-      fakes: ["Ángulo agudo de 45°", "Ángulo obtuso de 135°"],
-      hint: "Los dos lados adyacentes de un rectángulo son perpendiculares.",
-    },
-    {
-      p: "Si dos rectas en un mapa se cortan formando una 'X' inclinada, ¿qué tipo de rectas son?",
-      ans: "Secantes oblicuas",
-      fakes: ["Paralelas", "Perpendiculares"],
-      hint: "Se cortan pero sus ángulos no son de 90°.",
-    },
-    {
-      p: "Los dos rieles de una vía de tren en una recta son un ejemplo claro de:",
-      ans: "Rectas paralelas",
-      fakes: ["Rectas perpendiculares", "Rectas secantes"],
-      hint: "Conservan la misma distancia y nunca se juntan.",
-    },
-    {
-      p: "La línea del zócalo y la línea del techo en una misma pared representan:",
-      ans: "Rectas paralelas",
-      fakes: ["Rectas perpendiculares", "Rectas oblicuas"],
-      hint: "Son líneas horizontales que no se tocan.",
-    },
-    {
-      p: "En una hoja cuadriculada, una línea vertical y una línea horizontal que se cruzan forman:",
-      ans: "Rectas perpendiculares",
-      fakes: ["Rectas paralelas", "Rectas secantes oblicuas"],
-      hint: "Al cruzarse forman esquinas de 90°.",
-    },
-    {
-      p: "Si dos rectas se cortan en un único punto, se dice que son:",
-      ans: "Rectas secantes",
-      fakes: ["Rectas paralelas", "Rectas coincidentes"],
-      hint: "Tienen un punto común de intersección.",
-    },
-    {
-      p: "Los postes verticales de un arco de fútbol con respecto al travesaño horizontal forman:",
-      ans: "Ángulos rectos perpendiculares",
-      fakes: ["Líneas paralelas", "Ángulos agudos de 30°"],
-      hint: "La unión del poste con el travesaño forma una escuadra recta.",
-    },
-    {
-      p: "¿Cuántos ángulos rectos se forman en la intersección de dos rectas perpendiculares?",
-      ans: "4 ángulos rectos",
-      fakes: ["2 ángulos rectos", "1 ángulo recto"],
-      hint: "Al cruzarse en cruz dividen el plano en cuatro cuadrantes rectos.",
-    },
-    {
-      p: "Los lados opuestos de un pizarrón rectangular son:",
-      ans: "Paralelos entre sí",
-      fakes: ["Perpendiculares entre sí", "Secantes oblicuos"],
-      hint: "El borde superior y el inferior nunca se juntan.",
-    },
-    {
-      p: "Si prolongamos dos rectas paralelas a lo largo de 100 metros, ¿en qué punto se cruzan?",
-      ans: "En ningún punto",
-      fakes: ["A los 50 metros", "En el punto inicial"],
-      hint: "Por definición geométrica, las paralelas jamás se cortan.",
-    },
-    {
-      p: "¿Qué condición deben cumplir dos rectas para ser perpendiculares?",
-      ans: "Cortarse formando ángulos de 90°",
-      fakes: ["Tener la misma longitud", "No cruzarse jamás"],
-      hint: "Deben intersecarse exactamente en ángulo recto.",
-    },
   ];
 
-  const seleccionadas = shuffle(preguntas).slice(0, 7);
+  const staticPreguntas = [
+    { p: "¿Cómo se llaman dos rectas que, por más que se prolonguen en el plano, nunca se cruzan ni se tocan?", ans: "Rectas paralelas", fakes: ["Rectas perpendiculares", "Rectas secantes oblicuas"], hint: "Pista: mantienen una distancia constante sin intersectarse." },
+    { p: "¿Cómo se llaman dos rectas que al cruzarse forman cuatro ángulos rectos de 90° exactos?", ans: "Rectas perpendiculares", fakes: ["Rectas paralelas", "Rectas secantes oblicuas"], hint: "Pista: generan una intersección en cruz perfecta de escuadra." },
+    { p: "¿Cómo se llaman dos rectas que se cortan en un punto pero NO forman ángulos rectos de 90°?", ans: "Rectas secantes oblicuas", fakes: ["Rectas perpendiculares", "Rectas paralelas"], hint: "Pista: se intersecan de modo inclinado con ángulos no rectos." },
+    { p: "¿Qué instrumento de geometría es el más adecuado para trazar y verificar ángulos rectos entre rectas perpendiculares?", ans: "La escuadra", fakes: ["El compás", "La cinta métrica"], hint: "Pista: esta herramienta posee un vértice recto de referencia." },
+    { p: "Los bordes opuestos de una ventana rectangular son un ejemplo de:", ans: "Líneas paralelas", fakes: ["Líneas perpendiculares", "Líneas curvas"], hint: "Pista: corren a la misma distancia sin llegar a tocarse." },
+    { p: "El marco de un cuadro en la unión de su lado superior con el lado lateral forma:", ans: "Ángulo recto de 90°", fakes: ["Ángulo agudo de 45°", "Ángulo obtuso de 135°"], hint: "Pista: dos lados contiguos de un rectángulo se unen en esa abertura." },
+    { p: "Si dos rectas en un mapa se cortan formando una 'X' inclinada, ¿qué tipo de rectas son?", ans: "Secantes oblicuas", fakes: ["Paralelas", "Perpendiculares"], hint: "Pista: se cruzan pero ninguna de sus aberturas mide noventa grados." },
+    { p: "Los dos rieles de una vía de tren en una recta son un ejemplo claro de:", ans: "Rectas paralelas", fakes: ["Rectas perpendiculares", "Rectas secantes"], hint: "Pista: avanzan en el mismo sentido sin juntarse jamás." },
+    { p: "La línea del zócalo y la línea del techo en una misma pared representan:", ans: "Rectas paralelas", fakes: ["Rectas perpendiculares", "Rectas oblicuas"], hint: "Pista: son trazos horizontales que no tienen puntos en común." },
+    { p: "En una hoja cuadriculada, una línea vertical y una línea horizontal que se cruzan forman:", ans: "Rectas perpendiculares", fakes: ["Rectas paralelas", "Rectas secantes oblicuas"], hint: "Pista: la cuadrícula se estructura con esquinas de noventa grados." },
+    { p: "Si dos rectas se cortan en un único punto, se dice que son:", ans: "Rectas secantes", fakes: ["Rectas paralelas", "Rectas curvas"], hint: "Pista: comparten un punto de intersección en el plano." },
+    { p: "¿Cuántos ángulos rectos se forman cuando dos rectas son perpendiculares?", ans: "4 ángulos rectos", fakes: ["2 ángulos rectos", "1 ángulo recto"], hint: "Pista: pensá en las cuatro regiones creadas por la cruz." },
+    { p: "Las líneas de las rayas de un paso de peatones (senda peatonal) son entre sí:", ans: "Paralelas", fakes: ["Perpendiculares", "Secantes oblicuas"], hint: "Pista: todas conservan la misma orientación sin tocarse." },
+    { p: "Los lados opuestos de un rectángulo son siempre:", ans: "Paralelos e iguales", fakes: ["Perpendiculares", "Secantes oblicuos"], hint: "Pista: están enfrentados y conservan idéntica separación." },
+    { p: "Los lados adyacentes de un cuadrado forman entre sí:", ans: "Rectas perpendiculares", fakes: ["Rectas paralelas", "Rectas oblicuas"], hint: "Pista: en cada vértice del polígono regular se produce una esquina de noventa." },
+    { p: "Si dos rectas tienen distinta inclinación y no son paralelas, en el plano:", ans: "Se cortan en un punto", fakes: ["Nunca se cruzan", "Se vuelven curvas"], hint: "Pista: al prolongarse en la superficie plana terminarán coincidiendo." },
+    { p: "Para trazar dos rectas paralelas prolijas con regla y escuadra se suele:", ans: "Deslizar la escuadra sobre el borde de la regla", fakes: ["Usar únicamente el compás con punta seca", "Girar la regla en círculos"], hint: "Pista: se fija un instrumento de apoyo y se traslada el otro." },
+    { p: "¿Qué clase de ángulo mide MENOS de 90°?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: es una abertura más cerrada que la de una escuadra." },
+    { p: "¿Qué clase de ángulo mide MÁS de 90° y menos de 180°?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: es una abertura más abierta que la esquina recta." },
+    { p: "Dos rectas paralelas se prolongan infinitamente en ambas direcciones. ¿Cuántos puntos de cruce tienen?", ans: "0 puntos", fakes: ["1 punto", "Infinitos puntos"], hint: "Pista: por definición geométrica nunca llegan a intersectarse." },
+    { p: "Los renglones sucesivos de un cuaderno de caligrafía son ejemplos de:", ans: "Líneas paralelas", fakes: ["Líneas perpendiculares", "Líneas secantes"], hint: "Pista: guardan una distancia constante para permitir la escritura prolija." },
+    { p: "La intersección de la pared y el piso en una habitación forma:", ans: "Una recta perpendicular al zócalo", fakes: ["Una línea paralela al techo", "Una línea curva"], hint: "Pista: el plano vertical y el horizontal se encuentran en ángulo recto." },
+    { p: "Las dos diagonales de un cuadrado se cruzan en el centro formando:", ans: "Ángulos rectos de 90°", fakes: ["Ángulos de 45° únicamente", "Ángulos llanos de 180°"], hint: "Pista: en esa figura regular el cruce central es perfectamente perpendicular." },
+    { p: "¿Qué figura tiene cuatro lados perpendiculares dos a dos formando cuatro esquinas de 90°?", ans: "El rectángulo", fakes: ["El triángulo escaleno", "El círculo"], hint: "Pista: sus cuatro esquinas interiores son de noventa grados." },
+    { p: "Si doblamos una hoja de papel por la mitad y luego otra vez por la mitad cruzada, los dos pliegues son:", ans: "Perpendiculares", fakes: ["Paralelos", "Oblicuos"], hint: "Pista: los dos dobleces se cruzan en el centro formando una cruz exacta." },
+    { p: "La trayectoria de dos autos que van por carriles contiguos en una avenida recta es:", ans: "Paralela", fakes: ["Perpendicular", "Secante"], hint: "Pista: circulan en la misma dirección sin cruzarse en el trayecto." }
+  ];
+
+  const dynGenerators = [
+    () => {
+      const hora = pickOne([3, 9]);
+      const ans = "Rectas perpendiculares (90°)";
+      return { p: `La aguja horaria y el minutero de un reloj a las ${hora}:00 en punto forman:`, ans, fakes: ["Rectas paralelas", "Rectas secantes oblicuas"], hint: "Pista: forman una esquina en escuadra recta." };
+    },
+    () => {
+      const hora = pickOne([1, 2, 10, 11]);
+      const ans = "Ángulo agudo (menor a 90°)";
+      return { p: `Las agujas del reloj a las ${hora}:00 marcan una abertura que corresponde a:`, ans, fakes: ["Ángulo obtuso (mayor a 90°)", "Ángulo recto de 90°"], hint: "Pista: la abertura es menor a un cuarto de vuelta." };
+    },
+    () => {
+      const hora = pickOne([4, 5, 7, 8]);
+      const ans = "Ángulo obtuso (mayor a 90°)";
+      return { p: `Las agujas del reloj a las ${hora}:00 marcan una abertura que corresponde a:`, ans, fakes: ["Ángulo agudo (menor a 90°)", "Ángulo recto de 90°"], hint: "Pista: la abertura es más abierta que una escuadra." };
+    },
+    () => {
+      const hora = 6;
+      const ans = "Rectas que forman un ángulo llano (180°)";
+      return { p: `Las agujas del reloj exactamente a las ${hora}:00 en punto forman:`, ans, fakes: ["Rectas perpendiculares (90°)", "Rectas paralelas"], hint: "Pista: quedan completamente alineadas en línea recta opuesta." };
+    },
+    () => {
+      const calle1 = pickOne(["San Martín", "Roca", "Mitre", "Belgrano"]);
+      const calle2 = pickOne(["Rivadavia", "Moreno", "Sarmiento", "Urquiza"]);
+      const ans = "Perpendiculares entre sí";
+      return { p: `En el trazado en damero de una ciudad, la calle ${calle1} y la calle transversal ${calle2} se cruzan en ángulo recto. Son rectas:`, ans, fakes: ["Paralelas entre sí", "Secantes oblicuas"], hint: "Pista: el cruce en ángulo recto define esa relación." };
+    }
+  ];
+
+  acts.push(pickOne(clasificaciones));
+  const dynItems = dynGenerators.map((gen) => gen());
+  const allPreguntas = [...dynItems, ...staticPreguntas];
+  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
-        q(
-          item.p,
-          choices.map((c) => ["📐", c]),
-          choices.indexOf(item.ans),
-          item.hint
-        ),
+        q(item.p, choices.map((c) => ["📐", c]), choices.indexOf(item.ans), item.hint),
         `m42024-q-${i}`,
         "",
         skills
       )
     );
   }
-
   return numbered(acts);
 }
 
@@ -2060,7 +2102,7 @@ function buildMundo42025(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-angulos-transportador"];
 
-  acts.push(
+  const clasificaciones = [
     makeClassify(
       "m42025-cla-1",
       "Clasificá los ángulos según su abertura respecto al ángulo recto (90°):",
@@ -2075,47 +2117,127 @@ function buildMundo42025(): ActivitySpec[] {
       ],
       "Pista: agudo es más cerrado que una escuadra, obtuso es más abierto.",
       skills
+    ),
+    makeClassify(
+      "m42025-cla-2",
+      "Clasificá estos ángulos especiales según su medida exacta:",
+      ["Ángulos rectos (90°)", "Ángulos llanos (180°)"],
+      [
+        { label: "Esquina cuadrada de un libro", cat: 0 },
+        { label: "Agujas del reloj a las 3:00 en punto", cat: 0 },
+        { label: "Cruce perpendicular de dos ejes", cat: 0 },
+        { label: "Línea recta continua abierta", cat: 1 },
+        { label: "Agujas del reloj a las 6:00 en punto", cat: 1 },
+        { label: "Media vuelta completa de un compás", cat: 1 },
+      ],
+      "Pista: el recto forma una L perfecta y el llano una línea continua.",
+      skills
+    ),
+    makeClassify(
+      "m42025-cla-3",
+      "Clasificá los ángulos según su grado de abertura:",
+      ["Menores a 90°", "Mayores a 90°"],
+      [
+        { label: "Ángulo de 15°", cat: 0 },
+        { label: "Ángulo de 60°", cat: 0 },
+        { label: "Ángulo de 80°", cat: 0 },
+        { label: "Ángulo de 105°", cat: 1 },
+        { label: "Ángulo de 125°", cat: 1 },
+        { label: "Ángulo de 170°", cat: 1 },
+      ],
+      "Pista: compará cada número con el valor de referencia noventa.",
+      skills
+    ),
+    makeClassify(
+      "m42025-cla-4",
+      "Clasificá los ángulos según correspondan a esquina recta o inclinada:",
+      ["Ángulo recto de 90°", "Ángulo agudo menor a 90°"],
+      [
+        { label: "Esquina de una mesa rectangular", cat: 0 },
+        { label: "Cruce de un poste y el piso nivelado", cat: 0 },
+        { label: "Punta afilada de una porción de pizza", cat: 1 },
+        { label: "Abertura cerrada de una tijera", cat: 1 },
+      ],
+      "Pista: el ángulo recto mide exactamente noventa.",
+      skills
+    ),
+    makeClassify(
+      "m42025-cla-5",
+      "Clasificá las aberturas observadas en la vida cotidiana:",
+      ["Ángulo obtuso (abierto)", "Ángulo agudo (cerrado)"],
+      [
+        { label: "Techo a dos aguas muy extendido", cat: 0 },
+        { label: "Puerta entreabierta más allá de 90°", cat: 0 },
+        { label: "Punta de un lápiz recién afilado", cat: 1 },
+        { label: "Rampa empinada con el suelo", cat: 1 },
+      ],
+      "Pista: observá si la abertura es más amplia o más cerrada que la escuadra.",
+      skills
+    ),
+    makeClassify(
+      "m42025-cla-6",
+      "Clasificá los ángulos según su medida en grados:",
+      ["Ángulos agudos", "Ángulos llanos (180°)"],
+      [
+        { label: "Ángulo de 20°", cat: 0 },
+        { label: "Ángulo de 55°", cat: 0 },
+        { label: "Línea del horizonte plano", cat: 1 },
+        { label: "Regla extendida de 180°", cat: 1 },
+      ],
+      "Pista: el ángulo llano mide ciento ochenta grados.",
+      skills
     )
-  );
-
-  const angulos = [
-    { deg: 90, tipo: "Ángulo recto", hint: "Mide exactamente 90°, como la esquina de una hoja." },
-    { deg: 45, tipo: "Ángulo agudo", hint: "Mide menos de 90°." },
-    { deg: 120, tipo: "Ángulo obtuso", hint: "Mide más de 90° y menos de 180°." },
-    { deg: 180, tipo: "Ángulo llano", hint: "Mide exactamente 180°, equivalente a dos rectos." },
-    { deg: 60, tipo: "Ángulo agudo", hint: "Mide menos de 90°." },
-    { deg: 135, tipo: "Ángulo obtuso", hint: "Mide más de 90°." },
-    { deg: 25, tipo: "Ángulo agudo", hint: "Es muy cerrado, mide menos de 90°." },
-    { deg: 110, tipo: "Ángulo obtuso", hint: "Mide más de 90° y menos de 180°." },
-    { deg: 15, tipo: "Ángulo agudo", hint: "Mide mucho menos que un ángulo recto." },
-    { deg: 150, tipo: "Ángulo obtuso", hint: "Es mayor que 90°." },
-    { deg: 75, tipo: "Ángulo agudo", hint: "Mide menos de 90°." },
-    { deg: 100, tipo: "Ángulo obtuso", hint: "Apenas supera el ángulo recto de 90°." },
-    { deg: 30, tipo: "Ángulo agudo", hint: "Mide un tercio del ángulo recto." },
-    { deg: 165, tipo: "Ángulo obtuso", hint: "Casi llega a ser un ángulo llano." },
-    { deg: 85, tipo: "Ángulo agudo", hint: "Mide apenas menos de 90°." },
-    { deg: 95, tipo: "Ángulo obtuso", hint: "Supera por poco el ángulo recto." },
   ];
 
+  const angulos = [
+    { p: "Si al medir con el transportador la abertura de una figura encontramos exactamente 90°, ¿qué clase de ángulo es?", ans: "Ángulo recto", fakes: ["Ángulo agudo", "Ángulo obtuso"], hint: "Pista: corresponde a la esquina cuadrada exacta de una escuadra." },
+    { p: "Si al medir con el transportador encontramos 45°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo recto", "Ángulo obtuso"], hint: "Pista: su abertura es menor al valor de noventa grados." },
+    { p: "Si al medir con el transportador encontramos 120°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: su abertura supera el ángulo de una esquina recta." },
+    { p: "Si al medir con el transportador encontramos exactamente 180°, ¿qué clase de ángulo es?", ans: "Ángulo llano", fakes: ["Ángulo recto", "Ángulo agudo"], hint: "Pista: equivale a dos ángulos rectos alineados en línea recta." },
+    { p: "Si al medir con el transportador encontramos 60°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo llano"], hint: "Pista: mide menos de noventa grados." },
+    { p: "Si al medir con el transportador encontramos 135°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: es más abierto que la esquina recta." },
+    { p: "Si al medir con el transportador encontramos 25°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: es una abertura muy cerrada menor a noventa." },
+    { p: "Si al medir con el transportador encontramos 110°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo llano"], hint: "Pista: sobrepasa la amplitud de una escuadra recta." },
+    { p: "Si al medir con el transportador encontramos 15°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: su medida está bastante por debajo de noventa grados." },
+    { p: "Si al medir con el transportador encontramos 150°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: su medida se encuentra entre noventa y ciento ochenta grados." },
+    { p: "Si al medir con el transportador encontramos 75°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo llano"], hint: "Pista: no alcanza los noventa grados." },
+    { p: "Si al medir con el transportador encontramos 100°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: supera apenas los noventa grados de referencia." },
+    { p: "Si al medir con el transportador encontramos 30°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: mide un tercio del ángulo de noventa grados." },
+    { p: "Si al medir con el transportador encontramos 165°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: está muy abierto, cerca del ángulo de línea continua." },
+    { p: "Si al medir con el transportador encontramos 85°, ¿qué clase de ángulo es?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: está apenas por debajo del ángulo recto." },
+    { p: "Si al medir con el transportador encontramos 95°, ¿qué clase de ángulo es?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: apenas supera el ángulo recto." },
+    { p: "¿Qué instrumento de geometría se utiliza para medir la amplitud de los ángulos en grados?", ans: "El transportador", fakes: ["El compás", "La cinta métrica"], hint: "Pista: tiene forma semicircular con una escala numerada de cero a ciento ochenta." },
+    { p: "El ángulo que mide exactamente 90° se denomina:", ans: "Ángulo recto", fakes: ["Ángulo agudo", "Ángulo llano"], hint: "Pista: es la referencia fundamental de las esquinas perpendiculares." },
+    { p: "Un ángulo llano equivale exactamente a la suma de:", ans: "Dos ángulos rectos (180°)", fakes: ["Tres ángulos rectos", "Un ángulo agudo y uno recto"], hint: "Pista: calculá la suma de noventa más noventa." },
+    { p: "La mitad exacta de un ángulo recto de 90° mide:", ans: "45°", fakes: ["30°", "60°"], hint: "Pista: dividí noventa por dos." },
+    { p: "Al abrir una tijera formando una abertura más chica que una escuadra, se obtiene un:", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo llano"], hint: "Pista: su amplitud no llega a noventa grados." },
+    { p: "Una esquina prolija de una hoja doblada al medio y vuelta a doblar forma un ángulo de:", ans: "90°", fakes: ["45°", "180°"], hint: "Pista: el doblez en cruz genera cuadrantes rectos." },
+    { p: "¿Cuántos grados mide un giro o vuelta completa alrededor de un punto?", ans: "360°", fakes: ["180°", "90°"], hint: "Pista: es el doble del recorrido de un ángulo llano." },
+    { p: "¿Cómo se llama el punto donde se unen las dos semirrectas que forman un ángulo?", ans: "Vértice", fakes: ["Arista", "Centro"], hint: "Pista: es la esquina de unión de los lados del ángulo." },
+    { p: "Las dos semirrectas que delimitan y forman un ángulo se denominan:", ans: "Lados del ángulo", fakes: ["Bases", "Alturas"], hint: "Pista: son las líneas que parten desde el punto común." },
+    { p: "¿En qué unidad de medida se expresa convencionalmente la amplitud de un ángulo?", ans: "En grados (°)", fakes: ["En centímetros", "En gramos"], hint: "Pista: se indica con un pequeño círculo como superíndice." },
+    { p: "Si sumamos dos ángulos de 45°, ¿qué clase de ángulo se forma?", ans: "Un ángulo recto de 90°", fakes: ["Un ángulo obtuso", "Un ángulo llano"], hint: "Pista: sumá cuarenta y cinco más cuarenta y cinco." },
+    { p: "Si sumamos dos ángulos rectos de 90°, ¿qué figura angular obtenemos?", ans: "Un ángulo llano de 180°", fakes: ["Un ángulo de 360°", "Un ángulo agudo"], hint: "Pista: forman una línea recta continua." },
+    { p: "¿Qué clase de ángulo forman las agujas de un reloj exactamente a las 6:00?", ans: "Ángulo llano de 180°", fakes: ["Ángulo recto", "Ángulo agudo"], hint: "Pista: la aguja apunta al doce y la otra hacia abajo al seis." },
+    { p: "¿Qué clase de ángulo forman las agujas de un reloj exactamente a las 3:00?", ans: "Ángulo recto de 90°", fakes: ["Ángulo obtuso", "Ángulo llano"], hint: "Pista: el doce y el tres forman una esquina en escuadra." },
+    { p: "¿Qué clase de ángulo forman las agujas de un reloj a las 2:00?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: su separación es menor a la de las tres en punto." },
+    { p: "¿Qué clase de ángulo forman las agujas de un reloj a las 5:00?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: su separación supera la de una esquina recta." }
+  ];
+
+  acts.push(pickOne(clasificaciones));
   const seleccionados = shuffle(angulos).slice(0, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionados[i];
-    const choices = distinctChoices(item.tipo, ["Ángulo agudo", "Ángulo recto", "Ángulo obtuso", "Ángulo llano"], 3);
+    const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
-        q(
-          `Si al medir con el transportador la abertura de una figura encontramos exactamente ${item.deg}°, ¿qué clase de ángulo es?`,
-          choices.map((c) => ["🧭", c]),
-          choices.indexOf(item.tipo),
-          item.hint
-        ),
+        q(item.p, choices.map((c) => ["🧭", c]), choices.indexOf(item.ans), item.hint),
         `m42025-q-${i}`,
         "",
         skills
       )
     );
   }
-
   return numbered(acts);
 }
 
@@ -2124,7 +2246,7 @@ function buildMundo42026(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-triangulos"];
 
-  acts.push(
+  const clasificaciones = [
     makeClassify(
       "m42026-cla-1",
       "Clasificá los triángulos según la longitud de sus tres lados:",
@@ -2137,127 +2259,124 @@ function buildMundo42026(): ActivitySpec[] {
       ],
       "Pista: equilátero tiene los tres lados de igual medida; escaleno tiene los tres lados distintos.",
       skills
+    ),
+    makeClassify(
+      "m42026-cla-2",
+      "Clasificá los triángulos según sus ángulos interiores:",
+      ["Triángulo rectángulo (un ángulo recto)", "Triángulo acutángulo (tres agudos)"],
+      [
+        { label: "Triángulo con un ángulo de 90° y dos de 45°", cat: 0 },
+        { label: "Escuadra clásica con esquina en escuadra", cat: 0 },
+        { label: "Triángulo con tres ángulos de 60°", cat: 1 },
+        { label: "Triángulo con ángulos de 50°, 60° y 70°", cat: 1 },
+      ],
+      "Pista: el rectángulo tiene una esquina de 90°, el acutángulo tiene todos menores a 90°.",
+      skills
+    ),
+    makeClassify(
+      "m42026-cla-3",
+      "Clasificá los triángulos según la cantidad de lados iguales:",
+      ["Isósceles (al menos 2 lados iguales)", "Escaleno (ningún lado igual)"],
+      [
+        { label: "Banderín con dos lados de 20 cm y uno de 10 cm", cat: 0 },
+        { label: "Triángulo con lados de 8 cm, 8 cm y 12 cm", cat: 0 },
+        { label: "Triángulo con lados de 5 cm, 7 cm y 9 cm", cat: 1 },
+        { label: "Triángulo con lados de 6 cm, 10 cm y 14 cm", cat: 1 },
+      ],
+      "Pista: isósceles tiene un par de lados de igual longitud.",
+      skills
     )
-  );
-
-  const preguntasTriangulos = [
-    {
-      p: "Un banderín de campamento tiene dos lados de 25 cm y un lado de 15 cm. ¿Cómo se clasifica por sus LADOS?",
-      ans: "Triángulo isósceles",
-      fakes: ["Triángulo equilátero", "Triángulo escaleno"],
-      hint: "El triángulo que tiene exactamente dos lados de igual longitud es isósceles.",
-    },
-    {
-      p: "Una señal de tránsito triangular de 'Ceda el paso' tiene sus tres lados de 60 cm cada uno. ¿Cómo se clasifica por sus LADOS?",
-      ans: "Triángulo equilátero",
-      fakes: ["Triángulo isósceles", "Triángulo escaleno"],
-      hint: "Cuando los tres lados miden lo mismo, es equilátero.",
-    },
-    {
-      p: "Un triángulo tiene un ángulo recto de 90°. ¿Cómo se clasifica según sus ÁNGULOS?",
-      ans: "Triángulo rectángulo",
-      fakes: ["Triángulo acutángulo", "Triángulo obtusángulo"],
-      hint: "El triángulo que posee un ángulo recto se llama rectángulo.",
-    },
-    {
-      p: "Si los tres ángulos interiores de un triángulo son menores a 90° (agudos), ¿cómo se clasifica según sus ÁNGULOS?",
-      ans: "Triángulo acutángulo",
-      fakes: ["Triángulo rectángulo", "Triángulo obtusángulo"],
-      hint: "Acutángulo viene de agudo: sus tres ángulos son agudos.",
-    },
-    {
-      p: "Un triángulo tiene un ángulo de 120° (obtuso). ¿Cómo se clasifica según sus ÁNGULOS?",
-      ans: "Triángulo obtusángulo",
-      fakes: ["Triángulo rectángulo", "Triángulo acutángulo"],
-      hint: "Si tiene un ángulo mayor a 90°, es un triángulo obtusángulo.",
-    },
-    {
-      p: "¿Cuánto suman SIEMPRE los tres ángulos interiores de cualquier triángulo?",
-      ans: "180°",
-      fakes: ["90°", "360°"],
-      hint: "En cualquier triángulo, la suma de sus tres ángulos interiores siempre es igual a dos ángulos rectos: 180°.",
-    },
-    {
-      p: "Un cantero de flores tiene forma triangular con lados de 2 m, 3 m y 4 m. ¿Cómo se clasifica por sus LADOS?",
-      ans: "Triángulo escaleno",
-      fakes: ["Triángulo isósceles", "Triángulo equilátero"],
-      hint: "Sus tres lados tienen longitudes distintas: es escaleno.",
-    },
-    {
-      p: "Si un triángulo tiene dos ángulos de 45° y un ángulo de 90°, ¿qué tipo de triángulo es por sus ángulos?",
-      ans: "Triángulo rectángulo",
-      fakes: ["Triángulo obtusángulo", "Triángulo acutángulo"],
-      hint: "Basta con que uno de sus ángulos sea recto para que sea rectángulo.",
-    },
-    {
-      p: "Un triángulo equilátero tiene sus tres lados iguales. ¿Cómo son sus tres ángulos interiores?",
-      ans: "Iguales (cada uno mide 60°)",
-      fakes: ["Distintos entre sí", "Todos de 90°"],
-      hint: "Al tener lados iguales, sus tres ángulos también son iguales y suman 180°.",
-    },
-    {
-      p: "Un triángulo con lados de 7 cm, 7 cm y 7 cm es:",
-      ans: "Equilátero",
-      fakes: ["Isósceles", "Escaleno"],
-      hint: "Tres lados de igual longitud definen al triángulo equilátero.",
-    },
-    {
-      p: "Si un triángulo tiene un ángulo obtuso de 110°, ¿cómo se clasifica por sus ángulos?",
-      ans: "Triángulo obtusángulo",
-      fakes: ["Triángulo acutángulo", "Triángulo rectángulo"],
-      hint: "Un ángulo mayor a 90° lo clasifica como obtusángulo.",
-    },
-    {
-      p: "Un triángulo con lados de 5 cm, 5 cm y 8 cm se clasifica como:",
-      ans: "Isósceles",
-      fakes: ["Equilátero", "Escaleno"],
-      hint: "Tiene dos lados iguales y uno desigual.",
-    },
-    {
-      p: "¿Puede existir un triángulo con DOS ángulos rectos de 90° en el plano?",
-      ans: "No, porque dos rectos ya suman 180° sin dejar lugar a un tercer ángulo",
-      fakes: ["Sí, si es un triángulo grande", "Sí, si sus lados son curvos"],
-      hint: "La suma total de los tres ángulos debe ser exactamente 180°.",
-    },
-    {
-      p: "Una escuadra de dibujo de 45° es un triángulo rectángulo y a la vez:",
-      ans: "Isósceles",
-      fakes: ["Equilátero", "Escaleno"],
-      hint: "Tiene dos lados (catetos) de la misma longitud.",
-    },
-    {
-      p: "Un triángulo cuyos tres lados miden 8 cm, 11 cm y 14 cm es:",
-      ans: "Escaleno",
-      fakes: ["Isósceles", "Equilátero"],
-      hint: "Todos sus lados tienen medidas diferentes.",
-    },
-    {
-      p: "Si dos ángulos de un triángulo miden 50° y 60°, ¿cuánto mide el tercer ángulo sabiendo que suman 180°?",
-      ans: "70°",
-      fakes: ["80°", "60°"],
-      hint: "Restá 50 y 60 a 180 (180 - 110 = 70).",
-    },
   ];
 
-  const seleccionadas = shuffle(preguntasTriangulos).slice(0, 7);
+  const staticPreguntas = [
+    { p: "Un banderín de campamento tiene dos lados de 25 cm y un lado de 15 cm. ¿Cómo se clasifica por sus LADOS?", ans: "Triángulo isósceles", fakes: ["Triángulo equilátero", "Triángulo escaleno"], hint: "Pista: fijate que posee exactamente dos lados con idéntica medida." },
+    { p: "Una señal de tránsito triangular de 'Ceda el paso' tiene sus tres lados de 60 cm cada uno. ¿Cómo se clasifica por sus LADOS?", ans: "Triángulo equilátero", fakes: ["Triángulo isósceles", "Triángulo escaleno"], hint: "Pista: observá que las tres dimensiones son idénticas." },
+    { p: "Un triángulo tiene un ángulo recto de 90°. ¿Cómo se clasifica según sus ÁNGULOS?", ans: "Triángulo rectángulo", fakes: ["Triángulo acutángulo", "Triángulo obtusángulo"], hint: "Pista: su denominación proviene de la presencia del ángulo de esquina recta." },
+    { p: "Si los tres ángulos interiores de un triángulo son menores a 90° (agudos), ¿cómo se clasifica según sus ÁNGULOS?", ans: "Triángulo acutángulo", fakes: ["Triángulo rectángulo", "Triángulo obtusángulo"], hint: "Pista: el prefijo alude a que todas sus aberturas son agudas." },
+    { p: "Un triángulo tiene un ángulo de 120° (obtuso). ¿Cómo se clasifica según sus ÁNGULOS?", ans: "Triángulo obtusángulo", fakes: ["Triángulo rectángulo", "Triángulo acutángulo"], hint: "Pista: la presencia de una abertura superior a noventa determina su clase." },
+    { p: "¿Cuánto suman SIEMPRE los tres ángulos interiores de cualquier triángulo?", ans: "180°", fakes: ["90°", "360°"], hint: "Pista: en el plano, la suma angular equivale a dos rectos." },
+    { p: "Un cantero de flores tiene forma triangular con lados de 2 m, 3 m y 4 m. ¿Cómo se clasifica por sus LADOS?", ans: "Triángulo escaleno", fakes: ["Triángulo isósceles", "Triángulo equilátero"], hint: "Pista: sus tres longitudes presentan valores desiguales." },
+    { p: "Si un triángulo tiene dos ángulos de 45° y un ángulo de 90°, ¿qué tipo de triángulo es por sus ángulos?", ans: "Triángulo rectángulo", fakes: ["Triángulo obtusángulo", "Triángulo acutángulo"], hint: "Pista: alcanza con la presencia de un ángulo recto para clasificarlo." },
+    { p: "Un triángulo equilátero tiene sus tres lados iguales. ¿Cómo son sus tres ángulos interiores?", ans: "Iguales (cada uno mide 60°)", fakes: ["Distintos entre sí", "Todos de 90°"], hint: "Pista: la regularidad de sus lados se traslada a la igualdad de sus aberturas." },
+    { p: "Un triángulo con lados de 7 cm, 7 cm y 7 cm es:", ans: "Equilátero", fakes: ["Isósceles", "Escaleno"], hint: "Pista: los tres segmentos tienen idéntica longitud." },
+    { p: "Si un triángulo tiene un ángulo obtuso de 110°, ¿cómo se clasifica por sus ángulos?", ans: "Triángulo obtusángulo", fakes: ["Triángulo acutángulo", "Triángulo rectángulo"], hint: "Pista: la abertura de más de noventa grados define su nombre." },
+    { p: "Un triángulo con lados de 5 cm, 5 cm y 8 cm se clasifica como:", ans: "Isósceles", fakes: ["Equilátero", "Escaleno"], hint: "Pista: cuenta con dos lados iguales y uno diferente." },
+    { p: "¿Puede existir un triángulo con DOS ángulos rectos de 90° en el plano?", ans: "No, porque dos rectos ya suman 180° sin dejar lugar a un tercer ángulo", fakes: ["Sí, si es un triángulo grande", "Sí, si sus lados son curvos"], hint: "Pista: la suma total de las tres aberturas no puede exceder el límite." },
+    { p: "Una escuadra de dibujo de 45° es un triángulo rectángulo y a la vez:", ans: "Isósceles", fakes: ["Equilátero", "Escaleno"], hint: "Pista: sus dos lados perpendiculares poseen la misma extensión." },
+    { p: "Un triángulo cuyos tres lados miden 8 cm, 11 cm y 14 cm es:", ans: "Escaleno", fakes: ["Isósceles", "Equilátero"], hint: "Pista: ninguna de las tres medidas coincide." },
+    { p: "Si dos ángulos de un triángulo miden 50° y 60°, ¿cuánto mide el tercer ángulo sabiendo que suman 180°?", ans: "70°", fakes: ["80°", "60°"], hint: "Pista: calculá la diferencia restante para alcanzar la suma total." },
+    { p: "Un triángulo con lados de 12 cm, 12 cm y 15 cm recibe el nombre de:", ans: "Isósceles", fakes: ["Equilátero", "Escaleno"], hint: "Pista: posee un par de lados congruentes." },
+    { p: "Si un triángulo tiene lados de 9 cm, 12 cm y 15 cm y un ángulo de 90°, por sus lados es:", ans: "Escaleno", fakes: ["Isósceles", "Equilátero"], hint: "Pista: fijate si alguna de sus tres medidas se repite." },
+    { p: "El triángulo que tiene sus tres lados desiguales se denomina:", ans: "Triángulo escaleno", fakes: ["Triángulo isósceles", "Triángulo equilátero"], hint: "Pista: cada lado tiene una extensión diferente." },
+    { p: "¿Qué clase de triángulo posee tres ángulos interiores agudos menores a 90°?", ans: "Acutángulo", fakes: ["Rectángulo", "Obtusángulo"], hint: "Pista: ninguna de sus aberturas alcanza los noventa grados." },
+    { p: "Si un triángulo tiene dos ángulos de 70° cada uno, ¿cuánto mide el tercer ángulo?", ans: "40°", fakes: ["50°", "60°"], hint: "Pista: sumá los dos conocidos y restá de ciento ochenta." },
+    { p: "En un triángulo rectángulo, los dos ángulos que no son el recto deben ser siempre:", ans: "Agudos (suman 90°)", fakes: ["Obtusos", "Rectos"], hint: "Pista: entre los dos completan los noventa grados que faltan." },
+    { p: "¿Cuántos vértices y cuántos lados tiene cualquier triángulo?", ans: "3 lados y 3 vértices", fakes: ["4 lados y 3 vértices", "3 lados y 4 vértices"], hint: "Pista: el prefijo 'tri' indica tres elementos." },
+    { p: "¿Puede un triángulo equilátero ser también rectángulo?", ans: "No, porque sus ángulos siempre miden 60° cada uno", fakes: ["Sí, en algunos casos especiales", "Sí, si sus lados son muy largos"], hint: "Pista: en el equilátero los ángulos son obligatoriamente agudos." },
+    { p: "Si un triángulo tiene un ángulo de 100°, los otros dos ángulos deben ser necesariamente:", ans: "Agudos", fakes: ["Rectos", "Obtusos"], hint: "Pista: no pueden superar los ochenta grados en conjunto." },
+    { p: "¿Cómo se llama el lado opuesto al ángulo recto en un triángulo rectángulo?", ans: "Hipotenusa", fakes: ["Cateto", "Base menor"], hint: "Pista: es el segmento de mayor longitud en esa figura." },
+    { p: "Los dos lados que forman el ángulo recto en un triángulo rectángulo se denominan:", ans: "Catetos", fakes: ["Diagonales", "Radios"], hint: "Pista: son las dos ramas que se cortan perpendicularmente." },
+    { p: "Si en un triángulo dos lados miden 10 cm y el tercero 10 cm, es:", ans: "Equilátero", fakes: ["Isósceles", "Escaleno"], hint: "Pista: los tres lados tienen exactamente la misma medida." },
+    { p: "Si los ángulos interiores de un triángulo miden 30°, 60° y 90°, se clasifica como:", ans: "Rectángulo", fakes: ["Acutángulo", "Obtusángulo"], hint: "Pista: tiene una abertura de noventa grados." },
+    { p: "Si un triángulo tiene ángulos de 20°, 40° y 120°, se clasifica como:", ans: "Obtusángulo", fakes: ["Acutángulo", "Rectángulo"], hint: "Pista: una de sus aberturas supera los noventa grados." },
+    { p: "La altura de un triángulo es un segmento que cae perpendicular sobre:", ans: "La base o su prolongación", fakes: ["El vértice opuesto únicamente", "El punto medio exterior"], hint: "Pista: forma un ángulo recto con la línea de apoyo." },
+    { p: "¿Cuál es el perímetro de un triángulo equilátero de 5 cm de lado?", ans: "15 cm", fakes: ["10 cm", "20 cm"], hint: "Pista: sumá tres veces la longitud del lado." }
+  ];
+
+  const dynGenerators = [
+    () => {
+      const a = randInt(25, 75);
+      const b = randInt(25, 140 - a);
+      const c = 180 - a - b;
+      const ans = `${c}°`;
+      return { p: `Si dos ángulos de un triángulo miden ${a}° y ${b}°, ¿cuánto mide el tercer ángulo sabiendo que suman 180°?`, ans, fakes: [`${c + 10}°`, `${Math.max(10, c - 10)}°`], hint: `Pista: restá ${a} y ${b} de 180° (180 - ${a + b} = ${c}).` };
+    },
+    () => {
+      const lado = randInt(4, 25);
+      const ans = `${lado * 3} cm`;
+      return { p: `¿Cuál es el perímetro de un triángulo equilátero cuyos lados miden ${lado} cm cada uno?`, ans, fakes: [`${lado * 2} cm`, `${lado * 4} cm`], hint: `Pista: sumá los tres lados iguales (${lado} × 3 = ${lado * 3}).` };
+    },
+    () => {
+      const igual = randInt(10, 35);
+      const base = igual + pickOne([-4, -2, 3, 5]);
+      return { p: `Un banderín escolar tiene lados de ${igual} cm, ${igual} cm y ${base} cm. ¿Cómo se clasifica según sus LADOS?`, ans: "Triángulo isósceles", fakes: ["Triángulo equilátero", "Triángulo escaleno"], hint: "Pista: fijate que tiene dos lados de igual medida y uno distinto." };
+    },
+    () => {
+      const l1 = randInt(5, 15);
+      const l2 = l1 + randInt(2, 5);
+      const l3 = l2 + randInt(2, 5);
+      return { p: `Un cantero triangular tiene lados de ${l1} m, ${l2} m y ${l3} m. ¿Cómo se clasifica según sus LADOS?`, ans: "Triángulo escaleno", fakes: ["Triángulo isósceles", "Triángulo equilátero"], hint: "Pista: sus tres lados tienen medidas diferentes." };
+    },
+    () => {
+      const a1 = pickOne([30, 45, 60, 35, 55, 40, 50]);
+      const a2 = 90 - a1;
+      return { p: `Un triángulo tiene ángulos interiores de 90°, ${a1}° y ${a2}°. ¿Cómo se clasifica según sus ÁNGULOS?`, ans: "Triángulo rectángulo", fakes: ["Triángulo acutángulo", "Triángulo obtusángulo"], hint: "Pista: tiene un ángulo recto de 90°." };
+    },
+    () => {
+      const obt = pickOne([100, 110, 120, 130, 140]);
+      const rem = 180 - obt;
+      const a1 = Math.floor(rem / 2);
+      const a2 = rem - a1;
+      return { p: `Un triángulo tiene ángulos interiores de ${obt}°, ${a1}° y ${a2}°. ¿Cómo se clasifica según sus ÁNGULOS?`, ans: "Triángulo obtusángulo", fakes: ["Triángulo acutángulo", "Triángulo rectángulo"], hint: "Pista: tiene un ángulo mayor a 90°." };
+    }
+  ];
+
+  acts.push(pickOne(clasificaciones));
+  const dynItems = dynGenerators.map((gen) => gen());
+  const allPreguntas = [...dynItems, ...staticPreguntas];
+  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
-        q(
-          item.p,
-          choices.map((c) => ["📐", c]),
-          choices.indexOf(item.ans),
-          item.hint
-        ),
+        q(item.p, choices.map((c) => ["📐", c]), choices.indexOf(item.ans), item.hint),
         `m42026-q-${i}`,
         "",
         skills
       )
     );
   }
-
   return numbered(acts);
 }
 
@@ -2266,7 +2385,7 @@ function buildMundo42027(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-cuadrilateros", "m4-planos"];
 
-  acts.push(
+  const clasificaciones = [
     makeClassify(
       "m42027-cla-1",
       "Clasificá estos cuerpos geométricos según su forma y caras:",
@@ -2280,127 +2399,149 @@ function buildMundo42027(): ActivitySpec[] {
       ],
       "Pista: el cubo tiene todas sus 6 caras cuadradas e idénticas.",
       skills
+    ),
+    makeClassify(
+      "m42027-cla-2",
+      "Clasificá las figuras cuadriláteras según sus lados paralelos:",
+      ["Paralelogramos (2 pares de lados paralelos)", "No paralelogramos (trapecios o trapezoides)"],
+      [
+        { label: "Cuadrado de 4 lados iguales", cat: 0 },
+        { label: "Rectángulo de lados opuestos iguales", cat: 0 },
+        { label: "Rombo con lados paralelos dos a dos", cat: 0 },
+        { label: "Trapecio con un solo par de bases paralelas", cat: 1 },
+        { label: "Trapezoide sin lados paralelos", cat: 1 },
+      ],
+      "Pista: los paralelogramos tienen ambos pares de lados opuestos paralelos.",
+      skills
+    ),
+    makeClassify(
+      "m42027-cla-3",
+      "Clasificá los cuadriláteros según la igualdad de sus cuatro lados:",
+      ["4 lados iguales", "Lados consecutivos desiguales"],
+      [
+        { label: "Cuadrado regular", cat: 0 },
+        { label: "Rombo tradicional", cat: 0 },
+        { label: "Rectángulo con largo y ancho distintos", cat: 1 },
+        { label: "Trapecio isósceles", cat: 1 },
+      ],
+      "Pista: el cuadrado y el rombo comparten la propiedad de tener cuatro lados iguales.",
+      skills
+    ),
+    makeClassify(
+      "m42027-cla-4",
+      "Clasificá los cuadriláteros según la presencia de ángulos rectos:",
+      ["Con 4 ángulos rectos de 90°", "Sin ángulos rectos obligatorios"],
+      [
+        { label: "Cuadrado", cat: 0 },
+        { label: "Rectángulo", cat: 0 },
+        { label: "Rombo oblicuo", cat: 1 },
+        { label: "Trapezoide irregular", cat: 1 },
+      ],
+      "Pista: cuadrado y rectángulo poseen cuatro esquinas rectas.",
+      skills
+    ),
+    makeClassify(
+      "m42027-cla-5",
+      "Clasificá entre figuras del plano y cuerpos del espacio:",
+      ["Figuras planas 2D", "Cuerpos con volumen 3D"],
+      [
+        { label: "Cuadrado dibujado en papel", cat: 0 },
+        { label: "Rectángulo trazado con regla", cat: 0 },
+        { label: "Cubo de madera maciza", cat: 1 },
+        { label: "Prisma de cartón para encomiendas", cat: 1 },
+      ],
+      "Pista: los cuerpos ocupan un lugar tridimensional en el espacio.",
+      skills
+    ),
+    makeClassify(
+      "m42027-cla-6",
+      "Clasificá las partes constitutivas de un poliedro:",
+      ["Caras (superficies planas)", "Aristas (filos de unión)"],
+      [
+        { label: "Lado cuadrado frontal de un cubo", cat: 0 },
+        { label: "Base rectangular de una caja", cat: 0 },
+        { label: "Borde donde se juntan dos caras", cat: 1 },
+        { label: "Línea de unión entre pared y piso de la caja", cat: 1 },
+      ],
+      "Pista: las caras son superficies y las aristas son segmentos.",
+      skills
     )
-  );
-
-  const preguntasGeo = [
-    {
-      p: "¿Qué cuadrilátero tiene sus cuatro lados iguales y sus cuatro ángulos rectos de 90°?",
-      ans: "El cuadrado",
-      fakes: ["El rectángulo", "El rombo"],
-      hint: "El cuadrado reúne los cuatro lados iguales y cuatro ángulos rectos.",
-    },
-    {
-      p: "¿En qué se diferencian un rectángulo y un cuadrado?",
-      ans: "El rectángulo tiene lados opuestos iguales, no los cuatro iguales",
-      fakes: ["El rectángulo no tiene ángulos rectos", "El cuadrado tiene lados de distinta medida"],
-      hint: "Ambos tienen 4 ángulos rectos, pero en el rectángulo los lados consecutivos no miden lo mismo.",
-    },
-    {
-      p: "¿Cómo se llama el cuadrilátero que tiene solo UN par de lados opuestos paralelos?",
-      ans: "Trapecio",
-      fakes: ["Paralelogramo", "Trapezoide"],
-      hint: "El trapecio tiene dos bases paralelas y otros dos lados no paralelos.",
-    },
-    {
-      p: "¿Qué cuadrilátero tiene sus cuatro lados de igual longitud pero sus ángulos NO son necesariamente rectos?",
-      ans: "El rombo",
-      fakes: ["El trapecio", "El rectángulo"],
-      hint: "El rombo tiene 4 lados iguales y lados opuestos paralelos.",
-    },
-    {
-      p: "¿Cómo se llama la familia de cuadriláteros que tienen DOS pares de lados opuestos paralelos?",
-      ans: "Paralelogramos",
-      fakes: ["Trapecios", "Triángulos"],
-      hint: "Incluye al cuadrado, rectángulo, rombo y romboide.",
-    },
-    {
-      p: "¿Cuánto suman SIEMPRE los cuatro ángulos interiores de cualquier cuadrilátero plano?",
-      ans: "360°",
-      fakes: ["180°", "270°"],
-      hint: "Todo cuadrilátero se puede dividir en 2 triángulos (180° + 180° = 360°).",
-    },
-    {
-      p: "¿Cómo se llama el segmento recto que une dos vértices no consecutivos dentro de un cuadrilátero?",
-      ans: "Diagonal",
-      fakes: ["Arista", "Radio"],
-      hint: "En cualquier cuadrilátero se pueden trazar 2 diagonales.",
-    },
-    {
-      p: "¿Cuántos lados, vértices y ángulos tiene toda figura cuadrilátera?",
-      ans: "4 lados, 4 vértices y 4 ángulos",
-      fakes: ["3 lados, 3 vértices y 3 ángulos", "5 lados, 5 vértices y 5 ángulos"],
-      hint: "El prefijo 'cuadri' indica cuatro elementos.",
-    },
-    {
-      p: "Si un cuadrilátero tiene sus lados opuestos paralelos e iguales y sus 4 ángulos son rectos, es un:",
-      ans: "Rectángulo",
-      fakes: ["Trapecio", "Rombo"],
-      hint: "Los ángulos rectos y lados opuestos iguales definen al rectángulo.",
-    },
-    {
-      p: "¿Cuál de las siguientes figuras es un cuadrilátero sin ningún lado paralelo?",
-      ans: "Trapezoide",
-      fakes: ["Trapecio", "Rombo"],
-      hint: "El trapezoide no posee lados paralelos.",
-    },
-    {
-      p: "¿Cuántas caras, aristas y vértices tiene un cubo?",
-      ans: "6 caras, 12 aristas y 8 vértices",
-      fakes: ["4 caras, 8 aristas y 4 vértices", "8 caras, 12 aristas y 6 vértices"],
-      hint: "Tiene 6 caras planas cuadradas, 12 bordes (aristas) y 8 esquinas (vértices).",
-    },
-    {
-      p: "¿Cómo se llama la línea donde se unen dos caras de un cuerpo geométrico?",
-      ans: "Arista",
-      fakes: ["Vértice", "Diagonal"],
-      hint: "La arista es el borde común donde se juntan dos caras.",
-    },
-    {
-      p: "¿Cómo se llama el punto de encuentro donde coinciden tres o más aristas de un prisma?",
-      ans: "Vértice",
-      fakes: ["Cara", "Base"],
-      hint: "El vértice es la 'esquina' del cuerpo geométrico.",
-    },
-    {
-      p: "¿Qué forma tienen las 6 caras de un prisma rectangular recto (caja de zapatos)?",
-      ans: "Rectángulos",
-      fakes: ["Círculos", "Triángulos"],
-      hint: "Sus caras laterales y bases son figuras rectangulares.",
-    },
-    {
-      p: "¿Cuántas bases paralelas tiene un prisma rectangular recto?",
-      ans: "2 bases",
-      fakes: ["1 base", "4 bases"],
-      hint: "Un prisma se apoya sobre una base inferior y tiene una base superior idéntica.",
-    },
-    {
-      p: "¿Qué cuerpo geométrico tiene todas sus caras idénticas con forma de cuadrado?",
-      ans: "El cubo",
-      fakes: ["El prisma triangular", "El cono"],
-      hint: "Sus 6 caras son cuadrados exactamente iguales.",
-    },
   ];
 
-  const seleccionadas = shuffle(preguntasGeo).slice(0, 7);
+  const preguntasGeo = [
+    { p: "¿Qué cuadrilátero tiene sus cuatro lados iguales y sus cuatro ángulos rectos de 90°?", ans: "El cuadrado", fakes: ["El rectángulo", "El rombo"], hint: "Pista: reúne lados congruentes y cuatro esquinas perpendiculares." },
+    { p: "¿En qué se diferencian un rectángulo y un cuadrado?", ans: "El rectángulo tiene lados opuestos iguales, no los cuatro iguales", fakes: ["El rectángulo no tiene ángulos rectos", "El cuadrado tiene lados de distinta medida"], hint: "Pista: compará la longitud de lados consecutivos en ambas figuras." },
+    { p: "¿Cómo se llama el cuadrilátero que tiene solo UN par de lados opuestos paralelos?", ans: "Trapecio", fakes: ["Paralelogramo", "Trapezoide"], hint: "Pista: posee una base mayor y una base menor paralelas entre sí." },
+    { p: "¿Qué cuadrilátero tiene sus cuatro lados de igual longitud pero sus ángulos NO son necesariamente rectos?", ans: "El rombo", fakes: ["El trapecio", "El rectángulo"], hint: "Pista: todos sus bordes miden lo mismo aunque sus esquinas sean oblicuas." },
+    { p: "¿Cómo se llama la familia de cuadriláteros que tienen DOS pares de lados opuestos paralelos?", ans: "Paralelogramos", fakes: ["Trapecios", "Triángulos"], hint: "Pista: este grupo engloba al cuadrado, rectángulo y rombo." },
+    { p: "¿Cuánto suman SIEMPRE los cuatro ángulos interiores de cualquier cuadrilátero plano?", ans: "360°", fakes: ["180°", "270°"], hint: "Pista: cualquier polígono de cuatro lados se divide en dos triángulos." },
+    { p: "¿Cómo se llama el segmento recto que une dos vértices no consecutivos dentro de un cuadrilátero?", ans: "Diagonal", fakes: ["Arista", "Radio"], hint: "Pista: cruza la figura de una esquina a la opuesta." },
+    { p: "¿Cuántos lados, vértices y ángulos tiene toda figura cuadrilátera?", ans: "4 lados, 4 vértices y 4 ángulos", fakes: ["3 lados, 3 vértices y 3 ángulos", "5 lados, 5 vértices y 5 ángulos"], hint: "Pista: el prefijo de su nombre determina el número de elementos." },
+    { p: "Si un cuadrilátero tiene sus lados opuestos paralelos e iguales y sus 4 ángulos son rectos, es un:", ans: "Rectángulo", fakes: ["Trapecio", "Rombo"], hint: "Pista: posee esquinas perpendiculares y caras opuestas congruentes." },
+    { p: "¿Cuál de las siguientes figuras es un cuadrilátero sin ningún lado paralelo?", ans: "Trapezoide", fakes: ["Trapecio", "Rombo"], hint: "Pista: no presenta ningún paralelismo entre sus bordes." },
+    { p: "¿Cuántas caras, aristas y vértices tiene un cubo?", ans: "6 caras, 12 aristas y 8 vértices", fakes: ["4 caras, 8 aristas y 4 vértices", "8 caras, 12 aristas y 6 vértices"], hint: "Pista: pensá en las seis caras cuadradas de un dado común." },
+    { p: "¿Cómo se llama la línea donde se unen dos caras de un cuerpo geométrico?", ans: "Arista", fakes: ["Vértice", "Diagonal"], hint: "Pista: es el borde o filo de unión entre dos superficies planas." },
+    { p: "¿Cómo se llama el punto de encuentro donde coinciden tres o más aristas de un prisma?", ans: "Vértice", fakes: ["Cara", "Base"], hint: "Pista: representa cada una de las esquinas del cuerpo." },
+    { p: "¿Qué forma tienen las 6 caras de un prisma rectangular recto (caja de zapatos)?", ans: "Rectángulos", fakes: ["Círculos", "Triángulos"], hint: "Pista: cada una de sus superficies exteriores es un cuadrilátero recto." },
+    { p: "¿Cuántas bases paralelas tiene un prisma rectangular recto?", ans: "2 bases", fakes: ["1 base", "4 bases"], hint: "Pista: tiene una superficie de apoyo inferior y otra idéntica superior." },
+    { p: "¿Qué cuerpo geométrico tiene todas sus caras idénticas con forma de cuadrado?", ans: "El cubo", fakes: ["El prisma triangular", "El cono"], hint: "Pista: sus seis caras son polígonos regulares de cuatro lados." },
+    { p: "¿Cuántas diagonales se pueden trazar en total en cualquier cuadrilátero convexo?", ans: "2 diagonales", fakes: ["4 diagonales", "1 diagonal"], hint: "Pista: se unen los pares de vértices no consecutivos opuestos." },
+    { p: "Un romboide se caracteriza por tener:", ans: "Dos pares de lados consecutivos iguales", fakes: ["Cuatro lados iguales", "Ningún lado igual"], hint: "Pista: se asemeja a la silueta tradicional de un barrilete." },
+    { p: "¿Qué figura plana se obtiene al desplegar las caras de un cubo sobre la mesa?", ans: "Un desarrollo plano de 6 cuadrados", fakes: ["4 rectángulos y 2 círculos", "6 triángulos"], hint: "Pista: el cuerpo tridimensional está formado exclusivamente por caras cuadradas." },
+    { p: "¿Cuántas aristas concurren en cada vértice de un cubo?", ans: "3 aristas", fakes: ["2 aristas", "4 aristas"], hint: "Pista: en cada esquina se unen el largo, el ancho y el alto." },
+    { p: "Si una caja tiene 6 caras pero no todas son cuadradas, sino rectangulares, es un:", ans: "Prisma rectangular", fakes: ["Cubo", "Pirámide"], hint: "Pista: sus superficies laterales presentan forma de rectángulo." },
+    { p: "¿Cómo son entre sí las caras opuestas de un prisma rectangular?", ans: "Paralelas e iguales", fakes: ["Perpendiculares", "Triangulares"], hint: "Pista: mantienen la misma orientación y superficie." },
+    { p: "Un cuadrilátero con un ángulo recto, ¿puede ser un trapecio?", ans: "Sí, es un trapecio rectángulo", fakes: ["No, nunca", "Solo si es un cuadrado"], hint: "Pista: conserva dos bases paralelas y un lado perpendicular a ellas." },
+    { p: "¿Qué relación guardan las dos diagonales de un cuadrado?", ans: "Son iguales y perpendiculares", fakes: ["Son de distinta medida", "Nunca se cortan"], hint: "Pista: se intersectan en el centro formando ángulos rectos de igual extensión." },
+    { p: "¿Cuántos vértices tiene un prisma rectangular recto?", ans: "8 vértices", fakes: ["6 vértices", "12 vértices"], hint: "Pista: cuenta con cuatro esquinas en la base inferior y cuatro en la superior." },
+    { p: "¿Cuántas aristas tiene un prisma rectangular recto?", ans: "12 aristas", fakes: ["8 aristas", "6 aristas"], hint: "Pista: sumá las cuatro aristas de abajo, cuatro de arriba y cuatro verticales." },
+    { p: "¿Qué figura forma la base de una pirámide de base cuadrada?", ans: "Un cuadrado", fakes: ["Un triángulo", "Un círculo"], hint: "Pista: el nombre de la pirámide señala el polígono de apoyo." },
+    { p: "En un paralelogramo, los ángulos opuestos son:", ans: "Iguales", fakes: ["Complementarios", "Desiguales"], hint: "Pista: conservan la misma amplitud angular." },
+    { p: "¿Cuántas caras laterales tiene un prisma de base rectangular?", ans: "4 caras laterales", fakes: ["2 caras laterales", "6 caras laterales"], hint: "Pista: descartá las dos bases superior e inferior." },
+    { p: "Si un cuerpo geométrico puede rodar sobre una mesa, ¿puede ser un cubo?", ans: "No, porque todas sus caras son planas", fakes: ["Sí, si tiene vértices redondeados", "Sí, siempre"], hint: "Pista: los cuerpos poliedros carecen de superficies curvas." }
+  ];
+
+  acts.push(pickOne(clasificaciones));
+  const dynGenerators = [
+    () => {
+      const lado = randInt(4, 25);
+      const ans = `${lado * 4} cm`;
+      return { p: `El perímetro de un cuadrado de ${lado} cm de lado es:`, ans, fakes: [`${lado * 2} cm`, `${lado * 3} cm`], hint: "Pista: sumá la longitud de sus cuatro lados iguales." };
+    },
+    () => {
+      const largo = randInt(8, 20);
+      const ancho = randInt(3, 7);
+      const perim = 2 * (largo + ancho);
+      const ans = `${perim} cm`;
+      return { p: `El perímetro de un rectángulo de ${largo} cm de largo y ${ancho} cm de ancho es:`, ans, fakes: [`${largo * ancho} cm`, `${perim + 4} cm`], hint: "Pista: sumá dos veces el largo y dos veces el ancho." };
+    },
+    () => {
+      const k = randInt(2, 5);
+      const ans = `${k * 12} aristas`;
+      return { p: `¿Cuántas aristas reúnen en conjunto ${k} cubos separados?`, ans, fakes: [`${k * 6} aristas`, `${k * 8} aristas`], hint: "Pista: cada cubo tiene doce aristas." };
+    },
+    () => {
+      const k = randInt(2, 5);
+      const ans = `${k * 8} vértices`;
+      return { p: `¿Cuántos vértices reúnen en conjunto ${k} prismas rectangulares?`, ans, fakes: [`${k * 6} vértices`, `${k * 12} vértices`], hint: "Pista: cada prisma posee ocho vértices." };
+    }
+  ];
+
+  const dynItems = dynGenerators.map((gen) => gen());
+  const allPreguntas = [...dynItems, ...preguntasGeo];
+  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
-        q(
-          item.p,
-          choices.map((c) => ["🧊", c]),
-          choices.indexOf(item.ans),
-          item.hint
-        ),
+        q(item.p, choices.map((c) => ["🧊", c]), choices.indexOf(item.ans), item.hint),
         `m42027-q-${i}`,
         "",
         skills
       )
     );
   }
-
   return numbered(acts);
 }
 
@@ -2409,42 +2550,52 @@ function buildMundo42028(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-medidas-peso-cap", "m4-tiempo", "m4-superficies", "m4-perimetro", "m4-estadistica"];
 
-  // Perímetro
-  const largo = randInt(15, 35);
-  const ancho = randInt(8, 20);
-  const perim = 2 * largo + 2 * ancho;
+  // Perímetro variado
+  const perimLugares = [
+    { lugar: "Una huerta comunitaria en Los Antiguos", largo: randInt(15, 45), ancho: randInt(8, 25) },
+    { lugar: "Un patio de recreo en una escuela de Río Gallegos", largo: randInt(20, 50), ancho: randInt(10, 30) },
+    { lugar: "Una cancha de vóley en el polideportivo de Caleta Olivia", largo: randInt(16, 36), ancho: randInt(9, 22) },
+    { lugar: "Un cantero de flores en la costanera de El Calafate", largo: randInt(12, 30), ancho: randInt(6, 18) }
+  ];
+  const pLugar = pickOne(perimLugares);
+  const perimVal = 2 * pLugar.largo + 2 * pLugar.ancho;
   acts.push(
     makeInput(
       "m42028-perim",
-      `Una huerta comunitaria en Los Antiguos mide ${largo} metros de largo por ${ancho} metros de ancho. ¿Cuántos metros de alambre se necesitan para dar una vuelta completa a su perímetro?`,
-      perim,
-      `Pista: sumá los cuatro lados (${largo} + ${largo} + ${ancho} + ${ancho}).`,
+      `${pLugar.lugar} mide ${pLugar.largo} metros de largo por ${pLugar.ancho} metros de ancho. ¿Cuántos metros de cerca se necesitan para rodear todo su perímetro?`,
+      perimVal,
+      `Pista: calculá la suma de los cuatro lados (${pLugar.largo} + ${pLugar.largo} + ${pLugar.ancho} + ${pLugar.ancho}).`,
       skills
     )
   );
 
-  // Superficie / Área
-  const baseArea = randInt(6, 12);
-  const altArea = randInt(4, 8);
-  const area = baseArea * altArea;
+  // Superficie / Área variado
+  const areaLugares = [
+    { lugar: "El piso de una carpa de investigación en El Chaltén", base: randInt(5, 14), alt: randInt(4, 9) },
+    { lugar: "Una sala de lectura en la biblioteca de Puerto Deseado", base: randInt(6, 15), alt: randInt(5, 10) },
+    { lugar: "Un taller artesanal en Gobernador Gregores", base: randInt(7, 16), alt: randInt(4, 8) },
+    { lugar: "Un invernadero municipal en Río Turbio", base: randInt(8, 18), alt: randInt(5, 11) }
+  ];
+  const aLugar = pickOne(areaLugares);
+  const areaVal = aLugar.base * aLugar.alt;
   acts.push(
     makeInput(
       "m42028-area",
-      `El piso de una carpa de investigación en El Chaltén tiene ${baseArea} metros de largo por ${altArea} metros de ancho. ¿Cuál es su superficie en metros cuadrados (m²)?`,
-      area,
-      `Pista: multiplicá el largo por el ancho (${baseArea} × ${altArea}).`,
+      `${aLugar.lugar} tiene ${aLugar.base} metros de largo por ${aLugar.alt} metros de ancho. ¿Cuál es su superficie en metros cuadrados (m²)?`,
+      areaVal,
+      `Pista: multiplicá la longitud del largo por la del ancho (${aLugar.base} × ${aLugar.alt}).`,
       skills
     )
   );
 
-  // Peso / Masa
-  const kg = pickOne([2, 3, 5]);
+  // Peso / Masa variado
+  const kg = pickOne([2, 3, 4, 5, 6, 8, 10]);
   const g = kg * 1000;
   const choicesPeso = distinctChoices(`${g.toLocaleString("es-AR")} gramos`, [`${(kg * 100).toLocaleString("es-AR")} gramos`, `${(kg * 10).toLocaleString("es-AR")} gramos`], 3);
   acts.push(
     qToPick(
       q(
-        `Una bolsa de lana esquilada en una estancia de Santa Cruz pesa ${kg} kilogramos. ¿A cuántos gramos equivale?`,
+        `Una bolsa de lana esquilada en una estancia de Santa Cruz pesa ${kg} kilogramos. ¿A cuántos gramos equivale ese peso?`,
         choicesPeso.map((c) => ["⚖️", c]),
         choicesPeso.indexOf(`${g.toLocaleString("es-AR")} gramos`),
         "Pista: 1 kilogramo equivale exactamente a 1.000 gramos."
@@ -2455,8 +2606,8 @@ function buildMundo42028(): ActivitySpec[] {
     )
   );
 
-  // Capacidad
-  const litros = pickOne([2, 3, 4]);
+  // Capacidad variado
+  const litros = pickOne([2, 3, 4, 5, 6, 8]);
   const ml = litros * 1000;
   const choicesCap = distinctChoices(`${ml.toLocaleString("es-AR")} ml`, [`${(litros * 100).toLocaleString("es-AR")} ml`, `${(litros * 500).toLocaleString("es-AR")} ml`], 3);
   acts.push(
@@ -2473,14 +2624,14 @@ function buildMundo42028(): ActivitySpec[] {
     )
   );
 
-  // Tiempo realista en Santa Cruz (Río Gallegos a Comandante Luis Piedra Buena: ~235 km)
-  const horasViaje = pickOne([2, 3, 4, 5]);
+  // Tiempo: Horas a minutos variado
+  const horasViaje = pickOne([2, 3, 4, 5, 6]);
   const minutosViaje = horasViaje * 60;
   const choicesTiempo = distinctChoices(`${minutosViaje} minutos`, [`${minutosViaje - 30} minutos`, `${minutosViaje + 60} minutos`], 3);
   acts.push(
     qToPick(
       q(
-        `El viaje en colectivo de larga distancia desde Río Gallegos hacia el interior demora aproximadamente ${horasViaje} horas. ¿A cuántos minutos equivale ese viaje?`,
+        `El viaje en colectivo de larga distancia por las rutas santacruceñas demora aproximadamente ${horasViaje} horas. ¿A cuántos minutos equivale ese viaje?`,
         choicesTiempo.map((c) => ["⏱️", c]),
         choicesTiempo.indexOf(`${minutosViaje} minutos`),
         `Pista: cada hora tiene 60 minutos. Multiplicá ${horasViaje} × 60.`
@@ -2491,14 +2642,14 @@ function buildMundo42028(): ActivitySpec[] {
     )
   );
 
-  // Minutos a segundos
-  const min = pickOne([2, 3, 5]);
+  // Tiempo: Minutos a segundos variado
+  const min = pickOne([2, 3, 4, 5, 8]);
   const seg = min * 60;
   const choicesSeg = distinctChoices(`${seg} segundos`, [`${seg - 20} segundos`, `${seg + 30} segundos`], 3);
   acts.push(
     qToPick(
       q(
-        `Durante un recreo escolar pasaron ${min} minutos. ¿Cuántos segundos duró ese tiempo?`,
+        `Durante una actividad escolar cronometrada pasaron ${min} minutos. ¿Cuántos segundos duró ese intervalo?`,
         choicesSeg.map((c) => ["⏳", c]),
         choicesSeg.indexOf(`${seg} segundos`),
         `Pista: cada minuto tiene 60 segundos. Multiplicá ${min} × 60.`
@@ -2509,29 +2660,33 @@ function buildMundo42028(): ActivitySpec[] {
     )
   );
 
-  // Capacidad fraccionaria (medio litro y cuarto litro)
-  const choicesVasos = distinctChoices("4 vasos", ["2 vasos", "8 vasos"], 3);
+  // Capacidad fraccionaria variada (pool de preguntas)
+  const vasosPool = [
+    { p: "Si un vaso tiene una capacidad de 250 ml (1/4 de litro), ¿cuántos vasos se pueden llenar con una jarra de 1 litro?", ans: "4 vasos", fakes: ["2 vasos", "8 vasos"], hint: "Pista: pensá cuántas partes de 250 ml suman 1.000 ml." },
+    { p: "Si una taza tiene una capacidad de 500 ml (1/2 litro), ¿cuántas tazas se pueden llenar con un termo de 2 litros?", ans: "4 tazas", fakes: ["2 tazas", "6 tazas"], hint: "Pista: en cada litro entran dos medios litros." },
+    { p: "¿Cuántos vasitos de 125 ml (1/8 de litro) se llenan con 1 litro entero de jugo?", ans: "8 vasitos", fakes: ["4 vasitos", "16 vasitos"], hint: "Pista: ocho partes de 125 ml completan 1.000 ml." },
+    { p: "Si una botella contiene 1 1/2 litro de agua, ¿a cuántos mililitros equivale?", ans: "1.500 ml", fakes: ["1.250 ml", "1.750 ml"], hint: "Pista: sumá los mililitros de un litro entero más los de medio litro." },
+    { p: "¿Cuántos vasos de 250 ml se pueden llenar con una botella de 2 litros de agua mineral?", ans: "8 vasos", fakes: ["4 vasos", "6 vasos"], hint: "Pista: cada litro rinde cuatro vasos de un cuarto." },
+    { p: "Si tenemos un bidón de 3 litros de jugo, ¿cuántos recipientes de 500 ml podemos llenar?", ans: "6 recipientes", fakes: ["3 recipientes", "8 recipientes"], hint: "Pista: duplicá la cantidad de litros para obtener los medios litros." }
+  ];
+  const vItem = pickOne(vasosPool);
+  const choicesV = distinctChoices(vItem.ans, vItem.fakes, 3);
   acts.push(
     qToPick(
-      q(
-        `Si un vaso tiene una capacidad de 250 ml (1/4 de litro), ¿cuántos vasos se pueden llenar con una jarra de 1 litro?`,
-        choicesVasos.map((c) => ["🥛", c]),
-        choicesVasos.indexOf("4 vasos"),
-        "Pista: 1 litro equivale a 1.000 ml; calculá cuántas partes de 250 ml completan 1.000 ml."
-      ),
+      q(vItem.p, choicesV.map((c) => ["🥛", c]), choicesV.indexOf(vItem.ans), vItem.hint),
       "m42028-vasos",
       "",
       skills
     )
   );
 
-  // Estadística: variedad de lectura de tablas y datos
+  // Estadística variada
   const estadisticaEscenarios = [
     () => {
       const target = "Jueves (18 °C)";
       const choices = distinctChoices(target, ["Martes (15 °C)", "Viernes (14 °C)"], 3);
       return {
-        prompt: `En una tabla de temperaturas máximas en Río Gallegos se anotó:\nLunes: 12 °C — Martes: 15 °C — Miércoles: 10 °C — Jueves: 18 °C — Viernes: 14 °C.\n¿Qué día se registró la temperatura MÁS ALTA?`,
+        prompt: "En una tabla de temperaturas máximas en Río Gallegos se anotó:\nLunes: 12 °C — Martes: 15 °C — Miércoles: 10 °C — Jueves: 18 °C — Viernes: 14 °C.\n¿Qué día se registró la temperatura MÁS ALTA?",
         target,
         choices,
         pista: "Pista: compará los números de la tabla y buscá el valor mayor.",
@@ -2539,44 +2694,64 @@ function buildMundo42028(): ActivitySpec[] {
     },
     () => {
       const target = "Miércoles (9 °C)";
-      const choices = distinctChoices(target, ["Lunes (12 °C)", "Viernes (14 °C)"], 3);
+      const choices = distinctChoices(target, ["Lunes: 12 °C", "Viernes: 14 °C"], 3);
       return {
-        prompt: `En un registro semanal del clima en El Calafate se anotaron estas temperaturas mínimas:\nLunes: 12 °C — Martes: 15 °C — Miércoles: 9 °C — Jueves: 18 °C — Viernes: 14 °C.\n¿Qué día se registró la temperatura MÁS BAJA?`,
+        prompt: "En un registro semanal del clima en El Calafate se anotaron estas temperaturas mínimas:\nLunes: 12 °C — Martes: 15 °C — Miércoles: 9 °C — Jueves: 18 °C — Viernes: 14 °C.\n¿Qué día se registró la temperatura MÁS BAJA?",
         target,
         choices,
         pista: "Pista: buscá en la lista el día con el número menor de grados.",
       };
     },
     () => {
-      const target = "Febrero (520 visitantes)";
-      const choices = distinctChoices(target, ["Enero (450 visitantes)", "Marzo (310 visitantes)"], 3);
+      const target = "5 días";
+      const choices = distinctChoices(target, ["3 días", "4 días"], 3);
       return {
-        prompt: `Un registro de visitantes en el Parque Nacional Monte León muestra:\nEnero: 450 — Febrero: 520 — Marzo: 310 — Abril: 280.\n¿En qué mes hubo la MAYOR cantidad de visitantes?`,
+        prompt: "Durante la semana se registraron las horas de sol en Puerto San Julián:\nLun: 6 h — Mar: 8 h — Mié: 5 h — Jue: 7 h — Vie: 9 h.\n¿Cuántos días de la semana tuvieron 5 o más horas de sol?",
         target,
         choices,
-        pista: "Pista: compará la cantidad de visitantes registrada en cada mes.",
+        pista: "Pista: contá los días cuyos valores sean iguales o mayores a 5.",
       };
     },
     () => {
-      const target = "Fútbol (35 alumnos)";
-      const choices = distinctChoices(target, ["Básquet (22 alumnos)", "Natación (28 alumnos)"], 3);
+      const target = "Sábado (120 personas)";
+      const choices = distinctChoices(target, ["Viernes (95 personas)", "Domingo (110 personas)"], 3);
       return {
-        prompt: `En una encuesta sobre deportes preferidos en 4.º grado participaron 103 alumnos:\nFútbol: 35 — Básquet: 22 — Vóley: 18 — Natación: 28.\n¿Cuál fue el deporte MÁS elegido?`,
+        prompt: "Un museo histórico de Santa Cruz registró visitantes:\nJueves: 45 — Viernes: 95 — Sábado: 120 — Domingo: 110.\n¿Qué día asistió la MAYOR cantidad de personas?",
         target,
         choices,
-        pista: "Pista: observá cuál es el deporte con el número más alto de respuestas.",
+        pista: "Pista: buscá el número más alto en el conteo de visitas.",
       };
     },
+    () => {
+      const target = "Viernes (2 mm)";
+      const choices = distinctChoices(target, ["Martes (15 mm)", "Miércoles (8 mm)"], 3);
+      return {
+        prompt: "En una estación meteorológica se midieron precipitaciones:\nLunes: 10 mm — Martes: 15 mm — Miércoles: 8 mm — Jueves: 12 mm — Viernes: 2 mm.\n¿Qué día llovió MENOS?",
+        target,
+        choices,
+        pista: "Pista: buscá el valor numérico más bajo del registro de lluvias.",
+      };
+    },
+    () => {
+      const target = "Grado C (32 alumnos)";
+      const choices = distinctChoices(target, ["Grado A (25 alumnos)", "Grado B (28 alumnos)"], 3);
+      return {
+        prompt: "En un gráfico de barras sobre cantidad de estudiantes se observa:\nGrado A: 25 — Grado B: 28 — Grado C: 32 — Grado D: 26.\n¿Qué grado tiene la barra MÁS ALTA?",
+        target,
+        choices,
+        pista: "Pista: relacioná la altura de la barra con la mayor cantidad de alumnos.",
+      };
+    }
   ];
-  const estGen = pickOne(estadisticaEscenarios)();
 
+  const estCase = pickOne(estadisticaEscenarios)();
   acts.push(
     qToPick(
       q(
-        estGen.prompt,
-        estGen.choices.map((c) => ["📊", c]),
-        estGen.choices.indexOf(estGen.target),
-        estGen.pista
+        estCase.prompt,
+        estCase.choices.map((c) => ["📊", c]),
+        estCase.choices.indexOf(estCase.target),
+        estCase.pista
       ),
       "m42028-est",
       "",
