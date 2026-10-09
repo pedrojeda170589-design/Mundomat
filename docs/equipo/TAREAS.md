@@ -31,8 +31,8 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-21) |
 | AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-23) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
-| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🔴 PENDIENTE: **es la que sigue** |
-| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🔴 PENDIENTE (después de AG-21) |
+| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
 | CL-25 | Apoyos visuales (`apoyo` en las actividades: fila y cuadro de números, recta con saltos, bloques de base 10, reloj, dinero, grupos) en Matemática de 1.º, 2.º y 3.º; dibujo del tema en las actividades de texto de 2.º y 3.º; los cuentos se narran siempre con la voz del navegador | Claude | 🟢 UNIDA A MAIN |
@@ -127,6 +127,150 @@ Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablar
    - `npx tsx scripts/test-colecciones.ts`: OK.
    - `npx tsx scripts/test-privacidad.ts`: OK.
    - Respeto total a `publicado: false` en `src/lib/grades.ts` (4.º grado continúa oculto).
+
+### AG-23 · Panel docente: qué contenidos reforzar, por eje (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (para revisión de Claude y Pedro).
+
+#### Resumen punto por punto
+
+1. **Función pura `contenidosAReforzar(...)` en `src/lib/reforzar.ts` [HECHO]**
+   - Entrada: mundos/habilidades a reforzar o tupla `{ student, progress, enabledWorldIds }` con los umbrales pedagógicos de siempre (`needs_help` / `practica-guiada`, `in_progress` / `necesita-practica`), currículo activo (`getCurriculoActivo()`, Santa Cruz o NAP) con entradas validadas por el docente, y catálogo de mundos.
+   - Salida estructurada agrupada por materia y eje:
+     ```ts
+     { materia: string; materiaId: string; eje: string; items: ContenidoRefuerzoItem[] }[]
+     ```
+   - Materias ordenadas según el mapa oficial: Matemática (0), Lengua (1), Ciencias Naturales (2), Ciencias Sociales (3).
+   - Ejes ordenados según la secuencia de aparición de los mundos en el mapa.
+   - `contenido`: texto curricular sintético extraído prioritariamente de `WorldDef.description` (o habilidad/currículo). Si un mundo no posee entrada curricular (cuentos, dictados, zonas de práctica o complementarios), se clasifica bajo el eje `«Otros»` con su `description`.
+   - **Deduplicación estricta:** Si dos mundos del mismo eje abordan el mismo contenido curricular, se consolidan en una única entrada conservando el peor nivel (`LEVEL_SEVERITY`: `practica-guiada` > `necesita-practica` > `en-desarrollo` > `sin-datos` > `consolidado`) y la menor precisión porcentual.
+   - Helpers: `resumirEjes(grupos)` para listas compactas («Matemática · Número y Operaciones (2)») y `formatWorldRefuerzoCSV(id)` / `formatWorldsRefuerzoCSV(ids)` para exportación «eje: contenido».
+
+2. **Componente unificado `ReforzarPorEje` en `src/components/admin/ReforzarPorEje.tsx` [HECHO]**
+   - Jerarquía visual fiel a la especificación:
+     - Cabecera: `Materia · Eje (cantidad de contenidos)`
+     - Viñetas de contenido con emoji de nivel (`🔴` práctica guiada, `🟠` necesita práctica, `🟢` consolidado).
+     - Contenido sintético claro (ej. «Sumar y restar para agregar, quitar, ganar o perder»).
+     - Precisión porcentual entre paréntesis (`(52 % de aciertos)`) cuando existen intentos.
+     - Nombre del mundo discreto al final en gris (`— mundo: La Aldea de los Números`) como referencia de ubicación en el mapa.
+     - Acordeón interactivo: al tocar un ítem despliega el texto completo del diseño curricular, la fuente bibliográfica (`📖 DC Santa Cruz 1.er ciclo, p. 89`) y la advertencia si el vínculo no fue validado (`⚠️ Vínculo curricular sin validar`).
+     - Modo imprimible (`printable={true}`): despliega automáticamente todos los contenidos y detalles sin botones, adaptado para impresión nítida en hoja A4.
+
+3. **Resumen del curso (`src/components/admin/CourseSummary.tsx`, «A quién ayudar primero») [HECHO]**
+   - Se reemplazó la lista de nombres de mundos por los ejes curriculares y la cantidad de contenidos afectados («Matemática · Número y Operaciones (2)»).
+   - Se añadió `redWorldIds` a `StudentHelpPriority` en `courseSummary.ts` para mapear directamente los mundos en rojo del alumno sin mostrar nombres aislados de mundos.
+
+4. **Reporte imprimible del curso (`src/app/admin/reporte/curso/page.tsx`) [HECHO]**
+   - En la Sección 2 («Prioridades Pedagógicas / A quién ayudar primero»), se integró `<ReforzarPorEje grupos={grupos} printable={true} />`.
+   - El docente visualiza exactamente los contenidos curriculares y fuentes oficiales de cada estudiante en riesgo, sin nombres sueltos de mundos y listo para imprimir en A4.
+
+5. **Legajo del alumno (`src/app/docente/alumno/page.tsx`, «Fortalezas y aspectos a reforzar») [HECHO]**
+   - Tanto la sección de «Aspectos a reforzar» (`practica-guiada` y `necesita-practica`) como la de «Fortalezas» (`consolidado`) se agrupan por eje curricular utilizando el componente `ReforzarPorEje`.
+
+6. **CSV del curso (`src/lib/courseExport.ts`) [HECHO]**
+   - Las columnas «Mundos a Fortalecer» y «Mundos Pendientes de Refuerzo» ahora exportan en formato `eje: contenido` (ej. `Número y Operaciones: Sumar y restar para agregar, quitar, ganar o perder; Lectura: Comprensión de textos narrativos`).
+   - Se eliminaron los nombres aislados de mundos del archivo descargable.
+
+7. **Compatibilidad total con todos los grados (1.º, 2.º, 3.º y 4.º) [HECHO]**
+   - Funciona de forma consistente en los 395 mundos del catálogo (1.º, 2.º, 3.º, 4.º, dictados y zonas de práctica).
+   - Admite etiquetas y descripciones de habilidades (`SkillDef`) cuando la pantalla trabaja a nivel habilidad.
+   - 4.º grado continúa oculto (`publicado: false` en `src/lib/grades.ts`).
+
+8. **Suite de pruebas de regresión y verificación [HECHO]**
+   - Creado `scripts/test-reforzar.ts` con 6 bloques de prueba exhaustivos:
+     1. Agrupamiento por materia y eje en orden del mapa y fallback a «Otros» con `description`.
+     2. Deduplicación por contenido en el mismo eje y retención del peor nivel pedagógico (`practica-guiada` > `necesita-practica` > `consolidado`).
+     3. Cambio de currículo activo: con `curriculoId: "nap"` o `setCurriculoActivo("nap")` adopta los ejes y fuentes textuales de los NAP («En relación con el número y las operaciones» y «NAP Matemática 1.er ciclo»).
+     4. Verificación en 395 mundos de que NINGÚN texto de salida es solo el nombre del mundo.
+     5. Coincidencia exacta de umbrales con `computeStudentsNeedingHelp` en base local y caso sintético con mundos en rojo.
+     6. Verificación de formato CSV delimitado por `;`.
+   - `npx tsc --noEmit`: 0 errores.
+   - `npx eslint src`: 0 advertencias / 0 errores.
+   - Tests de regresión todos en verde:
+     - `npx tsx scripts/test-reforzar.ts` (6/6 bloques OK)
+     - `npx tsx scripts/test-grado4.ts` (14/14 checks OK)
+     - `npx tsx scripts/test-eventos.ts` (9/9 bloques OK)
+     - `npx tsx scripts/test-monte-leon.ts` (9/9 bloques OK)
+     - `npx tsx scripts/test-resumen.ts` (5/5 bloques OK)
+     - `npx tsx scripts/test-reportes.ts` (OK)
+     - `npx tsx scripts/test-privacidad.ts` (OK)
+     - `npx tsx scripts/test-curriculo.ts` (OK)
+   - Base de datos local `.data/db.json` protegida y restaurada intacta.
+
+### AG-21 · Tercera corrección de 4.º grado (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` para revisión de Claude).
+
+#### Resumen punto por punto
+
+1. **Respuestas que se adivinaban sin saber [HECHO]**
+   - **Verdadero/Falso (50/50):** Se reescribieron los bancos y pools de V/F (`TF_NATURALES`, `TF_SOCIALES`, `getExtraLengua`) con pares complementarios plausibles (afirmaciones falsas creíbles). En la simulación exhaustiva de 500 vueltas, cada mundo con V/F alcanza entre el 45% y 55% de afirmaciones falsas (superando holgadamente el mínimo exigido del 35%).
+   - **Clasificar desordenado:** `makeClassify` en `src/lib/grade4/content/util.ts` mezcla los ítems y comprueba que no presenten patrón alternado `(0, 1, 0, 1)`. En conjunto con `mezclarOpciones`, la comprobación estadística valida que ninguna actividad de clasificar presenta patrón alternado sistemático.
+   - **Actividades extra dinámicas (`EXTRA_*`):** Se transformaron en funciones generadoras invocadas en cada vuelta (`getExtraNaturales`, `getExtraSociales`, `getExtraLengua`), manteniendo Proxies para compatibilidad hacia atrás. Cada sesión y cada vuelta genera actividades frescas.
+   - **Etiquetas que delataban la respuesta:** Se eliminaron los paréntesis y pistas en las opciones de clasificar/ordenar (ej. naturales 542, 547, 563, 567, 568, 587, 588, 593, 623; sociales 518, 542; lengua 1146-1148 «pasado/presente/futuro»).
+   - **Equilibrio de longitud de opciones:** Se equilibraron las longitudes de los distractores en todos los bancos (Lengua: 25.00% más larga; Sociales: 24.36% más larga; Naturales: 26.15% más larga; Global: 25.15% más larga). Se añadió aserción estricta en `test-grado4.ts` que falla si la opción correcta es la más larga en > 40% de cualquier banco.
+   - **Pistas orientadoras sin copiar la respuesta:** Se ajustaron las pistas para que orienten con palabras clave temáticas sin repetir textualmente la respuesta ni regalar la opción.
+   - **Casos particulares:** Se corrigieron `lengua.ts:600` (eliminada la explicación entre paréntesis en «cancíon») y `matematica.ts` (eliminadas explicaciones entre paréntesis en comparaciones de romanos).
+
+2. **Distractores de chiste eliminados [HECHO]**
+   - Se reemplazaron todos los distractores inverosímiles y de chiste por errores conceptuales típicos de alumnos de 9 años (Naturales 42, 60, 69, 79, 82, 150, 158, 191, 305, 308, 344, 365, 404, 486; Sociales 174, 190, 229, 245, 266, 344, 418, 419, 479, 496; Lengua 114, 115, 135, 607; Matemática 1855 «cuadrado con 5 lados»).
+
+3. **Errores de contenido resueltos [HECHO]**
+   - **Naturales:**
+     - 440: Sombra al mediodía en Santa Cruz apunta al **sur** (el sol está en el norte geográfico).
+     - 137: Monte León es **Parque Nacional** y la mayor colonia continental de pingüinos de Magallanes es **Punta Tombo** (Chubut).
+     - 300: Colador que separa fideos del agua clasificado como **filtración** (tamización es para sólidos de distinto tamaño).
+     - 518: Guanaco descrito con precisión (el mayor mamífero terrestre nativo patagónico, sin afirmar erróneamente que es el mayor camélido mundial).
+     - 582: El imán realiza separación magnética / imantación (no decantación).
+     - 128: Castor aclarado como introducido en Tierra del Fuego.
+     - 32: Flor de michay amarillo-anaranjada.
+     - 479: Pregunta y respuesta diferenciadas sin tautologías.
+     - Vocabulario adaptado a 9 años (sin tecnicismos innecesarios como «heterótrofos absortivos», «ampolla con robinete», etc.).
+   - **Sociales:**
+     - 56: El Gorosito es un monumento de **hormigón armado** (verificado y corregido).
+     - 77: Cerro San Lorenzo y relieve provincial verificado documentalmente.
+     - 95: Represas hidroeléctricas sobre el río Santa Cruz (sin nombres partidarios ni de personas).
+     - 108 y 534: Precipitaciones de la estepa ajustadas a «menos de 300 mm».
+     - 158: Tonina overa protegida como monumento natural provincial en Santa Cruz (no nacional).
+     - 246: Carácter chino 雕 reemplazado por emoji estándar 🗿.
+     - 251: Cueva de las Manos atribuida a antiguos cazadores-recolectores milenarios (hace ~9.000 años).
+     - 300 y 462: Pucará de Tilcara aclarado como omaguaca; ruinas de Quilmes empleadas para diaguitas.
+     - 327: Eliminada palabra en inglés («domesticated» -> domesticado).
+     - 436: Camino Real descrito como camino de tierra y huella de carretas (no empedrado).
+     - 487 y 634: Simplificación de la Legislatura provincial santacruceña (sistema unicameral).
+     - 557 y Mundo 11 (43011): Actividad pesquera clasificada como actividad económica **primaria** (y el procesamiento/congelación como secundaria); título ajustado a «Actividades productivas: turismo y pesca marítima».
+   - **Lengua:**
+     - 81: Causa y consecuencia ordenadas lógicamente.
+     - 126: Casimiro Biguá sin fechas controvertidas.
+     - 129: Darwin y FitzRoy exploraron el río Santa Cruz en botes balleneros remontando la corriente.
+     - 291: Consigna de sangría reescrita sin depender de espacios no visibles en UI.
+     - 292: Raya de diálogo para aperturas y citas.
+     - 436, 1107, 1119: Conjugación y pronombres («estudian (ustedes)» no atribuido erróneamente a 2.ª persona).
+     - 790-791: Fórmulas de cierre de cartas con puntuación correcta (coma o punto, no dos puntos).
+     - 1257-1262: Separación estricta de prefijos y sufijos.
+
+4. **Matemática [HECHO]**
+   - **42022 y 42023 (Decimales):** Cero ruido flotante (`7,199999999999999`). Implementada función `decimalAR(n, cifras = 2)` en `src/lib/grade4/content/util.ts` aplicada rigurosamente en sumas, restas y comparaciones decimales.
+   - **Variabilidad en todos los mundos:** Generadores dinámicos o bancos de 15+ ítems aleatorios en 42005, 42015, 42016, 42018, 42019, 42024, 42025, 42026, 42027 y 42028.
+   - **42021:** Corregido el muestreo de preguntas sobre milésimos.
+   - **Deduplicación:** Generadores con conjuntos de valores únicos dentro de cada vuelta (`usedValues`, `usedTotals`).
+   - **42003:** Poblaciones censales reales y verificadas de Santa Cruz.
+   - **42014:** Incorporados criterios de divisibilidad y tabla de verdad en formato estructurado.
+
+5. **Pruebas y verificación [HECHO]**
+   - `scripts/test-grado4.ts`:
+     - Check 1: Falla si hay > 3 decimales, notación exponencial `e-`, o `NaN`/`undefined` dentro del texto.
+     - Check 3: Valida el emoji de cada opción asegurando que no existan emojis de chiste ni prohibidos.
+     - Nuevo Check: Verdadero/falso con al menos 35% de «falso» por mundo.
+     - Nuevo Check: Clasificar sin patrón alternado sistemático.
+     - Check 3.5: Falla si la opción correcta es la más larga en más del 40% de un banco.
+     - Check 8: Matemática con variabilidad consecutiva (0 actividades repetidas en > 50% de los mundos; obtenido > 78%).
+   - **10 ejecuciones consecutivas** de `scripts/test-grado4.ts` pasadas exitosamente (10/10 en verde, sin fallas al azar).
+   - `npx tsc --noEmit`: 0 errores.
+   - `npx eslint src`: 0 errores y 0 warnings.
+   - Tests de regresión en verde: `test-eventos`, `test-monte-leon`, `test-resumen`, `test-reportes`, `test-privacidad`, `test-modulos`.
+   - Base de datos local restaurada.
+   - 4.º grado continúa oculto (`publicado: false`).
 
 ### AG-18 · Segunda corrección del contenido de 4.º grado (Antigravity)
 

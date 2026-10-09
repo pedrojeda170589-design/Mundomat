@@ -2,6 +2,7 @@ import { Student, StudentProgress } from "@/types";
 import { getWorld } from "@/lib/worlds";
 import { masteryPctForWorld } from "@/lib/grades";
 import { CurriculumEntry } from "@/lib/curriculo";
+import { formatWorldRefuerzoCSV } from "@/lib/reforzar";
 
 export function generateCourseCSV(
   students: Student[],
@@ -69,11 +70,11 @@ export function generateCourseCSV(
     const timeMin = Math.round(totalTimeSec / 60);
 
     const needingReviewNames = (p?.worldsNeedingTeacherReview ?? [])
-      .map((id) => getWorld(id)?.name ?? `M${id}`)
+      .map((id) => formatWorldRefuerzoCSV(id))
       .join(", ");
 
     const pendingRetryNames = (p?.worldsPendingReinforcementRetry ?? [])
-      .map((id) => getWorld(id)?.name ?? `M${id}`)
+      .map((id) => formatWorldRefuerzoCSV(id))
       .join(", ");
 
     const rowCells = [

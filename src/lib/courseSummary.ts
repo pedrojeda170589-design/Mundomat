@@ -26,6 +26,7 @@ export interface StudentHelpPriority {
   student: Student;
   redWorldsCount: number;
   redWorldNames: string[];
+  redWorldIds?: number[];
   daysInactive: number | null;
   lastPlayedAt: string | null;
   reasons: string[];
@@ -218,12 +219,14 @@ export function computeStudentsNeedingHelp(
   for (const student of students) {
     const p = progressMap[student.code];
     const redWorldNames: string[] = [];
+    const redWorldIds: number[] = [];
 
     for (const wId of enabledWorldIds) {
       const summary = getStudentWorldSummary(student, p, wId);
       if (summary.played && summary.status === "needs_help") {
         const w = getWorld(wId);
         redWorldNames.push(w?.name ?? `Mundo ${wId}`);
+        redWorldIds.push(wId);
       }
     }
 
@@ -263,6 +266,7 @@ export function computeStudentsNeedingHelp(
         student,
         redWorldsCount: redWorldNames.length,
         redWorldNames,
+        redWorldIds,
         daysInactive,
         lastPlayedAt,
         reasons,

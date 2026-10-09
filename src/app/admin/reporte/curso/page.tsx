@@ -14,6 +14,8 @@ import {
   getStudentWorldSummary,
 } from "@/lib/courseSummary";
 import { generateCourseCSV, downloadCourseCSV } from "@/lib/courseExport";
+import { contenidosAReforzar } from "@/lib/reforzar";
+import ReforzarPorEje from "@/components/admin/ReforzarPorEje";
 
 export default function CourseReportPage() {
   return (
@@ -287,31 +289,37 @@ function CourseReportContent() {
           </h2>
           {helpList.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-              {helpList.slice(0, 6).map((h) => (
-                <div
-                  key={h.student.code}
-                  className="p-3 rounded-xl border border-rose-200 bg-rose-50/50 text-xs flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-black text-rose-950 truncate">{h.student.name}</span>
-                      <span className="text-[10px] font-bold bg-white text-rose-800 border border-rose-300 px-1.5 py-0.5 rounded">
-                        {h.student.grade ?? 3}.º
-                      </span>
+              {helpList.slice(0, 6).map((h) => {
+                const ids = h.redWorldIds && h.redWorldIds.length > 0 ? h.redWorldIds : [];
+                const grupos = ids.length > 0
+                  ? contenidosAReforzar(ids, { worlds: relevantWorlds })
+                  : [];
+                return (
+                  <div
+                    key={h.student.code}
+                    className="p-3 rounded-xl border border-rose-200 bg-rose-50/50 text-xs flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-black text-rose-950 truncate">{h.student.name}</span>
+                        <span className="text-[10px] font-bold bg-white text-rose-800 border border-rose-300 px-1.5 py-0.5 rounded">
+                          {h.student.grade ?? 3}.º
+                        </span>
+                      </div>
+                      <ul className="text-[11px] text-rose-800 space-y-0.5 mb-2">
+                        {h.reasons.map((r, i) => (
+                          <li key={i}>• {r}</li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="text-[11px] text-rose-800 space-y-0.5">
-                      {h.reasons.map((r, i) => (
-                        <li key={i}>• {r}</li>
-                      ))}
-                    </ul>
+                    {grupos.length > 0 && (
+                      <div className="pt-2 border-t border-rose-200/60">
+                        <ReforzarPorEje grupos={grupos} printable={true} />
+                      </div>
+                    )}
                   </div>
-                  {h.redWorldNames.length > 0 && (
-                    <p className="text-[10px] text-slate-600 truncate mt-1.5 pt-1 border-t border-rose-200/60">
-                      Mundos: {h.redWorldNames.join(", ")}
-                    </p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="text-xs text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200 font-medium">

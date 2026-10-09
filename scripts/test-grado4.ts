@@ -160,39 +160,42 @@ interface McBankItem {
   hint?: string;
 }
 
-check("Distribución de longitud de opciones en bancos de opción múltiple", () => {
-  let totalMCQuestions = 0;
-  let correctStrictlyLongest = 0;
-  let correctStrictlyShortest = 0;
-
-  function evaluateQ(q: McBankItem) {
-    if (!q || !Array.isArray(q.options) || typeof q.answer !== "number") return;
-    totalMCQuestions++;
-    const lengths = q.options.map((c: [string, string]) => c[1].trim().length);
-    const correctLen = lengths[q.answer];
-    const isStrictlyLongest = lengths.every((len: number, idx: number) => idx === q.answer || len < correctLen);
-    const isStrictlyShortest = lengths.every((len: number, idx: number) => idx === q.answer || len > correctLen);
-    if (isStrictlyLongest) correctStrictlyLongest++;
-    if (isStrictlyShortest) correctStrictlyShortest++;
+check("Distribución de longitud de opciones en bancos de opción múltiple (máximo 40% más larga)", () => {
+  function evaluateBank(bankName: string, bank: Record<number, McBankItem[]>, count: number) {
+    let total = 0;
+    let longest = 0;
+    let shortest = 0;
+    for (let n = 1; n <= count; n++) {
+      for (const q of bank[n] ?? []) {
+        if (!q || !Array.isArray(q.options) || typeof q.answer !== "number") continue;
+        total++;
+        const lengths = q.options.map((c: [string, string]) => c[1].trim().length);
+        const correctLen = lengths[q.answer];
+        const isStrictlyLongest = lengths.every((len: number, idx: number) => idx === q.answer || len < correctLen);
+        const isStrictlyShortest = lengths.every((len: number, idx: number) => idx === q.answer || len > correctLen);
+        if (isStrictlyLongest) longest++;
+        if (isStrictlyShortest) shortest++;
+      }
+    }
+    const pctL = (longest / total) * 100;
+    const pctS = (shortest / total) * 100;
+    console.log(`   [Balance ${bankName}] Total: ${total}, Más larga: ${longest} (${pctL.toFixed(2)}%), Más corta: ${shortest} (${pctS.toFixed(2)}%)`);
+    assert(
+      pctL <= 40,
+      `Banco de ${bankName}: la opción correcta es la más larga en ${pctL.toFixed(2)}% (límite máximo permitido: 40%)`
+    );
+    return { total, longest, shortest };
   }
 
-  for (let n = 1; n <= 28; n++) {
-    for (const q of LENGUA_BANK[n] ?? []) evaluateQ(q);
-  }
-  for (let n = 1; n <= 26; n++) {
-    for (const q of SOCIALES_BANK[n] ?? []) evaluateQ(q);
-  }
-  for (let n = 1; n <= 26; n++) {
-    for (const q of NATURALES_BANK[n] ?? []) evaluateQ(q);
-  }
+  const lenguaStats = evaluateBank("Lengua", LENGUA_BANK, 28);
+  const socialesStats = evaluateBank("Sociales", SOCIALES_BANK, 26);
+  const naturalesStats = evaluateBank("Naturales", NATURALES_BANK, 26);
 
-  const pctLongest = (correctStrictlyLongest / totalMCQuestions) * 100;
-  const pctShortest = (correctStrictlyShortest / totalMCQuestions) * 100;
-
-  console.log(`   [Balance de Opciones] Total preguntas evaluadas: ${totalMCQuestions}`);
-  console.log(`   [Balance de Opciones] Más larga: ${correctStrictlyLongest} (${pctLongest.toFixed(2)}%)`);
-  console.log(`   [Balance de Opciones] Más corta: ${correctStrictlyShortest} (${pctShortest.toFixed(2)}%)`);
-
+  const totalMCQuestions = lenguaStats.total + socialesStats.total + naturalesStats.total;
+  const correctStrictlyLongest = lenguaStats.longest + socialesStats.longest + naturalesStats.longest;
+  const pctGlobal = (correctStrictlyLongest / totalMCQuestions) * 100;
+  console.log(`   [Balance Global] Total: ${totalMCQuestions}, Más larga: ${correctStrictlyLongest} (${pctGlobal.toFixed(2)}%)`);
+  assert(pctGlobal <= 40, `Global: la opción correcta es la más larga en ${pctGlobal.toFixed(2)}% (máximo: 40%)`);
   assert(totalMCQuestions >= 1300, `Se esperaban >= 1300 preguntas evaluadas, se hallaron ${totalMCQuestions}`);
 });
 
@@ -451,13 +454,22 @@ check("Integración con grades.ts, worlds.ts, data.ts, courseSummary.ts y dictad
 // ---------------------------------------------------------------------------
 // 7. Simulación Exhaustiva con 500 Vueltas por Mundo (AG-18 Checks 1, 2, 3, 4)
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// 7. Simulación Exhaustiva con 500 Vueltas por Mundo (Checks 1 a 4 y AG-21)
+// ---------------------------------------------------------------------------
 check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos + Dictado (Checks 1 a 4)", () => {
   const g4SkillCodes = new Set(GRADE4_SKILLS.map((s) => s.id));
   const FORBIDDEN_EMOJIS = /[✅❌✔✖]/;
   const ORDER_NUM_PREFIX = /^\d+[.)]/;
+  const INVALID_NUM_DECIMALS = /\d+[.,]\d{4,}/;
+  const INVALID_EXPONENTIAL = /(?:\d|\b)e-\d+/i;
+  const INVALID_NAN = /NaN/;
+  const INVALID_UNDEFINED = /undefined/i;
   const RUNS = 500;
   let totalActivities = 0;
 
+  const tfStatsByWorld = new Map<number, { total: number; falses: number }>();
+  const classifyStats = new Map<string, { total: number; alt: number }>();
   const worldsToTest = [...GRADE4_WORLDS, getMundoDictado(4)];
 
   for (const world of worldsToTest) {
@@ -487,6 +499,10 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
         assert(act.title, `Mundo ${world.id} run ${run} act ${i}: title vacío`);
         if (act.type === "true-false") {
           assert(act.statement, `Mundo ${world.id} run ${run} act ${i}: statement vacío`);
+          const cur = tfStatsByWorld.get(world.id) || { total: 0, falses: 0 };
+          cur.total++;
+          if (act.isTrue === false) cur.falses++;
+          tfStatsByWorld.set(world.id, cur);
         } else if ("prompt" in act) {
           assert(act.prompt, `Mundo ${world.id} run ${run} act ${i}: prompt vacío`);
         }
@@ -512,7 +528,7 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
           }
         }
 
-        // Textos a chequear para Check 3 (sin emojis prohibidos)
+        // Textos a chequear para Check 1 y Check 3
         const textsToCheck: string[] = [act.title, act.hint ?? ""];
         if ("prompt" in act && act.prompt) textsToCheck.push(act.prompt);
         if ("statement" in act && act.statement) textsToCheck.push(act.statement);
@@ -529,13 +545,16 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
           const cardTexts: string[] = [];
           for (const c of act.cards) {
             const cardText = (c.label ?? c.big ?? "").trim();
-            // Check 1: opciones vacías, NaN o undefined
+            // Check 1: opciones vacías
             assert(
-              cardText && cardText !== "NaN" && cardText !== "undefined",
-              `Check 1: Mundo ${world.id} pick act ${act.id} opción vacía/NaN/undefined`
+              cardText,
+              `Check 1: Mundo ${world.id} pick act ${act.id} opción vacía`
             );
             cardTexts.push(cardText);
             textsToCheck.push(cardText);
+            if (c.emoji) {
+              textsToCheck.push(c.emoji);
+            }
           }
           // Check 1: opciones repetidas
           const uniqueTexts = new Set(cardTexts);
@@ -563,8 +582,8 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
 
           for (const item of act.items) {
             textsToCheck.push(item);
-            // Check 1: ítem vacío/NaN/undefined
-            assert(item && item !== "NaN" && item !== "undefined", `Check 1: Mundo ${world.id} order ítem vacío`);
+            // Check 1: ítem vacío
+            assert(item, `Check 1: Mundo ${world.id} order ítem vacío`);
             // Check 2: ítem no empieza con número de orden
             assert(
               !ORDER_NUM_PREFIX.test(item.trim()),
@@ -586,13 +605,31 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
               `Mundo ${world.id} classify act ${act.id}: categoría de ítem inválida ${item.categoryIndex}`
             );
           }
+
+          // Check AG-21: clasificar sin patrón alternado sistemático
+          if (act.items.length >= 4 && act.categories.length >= 2) {
+            const c0 = act.items[0].categoryIndex;
+            const c1 = act.items[1].categoryIndex;
+            const isAlt = c0 !== c1 && act.items.every((it, idx) => it.categoryIndex === (idx % 2 === 0 ? c0 : c1));
+            const record = classifyStats.get(act.id) || { total: 0, alt: 0 };
+            record.total++;
+            if (isAlt) record.alt++;
+            classifyStats.set(act.id, record);
+          }
         } else if (act.type === "dictation") {
           assert(act.say, `Mundo ${world.id} dictation act ${act.id}: say vacío`);
           assert(act.answer, `Mundo ${world.id} dictation act ${act.id}: answer vacío`);
         }
 
-        // Check 3 de AG-18: ninguna opción contiene ✅, ❌, ✔ o ✖
+        // Checks 1 y 3 en todos los textos de la actividad
         for (const t of textsToCheck) {
+          // Check 1: que falle con números con más de 3 decimales o con «e-», y con «NaN»/«undefined» dentro del texto
+          assert(!INVALID_NAN.test(t), `Check 1: Mundo ${world.id} contiene NaN en texto: "${t}"`);
+          assert(!INVALID_UNDEFINED.test(t), `Check 1: Mundo ${world.id} contiene undefined en texto: "${t}"`);
+          assert(!INVALID_EXPONENTIAL.test(t), `Check 1: Mundo ${world.id} contiene notación e- en texto: "${t}"`);
+          assert(!INVALID_NUM_DECIMALS.test(t), `Check 1: Mundo ${world.id} contiene número con más de 3 decimales en texto: "${t}"`);
+
+          // Check 3: ninguna opción ni emoji contiene ✅, ❌, ✔ o ✖
           assert(
             !FORBIDDEN_EMOJIS.test(t),
             `Check 3: Mundo ${world.id} contiene emoji prohibido en: "${t}"`
@@ -601,7 +638,71 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
       }
     }
   }
+
+  // Verificación AG-21: Verdadero/Falso con al menos 35% de «falso» por mundo
+  for (const [wId, stats] of tfStatsByWorld.entries()) {
+    const pctFalse = (stats.falses / stats.total) * 100;
+    assert(
+      pctFalse >= 35,
+      `Check Verdadero/Falso: Mundo ${wId} tuvo solo ${pctFalse.toFixed(1)}% de afirmaciones falsas (${stats.falses}/${stats.total}). Mínimo requerido: 35%`
+    );
+  }
+  // Verificación AG-21: Clasificar sin patrón alternado sistemático (en 4 ítems al azar es ~33%; falla si es sistemático > 50%)
+  for (const [id, stats] of classifyStats.entries()) {
+    const pctAlt = (stats.alt / stats.total) * 100;
+    assert(
+      pctAlt < 50,
+      `Check clasificar: Actividad ${id} tiene patrón alternado en ${pctAlt.toFixed(1)}% de ejecuciones (${stats.alt}/${stats.total}). Máximo permitido: < 50%`
+    );
+  }
+  console.log(`   [Clasificar] Actividades de clasificar validadas (${classifyStats.size}): ninguna tiene patrón alternado sistemático.`);
   console.log(`   [Simulación] Total de actividades generadas y validadas: ${totalActivities.toLocaleString("es-AR")}`);
+});
+
+// ---------------------------------------------------------------------------
+// 8. Variabilidad en Matemática: Ninguna Actividad Igual en 2 Vueltas Seguidas en > 50% de Mundos
+// ---------------------------------------------------------------------------
+check("Matemática: variabilidad entre vueltas consecutivas (sin actividades idénticas en > 50% de los mundos)", () => {
+  const mathWorlds = GRADE4_WORLDS.filter((w) => w.subject === "matematica");
+  assert.equal(mathWorlds.length, 28, "Deben haber 28 mundos de Matemática");
+
+  const getSig = (a: ActivitySpec) => {
+    if (a.type === "pick") {
+      const cardSigs = (a.cards || []).map((c) => `${c.label || ""}-${c.big || ""}`).join("|");
+      return `pick:${a.prompt}:${cardSigs}`;
+    }
+    if (a.type === "true-false") return `tf:${a.statement}`;
+    if (a.type === "order") return `order:${a.prompt}:${(a.items || []).join("|")}`;
+    if (a.type === "classify") return `classify:${a.prompt}:${(a.items || []).map((i) => i.label).join("|")}`;
+    if ("prompt" in a) return `${a.type}:${a.prompt}`;
+    return `${a.type}:${a.id}`;
+  };
+
+  let worldsWithZeroIdentical = 0;
+  for (const world of mathWorlds) {
+    const run1 = buildActivitiesForWorld(world);
+    const run2 = buildActivitiesForWorld(world);
+
+    const sigs1 = new Set(run1.map(getSig));
+    const identicalCount = run2.filter((a) => sigs1.has(getSig(a))).length;
+
+    // Ningún mundo puede tener el 100% de actividades idénticas entre 2 vueltas consecutivas
+    assert(
+      identicalCount < run2.length,
+      `Mundo Matemática ${world.id} (${world.name}) tuvo el 100% de actividades idénticas entre 2 vueltas consecutivas`
+    );
+
+    if (identicalCount === 0) {
+      worldsWithZeroIdentical++;
+    }
+  }
+
+  const pctZero = (worldsWithZeroIdentical / mathWorlds.length) * 100;
+  console.log(`   [Variabilidad Matemática] Mundos con 0 actividades repetidas en 2 vueltas consecutivas: ${worldsWithZeroIdentical}/28 (${pctZero.toFixed(1)}%)`);
+  assert(
+    pctZero >= 50,
+    `Al menos el 50% de los mundos de Matemática deben tener 0 actividades repetidas en 2 vueltas seguidas (actual: ${pctZero.toFixed(1)}%)`
+  );
 });
 
 console.log(`\n=================================================`);

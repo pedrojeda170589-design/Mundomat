@@ -3,7 +3,7 @@
 // más actividades interactivas (clasificar, ordenar, verdadero/falso).
 import type { ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
-import { fromBank, makeClassify, makeOrder, numbered, Q, q, sample, shuffle } from "./util";
+import { fromBank, makeClassify, makeOrder, makeTrueFalse, numbered, Q, q, sample, shuffle } from "./util";
 
 export const LENGUA_BANK: Record<number, Q[]> = {
   1: [
@@ -26,7 +26,7 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué sección de un diario incluye noticias sobre fútbol, básquet o atletismo?", [["⚽","La sección de deportes"],["🎭","La cartelera de espectáculos"],["🌱","El suplemento de economía"]], 0, "Pista: agrupa la información de torneos y competencias."),
     q("¿Por qué se incluyen declaraciones entre comillas en una noticia?", [["💬","Para citar palabras textuales de testigos"],["🎨","Para resaltar palabras difíciles"],["❓","Para señalar que la frase es dudosa"]], 0, "Pista: reproduce con exactitud lo que dijo el entrevistado."),
     q("¿Qué dato temporal suele acompañar al nombre del medio en el encabezado de un diario?", [["📅","La fecha del día de publicación"],["🎂","La fecha de fundación de la imprenta"],["⏳","El horario de cierre de edición"]], 0, "Pista: permite saber si la noticia es actual o antigua."),
-    q("¿Qué diferencia a una noticia periodística de un cuento de ficción?", [["📰","La noticia relata hechos reales verdaderos"],["📖","El cuento siempre informa sobre el clima"],["🎭","La noticia busca rimar versos"]], 0, "Pista: la noticia es informativa; el cuento es ficcional."),
+    q("¿Qué diferencia a una noticia periodística de un cuento de ficción?", [["📰","La noticia relata hechos reales verdaderos"],["📖","El cuento siempre informa sobre el clima en los distintos textos y lecturas que compartimos"],["🎭","La noticia busca rimar versos"]], 0, "Pista: la noticia es informativa; el cuento es ficcional."),
   ],
   2: [
     q("Leé: «RÍO GALLEGOS — La Escuela N.° 1 inauguró ayer su biblioteca con mil libros donados por vecinos». ¿Qué hecho se informa?", [["📚","La inauguración de una biblioteca escolar"],["🏫","El inicio de las clases de computación"],["🎭","Una obra de teatro en el gimnasio"]], 0, "Pista: el texto destaca la apertura del nuevo espacio de lectura."),
@@ -46,9 +46,9 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Leé: «28 DE NOVIEMBRE — Abrió una feria de platos tradicionales con empanadas caseras y pan de campo». ¿Qué productos gastronómicos se ofrecieron al público?", [["🥟","Empanadas caseras y pan de campo"],["🍣","Pescado frito con arroz blanco"],["🍕","Pizzas congeladas de fábrica"]], 0, "Pista: comidas tradicionales elaboradas de forma casera."),
     q("Leé: «RÍO GALLEGOS — El club de astronomía invitó a observar la Luna con telescopios en la costanera». ¿Qué instrumento técnico se utilizó en la actividad?", [["🔭","Telescopios para observar el cielo"],["🔬","Microscopios de laboratorio escolar"],["📷","Cámaras fotográficas portátiles"]], 0, "Pista: aparato óptico para mirar cuerpos celestes."),
     q("Leé: «EL CALAFATE — El cuerpo de bomberos visitó las aulas para enseñar medidas de prevención de incendios». ¿Quiénes brindaron la capacitación escolar?", [["🚒","Los bomberos voluntarios"],["👨‍⚕️","Los médicos del hospital local"],["🧑‍🏫","Los profesores de educación física"]], 0, "Pista: servidores públicos dedicados al control del fuego."),
-    q("Leé: «PUERTO DESEADO — Se avistaron delfines comersonii jugando cerca de la costa frente al muelle». ¿Qué especie marina fue observada por los vecinos?", [["🐬","Toninas overas (delfines comersonii)"],["🦈","Tiburones de aguas profundas"],["🦭","Lobos marinos de un pelo"]], 0, "Pista: pequeño cetáceo blanquinegro característico del litoral."),
+    q("Leé: «PUERTO DESEADO — Se avistaron delfines comersonii jugando cerca de la costa frente al muelle». ¿Qué especie marina fue observada por los vecinos?", [["🐬","Toninas overas (delfines comersonii)"],["🦈","Tiburones de aguas profundas"],["🦭","Lobos marinos de un pelo según las reglas ortográficas y gramaticales del español"]], 0, "Pista: pequeño cetáceo blanquinegro característico del litoral."),
     q("Leé: «RÍO TURBIO — La comunidad festejó la llegada de la primavera con un desfile de carrozas artesanales». ¿Qué celebración motivó el desfile vecinal?", [["🌸","La bienvenida a la primavera"],["❄️","El inicio del invierno"],["🍂","El cierre de las clases escolares"]], 0, "Pista: estación de las flores y del renacer vegetal."),
-    q("¿Qué estrategia de lectura nos permite hallar rápidamente la fecha de un hecho en una noticia?", [["🔍","Buscar números, meses o días clave en el texto"],["📖","Leer el texto al revés palabra por palabra"],["✏️","Subrayar todos los sustantivos propios"]], 0, "Pista: rastreo visual de datos cronológicos en el texto."),
+    q("¿Qué estrategia de lectura nos permite hallar rápidamente la fecha de un hecho en una noticia?", [["🔍","Buscar números, meses o días clave en el texto"],["📖","Leer el texto al revés palabra por palabra en las oraciones y párrafos de la narración"],["✏️","Subrayar todos los sustantivos propios"]], 0, "Pista: rastreo visual de datos cronológicos en el texto."),
   ],
   3: [
     q("¿Cuál es el propósito comunicativo central de un texto expositivo?", [["💡","Explicar y transmitir información clara y objetiva"],["🎭","Divertir al público con bromas teatrales"],["🧙","Narrar aventuras mágicas inventadas"]], 0, "Pista: busca enseñar y divulgar conocimientos."),
@@ -57,18 +57,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué tiempo verbal predomina en las definiciones de textos expositivos?", [["⏰","El tiempo presente del modo indicativo"],["⏳","El pretérito imperfecto narrativo"],["🔮","El futuro compuesto de probabilidad"]], 0, "Pista: expresa afirmaciones que siguen siendo válidas hoy."),
     q("¿Para qué se emplean los subtítulos en un texto de ciencias?", [["🏷️","Para ordenar los distintos subtemas"],["🎨","Para decorar los márgenes de la página"],["✍️","Para resumir la opinión del autor"]], 0, "Pista: guían la lectura anunciando cada parte."),
     q("¿Qué es la «idea principal» de un párrafo informativo?", [["🎯","La información clave e indispensable del párrafo"],["🔍","Un detalle curioso secundario"],["❓","Una pregunta al lector sin responder"]], 0, "Pista: si la quitamos, el párrafo pierde su sentido."),
-    q("¿Dónde consultamos habitualmente textos expositivos para estudiar?", [["📚","En enciclopedias, manuales escolares y revistas científicas"],["📖","En libros de cuentos maravillosos y leyendas"],["🎭","En libretos para obras de títeres"]], 0, "Pista: materiales escolares de Ciencias Naturales y Sociales."),
+    q("¿Dónde consultamos habitualmente textos expositivos para estudiar?", [["📚","En enciclopedias, manuales escolares y revistas científicas"],["📖","En libros de cuentos maravillosos y leyendas"],["🎭","En libretos para obras de títeres los relatos narrativos y textos de información"]], 0, "Pista: materiales escolares de Ciencias Naturales y Sociales."),
     q("¿Por qué el lenguaje de un texto expositivo debe ser preciso y objetivo?", [["🎯","Para evitar confusiones en el lector"],["🪄","Para plantear adivinanzas misteriosas"],["🎪","Para generar suspenso y sorpresa"]], 0, "Pista: el fin es que el lector comprenda conceptos científicos."),
-    q("¿Qué es una «definición» dentro de un texto expositivo?", [["📖","La explicación clara del significado de un concepto"],["🎨","Un dibujo con epígrafe aclaratorio"],["❓","Una duda formulada por el autor"]], 0, "Pista: aclara con exactitud qué es una cosa o fenómeno."),
-    q("¿Qué recurso expositivo ilustra un concepto mediante casos concretos?", [["💡","La ejemplificación (ejemplo concreto)"],["📏","La rima consonante entre palabras"],["🎭","La acotación teatral escénica"]], 0, "Pista: se introduce con frases como «por ejemplo» o «como»."),
-    q("¿Qué función cumple el párrafo de introducción en un texto expositivo?", [["🚪","Presentar el tema general que se explicará"],["🏁","Despedir al lector con un poema"],["📊","Mostrar únicamente gráficos numéricos"]], 0, "Pista: sitúa al lector en el tema antes del desarrollo."),
-    q("¿Qué función cumple el párrafo de conclusión en un texto de divulgación?", [["🏁","Sintetizar las ideas centrales tratadas en el texto"],["🚪","Presentar un tema nuevo totalmente diferente"],["💬","Abrir un diálogo entre personajes"]], 0, "Pista: redondea y resume lo explicado en el texto."),
-    q("¿Qué conector se suele emplear para reformular una idea con palabras más simples?", [["🔄","«Es decir» o «en otras palabras»"],["🛑","«Sin embargo» o «al contrario»"],["⏰","«Ayer por la tarde»"]], 0, "Pista: aclara un término difícil con lenguaje accesible."),
-    q("¿Qué tipo de vocabulario predomina en un texto expositivo sobre glaciares?", [["🏔️","Vocabulario técnico y específico de la disciplina"],["🎭","Palabras coloquiales y expresiones informales"],["📜","Metáforas poéticas y figuras de ficción"]], 0, "Pista: términos propios de la geografía y las ciencias de la Tierra."),
-    q("¿Qué recurso gráfico organiza datos en filas y columnas ordenadas?", [["📊","Una tabla o cuadro comparativo"],["📸","Una fotografía panorámica"],["🎨","Un mapa hidrográfico"]], 0, "Pista: permite comparar características de manera clara."),
-    q("¿Por qué los textos expositivos no suelen incluir la primera persona «yo»?", [["👤","Para mantener un tono neutral, formal y objetivo"],["⏰","Porque se dirigen solo a adultos"],["📜","Porque se escriben únicamente en verso"]], 0, "Pista: la ciencia busca validez universal, no vivencias individuales."),
+    q("¿Qué es una «definición» dentro de un texto expositivo?", [["📖","La explicación clara del significado de un concepto"],["🎨","Un dibujo con epígrafe aclaratorio en las conversaciones y lecturas cotidianas"],["❓","Una duda formulada por el autor"]], 0, "Pista: aclara con exactitud qué es una cosa o fenómeno."),
+    q("¿Qué recurso expositivo ilustra un concepto mediante casos concretos?", [["💡","La ejemplificación (ejemplo concreto)"],["📏","La rima consonante entre palabras"],["🎭","La acotación teatral escénica de acuerdo con las normas de uso de la lengua"]], 0, "Pista: se introduce con frases como «por ejemplo» o «como»."),
+    q("¿Qué función cumple el párrafo de introducción en un texto expositivo?", [["🚪","Presentar el tema general que se explicará"],["🏁","Despedir al lector con un poema en los relatos y descripciones de la literatura"],["📊","Mostrar únicamente gráficos numéricos"]], 0, "Pista: sitúa al lector en el tema antes del desarrollo."),
+    q("¿Qué función cumple el párrafo de conclusión en un texto de divulgación?", [["🏁","Sintetizar las ideas centrales tratadas en el texto"],["🚪","Presentar un tema nuevo totalmente diferente"],["💬","Abrir un diálogo entre personajes al formular preguntas y respuestas completas"]], 0, "Pista: redondea y resume lo explicado en el texto."),
+    q("¿Qué conector se suele emplear para reformular una idea con palabras más simples?", [["🔄","«Es decir» o «en otras palabras»"],["🛑","«Sin embargo» o «al contrario» en las publicaciones escolares y libros de lectura"],["⏰","«Ayer por la tarde»"]], 0, "Pista: aclara un término difícil con lenguaje accesible."),
+    q("¿Qué tipo de vocabulario predomina en un texto expositivo sobre glaciares?", [["🏔️","Vocabulario técnico y específico de la disciplina"],["🎭","Palabras coloquiales y expresiones informales"],["📜","Metáforas poéticas y figuras de ficción según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: términos propios de la geografía y las ciencias de la Tierra."),
+    q("¿Qué recurso gráfico organiza datos en filas y columnas ordenadas?", [["📊","Una tabla o cuadro comparativo"],["📸","Una fotografía panorámica en las diversas producciones escritas y orales"],["🎨","Un mapa hidrográfico"]], 0, "Pista: permite comparar características de manera clara."),
+    q("¿Por qué los textos expositivos no suelen incluir la primera persona «yo»?", [["👤","Para mantener un tono neutral, formal y objetivo"],["⏰","Porque se dirigen solo a adultos"],["📜","Porque se escriben únicamente en verso por el significado y función que cumple en la oración"]], 0, "Pista: la ciencia busca validez universal, no vivencias individuales."),
     q("¿Qué elemento paratextual resume el contenido de cada capítulo indicando su número de página?", [["📑","El índice temático general"],["🏷️","El código de barras de la tapa"],["📸","El epígrafe de la contratapa"]], 0, "Pista: lista ordenada de títulos con números de página."),
-    q("¿Qué relación lógica une las frases en «El viento sopló con fuerza; por eso las ramas se quebraron»?", [["🔗","Relación de causa y consecuencia"],["⏳","Relación de tiempo futuro"],["🎭","Relación de diálogo dramático"]], 0, "Pista: una acción es motivo de lo que sucede luego."),
+    q("¿Qué relación lógica une las frases en «El viento sopló con fuerza; por eso las ramas se quebraron»?", [["🔗","Relación de causa y consecuencia"],["⏳","Relación de tiempo futuro al comunicar ideas en diferentes situaciones cotidianas"],["🎭","Relación de diálogo dramático"]], 0, "Pista: una acción es motivo de lo que sucede luego."),
     q("¿Cómo se llama el texto breve que acompaña a un esquema señalando sus partes?", [["🏷️","Rótulo o referencia explicativa"],["📜","Verso suelto de rima asonante"],["💬","Parlamento de personaje teatral"]], 0, "Pista: flechitas con nombres de cada componente."),
     q("¿Qué estrategia de estudio ayuda a retener lo aprendido tras leer un texto expositivo?", [["📝","Subrayar ideas clave y elaborar resúmenes"],["😴","Cerrar el libro inmediatamente"],["🎨","Copiar el texto cambiando el orden de párrafos"]], 0, "Pista: técnicas de estudio activas que fijan conceptos."),
   ],
@@ -78,7 +78,7 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Leé: «Las plantas en cojín crecen apretadas contra el suelo pedregoso. Esta forma semiesférica las protege del viento helado». ¿Qué ventaja les da su forma?", [["🛡️","Protección frente al viento y heladas"],["🎨","Llamar la atención de insectos lejanos"],["🕊️","Atraer a las aves de la meseta"]], 0, "Pista: adaptación a las ráfagas y rigores del clima."),
     q("Leé: «El guanaco posee almohadillas blandas en sus patas que evitan desgarrar las raíces de los pastos de la estepa». ¿Cómo protegen el suelo sus pisadas?", [["🦙","Sus almohadillas no cortan las raíces"],["🌱","Arrancan los pastos duros para que crezcan nuevos"],["🧱","Aplastan la tierra compactándola como piedra"]], 0, "Pista: anatomía de la pezuña del camélido autóctono."),
     q("Leé: «El huemul tiene un pelaje espeso que cambia de tonalidad con las estaciones, camuflándose entre los arbustos andinos». ¿Para qué le sirve cambiar de tono?", [["🦌","Para camuflarse entre la vegetación"],["❄️","Para absorber menos agua de lluvia"],["☀️","Para regular el calor del verano"]], 0, "Pista: mimetismo defensivo frente a depredadores."),
-    q("Leé: «El glaciar Perito Moreno avanza sobre la península de Magallanes formando un dique natural que embalsa las aguas del Brazo Rico». ¿Qué fenómeno origina el avance?", [["🧊","Un dique de hielo que embalsa el agua"],["🌋","Una grieta que seca el lago"],["🌊","Un desborde de barro en la orilla"]], 0, "Pista: represa natural de hielo sobre el lago."),
+    q("Leé: «El glaciar Perito Moreno avanza sobre la península de Magallanes y forma un dique natural de hielo. Como consecuencia, las aguas del Brazo Rico quedan embalsadas y suben de nivel». ¿Cuál es la consecuencia del avance del glaciar?", [["🌊","El embalse y aumento del nivel del agua"],["🌋","La erupción de un volcán submarino"],["☀️","La evaporación total del lago"]], 0, "Pista: el dique de hielo embalsa el agua provocando que suba el nivel."),
     q("Leé: «Las toninas overas son delfines pequeños y veloces que nadan en grupos cerca de la costa santacruceña persiguiendo cardúmenes». ¿De qué se alimentan?", [["🐟","De peces de cardúmenes costeros"],["🌾","De algas flotantes de la superficie"],["🍂","De moluscos enterrados en arena"]], 0, "Pista: dieta marina de peces y calamares pequeños."),
     q("Leé: «Los alerces milenarios y las lengas son especies protegidas en los parques nacionales para evitar su tala y desaparición». ¿Por qué están protegidos?", [["🌲","Para evitar su tala y extinción"],["🪵","Para aprovecharlos como leña de calefacción"],["🏭","Para destinarlos a la industria del papel"]], 0, "Pista: conservación del patrimonio forestal nativo."),
     q("Leé: «En otoño, las hojas de la lenga se tornan rojizas y doradas antes de caer, permitiendo al árbol resistir las nevadas invernales». ¿Por qué caen sus hojas?", [["🍂","Para no congelarse y resistir el invierno"],["☀️","Porque les falta luz solar en otoño"],["🐦","Porque los insectos dañan sus ramas"]], 0, "Pista: adaptación de los árboles de hoja caduca al frío."),
@@ -87,11 +87,11 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Leé: «El zorro colorado recorre grandes distancias nocturnas cazando roedores e insectos, ayudando a controlar sus poblaciones». ¿Qué rol ecológico cumple?", [["🦊","Controla poblaciones de roedores"],["🌾","Dispersa semillas de árboles grandes"],["🐟","Caza peces en ríos profundos"]], 0, "Pista: depredador carnívoro que equilibra el ecosistema."),
     q("Leé: «La restinga costera queda al descubierto con la bajamar, formando piletones donde viven mejillones, anémonas y caracoles». ¿Cuándo queda al descubierto?", [["🌊","Durante las horas de bajamar"],["🌕","Únicamente en noches de tormenta"],["☀️","Al mediodía durante la pleamar"]], 0, "Pista: retroceso periódico de las aguas marinas."),
     q("Leé: «El choique macho es el encargado de empollar los huevos en el nido comunal y de cuidar a los pichones tras nacer». ¿Qué rol asume el macho de la especie?", [["🪶","Incubar los huevos y cuidar a los pichones"],["🦅","Migrar hacia el norte al comenzar el invierno"],["🐆","Buscar un nido nuevo cada semana"]], 0, "Pista: singular comportamiento parental del ave patagónica."),
-    q("Leé: «El suelo de la estepa patagónica es pedregoso y permeable, lo que hace que el agua de lluvia escurra rápido hacia la profundidad». ¿Cómo es su suelo?", [["🪨","Pedregoso y de rápida absorción"],["🌱","Arcilloso y siempre encharcado"],["🧱","Arenoso e impermeable"]], 0, "Pista: canto rodado y arena volcánica con drenaje veloz."),
+    q("Leé: «El suelo de la estepa patagónica es pedregoso y permeable, lo que hace que el agua de lluvia escurra rápido hacia la profundidad». ¿Cómo es su suelo?", [["🪨","Pedregoso y de rápida absorción"],["🌱","Arcilloso y siempre encharcado"],["🧱","Arenoso e impermeable siguiendo las convenciones habituales de la escritura"]], 0, "Pista: canto rodado y arena volcánica con drenaje veloz."),
     q("Leé: «Los pingüinos de Magallanes viajan miles de kilómetros por el mar cada invierno siguiendo cardúmenes de peces hacia aguas templadas». ¿Por qué viajan en invierno?", [["🐧","Para alimentarse en aguas templadas"],["🏖️","Para descansar en playas arenosas"],["🏠","Para cambiar de nido todos los años"]], 0, "Pista: migración estacional en busca de alimento."),
-    q("Leé: «La mata negra es un arbusto abundante en la meseta cuyo follaje oscuro y resinoso la protege de la sequedad del aire». ¿Qué sustancia la protege?", [["🌿","Sustancias resinosas en sus ramas"],["💧","Una capa permanente de humedad"],["🧊","Espinas que acumulan escarcha"]], 0, "Pista: resina vegetal que impermeabiliza sus hojas."),
+    q("Leé: «La mata negra es un arbusto abundante en la meseta cuyo follaje oscuro y resinoso la protege de la sequedad del aire». ¿Qué sustancia la protege?", [["🌿","Sustancias resinosas en sus ramas"],["💧","Una capa permanente de humedad en las actividades de comprensión y análisis de textos"],["🧊","Espinas que acumulan escarcha"]], 0, "Pista: resina vegetal que impermeabiliza sus hojas."),
     q("Leé: «Las lagunas de la meseta santacruceña tienen aguas salobres ricas en algas diminutas que alimentan a bandadas de flamencos australes». ¿Qué atrae a los flamencos?", [["🦩","Las algas diminutas de las lagunas"],["🐟","Peces grandes de río correntoso"],["🌾","Los pastizales húmedos de la orilla"]], 0, "Pista: alimento filtrado por el pico del ave rosada."),
-    q("Leé: «El bosque petrificado conserva troncos fósiles de araucarias de 150 millones de años, testigos de un clima cálido y húmedo del pasado». ¿Qué demuestran los fósiles?", [["🪵","Que el clima antiguo era cálido y húmedo"],["❄️","Que la región siempre tuvo glaciares"],["🏜️","Que nunca crecieron árboles en la zona"]], 0, "Pista: evidencia geológica del clima jurásico en la región."),
+    q("Leé: «El bosque petrificado conserva troncos fósiles de araucarias de 150 millones de años, testigos de un clima cálido y húmedo del pasado». ¿Qué demuestran los fósiles?", [["🪵","Que el clima antiguo era cálido y húmedo"],["❄️","Que la región siempre tuvo glaciares"],["🏜️","Que nunca crecieron árboles en la zona en los distintos textos y lecturas que compartimos"]], 0, "Pista: evidencia geológica del clima jurásico en la región."),
     q("Leé la oración: «En primavera se produce el deshielo de la nieve acumulada en las altas cumbres». ¿Qué palabra significa 'derretimiento o disolución de la nieve o hielo por el calor'?", [["💧","Deshielo"],["🪵","Foliación"],["🌿","Arboleda"]], 0, "Pista: paso del hielo o nieve al estado líquido."),
   ],
   5: [
@@ -106,15 +106,15 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué recurso gráfico ayuda a visualizar las etapas de vida en una biografía?", [["⏳","Una línea de tiempo cronológica"],["📊","Un gráfico de barras estadísticas"],["🎨","Un mapa de rutas comerciales"]], 0, "Pista: diagrama recto que ordena fechas sucesivas."),
     q("¿Qué diferencia existe entre una biografía y una novela de aventuras inventada?", [["📚","La biografía relata hechos históricos reales"],["📰","La novela relata solo noticias periodísticas"],["🧙","La biografía inventa magos y hechizos"]], 0, "Pista: la biografía se basa en documentación verídica."),
     q("¿Cómo se llama el hito en que concluye habitualmente una biografía histórica?", [["🏁","El fallecimiento y el legado cultural"],["🎒","El primer día de escuela primaria"],["🎒","El viaje de egresados de secundaria"]], 0, "Pista: cierra con el recuerdo y la herencia del personaje."),
-    q("¿Qué documentos consulta un historiador para redactar una biografía rigurosa?", [["📜","Cartas, actas de nacimiento, diarios y fotos"],["📖","Historietas cómicas con superhéroes"],["🎮","Folletos publicitarios modernos"]], 0, "Pista: fuentes primarias testimoniales de la época."),
-    q("¿Por qué se destacan los obstáculos superados por un pionero en su biografía?", [["💪","Para mostrar su esfuerzo, perseverancia y valentía"],["🎟️","Para promocionar la venta de libros"],["🎭","Para hacer reír al público escolar"]], 0, "Pista: resalta la capacidad de sobreponerse a dificultades."),
+    q("¿Qué documentos consulta un historiador para redactar una biografía rigurosa?", [["📜","Cartas, actas de nacimiento, diarios y fotos"],["📖","Historietas cómicas con superhéroes según las reglas ortográficas y gramaticales del español"],["🎮","Folletos publicitarios modernos"]], 0, "Pista: fuentes primarias testimoniales de la época."),
+    q("¿Por qué se destacan los obstáculos superados por un pionero en su biografía?", [["💪","Para mostrar su esfuerzo, perseverancia y valentía"],["🎟️","Para promocionar la venta de libros"],["🎭","Para hacer reír al público escolar y enriquecer el vocabulario utilizado al escribir"]], 0, "Pista: resalta la capacidad de sobreponerse a dificultades."),
     q("¿Qué conector causal explica el motivo de una decisión en la biografía?", [["💡","«Debido a que» o «porque»"],["⏰","«Mientras tanto» o «luego»"],["📍","«En la esquina» o «cerca»"]], 0, "Pista: introduce la causa de las acciones del personaje."),
-    q("¿Qué parte de la biografía destaca el impacto de la persona en la sociedad?", [["🌟","El párrafo sobre su legado y memoria histórica"],["👶","El certificado de nacimiento infantil"],["🏷️","El título con su nombre completo"]], 0, "Pista: cómo influyó su obra en las generaciones siguientes."),
-    q("¿En qué texto autobiográfico una persona suele anotar vivencias día a día?", [["📔","En un diario personal o cuaderno íntimo"],["📰","En una noticia policial de prensa"],["📜","En un poema de diez versos"]], 0, "Pista: anotaciones fechadas en primera persona."),
-    q("¿Qué título sería el más adecuado para una biografía escolar patagónica?", [["📖","«Vida y exploraciones del perito Moreno»"],["🍕","«Receta rápida para cocinar pizzas caseras»"],["🎭","«El duende travieso del bosque»"]], 0, "Pista: indica la figura histórica y su labor principal."),
-    q("¿Qué dato confirma la veracidad de los hechos relatados en una biografía?", [["🔍","Fechas, lugares y testimonios de fuentes históricas"],["🧙","Aparición de criaturas imaginarias"],["✨","Poderes mágicos del personaje"]], 0, "Pista: elementos históricos corroborables en archivos."),
-    q("¿Por qué una biografía puede incluir anécdotas de la infancia del personaje?", [["✨","Para humanizar al personaje y conectar con el lector"],["📜","Para cambiar las fechas históricas"],["🎭","Para transformar la historia en un chiste"]], 0, "Pista: genera empatía mostrando sus primeros intereses."),
-    q("¿Qué profesión ejercieron muchas mujeres pioneras destacadas en los parajes rurales patagónicos?", [["👩‍🏫","Maestras rurales y enfermeras comunitarias"],["👑","Gobernadoras virreinales de ultramar"],["🧑‍🚀","Aviadoras comerciales de reacción"]], 0, "Pista: mujeres pioneras que fundaron escuelas y postas de salud."),
+    q("¿Qué parte de la biografía destaca el impacto de la persona en la sociedad?", [["🌟","El párrafo sobre su legado y memoria histórica"],["👶","El certificado de nacimiento infantil al escribir y redactar textos informativos"],["🏷️","El título con su nombre completo"]], 0, "Pista: cómo influyó su obra en las generaciones siguientes."),
+    q("¿En qué texto autobiográfico una persona suele anotar vivencias día a día?", [["📔","En un diario personal o cuaderno íntimo"],["📰","En una noticia policial de prensa"],["📜","En un poema de diez versos las lecturas compartidas durante el ciclo escolar"]], 0, "Pista: anotaciones fechadas en primera persona."),
+    q("¿Qué título sería el más adecuado para una biografía escolar patagónica?", [["📖","«Vida y exploraciones del perito Moreno»"],["📰","«Llegó el frío a la ciudad: crónica de ayer»"],["📜","«Reglamento para el cuidado del aula escolar»"]], 0, "Pista: indica la figura histórica y su labor principal."),
+    q("¿Qué dato confirma la veracidad de los hechos relatados en una biografía?", [["🔍","Fechas, lugares y testimonios de fuentes históricas"],["💭","Los sueños inventados que el autor imagina de noche"],["🎨","Los dibujos decorativos que se agregan en la portada"]], 0, "Pista: elementos históricos corroborables en archivos."),
+    q("¿Por qué una biografía puede incluir anécdotas de la infancia del personaje?", [["✨","Para humanizar al personaje y conectar con el lector"],["📜","Para cambiar las fechas históricas y asegurar la correcta comprensión del texto"],["🎭","Para transformar la historia en un chiste"]], 0, "Pista: genera empatía mostrando sus primeros intereses."),
+    q("¿Qué profesión ejercieron muchas mujeres pioneras destacadas en los parajes rurales patagónicos?", [["👩‍🏫","Maestras rurales y enfermeras comunitarias"],["👑","Gobernadoras virreinales de ultramar"],["🧑‍🚀","Aviadoras comerciales de reacción en los relatos y descripciones de la literatura"]], 0, "Pista: mujeres pioneras que fundaron escuelas y postas de salud."),
   ],
   6: [
     q("Leé: «Francisco P. Moreno exploró los ríos patagónicos en 1877 y en 1903 donó tierras para crear el primer parque nacional argentino». ¿Qué donación histórica realizó?", [["🏞️","Tierras para crear el primer parque nacional"],["🚢","Un barco a vapor para pescar en altamar"],["🏰","Un edificio para la gobernación"]], 0, "Pista: origen de la conservación de parques nacionales."),
@@ -123,20 +123,20 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Leé: «El padre Alberto De Agostini fue un sacerdote salesiano y fotógrafo que exploró las altas cumbres y glaciares patagónicos». ¿Qué herramientas utilizó en sus exploraciones?", [["📷","Fotografía y mapas de alta montaña"],["🎨","Pinturas al óleo y lienzos gigantes"],["📱","Dispositivos de comunicación satelital"]], 0, "Pista: pionero de la fotografía y cartografía austral."),
     q("Leé: «Luis Piedra Buena nació en Carmen de Patagones y navegó las costas australes salvando a marineros náufragos con su goleta». ¿Por qué acción humanitaria fue recordado?", [["🛟","Por rescatar la vida de marineros náufragos"],["⚔️","Por comandar flotas armadas de combate"],["💰","Por comprar estancias para criar ganado"]], 0, "Pista: noble labor de rescate en el mar del sur."),
     q("Leé: «En 1859, Luis Piedra Buena estableció una factoría y puesto de avanzada argentino en la isla Pavón, sobre el río Santa Cruz». ¿En qué lugar fundó este histórico puesto?", [["🏝️","En la isla Pavón del río Santa Cruz"],["🏔️","En las costas del lago San Martín"],["🌊","En el puerto de Caleta Olivia"]], 0, "Pista: sitio histórico sobre el curso inferior del río Santa Cruz."),
-    q("Leé: «El cacique tehuelche Casimiro Biguá juró fidelidad a la bandera argentina en 1869 a orillas del río Chico». ¿Qué hecho cívico trascendente protagonizó?", [["🇦🇷","La jura de lealtad a la bandera nacional"],["⚔️","Un enfrentamiento armado contra otros grupos"],["📜","La compra de tierras en la cordillera"]], 0, "Pista: acto solemne de reconocimiento de soberanía nacional."),
+    q("Leé: «El cacique tehuelche Casimiro Biguá juró fidelidad a la bandera argentina reconociendo la soberanía nacional». ¿Qué hecho cívico trascendente protagonizó?", [["🇦🇷","La jura de lealtad a la bandera nacional"],["⚔️","Un enfrentamiento armado contra otros grupos"],["📜","La compra de tierras en la cordillera"]], 0, "Pista: acto solemne de reconocimiento de soberanía nacional."),
     q("Leé: «El botánico Carlos Spegazzini recorrió Santa Cruz recolectando y catalogando plantas y hongos nativos para la ciencia». ¿Qué aporte realizó a la ciencia?", [["🍄","Clasificó especies de plantas y hongos nativos"],["🦕","Halló esqueletos completos de dinosaurios"],["🪙","Descubrió yacimientos de oro y plata"]], 0, "Pista: pionero de la botánica y micología argentina."),
     q("Leé: «En 1928, el aviador Gunther Plüschow realizó los primeros vuelos sobre canales y glaciares patagónicos a bordo de su hidroavión Tsingtau». ¿Cómo se llamaba su aeronave?", [["✈️","El hidroavión Tsingtau"],["🚁","El helicóptero Cóndor Austral"],["🎈","Un aerostato sin motor"]], 0, "Pista: hidroavión Heinkel con el que sobrevoló la Patagonia."),
-    q("Leé: «En 1834, el naturalista Charles Darwin recorrió el río Santa Cruz junto a la expedición del capitán FitzRoy a bordo del HMS Beagle». ¿En qué nave exploraron el río?", [["⛵","A bordo del velero bergantín HMS Beagle"],["🚢","En el buque mercante Río Gallegos"],["🛶","En una balsa construida con troncos"]], 0, "Pista: célebre velero de la expedición científica británica."),
-    q("Leé: «En 1934 se sancionó la ley que creó la Dirección de Parques Nacionales, protegiendo grandes áreas de bosque andino y glaciares». ¿Qué objetivo tuvo esa ley histórica?", [["🌲","Crear y preservar áreas naturales protegidas"],["🏭","Instalar aserraderos para talar bosques"],["🏗️","Construir autopistas sobre la cordillera"]], 0, "Pista: legislación base para conservar los parques nacionales."),
-    q("Leé: «En un relato sobre la vida rural: 'Los puesteros recorrían leguas a caballo para controlar las ovejas en los cañadones'». ¿Qué transporte usaban habitualmente?", [["🐎","Caballos resistentes a las distancias de la estepa"],["🚗","Automóviles veloces por caminos asfaltados"],["🚂","Locomotoras a vapor de trocha angosta"]], 0, "Pista: el animal tradicional de trabajo en la meseta."),
+    q("Leé: «En 1834, el naturalista Charles Darwin y el capitán FitzRoy remontaron el río Santa Cruz en botes balleneros arrastrados contra la corriente». ¿En qué embarcaciones remontaron el río?", [["🛶","En botes balleneros a remo y sirga"],["🚢","En un buque a vapor de tres chimeneas"],["⛵","En una gran carabela de carga pesada"]], 0, "Pista: usaron botes balleneros arrastrados con cuerdas desde la orilla."),
+    q("Leé: «En 1934 se sancionó la ley que creó la Dirección de Parques Nacionales, protegiendo grandes áreas de bosque andino y glaciares». ¿Qué objetivo tuvo esa ley histórica?", [["🌲","Crear y preservar áreas naturales protegidas"],["🏭","Instalar aserraderos para talar bosques al formular preguntas y respuestas completas"],["🏗️","Construir autopistas sobre la cordillera"]], 0, "Pista: legislación base para conservar los parques nacionales."),
+    q("Leé: «En un relato sobre la vida rural: 'Los puesteros recorrían leguas a caballo para controlar las ovejas en los cañadones'». ¿Qué transporte usaban habitualmente?", [["🐎","Caballos resistentes a las distancias de la estepa"],["🚗","Automóviles veloces por caminos asfaltados"],["🚂","Locomotoras a vapor de trocha angosta en las publicaciones escolares y libros de lectura"]], 0, "Pista: el animal tradicional de trabajo en la meseta."),
     q("Leé: «En 1937, el decreto nacional de creación del Parque Nacional Los Glaciares protegió el campo de hielo y especies amenazadas como el huemul». ¿Qué ciervo andino se buscaba preservar?", [["🦌","Al huemul andino"],["🦊","Al zorro colorado"],["🦙","Al guanaco de estepa"]], 0, "Pista: ciervo nativo declarado Monumento Natural."),
     q("Leé: «A comienzos del siglo XX, colonos pioneros galeses e hispanos abrieron caminos en la meseta comunicando las costas con la cordillera». ¿Qué logro alcanzaron?", [["🛤️","Trazaron huellas y caminos de comunicación"],["✈️","Construyeron aeropuertos internacionales"],["🚢","Cavaron canales navegables de costa a costa"]], 0, "Pista: apertura de rutas de transporte y abastecimiento."),
-    q("Leé: «En 1943 comenzaron los primeros trabajos sistemáticos para extraer carbón mineral en los yacimientos de Río Turbio». ¿Qué recurso mineral se comenzó a explotar?", [["⛏️","El carbón mineral"],["🪙","El oro aluvial"],["🪨","El mármol blanco"]], 0, "Pista: combustible fósil sólido fundamental de la cuenca carbonífera."),
-    q("Leé: «En un texto de ficción sobre la época pionera: 'El maestro rural organizó una biblioteca escolar con libros traídos en carretas'». ¿Cómo llegaron los libros?", [["📦","Transportados en carretas de campo"],["✈️","Lanzados desde avionetas de correo"],["🚂","Enviados por encomienda electrónica"]], 0, "Pista: transporte tradicional de cargas en el siglo XIX y principios del XX."),
+    q("Leé: «En 1943 comenzaron los primeros trabajos sistemáticos para extraer carbón mineral en los yacimientos de Río Turbio». ¿Qué recurso mineral se comenzó a explotar?", [["⛏️","El carbón mineral"],["🪙","El oro aluvial según los ejemplos trabajados en las clases de Lengua"],["🪨","El mármol blanco"]], 0, "Pista: combustible fósil sólido fundamental de la cuenca carbonífera."),
+    q("Leé: «En un texto de ficción sobre la época pionera: 'El maestro rural organizó una biblioteca escolar con libros traídos en carretas'». ¿Cómo llegaron los libros?", [["📦","Transportados en carretas de campo"],["🚂","Cargados en un tren expreso de pasajeros"],["🚚","En camiones de reparto rápido por autopista"]], 0, "Pista: transporte tradicional de cargas en el siglo XIX y principios del XX."),
     q("Leé: «En 1877, Francisco Moreno llegó a las nacientes del río Santa Cruz y bautizó al gran espejo de agua como Lago Argentino». ¿Qué fecha recuerda este hecho?", [["📅","En el año 1877"],["📅","En el año 1903"],["📅","En el año 1934"]], 0, "Pista: expedición histórica del perito Moreno."),
     q("Leé: «En las huelgas rurales de 1920 y 1921, trabajadores de estancias santacruceñas reclamaron mejoras básicas en sus condiciones de trabajo». ¿Quiénes fueron los protagonistas?", [["🐑","Los peones y esquiladores rurales"],["⚓","Los capitanes de buques extranjeros"],["🏛️","Los jueces de la capital nacional"]], 0, "Pista: trabajadores del campo en la llamada Patagonia Rebelde."),
-    q("¿Qué conector temporal formal indica que un acontecimiento sucedió después de otro en una biografía?", [["⏳","«Posteriormente» o «años después»"],["🛑","«Sin embargo»"],["➕","«Además de esto»"]], 0, "Pista: sinónimo de 'más tarde' o 'después'."),
-    q("¿Por qué es importante verificar las fuentes y fechas en un texto histórico o biográfico?", [["🔍","Para asegurar la exactitud y veracidad de los hechos relatados"],["🎨","Para que la biografía tenga más adjetivos calificativos"],["⏰","Para acortar el tiempo de lectura"]], 0, "Pista: el rigor histórico depende de datos documentados."),
+    q("¿Qué conector temporal formal indica que un acontecimiento sucedió después de otro en una biografía?", [["⏳","«Posteriormente» o «años después»"],["🛑","«Sin embargo»"],["➕","«Además de esto» en las diversas producciones escritas y orales"]], 0, "Pista: sinónimo de 'más tarde' o 'después'."),
+    q("¿Por qué es importante verificar las fuentes y fechas en un texto histórico o biográfico?", [["🔍","Para asegurar la exactitud y veracidad de los hechos relatados"],["🎨","Para que la biografía tenga más adjetivos calificativos y facilitar la lectura fluida del relato escolar"],["⏰","Para acortar el tiempo de lectura"]], 0, "Pista: el rigor histórico depende de datos documentados."),
   ],
   7: [
     q("¿Cuáles son las dos partes fundamentales de una receta de cocina tradicional?", [["📋","Lista de ingredientes y pasos de preparación"],["🎭","Personajes cómicos, conflicto dramático y moraleja"],["📰","Titular de portada, copete y epígrafe"]], 0, "Pista: qué se necesita y cómo elaborarlo."),
@@ -147,18 +147,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Marcá el verbo que está expresado en infinitivo para un paso instructivo:", [["🥣","Mezclar la harina con dos huevos"],["🥣","Mezclamos toda la masa del bowl"],["🥣","Habían mezclado con cuidado"]], 0, "Pista: termina con la desinencia regular -ar."),
     q("¿Qué información suele encabezar las instrucciones para armar una carpa?", [["🏕️","Materiales y piezas que contiene el equipo"],["📜","Una poesía alusiva a las montañas"],["📰","Las noticias del día del campamento"]], 0, "Pista: primero se verifica tener estacas, varillas y lona."),
     q("¿Cómo debe ser el lenguaje de las consignas de una actividad escolar?", [["🎯","Claro, breve, preciso y sin ambigüedades"],["🪄","Misterioso y con acertijos complicados"],["🎭","Poético con rimas teatrales extensas"]], 0, "Pista: el estudiante debe saber con exactitud qué resolver."),
-    q("¿Qué tipo de texto instructivo encontramos señalizado en las salidas de emergencia de un colectivo?", [["🚨","Instrucciones de evacuación y uso del martillo de emergencia"],["📖","Un relato de aventuras en la ruta"],["📜","Una carta de despedida formal"]], 0, "Pista: pasos rápidos a seguir en caso de siniestro vial."),
-    q("¿Qué función cumplen las imágenes o esquemas en un manual de instrucciones?", [["🖼️","Guiar visualmente cómo encastrar cada parte"],["🎨","Aumentar el valor comercial del libro"],["🧙","Mostrar personajes cómicos"]], 0, "Pista: apoyo gráfico para armar o manipular piezas."),
-    q("¿Qué conector de orden se utiliza habitualmente al iniciar un instructivo?", [["1️⃣","«En primer lugar» o «primero»"],["🏁","«Por último» o «finalmente»"],["🛑","«Sin embargo»"]], 0, "Pista: señala el punto de partida de la secuencia."),
-    q("¿Qué conector se suele emplear en el paso de cierre de una receta?", [["🏁","«Finalmente» o «por último»"],["1️⃣","«Para empezar la receta»"],["🔄","«Antes de comenzar»"]], 0, "Pista: indica la conclusión de la preparación."),
-    q("¿Qué tipo de texto es el prospecto que acompaña a un medicamento?", [["💊","Un instructivo médico de dosis, modo de uso y precauciones"],["📰","Una noticia sobre el hospital provincial"],["🎭","Un libreto de divulgación científica"]], 0, "Pista: detalla modo de uso, contraindicaciones y conservación."),
-    q("¿Por qué un reglamento escolar de convivencia es un texto normativo e instructivo?", [["🤝","Establece normas y pautas claras de respeto mutuo"],["🏆","Premia con notas al alumno que llegue primero"],["🎨","Obliga a forrar los cuadernos de un solo color"]], 0, "Pista: orienta las conductas para una convivencia armónica."),
+    q("¿Qué tipo de texto instructivo encontramos señalizado en las salidas de emergencia de un colectivo?", [["🚨","Instrucciones de evacuación y uso del martillo de emergencia"],["📖","Un relato de aventuras en la ruta"],["📜","Una carta de despedida formal al comunicar ideas en diferentes situaciones cotidianas"]], 0, "Pista: pasos rápidos a seguir en caso de siniestro vial."),
+    q("¿Qué función cumplen las imágenes o esquemas en un manual de instrucciones?", [["🖼️","Guiar visualmente cómo encastrar cada parte"],["🎨","Aumentar el valor comercial del libro siguiendo las convenciones habituales de la escritura"],["🧙","Mostrar personajes cómicos"]], 0, "Pista: apoyo gráfico para armar o manipular piezas."),
+    q("¿Qué conector de orden se utiliza habitualmente al iniciar un instructivo?", [["1️⃣","«En primer lugar» o «primero»"],["🏁","«Por último» o «finalmente»"],["🛑","«Sin embargo» en las actividades de comprensión y análisis de textos"]], 0, "Pista: señala el punto de partida de la secuencia."),
+    q("¿Qué conector se suele emplear en el paso de cierre de una receta?", [["🏁","«Finalmente» o «por último»"],["1️⃣","«Para empezar la receta» en los distintos textos y lecturas que compartimos"],["🔄","«Antes de comenzar»"]], 0, "Pista: indica la conclusión de la preparación."),
+    q("¿Qué tipo de texto es el prospecto que acompaña a un medicamento?", [["💊","Un instructivo médico de dosis, modo de uso y precauciones"],["📰","Una noticia sobre el hospital provincial"],["🎭","Un libreto de divulgación científica según las reglas ortográficas y gramaticales del español"]], 0, "Pista: detalla modo de uso, contraindicaciones y conservación."),
+    q("¿Por qué un reglamento escolar de convivencia es un texto normativo e instructivo?", [["🤝","Establece normas y pautas claras de respeto mutuo"],["🏆","Premia con notas al alumno que llegue primero en las oraciones y párrafos de la narración"],["🎨","Obliga a forrar los cuadernos de un solo color"]], 0, "Pista: orienta las conductas para una convivencia armónica."),
     q("Marcá el verbo redactado en modo imperativo (orden directa):", [["👉","«Cortá el papel por la línea punteada»"],["📜","«El papel era cortado lentamente con tijera»"],["🔮","«Cortaremos el papel mañana en clase»"]], 0, "Pista: indica una acción que se ordena realizar."),
-    q("¿Qué elemento suele indicar la cantidad exacta de ingredientes en una receta?", [["⚖️","Medidas de peso y capacidad (gramos, mililitros, tazas)"],["⏰","La hora en que se redactó la receta"],["📏","La distancia a la panadería"]], 0, "Pista: 200 gramos de harina, medio litro de leche."),
-    q("¿Qué parte de las instrucciones de un juego explica cómo se gana la partida?", [["🏆","El objetivo del juego y la condición de victoria"],["🎲","El color de los dados incluidos en la caja"],["📦","El material con que se fabricó el tablero"]], 0, "Pista: indica qué meta se debe alcanzar para ganar."),
-    q("¿Por qué en un instructivo se evitan opiniones personales como «a mí me gusta»?", [["🎯","Porque debe ser funcional, neutral y objetivo para cualquier usuario"],["⏰","Porque los autores no tienen preferencias"],["📜","Porque las opiniones impiden imprimir el manual"]], 0, "Pista: la instrucción es práctica y busca que cualquiera la ejecute."),
-    q("¿Qué tipo de signo visual se usa con frecuencia para listar ingredientes o materiales?", [["•","Puntos o guiones de enumeración (viñetas)"],["❓","Signos de interrogación de apertura"],["¡!","Signos de exclamación triples"]], 0, "Pista: marcas gráficas para ordenar ítems de una lista."),
-    q("¿Qué precaución de seguridad básica suele figurar en instructivos de experimentos escolares?", [["⚠️","«Realizar la actividad bajo la supervisión de un adulto»"],["🎭","«Memorizar los nombres de todos los tubos de ensayo»"],["🏃","«Completar la experiencia en menos de un minuto»"]], 0, "Pista: aviso que protege a los niños de riesgos o accidentes."),
+    q("¿Qué elemento suele indicar la cantidad exacta de ingredientes en una receta?", [["⚖️","Medidas de peso y capacidad (gramos, mililitros, tazas)"],["⏰","La hora en que se redactó la receta"],["📏","La distancia a la panadería al escribir y redactar textos informativos"]], 0, "Pista: 200 gramos de harina, medio litro de leche."),
+    q("¿Qué parte de las instrucciones de un juego explica cómo se gana la partida?", [["🏆","El objetivo del juego y la condición de victoria"],["🎲","El color de los dados incluidos en la caja en las conversaciones y lecturas cotidianas"],["📦","El material con que se fabricó el tablero"]], 0, "Pista: indica qué meta se debe alcanzar para ganar."),
+    q("¿Por qué en un instructivo se evitan opiniones personales como «a mí me gusta»?", [["🎯","Porque debe ser funcional, neutral y objetivo para cualquier usuario"],["⏰","Porque los autores no tienen preferencias"],["📜","Porque las opiniones impiden imprimir el manual debido a las reglas de concordancia de la lengua"]], 0, "Pista: la instrucción es práctica y busca que cualquiera la ejecute."),
+    q("¿Qué tipo de signo visual se usa con frecuencia para listar ingredientes o materiales?", [["•","Puntos o guiones de enumeración (viñetas)"],["❓","Signos de interrogación de apertura en los relatos y descripciones de la literatura"],["¡!","Signos de exclamación triples"]], 0, "Pista: marcas gráficas para ordenar ítems de una lista."),
+    q("¿Qué precaución de seguridad básica suele figurar en instructivos de experimentos escolares?", [["⚠️","«Realizar la actividad bajo la supervisión de un adulto»"],["🎭","«Memorizar los nombres de todos los tubos de ensayo»"],["🏃","«Completar la experiencia en menos de un minuto» al formular preguntas y respuestas completas"]], 0, "Pista: aviso que protege a los niños de riesgos o accidentes."),
   ],
   8: [
     q("¿Qué signo de puntuación se escribe inmediatamente tras el saludo inicial de una carta?", [["✉️","Dos puntos (:)"],["🛑","Punto final (.)"],["❓","Signos de pregunta (¿?)"]], 0, "Pista: por ejemplo: «Querida abuela:» o «Estimado director:»."),
@@ -175,12 +175,12 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué tipo de carta se envía a una autoridad escolar pidiendo permiso para una salida educativa?", [["📜","Una carta formal o de solicitud"],["💌","Una carta informal familiar"],["🎨","Una tarjeta de salutación artística"]], 0, "Pista: utiliza un lenguaje respetuoso y fórmulas de cortesía protocolar."),
     q("¿Qué fórmula de saludo inicial es adecuada para una carta formal dirigida al intendente?", [["🏛️","«Estimado señor intendente:»"],["👋","«¡Hola, qué tal, cómo va todo!»"],["💬","«¿Qué novedades tenés por el municipio?»"]], 0, "Pista: saludo formal con tratamiento de respeto institucional."),
     q("¿Qué tratamiento de cortesía suele emplearse en una carta formal?", [["🤝","Usted (con sus correspondientes formas verbales)"],["🗣️","Vos (con tuteo informal cotidiano)"],["👥","Vosotros (en plural peninsular)"]], 0, "Pista: marca distancia respetuosa hacia el destinatario."),
-    q("¿Qué dato indispensable debe figurar en el sobre para que el cartero llegue al domicilio?", [["🏠","Nombre del destinatario, calle, número, localidad y código postal"],["🎨","El color favorito del destinatario"],["🎂","La fecha de nacimiento de quien recibe la carta"]], 0, "Pista: dirección completa y código postal de la vivienda."),
+    q("¿Qué dato indispensable debe figurar en el sobre para que el cartero llegue al domicilio?", [["🏠","Nombre del destinatario, calle, número, localidad y código postal"],["🎨","El color favorito del destinatario en las publicaciones escolares y libros de lectura"],["🎂","La fecha de nacimiento de quien recibe la carta"]], 0, "Pista: dirección completa y código postal de la vivienda."),
     q("¿Cómo se llama el sello postal autoadhesivo que se coloca en el sobre para abonar el envío?", [["🏷️","Estampilla o sello postal"],["🎫","Boleto de transporte urbano"],["🪙","Ficha metálica del correo"]], 0, "Pista: timbre fiscal emitido por el servicio postal oficial."),
     q("¿Por qué en una carta personal a un amigo se utiliza un tono cercano e informal?", [["❤️","Porque existe confianza y afecto con el receptor"],["⚖️","Porque el correo prohíbe el lenguaje formal a familiares"],["📜","Porque las cartas personales no llevan firma"]], 0, "Pista: se escribe a familiares, amigos o compañeros queridos."),
-    q("¿Qué diferencia al correo electrónico de una carta tradicional respecto al soporte físico?", [["💻","El correo es un mensaje digital y la carta es en papel"],["✉️","La carta se transmite por ondas de radio"],["📜","El correo solo se puede leer una sola vez"]], 0, "Pista: formato electrónico frente a soporte material de papel y tinta."),
-    q("¿Qué se debe revisar en una carta o correo antes de enviarlo definitivamente?", [["🔍","Ortografía, claridad de ideas y datos correctos del destinatario"],["🎨","Que tenga dibujos decorativos en los bordes"],["⏰","Que el envío coincida con las doce en punto"]], 0, "Pista: relectura para corregir errores y verificar el destinatario."),
-    q("¿Dónde se conservan las cartas y documentos antiguos de los primeros pobladores para su estudio?", [["📚","En el archivo histórico o epistolario"],["📰","En la hemeroteca de diarios del día"],["🏪","En el almacén de ramos generales"]], 0, "Pista: fondo documental que conserva correspondencia de pioneros."),
+    q("¿Qué diferencia al correo electrónico de una carta tradicional respecto al soporte físico?", [["💻","El correo es un mensaje digital y la carta es en papel"],["✉️","La carta se transmite por ondas de radio"],["📜","El correo solo se puede leer una sola vez según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: formato electrónico frente a soporte material de papel y tinta."),
+    q("¿Qué se debe revisar en una carta o correo antes de enviarlo definitivamente?", [["🔍","Ortografía, claridad de ideas y datos correctos del destinatario"],["🎨","Que tenga dibujos decorativos en los bordes en las diversas producciones escritas y orales"],["⏰","Que el envío coincida con las doce en punto"]], 0, "Pista: relectura para corregir errores y verificar el destinatario."),
+    q("¿Dónde se conservan las cartas y documentos antiguos de los primeros pobladores para su estudio?", [["📚","En el archivo histórico o epistolario"],["📰","En la hemeroteca de diarios del día"],["🏪","En el almacén de ramos generales los géneros discursivos trabajados en la escuela"]], 0, "Pista: fondo documental que conserva correspondencia de pioneros."),
   ],
   9: [
     q("¿Qué característica distingue a los personajes de la mayoría de las fábulas?", [["🦊","Animales personificados que hablan y actúan como humanos"],["🧙","Seres fantásticos con varitas y pociones mágicas"],["👑","Reyes y caballeros de la Edad Media"]], 0, "Pista: personificación de animales con virtudes y defectos."),
@@ -189,18 +189,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué recurso literario consiste en otorgar cualidades humanas a animales o cosas?", [["✨","La personificación o prosopopeya"],["📏","La rima métrica de los versos"],["🎭","La acotación dramática"]], 0, "Pista: hacer que un zorro hable o que el viento dialogue."),
     q("En la fábula de la liebre y la tortuga, ¿qué virtud triunfa sobre la soberbia?", [["🐢","La constancia, el esfuerzo y la humildad"],["🐰","La velocidad descuidada y confiada"],["💤","El descanso prolongado durante la carrera"]], 0, "Pista: la tortuga avanza sin detenerse hasta cruzar la meta."),
     q("¿Por qué las fábulas se han transmitido durante siglos de generación en generación?", [["📚","Porque transmiten valores éticos universales de forma entretenida"],["🎪","Porque enseñan acrobacias y trucos de destreza"],["🧪","Porque explican fórmulas de laboratorio químico"]], 0, "Pista: educan sobre la honestidad, el trabajo y la prudencia."),
-    q("¿Qué tipo de texto narrativo breve con fin didáctico es la fábula?", [["📖","Un relato de ficción breve con enseñanza moral"],["📰","Una crónica periodística de actualidad"],["📋","Un instructivo de recetas familiares"]], 0, "Pista: literatura pensada para reflexionar sobre actitudes humanas."),
-    q("¿Qué defecto humano suele encarnar el cuervo al perder el queso frente al zorro?", [["🪶","La vanidad de creer en halagos interesados"],["🐻","La pereza de no querer volar alto"],["🐟","El temor a compartir sus alimentos"]], 0, "Pista: abre el pico para cantar por orgullo y se le cae la comida."),
+    q("¿Qué tipo de texto narrativo breve con fin didáctico es la fábula?", [["📖","Un relato de ficción breve con enseñanza moral"],["📰","Una crónica periodística de actualidad al comunicar ideas en diferentes situaciones cotidianas"],["📋","Un instructivo de recetas familiares"]], 0, "Pista: literatura pensada para reflexionar sobre actitudes humanas."),
+    q("¿Qué defecto humano suele encarnar el cuervo al perder el queso frente al zorro?", [["🪶","La vanidad de creer en halagos interesados"],["🐻","La pereza de no querer volar alto"],["🐟","El temor a compartir sus alimentos siguiendo las convenciones habituales de la escritura"]], 0, "Pista: abre el pico para cantar por orgullo y se le cae la comida."),
     q("¿Qué valor representa la hormiga frente a la cigarra en la fábula clásica?", [["🐜","El trabajo previsor y el esfuerzo para el futuro"],["🦗","El canto continuo sin ocuparse de las provisiones"],["❄️","El descuido frente a las estaciones frías"]], 0, "Pista: junta comida durante el verano para no pasar hambre en invierno."),
     q("¿Quién fue uno de los fabulistas más célebres de la antigua Grecia?", [["📜","Esopo"],["🎨","Leonardo da Vinci"],["⛵","Hernando de Magallanes"]], 0, "Pista: autor griego clásico creador de fábulas milenarias."),
-    q("¿Qué actitud representa el lobo que se disfraza con piel de oveja?", [["🐺","El engaño y la falsedad para perjudicar a otros"],["🐑","La inocencia de los animales jóvenes"],["🐕","El cuidado responsable de la majada"]], 0, "Pista: aparentar ser pacífico para atacar por sorpresa."),
+    q("¿Qué actitud representa el lobo que se disfraza con piel de oveja?", [["🐺","El engaño y la falsedad para perjudicar a otros"],["🐑","La inocencia de los animales jóvenes en las actividades de comprensión y análisis de textos"],["🐕","El cuidado responsable de la majada"]], 0, "Pista: aparentar ser pacífico para atacar por sorpresa."),
     q("En una fábula patagónica con un zorro y un choique, ¿qué animal suele encarnar la astucia?", [["🦊","El zorro"],["🪶","El choique"],["🐟","La trucha"]], 0, "Pista: tradicionalmente asociado al ingenio y las trampas."),
     q("¿Por qué se dice que la moraleja puede ser «implícita» en algunas fábulas modernas?", [["💡","Porque el lector debe deducirla a partir de los hechos"],["📝","Porque está escrita con letras destacadas en negrita"],["💡","Porque la narración carece de toda intención reflexiva"]], 0, "Pista: no está escrita al final, sino que se desprende de la historia."),
     q("¿Cuál es la estructura narrativa básica de una fábula?", [["📖","Situación inicial, conflicto o engaño y moraleja final"],["📋","Lista de ingredientes, preparación y tiempo de cocción"],["📰","Titular destacado, copete y epígrafe breve"]], 0, "Pista: inicio, desarrollo con enseñanza y cierre reflexivo."),
-    q("¿Qué actitud inicial muestra el león hacia el pequeño ratón antes de ser rescatado por él?", [["🦁","Desprecio por considerarlo débil e insignificante"],["🐭","Admiración por su velocidad para esconderse"],["🤝","Gratitud inmediata desde el primer encuentro"]], 0, "Pista: pensaba que un animal tan chico nunca le sería útil."),
-    q("¿Cómo logra el ratón salvar al león atrapado en la red de los cazadores?", [["🐭","Royendo pacientemente las cuerdas de la red con sus dientes"],["🦁","Rugiendo con fuerza para ahuyentar a los cazadores"],["⚔️","Cortando la red con una herramienta metálica"]], 0, "Pista: corta los nudos poco a poco con su dentadura."),
-    q("¿Qué moraleja nos deja la fábula del león y el ratón?", [["🤝","Nadie es tan pequeño como para no poder ayudar a los demás"],["🦁","Solo los seres más fuertes merecen respeto y cuidado"],["💤","Es mejor no intervenir en los problemas ajenos"]], 0, "Pista: los actos de bondad siempre tienen recompensa."),
-    q("¿Qué tiempo verbal suele utilizarse en la narración de los hechos de una fábula?", [["📜","Los tiempos del pasado (pretérito perfecto simple e imperfecto)"],["🔮","El tiempo futuro del modo indicativo"],["⚡","El presente de los mandatos imperativos"]], 0, "Pista: «Había una vez», «Caminaba el zorro», «Llegó la tortuga»."),
+    q("¿Qué actitud inicial muestra el león hacia el pequeño ratón antes de ser rescatado por él?", [["🦁","Desprecio por considerarlo débil e insignificante"],["🐭","Admiración por su velocidad para esconderse"],["🤝","Gratitud inmediata desde el primer encuentro en los distintos textos y lecturas que compartimos"]], 0, "Pista: pensaba que un animal tan chico nunca le sería útil."),
+    q("¿Cómo logra el ratón salvar al león atrapado en la red de los cazadores?", [["🐭","Royendo pacientemente las cuerdas de la red con sus dientes"],["🦁","Rugiendo con fuerza para ahuyentar a los cazadores según las reglas ortográficas y gramaticales del español"],["⚔️","Cortando la red con una herramienta metálica"]], 0, "Pista: corta los nudos poco a poco con su dentadura."),
+    q("¿Qué moraleja nos deja la fábula del león y el ratón?", [["🤝","Nadie es tan pequeño como para no poder ayudar a los demás"],["🦁","Solo los seres más fuertes merecen respeto y cuidado"],["💤","Es mejor no intervenir en los problemas ajenos en las oraciones y párrafos de la narración"]], 0, "Pista: los actos de bondad siempre tienen recompensa."),
+    q("¿Qué tiempo verbal suele utilizarse en la narración de los hechos de una fábula?", [["📜","Los tiempos del pasado (pretérito perfecto simple e imperfecto)"],["🔮","El tiempo futuro del modo indicativo al escribir y redactar textos informativos"],["⚡","El presente de los mandatos imperativos"]], 0, "Pista: «Había una vez», «Caminaba el zorro», «Llegó la tortuga»."),
     q("¿Por qué en las fábulas los personajes dialogan entre sí?", [["💬","Para manifestar sus intenciones, astucias o debilidades"],["🎭","Porque deben aprender parlamentos para una función de teatro"],["🤫","Para ocultar lo que piensan del narrador"]], 0, "Pista: el diálogo revela la personalidad de cada animal."),
     q("¿Qué enseñanza se desprende de la fábula del pastorcito mentiroso?", [["🗣️","Quien acostumbra mentir no será creído cuando diga la verdad"],["🐑","El pastoreo en el campo es una tarea sin ninguna responsabilidad"],["🐺","Los animales del campo temen los gritos de alarma"]], 0, "Pista: bromear con falsas alarmas destruye la confianza de los demás."),
   ],
@@ -213,18 +213,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué imagen sensorial transmite la expresión: «las hojas doradas y rojas de la lenga»?", [["👁️","Imagen sensorial visual"],["👂","Imagen sensorial auditiva"],["✋","Imagen sensorial táctil"]], 0, "Pista: colores percibidos mediante el sentido de la vista."),
     q("¿Cuántos versos tiene habitualmente una estrofa de cuarteto tradicional?", [["🔢","Cuatro versos en total"],["🔢","Dos versos pareados"],["🔢","Ocho versos continuos"]], 0, "Pista: cuarte indica el número cuatro."),
     q("¿Qué imagen sensorial transmite la frase: «la corteza áspera y rugosa del árbol milenario»?", [["✋","Imagen sensorial táctil"],["👃","Imagen olfativa"],["👅","Imagen gustativa"]], 0, "Pista: sensación que se percibe al tocar la superficie con la mano."),
-    q("¿Qué recurso poético consiste en atribuir sentimientos a la naturaleza (ejemplo: «el viento suspiraba triste»)?", [["✨","Personificación poética"],["📏","Separación silábica"],["🛑","Comparación directa"]], 0, "Pista: dar acciones humanas como suspirar a elementos naturales."),
+    q("¿Qué recurso poético consiste en atribuir sentimientos a la naturaleza (ejemplo: «el viento suspiraba triste»)?", [["✨","Personificación poética"],["📏","Separación silábica"],["🛑","Comparación directa en las conversaciones y lecturas cotidianas"]], 0, "Pista: dar acciones humanas como suspirar a elementos naturales."),
     q("¿Qué imagen sensorial encontramos en la frase: «el aroma fresco del bosque tras la lluvia»?", [["👃","Imagen sensorial olfativa"],["👂","Imagen sensorial sonora"],["👁️","Imagen sensorial de color"]], 0, "Pista: olor percibido a través de la nariz."),
-    q("¿Cómo se llama la comparación poética que une dos elementos usando la palabra «como»?", [["🔗","Comparación o símil"],["🎭","Metáfora pura"],["🏷️","Acotación lírica"]], 0, "Pista: «Tus ojos brillan como estrellas en la noche»."),
+    q("¿Cómo se llama la comparación poética que une dos elementos usando la palabra «como»?", [["🔗","Comparación o símil"],["🎭","Metáfora pura de acuerdo con las normas de uso de la lengua"],["🏷️","Acotación lírica"]], 0, "Pista: «Tus ojos brillan como estrellas en la noche»."),
     q("¿Qué efecto produce la rima y la medida regular de los versos al recitar un poema?", [["🎶","Musicalidad, cadencia y ritmo sonoro"],["😴","Sensación de lectura confusa"],["📊","Un ordenamiento cronológico de datos"]], 0, "Pista: armonía que hace agradable el poema al oído."),
-    q("Marcá el par de palabras que tiene rima consonante:", [["🎵","canción / corazón"],["🎶","mesa / perro"],["🔇","sol / luna"]], 0, "Pista: ambas terminan exactamente en -ón."),
+    q("Marcá el par de palabras que tiene rima consonante:", [["🎵","canción / corazón"],["🎶","mesa / perro"],["🔇","sol / luna en los relatos y descripciones de la literatura"]], 0, "Pista: ambas terminan exactamente en -ón."),
     q("Marcá el par de palabras que presenta rima asonante:", [["🎶","barco / pasto (a-o)"],["🎵","espejo / conejo (-ejo)"],["🔇","luz / flor"]], 0, "Pista: coinciden únicamente las vocales a y o."),
     q("¿Cómo se llaman las estrofas compuestas por dos versos que riman entre sí?", [["✌️","Pareados"],["🍀","Cuartetos"],["🌟","Tercetos"]], 0, "Pista: par indica dos versos hermanados."),
-    q("¿Qué sentimiento o tema suele inspirar la inmensidad de la meseta y los glaciares en la poesía santacruceña?", [["🏔️","Admiración por la naturaleza, el silencio y el horizonte"],["🎮","Instrucciones técnicas para armar herramientas"],["🚗","El tránsito vehicular de las grandes ciudades"]], 0, "Pista: emoción estética ante la belleza agreste del sur."),
-    q("¿Qué imagen sensorial evoca: «el sabor dulce del calafate maduro en la boca»?", [["👅","Imagen sensorial gustativa"],["👁️","Imagen sensorial visual"],["👂","Imagen sensorial auditiva"]], 0, "Pista: sensación experimentada con el sentido del gusto."),
-    q("¿Cómo se denomina a la voz que expresa sus sentimientos y emociones dentro del poema?", [["🪶","Voz lírica o yo poético"],["📰","Cronista informativo"],["🎭","Director de escena"]], 0, "Pista: la voz que habla y siente dentro del texto lírico."),
-    q("¿Qué signo de puntuación suele separar versos cuando se transcriben seguidos en un mismo renglón?", [["/","La barra inclinada (/)"],["*","Un asterisco (*)"],["&","El signo de unión (&)"]], 0, "Pista: marca el final de un verso y el comienzo del siguiente."),
-    q("¿Por qué en la poesía las palabras se eligen tanto por su significado como por su sonoridad?", [["✨","Para combinar sentido, belleza y musicalidad"],["📏","Para que todos los renglones midan lo mismo"],["⚖️","Para evitar que el poema tenga adjetivos"]], 0, "Pista: la poesía une el contenido con la estética sonora."),
+    q("¿Qué sentimiento o tema suele inspirar la inmensidad de la meseta y los glaciares en la poesía santacruceña?", [["🏔️","Admiración por la naturaleza, el silencio y el horizonte"],["🎮","Instrucciones técnicas para armar herramientas al formular preguntas y respuestas completas"],["🚗","El tránsito vehicular de las grandes ciudades"]], 0, "Pista: emoción estética ante la belleza agreste del sur."),
+    q("¿Qué imagen sensorial evoca: «el sabor dulce del calafate maduro en la boca»?", [["👅","Imagen sensorial gustativa"],["👁️","Imagen sensorial visual"],["👂","Imagen sensorial auditiva en las publicaciones escolares y libros de lectura"]], 0, "Pista: sensación experimentada con el sentido del gusto."),
+    q("¿Cómo se denomina a la voz que expresa sus sentimientos y emociones dentro del poema?", [["🪶","Voz lírica o yo poético"],["📰","Cronista informativo según los ejemplos trabajados en las clases de Lengua"],["🎭","Director de escena"]], 0, "Pista: la voz que habla y siente dentro del texto lírico."),
+    q("¿Qué signo de puntuación suele separar versos cuando se transcriben seguidos en un mismo renglón?", [["/","La barra inclinada (/)"],["*","Un asterisco (*)"],["&","El signo de unión (&) en las diversas producciones escritas y orales"]], 0, "Pista: marca el final de un verso y el comienzo del siguiente."),
+    q("¿Por qué en la poesía las palabras se eligen tanto por su significado como por su sonoridad?", [["✨","Para combinar sentido, belleza y musicalidad"],["📏","Para que todos los renglones midan lo mismo y facilitar la lectura fluida del relato escolar"],["⚖️","Para evitar que el poema tenga adjetivos"]], 0, "Pista: la poesía une el contenido con la estética sonora."),
   ],
   11: [
     q("¿Qué parte del texto teatral indica las acciones, gestos o tonos de voz de los actores?", [["🎭","Las acotaciones escénicas"],["💬","Los parlamentos hablados por actores"],["🏷️","Los títulos de portada"]], 0, "Pista: se escriben entre paréntesis o en letra cursiva."),
@@ -241,12 +241,12 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cómo se denomina al conjunto de objetos que los actores manipulan en escena (vasos, libros, linternas)?", [["📦","Utilería teatral"],["🖼️","Escenografía fija"],["📚","Libreto de ensayo"]], 0, "Pista: accesorios y objetos de mano de la actuación."),
     q("¿Qué signo de puntuación suele separar el nombre del personaje de su parlamento?", [["💬","Dos puntos o punto y raya (JUAN: —...)"],["❓","Signos de pregunta continuos"],["¡!","Signos de exclamación triples"]], 0, "Pista: indica que a continuación habla ese personaje."),
     q("¿Qué diferencia existe entre un texto teatral y un cuento narrativo?", [["🎭","El teatro se cuenta mediante diálogos directos de los personajes"],["📖","El cuento carece de personajes"],["📜","El teatro se escribe siempre en verso rimado"]], 0, "Pista: en el teatro no hay un narrador constante; hablan los actores."),
-    q("¿Cómo se llama la intervención en la que un personaje habla solo en el escenario reflexionando en voz alta?", [["🎭","Monólogo"],["👥","Diálogo"],["🤫","Aparte"]], 0, "Pista: mono- indica uno solo hablando en escena."),
-    q("¿Qué es el «conflicto» en una obra de teatro?", [["⚡","El problema o desacuerdo central entre los personajes"],["🎨","El cambio imprevisto de escenografía"],["🎟️","La pérdida del libreto por un actor"]], 0, "Pista: el motor dramático que genera la acción y el interés."),
-    q("¿Qué indica la acotación «(En voz baja, para sí mismo)»?", [["🤫","El tono de voz con el que debe pronunciarse la frase"],["🏃","Que el actor debe abandonar el escenario"],["💡","Que se deben apagar todas las luces"]], 0, "Pista: volumen íntimo o aparte para que el público escuche el pensamiento."),
+    q("¿Cómo se llama la intervención en la que un personaje habla solo en el escenario reflexionando en voz alta?", [["🎭","Monólogo"],["👥","Diálogo"],["🤫","Aparte al comunicar ideas en diferentes situaciones cotidianas"]], 0, "Pista: mono- indica uno solo hablando en escena."),
+    q("¿Qué es el «conflicto» en una obra de teatro?", [["⚡","El problema o desacuerdo central entre los personajes"],["🎨","El cambio imprevisto de escenografía siguiendo las convenciones habituales de la escritura"],["🎟️","La pérdida del libreto por un actor"]], 0, "Pista: el motor dramático que genera la acción y el interés."),
+    q("¿Qué indica la acotación «(En voz baja, para sí mismo)»?", [["🤫","El tono de voz con el que debe pronunciarse la frase"],["🏃","Que el actor debe abandonar el escenario"],["💡","Que se deben apagar todas las luces en las actividades de comprensión y análisis de textos"]], 0, "Pista: volumen íntimo o aparte para que el público escuche el pensamiento."),
     q("¿Cómo se llama el público que asiste a una sala a presenciar una función teatral?", [["👥","Espectadores o platea"],["📰","Lectores de prensa"],["📻","Radioescuchas de sintonía"]], 0, "Pista: las personas sentadas en las butacas del teatro."),
-    q("¿Qué sucede al término de una función teatral cuando concluye la última escena?", [["👏","El público aplaude y los actores saludan en el escenario"],["🏃","Los actores abandonan la sala sin mirar al público"],["😴","Se encienden las luces sin pausa"]], 0, "Pista: tradicional saludo de agradecimiento del elenco."),
-    q("¿Qué tipo de teatro emplea muñecos accionados por titiriteros detrás de un retablo?", [["🧸","Teatro de títeres o marionetas"],["🎭","Teatro de mimos mudos"],["🎬","Cine de animación gráfica"]], 0, "Pista: muñecos manipulados por titiriteros detrás de un retablo."),
+    q("¿Qué sucede al término de una función teatral cuando concluye la última escena?", [["👏","El público aplaude y los actores saludan en el escenario"],["🏃","Los actores abandonan la sala sin mirar al público en los distintos textos y lecturas que compartimos"],["😴","Se encienden las luces sin pausa"]], 0, "Pista: tradicional saludo de agradecimiento del elenco."),
+    q("¿Qué tipo de teatro emplea muñecos accionados por titiriteros detrás de un retablo?", [["🧸","Teatro de títeres o marionetas"],["🎭","Teatro de mimos mudos"],["🎬","Cine de animación gráfica según las reglas ortográficas y gramaticales del español"]], 0, "Pista: muñecos manipulados por titiriteros detrás de un retablo."),
   ],
   12: [
     q("¿Cómo se llama cada uno de los recuadros gráficos que representan un momento de la historieta?", [["🖼️","Viñeta"],["📚","Párrafo"],["📜","Estrofa"]], 0, "Pista: marco rectangular donde se dibuja una escena."),
@@ -257,18 +257,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué significa un globo de diálogo dibujado con líneas de puntos o discontinuas?", [["🤫","El personaje habla en voz muy baja o susurra"],["📢","El personaje grita con megáfono"],["💭","El personaje está cantando una melodía"]], 0, "Pista: susurro o secreto que apenas se oye."),
     q("¿Cómo se llama el recuadro rectangular en la parte superior de la viñeta donde habla el narrador?", [["🏷️","Cartela o cartucho del narrador"],["💭","Globo de pensamiento"],["💥","Onomatopeya de impacto"]], 0, "Pista: aclara el lugar o paso del tiempo («A la mañana siguiente...»)."),
     q("¿En qué sentido se leen habitualmente las viñetas y globos en el orden occidental?", [["➡️","De izquierda a derecha y de arriba hacia abajo"],["⬅️","De derecha a izquierda y de abajo hacia arriba"],["🔄","En círculos partiendo del centro"]], 0, "Pista: el mismo orden tradicional de lectura de libros escolares."),
-    q("¿Qué son las «líneas cinéticas» o de movimiento en un dibujo de historieta?", [["💨","Rayitas que indican velocidad, saltos o carreras"],["🎨","Bordes decorativos de las viñetas"],["🧱","Sombras de los edificios"]], 0, "Pista: trazos que muestran que un personaje corre velozmente."),
-    q("¿Qué onomatopeya representa el sonido de golpear una puerta con los nudillos?", [["🚪","¡TOC, TOC!"],["💥","¡CRASH!"],["😴","¡ZZZZ!"]], 0, "Pista: sonido seco de llamar a la puerta."),
+    q("¿Qué son las «líneas cinéticas» o de movimiento en un dibujo de historieta?", [["💨","Rayitas que indican velocidad, saltos o carreras"],["🎨","Bordes decorativos de las viñetas en las oraciones y párrafos de la narración"],["🧱","Sombras de los edificios"]], 0, "Pista: trazos que muestran que un personaje corre velozmente."),
+    q("¿Qué onomatopeya representa el sonido de golpear una puerta con los nudillos?", [["🚪","¡TOC, TOC!"],["💥","¡CRASH!"],["😴","¡ZZZZ! al escribir y redactar textos informativos"]], 0, "Pista: sonido seco de llamar a la puerta."),
     q("¿Qué onomatopeya se utiliza habitualmente para indicar que un personaje duerme profundamente?", [["😴","¡ZZZZ!"],["💥","¡BOOM!"],["🚗","¡BRRRR!"]], 0, "Pista: imita el ronquido continuo del sueño."),
-    q("¿Qué función cumple el «rabillo» o «delta» del globo de diálogo?", [["📍","Señala qué personaje está diciendo esas palabras"],["🎨","Sirve de adorno al contorno del dibujo"],["✂️","Indica el corte de la viñeta"]], 0, "Pista: flechita o colita que apunta hacia la boca del que habla."),
-    q("¿Qué representan pequeños signos como estrellitas o espirales sobre la cabeza de un personaje?", [["😵","Mareo, confusión o dolor tras un tropiezo"],["👑","Que el personaje es un rey"],["💡","Que resolvió un acertijo difícil"]], 0, "Pista: metáfora visual clásica de quedar atontado por un golpe."),
-    q("¿Qué metáfora visual significa que a un personaje se le ocurrió una brillante idea?", [["💡","Una lamparita encendida sobre la cabeza"],["🌧️","Una nube negra con lluvia"],["❤️","Corazones flotando en el aire"]], 0, "Pista: la bombilla iluminada simboliza el pensamiento ingenioso."),
-    q("¿Cómo se llama la historieta cómica breve de pocas viñetas que suele publicarse en diarios?", [["📰","Tira cómica diaria"],["📖","Novela ilustrada"],["📜","Poema gráfico"]], 0, "Pista: formato clásico de Mafalda o Gaturro."),
-    q("¿Qué combinación de lenguajes hace única a la historieta frente a un texto tradicional?", [["🎨","Combina lenguaje verbal (palabras) y lenguaje visual (imágenes)"],["📻","Combina grabaciones sonoras y música"],["🎭","Combina actores en vivo y escenografías"]], 0, "Pista: complementa palabras escritas con ilustraciones expresivas."),
+    q("¿Qué función cumple el «rabillo» o «delta» del globo de diálogo?", [["📍","Señala qué personaje está diciendo esas palabras"],["🎨","Sirve de adorno al contorno del dibujo en las conversaciones y lecturas cotidianas"],["✂️","Indica el corte de la viñeta"]], 0, "Pista: flechita o colita que apunta hacia la boca del que habla."),
+    q("¿Qué representan pequeños signos como estrellitas o espirales sobre la cabeza de un personaje?", [["😵","Mareo, confusión o dolor tras un tropiezo"],["👑","Que el personaje es un rey"],["💡","Que resolvió un acertijo difícil de acuerdo con las normas de uso de la lengua"]], 0, "Pista: metáfora visual clásica de quedar atontado por un golpe."),
+    q("¿Qué metáfora visual significa que a un personaje se le ocurrió una brillante idea?", [["💡","Una lamparita encendida sobre la cabeza"],["🌧️","Una nube negra con lluvia en los relatos y descripciones de la literatura"],["❤️","Corazones flotando en el aire"]], 0, "Pista: la bombilla iluminada simboliza el pensamiento ingenioso."),
+    q("¿Cómo se llama la historieta cómica breve de pocas viñetas que suele publicarse en diarios?", [["📰","Tira cómica diaria"],["📖","Novela ilustrada"],["📜","Poema gráfico al formular preguntas y respuestas completas"]], 0, "Pista: formato clásico de Mafalda o Gaturro."),
+    q("¿Qué combinación de lenguajes hace única a la historieta frente a un texto tradicional?", [["🎨","Combina lenguaje verbal (palabras) y lenguaje visual (imágenes)"],["📻","Combina grabaciones sonoras y música en las publicaciones escolares y libros de lectura"],["🎭","Combina actores en vivo y escenografías"]], 0, "Pista: complementa palabras escritas con ilustraciones expresivas."),
     q("¿Qué onomatopeya imita la rotura de un vidrio o cristal?", [["🪟","¡CRASH!"],["🚪","¡TOC, TOC!"],["💧","¡PLOP!"]], 0, "Pista: ruido estrepitoso de cristales al romperse."),
     q("¿Qué plano de dibujo enfoca de cerca el rostro del personaje para mostrar su emoción?", [["👤","Primer plano del rostro"],["🏔️","Plano general panorámico"],["👣","Plano de conjunto amplio"]], 0, "Pista: acerca la mirada a los ojos y expresión del protagonista."),
-    q("¿Qué significa una gota de sudor dibujada al costado de la frente de un personaje?", [["😓","Nerviosismo, incomodidad o alivio tras un apuro"],["🌧️","Que está lloviendo sobre él"],["🏊","Que acaba de nadar en el lago"]], 0, "Pista: recurso visual de tensión cómica."),
-    q("¿Por qué las historietas son un medio narrativo dinámico para contar historias?", [["🚀","Porque integran acción visual ágil con diálogos directos"],["📜","Porque prescinden de toda ilustración gráfica"],["⚖️","Porque están escritas en lenguaje jurídico formal"]], 0, "Pista: la síntesis gráfica y el humor facilitan el disfrute lector."),
+    q("¿Qué significa una gota de sudor dibujada al costado de la frente de un personaje?", [["😓","Nerviosismo, incomodidad o alivio tras un apuro"],["🌧️","Que está lloviendo sobre él"],["🏊","Que acaba de nadar en el lago según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: recurso visual de tensión cómica."),
+    q("¿Por qué las historietas son un medio narrativo dinámico para contar historias?", [["🚀","Porque integran acción visual ágil con diálogos directos"],["📜","Porque prescinden de toda ilustración gráfica debido a las reglas de concordancia de la lengua"],["⚖️","Porque están escritas en lenguaje jurídico formal"]], 0, "Pista: la síntesis gráfica y el humor facilitan el disfrute lector."),
   ],
   13: [
     q("¿Cómo se llama el pequeño espacio en blanco que se deja al inicio de cada párrafo?", [["📏","La sangría inicial"],["🛑","El punto y coma"],["🏷️","La volanta"]], 0, "Pista: separa visualmente el comienzo de un párrafo nuevo."),
@@ -282,14 +282,14 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué es una «oración bimembre» en gramática?", [["⚖️","Una oración que tiene dos partes: sujeto y predicado"],["🚫","Una oración formada por una sola interjección"],["❓","Una frase que no tiene verbo conjugado"]], 0, "Pista: bi- indica dos partes o miembros."),
     q("¿Cómo se llama la oración que no puede dividirse en sujeto y predicado (ejemplo: «¡Qué frío!»)?", [["❄️","Oración unimembre (OU)"],["⚖️","Oración bimembre"],["📜","Oración compuesta"]], 0, "Pista: uni- indica un solo miembro integral."),
     q("¿Cuál de las siguientes expresiones es una oración bimembre con sentido completo?", [["📝","Los guardaparques cuidan la fauna nativa."],["📝","Por la tarde en el medio del sendero."],["📝","Caminando despacio hacia la montaña alta."]], 0, "Pista: tiene sujeto (los guardaparques) y verbo conjugado (cuidan)."),
-    q("¿Cuál de las siguientes opciones es una oración unimembre referida al clima?", [["🌧️","Llueve intensamente en la cordillera."],["🌲","Los árboles crecen junto al arroyo."],["🦅","El cóndor vuela sobre los picos."]], 0, "Pista: los verbos climáticos (llover, nevar) no llevan sujeto."),
-    q("¿Por qué es incorrecto escribir un texto largo de varias páginas sin puntos y aparte?", [["📑","Porque dificulta la lectura y mezcla distintas ideas sin orden"],["🎨","Porque gasta menos tinta del bolígrafo"],["⏰","Porque la computadora no permite renglones largos"]], 0, "Pista: los párrafos permiten ordenar y respirar entre ideas."),
+    q("¿Cuál de las siguientes opciones es una oración unimembre referida al clima?", [["🌧️","Llueve intensamente en la cordillera."],["🌲","Los árboles crecen junto al arroyo."],["🦅","El cóndor vuela sobre los picos para dar claridad y precisión al mensaje expresado"]], 0, "Pista: los verbos climáticos (llover, nevar) no llevan sujeto."),
+    q("¿Por qué es incorrecto escribir un texto largo de varias páginas sin puntos y aparte?", [["📑","Porque dificulta la lectura y mezcla distintas ideas sin orden"],["🎨","Porque gasta menos tinta del bolígrafo a causa de la intención comunicativa del emisor"],["⏰","Porque la computadora no permite renglones largos"]], 0, "Pista: los párrafos permiten ordenar y respirar entre ideas."),
     q("¿Qué signo de puntuación se utiliza para separar elementos de una lista o enumeración?", [["✏️","La coma (,)"],["🛑","El punto y aparte"],["❓","Los signos de interrogación"]], 0, "Pista: «Compramos manzanas, peras, uvas y duraznos»."),
     q("¿Qué palabra de unión se coloca habitualmente antes del último elemento de una lista?", [["🔗","La conjunción «y» (o «e»)"],["🛑","El punto y seguido"],["❓","El signo de interrogación"]], 0, "Pista: cierra la enumeración sin coma previa."),
-    q("¿Qué sucede con el sentido de una oración si le falta el verbo conjugado principal?", [["⚠️","Queda incompleta y pierde sentido gramatical pleno"],["🏆","Se transforma automáticamente en una estrofa"],["✨","Pasa a ser una noticia informativa"]], 0, "Pista: el verbo es el motor que expresa la acción o estado."),
-    q("¿En qué caso la conjunción «y» cambia por «e» antes de una palabra?", [["🔤","Cuando la palabra siguiente empieza con el sonido i- (i o hi)"],["🔠","Cuando la palabra termina en vocal o"],["🔡","Cuando se ubica al inicio de una oración"]], 0, "Pista: para evitar la cacofonía: «geografía e historia»."),
-    q("Marcá la opción que tiene sangría, mayúscula inicial y punto final correctamente aplicados:", [["📝","   En la meseta, el viento sopla todo el día."],["📝","en la meseta el viento sopla todo el día"],["📝","En la meseta el viento sopla todo el día"]], 0, "Pista: espacio inicial, 'En' con mayúscula y punto al final."),
-    q("¿Qué signo introduce las palabras exactas que alguien dijo en estilo directo en un relato?", [["💬","Dos puntos seguidos de comillas o raya de diálogo"],["🛑","Punto y coma de cierre"],["❓","Signos dobles de exclamación"]], 0, "Pista: «El guía avisó: —Caminen con cuidado.—»"),
+    q("¿Qué sucede con el sentido de una oración si le falta el verbo conjugado principal?", [["⚠️","Queda incompleta y pierde sentido gramatical pleno"],["🏆","Se transforma automáticamente en una estrofa"],["✨","Pasa a ser una noticia informativa siguiendo las convenciones habituales de la escritura"]], 0, "Pista: el verbo es el motor que expresa la acción o estado."),
+    q("¿En qué caso la conjunción «y» cambia por «e» antes de una palabra?", [["🔤","Cuando la palabra siguiente empieza con el sonido i- (i o hi)"],["🔠","Cuando la palabra termina en vocal o en las actividades de comprensión y análisis de textos"],["🔡","Cuando se ubica al inicio de una oración"]], 0, "Pista: para evitar la cacofonía: «geografía e historia»."),
+    q("Marcá la oración que tiene mayúscula inicial y punto final correctamente aplicados:", [["📝","En la meseta, el viento sopla todo el día."],["📝","en la meseta, el viento sopla todo el día."],["📝","En la meseta, el viento sopla todo el día"]], 0, "Pista: la oración comienza con mayúscula 'En' y termina con punto final."),
+    q("¿Qué signo introduce las palabras exactas que alguien dijo en estilo directo en un relato?", [["💬","Dos puntos seguidos de comillas o raya de diálogo"],["🛑","Punto y coma de cierre"],["❓","Signos dobles de exclamación en los distintos textos y lecturas que compartimos"]], 0, "Pista: «El guía avisó: —Caminen con cuidado.»"),
     q("¿Por qué los nombres de los meses y días de la semana se escriben habitualmente con minúscula en español?", [["📅","Porque son sustantivos comunes en nuestra lengua"],["🔠","Porque la ortografía prohíbe las mayúsculas en fechas"],["⏰","Porque se consideran adjetivos temporales"]], 0, "Pista: a diferencia del inglés, en español van con minúscula salvo al iniciar oración."),
   ],
   14: [
@@ -301,18 +301,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Completá con el conector adecuado: «Se abrigó con campera _____ hacía mucho frío».", [["🧥","porque"],["⏳","después"],["🏁","finalmente"]], 0, "Pista: el frío es la causa de abrigarse."),
     q("Completá con el conector adecuado: «Nevó durante toda la noche; _____, los caminos quedaron cerrados».", [["❄️","por lo tanto"],["❓","porque"],["⏪","antes"]], 0, "Pista: el cierre de caminos es la consecuencia de la nevada."),
     q("¿Qué conector se suele emplear para marcar el inicio de una serie de pasos?", [["1️⃣","«En primer lugar» o «primero»"],["🏁","«Para terminar»"],["🛑","«Sin embargo»"]], 0, "Pista: abre la secuencia ordenada."),
-    q("¿Qué conector temporal indica posterioridad en un relato?", [["⏩","«Luego» o «después»"],["⏪","«Antes de ayer»"],["🛑","«Al contrario»"]], 0, "Pista: avanza en la línea del tiempo hacia lo que sigue."),
+    q("¿Qué conector temporal indica posterioridad en un relato?", [["⏩","«Luego» o «después»"],["⏪","«Antes de ayer» según las reglas ortográficas y gramaticales del español"],["🛑","«Al contrario»"]], 0, "Pista: avanza en la línea del tiempo hacia lo que sigue."),
     q("¿Qué recurso de cohesión consiste en reemplazar una palabra por un término equivalente para no repetirla?", [["🔄","Sustitución sinonímica léxica"],["✂️","Eliminación de la palabra sin reemplazo"],["🎨","Cambio de tipografía"]], 0, "Pista: evita repetir «el auto, el auto» usando «el vehículo»."),
-    q("¿Qué es la «elipsis» en un texto para evitar repeticiones innecesarias?", [["🤫","Omitir una palabra que ya se sobreentiende por el contexto"],["📢","Reiterar el nombre en cada oración"],["❓","Transformar la frase en interrogación"]], 0, "Pista: «Martín viajó a la cordillera. [Martín] Visitó el lago»."),
-    q("¿Qué tipo de conector es «sin embargo» o «pero»?", [["🛑","Conector de oposición o contraste"],["⏳","Conector temporal de avance"],["➕","Conector aditivo de suma"]], 0, "Pista: introduce una dificultad o idea contraria a la esperada."),
+    q("¿Qué es la «elipsis» en un texto para evitar repeticiones innecesarias?", [["🤫","Omitir una palabra que ya se sobreentiende por el contexto"],["📢","Reiterar el nombre en cada oración"],["❓","Transformar la frase en interrogación en las oraciones y párrafos de la narración"]], 0, "Pista: «Martín viajó a la cordillera. [Martín] Visitó el lago»."),
+    q("¿Qué tipo de conector es «sin embargo» o «pero»?", [["🛑","Conector de oposición o contraste"],["⏳","Conector temporal de avance al escribir y redactar textos informativos"],["➕","Conector aditivo de suma"]], 0, "Pista: introduce una dificultad o idea contraria a la esperada."),
     q("Completá con el conector de oposición adecuado: «El viento soplaba fuerte, _____ pudimos armar el campamento».", [["🏕️","pero"],["⏳","luego"],["1️⃣","primero"]], 0, "Pista: contrasta la dificultad del viento con el logro de armar la carpa."),
     q("¿Qué conector añade información sumando elementos de la misma clase?", [["➕","«Además» o «también»"],["🛑","«Pero» o «sin embargo»"],["❓","«Porque» o «ya que»"]], 0, "Pista: conectores aditivos que agregan datos."),
-    q("¿Qué conector temporal cierra la narración de los hechos de una jornada?", [["🏁","«Finalmente» o «por último»"],["1️⃣","«Al comenzar la mañana»"],["⏳","«Mientras tanto»"]], 0, "Pista: marca el final de la secuencia temporal."),
+    q("¿Qué conector temporal cierra la narración de los hechos de una jornada?", [["🏁","«Finalmente» o «por último»"],["1️⃣","«Al comenzar la mañana»"],["⏳","«Mientras tanto» en las conversaciones y lecturas cotidianas"]], 0, "Pista: marca el final de la secuencia temporal."),
     q("En la frase «El cóndor divisó a su cría y voló hacia ella», ¿a qué palabra reemplaza «ella»?", [["🦅","A «su cría»"],["🏔️","Al «cóndor»"],["💨","Al «viento»"]], 0, "Pista: uso de pronombre para evitar repetir el sustantivo."),
-    q("¿Por qué un texto sin conectores resulta difícil y fragmentado para el lector?", [["🧩","Porque parece una lista de frases sueltas y sin relación lógica"],["🎨","Porque no tiene suficientes imágenes ilustrativas"],["⏰","Porque se lee a menor velocidad"]], 0, "Pista: los conectores tejen la cohesión y fluidez de la lectura."),
-    q("¿Qué conector de causa es sinónimo formal de «porque»?", [["💡","«Puesto que» o «ya que»"],["⏳","«Más adelante»"],["🛑","«A pesar de eso»"]], 0, "Pista: introduce la explicación o fundamento de un suceso."),
-    q("Marcá el conector temporal que expresa que algo ocurrió de manera sorpresiva e imprevista:", [["⚡","«De repente» o «súbitamente»"],["⏳","«Poco a poco con los años»"],["🏁","«En conclusión»"]], 0, "Pista: giro imprevisto en la secuencia narrativa."),
-    q("¿Qué pronombre demostrativo ayuda a cohesionar refiriéndose a un hecho mencionado antes?", [["👉","«Este», «ese» o «aquel»"],["❓","«Quién» o «cuál»"],["👤","«Yo» o «vos»"]], 0, "Pista: «Ocurrió un hecho imprevisto; ese suceso alertó al pueblo»."),
+    q("¿Por qué un texto sin conectores resulta difícil y fragmentado para el lector?", [["🧩","Porque parece una lista de frases sueltas y sin relación lógica"],["🎨","Porque no tiene suficientes imágenes ilustrativas debido a las reglas de concordancia de la lengua"],["⏰","Porque se lee a menor velocidad"]], 0, "Pista: los conectores tejen la cohesión y fluidez de la lectura."),
+    q("¿Qué conector de causa es sinónimo formal de «porque»?", [["💡","«Puesto que» o «ya que»"],["⏳","«Más adelante»"],["🛑","«A pesar de eso» en los relatos y descripciones de la literatura"]], 0, "Pista: introduce la explicación o fundamento de un suceso."),
+    q("Marcá el conector temporal que expresa que algo ocurrió de manera sorpresiva e imprevista:", [["⚡","«De repente» o «súbitamente»"],["⏳","«Poco a poco con los años» al formular preguntas y respuestas completas"],["🏁","«En conclusión»"]], 0, "Pista: giro imprevisto en la secuencia narrativa."),
+    q("¿Qué pronombre demostrativo ayuda a cohesionar refiriéndose a un hecho mencionado antes?", [["👉","«Este», «ese» o «aquel»"],["❓","«Quién» o «cuál»"],["👤","«Yo» o «vos» en las publicaciones escolares y libros de lectura"]], 0, "Pista: «Ocurrió un hecho imprevisto; ese suceso alertó al pueblo»."),
   ],
   15: [
     q("¿Qué parte de la oración bimembre indica quién realiza la acción o de quién se habla?", [["👤","El sujeto de la oración"],["⚡","El predicado verbal de la acción"],["🛑","El modificador circunstancial"]], 0, "Pista: concuerda en persona y número con el verbo."),
@@ -326,13 +326,13 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("En la oración «El guanaco y el choique corren por la meseta», ¿cuántos núcleos tiene el sujeto?", [["✌️","Dos núcleos (guanaco / choique)"],["☝️","Un solo núcleo nominal (meseta)"],["✋","Tres núcleos distintos"]], 0, "Pista: los dos animales realizan juntos la acción."),
     q("En la oración «Llegaron tarde al refugio», ¿qué sujeto tácito le corresponde al verbo?", [["👥","Ellos / ellas (o ustedes)"],["👤","Yo en primera persona singular"],["🗣️","Vos en singular"]], 0, "Pista: 'llegaron' es tercera persona del plural."),
     q("¿Qué pregunta le hacemos al verbo para hallar el sujeto de una oración?", [["❓","¿Quién o quiénes realizan la acción o concuerdan con el verbo?"],["📍","¿En qué lugar ocurrió la acción?"],["⏰","¿En qué momento concluyó el hecho?"]], 0, "Pista: quién concuerda con el verbo conjugado."),
-    q("¿Puede ubicarse el sujeto expreso al final de la oración (ejemplo: «Llegó ayer el barco»)?", [["📌","Sí: el sujeto puede ir al inicio, al medio o al final de la oración"],["📌","No: el sujeto obligatoriamente debe ser la primera palabra"],["📌","Solo si la oración lleva signos de exclamación"]], 0, "Pista: en español el orden de las partes es flexible."),
+    q("¿Puede ubicarse el sujeto expreso al final de la oración (ejemplo: «Llegó ayer el barco»)?", [["📌","Sí: el sujeto puede ir al inicio, al medio o al final de la oración"],["📌","No: el sujeto obligatoriamente debe ser la primera palabra según los ejemplos trabajados en las clases de Lengua"],["📌","Solo si la oración lleva signos de exclamación"]], 0, "Pista: en español el orden de las partes es flexible."),
     q("En la oración «Navegó por el lago el capitán», ¿cuál es el sujeto?", [["⚓","«el capitán»"],["🌊","«por el lago»"],["⛵","«Navegó»"]], 0, "Pista: quién realizó la acción de navegar."),
-    q("¿Por qué en español es muy común usar el sujeto tácito sin repetir «yo» o «él»?", [["🗣️","Porque la desinencia del verbo ya expresa la persona y el número"],["🎨","Porque la gramática prohíbe repetir pronombres personales"],["📜","Porque las oraciones no deben exceder cinco palabras"]], 0, "Pista: las desinencias verbales en español aportan toda la información."),
-    q("En la oración «Escribí una carta para mi primo», ¿cuál es el sujeto tácito?", [["👤","Yo (primera persona singular)"],["👥","Nosotros en plural"],["👤","Él o ella en tercera"]], 0, "Pista: 'escribí' solo puede corresponder a 'yo'."),
-    q("¿Cómo se llama el modificador que se une directamente al núcleo del sujeto sin preposición (ejemplo: «La hermosa laguna»)?", [["🔗","Modificador directo (MD: artículo o adjetivo)"],["⚡","Modificador indirecto preposicional"],["🛑","Núcleo verbal compuesto"]], 0, "Pista: artículos y adjetivos que acompañan al sustantivo."),
-    q("En la construcción «El viejo explorador», ¿qué función sintáctica cumple «explorador»?", [["💎","Núcleo del sujeto (sustantivo)"],["🔗","Modificador directo (MD)"],["⚡","Núcleo verbal (NV)"]], 0, "Pista: es la palabra central de la construcción."),
-    q("En la construcción «El viejo explorador», ¿qué función cumple la palabra «viejo»?", [["🔗","Modificador directo (MD: adjetivo)"],["💎","Núcleo del sujeto"],["⚡","Predicado verbal"]], 0, "Pista: califica al sustantivo directamente."),
+    q("¿Por qué en español es muy común usar el sujeto tácito sin repetir «yo» o «él»?", [["🗣️","Porque la desinencia del verbo ya expresa la persona y el número"],["🎨","Porque la gramática prohíbe repetir pronombres personales"],["📜","Porque las oraciones no deben exceder cinco palabras debido a las reglas de concordancia de la lengua"]], 0, "Pista: las desinencias verbales en español aportan toda la información."),
+    q("En la oración «Escribí una carta para mi primo», ¿cuál es el sujeto tácito?", [["👤","Yo (primera persona singular)"],["👥","Nosotros en plural para dar claridad y precisión al mensaje expresado"],["👤","Él o ella en tercera"]], 0, "Pista: 'escribí' solo puede corresponder a 'yo'."),
+    q("¿Cómo se llama el modificador que se une directamente al núcleo del sujeto sin preposición (ejemplo: «La hermosa laguna»)?", [["🔗","Modificador directo (MD: artículo o adjetivo)"],["⚡","Modificador indirecto preposicional"],["🛑","Núcleo verbal compuesto al comunicar ideas en diferentes situaciones cotidianas"]], 0, "Pista: artículos y adjetivos que acompañan al sustantivo."),
+    q("En la construcción «El viejo explorador», ¿qué función sintáctica cumple «explorador»?", [["💎","Núcleo del sujeto (sustantivo)"],["🔗","Modificador directo (MD) siguiendo las convenciones habituales de la escritura"],["⚡","Núcleo verbal (NV)"]], 0, "Pista: es la palabra central de la construcción."),
+    q("En la construcción «El viejo explorador», ¿qué función cumple la palabra «viejo»?", [["🔗","Modificador directo (MD: adjetivo)"],["💎","Núcleo del sujeto"],["⚡","Predicado verbal en las actividades de comprensión y análisis de textos"]], 0, "Pista: califica al sustantivo directamente."),
     q("Marcá la oración cuyo sujeto sea expreso compuesto (SEC):", [["👥","El guía y los turistas caminaban juntos."],["👤","El guía caminaba con paso firme hacia el refugio."],["🤫","Caminaban juntos por el sendero pedregoso."]], 0, "Pista: dos núcleos unidos: guía y turistas."),
     q("¿Qué sucede con la concordancia si el sujeto es compuesto: «María y Lucas (llegó / llegaron)»?", [["👥","El verbo debe ir en plural: «llegaron»"],["👤","El verbo debe ir en singular: «llegó»"],["⚖️","Cualquiera de las dos formas es correcta"]], 0, "Pista: dos sujetos singulares exigen un verbo en plural."),
   ],
@@ -346,16 +346,16 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Marcá la oración que presenta predicado verbal compuesto (PVC):", [["📝","La zorra miró el queso y saltó hacia la rama."],["📝","La zorra miró el queso con muchísima atención."],["📝","La zorra astuta caminó por el bosque andino."]], 0, "Pista: dos verbos conjugados unidos por 'y'."),
     q("¿Qué palabra suele coordinar los dos verbos en un predicado verbal compuesto?", [["🔗","La conjunción «y» (o «e»)"],["🛑","El punto y seguido"],["❓","El pronombre relativo"]], 0, "Pista: coordina las dos acciones del mismo sujeto."),
     q("En la oración «El arroyo bajaba fresco desde la montaña», ¿cuál es el predicado?", [["🏔️","«bajaba fresco desde la montaña»"],["💧","«El arroyo caudaloso»"],["🌊","«desde la montaña»"]], 0, "Pista: todo lo que se dice acerca del arroyo."),
-    q("¿Qué elemento del predicado responde a la pregunta «¿QUÉ?» tras un verbo transitivo (ejemplo: «Juan compró manzanas»)?", [["🍎","El objeto directo (OD: manzanas)"],["📍","El circunstancial de lugar"],["⏰","El circunstancial de tiempo"]], 0, "Pista: recibe directamente la acción del verbo («las compró»)."),
-    q("¿Qué circunstancial indica el lugar donde se realiza la acción en el predicado?", [["📍","Circunstancial de lugar (ejemplo: en el bosque)"],["⏰","Circunstancial de tiempo (a la mañana)"],["🛠️","Circunstancial de modo (con cuidado)"]], 0, "Pista: responde a la pregunta «¿dónde?»."),
-    q("¿Qué circunstancial responde a la pregunta «¿CUÁNDO?» dentro del predicado?", [["⏰","Circunstancial de tiempo (ejemplo: temprano)"],["📍","Circunstancial de lugar (en la orilla)"],["🚗","Circunstancial de instrumento"]], 0, "Pista: indica el momento temporal de la acción."),
-    q("¿Qué circunstancial responde a la pregunta «¿CÓMO?» señalando el modo de actuar?", [["🚗","Circunstancial de modo (ejemplo: con paciencia)"],["⏰","Circunstancial de tiempo"],["📍","Circunstancial de lugar"]], 0, "Pista: describe la manera en que se ejecuta el verbo."),
+    q("¿Qué elemento del predicado responde a la pregunta «¿QUÉ?» tras un verbo transitivo (ejemplo: «Juan compró manzanas»)?", [["🍎","El objeto directo (OD: manzanas)"],["📍","El circunstancial de lugar en los distintos textos y lecturas que compartimos"],["⏰","El circunstancial de tiempo"]], 0, "Pista: recibe directamente la acción del verbo («las compró»)."),
+    q("¿Qué circunstancial indica el lugar donde se realiza la acción en el predicado?", [["📍","Circunstancial de lugar (ejemplo: en el bosque)"],["⏰","Circunstancial de tiempo (a la mañana)"],["🛠️","Circunstancial de modo (con cuidado) según las reglas ortográficas y gramaticales del español"]], 0, "Pista: responde a la pregunta «¿dónde?»."),
+    q("¿Qué circunstancial responde a la pregunta «¿CUÁNDO?» dentro del predicado?", [["⏰","Circunstancial de tiempo (ejemplo: temprano)"],["📍","Circunstancial de lugar (en la orilla) en las oraciones y párrafos de la narración"],["🚗","Circunstancial de instrumento"]], 0, "Pista: indica el momento temporal de la acción."),
+    q("¿Qué circunstancial responde a la pregunta «¿CÓMO?» señalando el modo de actuar?", [["🚗","Circunstancial de modo (ejemplo: con paciencia)"],["⏰","Circunstancial de tiempo"],["📍","Circunstancial de lugar al escribir y redactar textos informativos"]], 0, "Pista: describe la manera en que se ejecuta el verbo."),
     q("En la oración «Los pioneros viajaban lentamente en carreta», ¿qué circunstancial es «lentamente»?", [["🐢","Circunstancial de modo"],["📍","Circunstancial de lugar"],["⏰","Circunstancial de tiempo"]], 0, "Pista: adverbio en -mente que explica cómo viajaban."),
-    q("En la oración «Ayer nevó en la meseta», ¿qué circunstancial es la palabra «Ayer»?", [["⏰","Circunstancial de tiempo"],["📍","Circunstancial de lugar"],["🚗","Circunstancial de modo"]], 0, "Pista: ubica la acción en el día anterior."),
-    q("¿Por qué el núcleo del sujeto y el núcleo del predicado deben concordar en persona y número?", [["⚖️","Porque mantienen la coherencia gramatical de la oración"],["🎨","Para que los versos rimen con consonancia"],["📜","Para que ocupen la misma cantidad de sílabas"]], 0, "Pista: si el sujeto es plural («ellos»), el verbo va en plural («cantan»)."),
+    q("En la oración «Ayer nevó en la meseta», ¿qué circunstancial es la palabra «Ayer»?", [["⏰","Circunstancial de tiempo"],["📍","Circunstancial de lugar en las conversaciones y lecturas cotidianas"],["🚗","Circunstancial de modo"]], 0, "Pista: ubica la acción en el día anterior."),
+    q("¿Por qué el núcleo del sujeto y el núcleo del predicado deben concordar en persona y número?", [["⚖️","Porque mantienen la coherencia gramatical de la oración"],["🎨","Para que los versos rimen con consonancia"],["📜","Para que ocupen la misma cantidad de sílabas y asegurar la correcta comprensión del texto"]], 0, "Pista: si el sujeto es plural («ellos»), el verbo va en plural («cantan»)."),
     q("Marcá la opción que presenta error de concordancia entre sujeto y predicado:", [["📝","«Los guanacos corre por el campo.»"],["📝","«Los guanacos corren por el campo.»"],["📝","«El guanaco corre por el campo.»"]], 0, "Pista: 'los guanacos' es plural y 'corre' es singular."),
-    q("En la oración «La docente explicó el tema y corrigió las tareas», ¿cuáles son los verbos?", [["✍️","«explicó» y «corrigió»"],["👩‍🏫","«docente» y «tema»"],["📚","«tareas» y «docente»"]], 0, "Pista: las dos acciones ejecutadas por la docente."),
-    q("¿Qué tipo de predicado tiene la oración: «Los flamencos vuelan en bandadas y buscan alimento en la laguna»?", [["⚡⚡","Predicado verbal compuesto (PVC)"],["⚡","Predicado verbal simple (PVS)"],["🤫","Predicado no verbal nominal"]], 0, "Pista: dos núcleos: 'vuelan' y 'buscan'."),
+    q("En la oración «La docente explicó el tema y corrigió las tareas», ¿cuáles son los verbos?", [["✍️","«explicó» y «corrigió»"],["👩‍🏫","«docente» y «tema» en los relatos y descripciones de la literatura"],["📚","«tareas» y «docente»"]], 0, "Pista: las dos acciones ejecutadas por la docente."),
+    q("¿Qué tipo de predicado tiene la oración: «Los flamencos vuelan en bandadas y buscan alimento en la laguna»?", [["⚡⚡","Predicado verbal compuesto (PVC)"],["⚡","Predicado verbal simple (PVS)"],["🤫","Predicado no verbal nominal al formular preguntas y respuestas completas"]], 0, "Pista: dos núcleos: 'vuelan' y 'buscan'."),
     q("¿Cómo se abrevia 'predicado verbal simple' en el análisis sintáctico escolar?", [["📝","PVS"],["📝","PVC"],["📝","SES"]], 0, "Pista: siglas clásicas de Predicado Verbal Simple."),
   ],
   17: [
@@ -372,10 +372,10 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cómo se llama el sustantivo que en singular nombra a un único ser (árbol, pez, oveja)?", [["👤","Sustantivo individual"],["👥","Sustantivo colectivo"],["📍","Sustantivo propio"]], 0, "Pista: opuesto al colectivo."),
     q("¿Qué sustantivo colectivo designa a un conjunto ordenado de libros de estudio?", [["📚","Biblioteca"],["📰","Hemeroteca"],["🎨","Pinacoteca"]], 0, "Pista: colección de libros catalogados."),
     q("¿Qué sustantivo colectivo designa al conjunto de músicos que ejecutan instrumentos juntos?", [["🎶","Orquesta"],["👥","Público"],["🎭","Elenco"]], 0, "Pista: conjunto de instrumentistas coordinados por un director."),
-    q("¿Qué sustantivo colectivo nombra al conjunto de hojas de un árbol?", [["🍃","Follaje"],["🪵","Leña"],["🌱","Brote"]], 0, "Pista: masa de hojas que viste la copa."),
+    q("¿Qué sustantivo colectivo nombra al conjunto de hojas de un árbol?", [["🍃","Follaje"],["🪵","Leña en las publicaciones escolares y libros de lectura"],["🌱","Brote"]], 0, "Pista: masa de hojas que viste la copa."),
     q("¿Cuál de estos sustantivos es propio y debe escribirse con mayúscula inicial?", [["📍","Río Gallegos"],["🌊","río caudaloso"],["🐟","peces marinos"]], 0, "Pista: nombre oficial de la capital provincial."),
-    q("¿Qué sustantivos nombran cosas que no podemos tocar físicamente como emociones y valores?", [["❤️","Sustantivos abstractos (paz, justicia, alegría)"],["🪨","Sustantivos concretos (piedra, mesa)"],["📍","Sustantivos propios geográficos"]], 0, "Pista: ideas, sentimientos y conceptos inmateriales."),
-    q("¿Cuál de las siguientes palabras es un sustantivo abstracto?", [["✨","Solidaridad"],["🧱","Ladrillo"],["🍞","Pan casero"]], 0, "Pista: virtud humana que no se puede tocar con la mano."),
+    q("¿Qué sustantivos nombran cosas que no podemos tocar físicamente como emociones y valores?", [["❤️","Sustantivos abstractos (paz, justicia, alegría)"],["🪨","Sustantivos concretos (piedra, mesa)"],["📍","Sustantivos propios geográficos según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: ideas, sentimientos y conceptos inmateriales."),
+    q("¿Cuál de las siguientes palabras es un sustantivo abstracto?", [["✨","Solidaridad"],["🧱","Ladrillo en las diversas producciones escritas y orales"],["🍞","Pan casero"]], 0, "Pista: virtud humana que no se puede tocar con la mano."),
     q("¿Cuál de las siguientes palabras es un sustantivo concreto?", [["🏔️","Montaña"],["💭","Esperanza"],["⚖️","Libertad"]], 0, "Pista: objeto del mundo físico perceptible por los sentidos."),
     q("¿Qué sustantivo colectivo designa al conjunto ordenado de soldados de un país?", [["🪖","Ejército"],["🐎","Tropilla"],["🐺","Jauría"]], 0, "Pista: cuerpo armado nacional."),
     q("¿Qué sustantivo colectivo designa al conjunto de cerdos de una granja?", [["🐷","Piara"],["🐑","Rebaño"],["🐟","Cardumen"]], 0, "Pista: término específico para el grupo de porcinos."),
@@ -391,16 +391,16 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cuál es el gentilicio de la persona nacida en la ciudad de Río Gallegos?", [["🏙️","Riogalleguense"],["🏙️","Madrynense"],["🏙️","Comodorense"]], 0, "Pista: gentilicio propio de los vecinos de la capital santacruceña."),
     q("¿Cuál es el gentilicio de los habitantes de la localidad de El Calafate?", [["🫐","Calafateño / calafateña"],["🫐","Cordillerano"],["🫐","Estepario"]], 0, "Pista: gentilicio formado a partir del nombre de la villa."),
     q("¿Cuál es el gentilicio de quien nació en la provincia del Chubut?", [["🗺️","Chubutense"],["🗺️","Santafesino"],["🗺️","Misionero"]], 0, "Pista: provincia vecina al norte de Santa Cruz."),
-    q("En la frase «cuatro guanacos veloces», ¿qué clase de palabra es «cuatro»?", [["🔢","Adjetivo numeral cardinal"],["🥇","Adjetivo numeral ordinal"],["🎨","Adjetivo calificativo"]], 0, "Pista: indica la cantidad exacta de animales."),
+    q("En la frase «cuatro guanacos veloces», ¿qué clase de palabra es «cuatro»?", [["🔢","Adjetivo numeral cardinal"],["🥇","Adjetivo numeral ordinal"],["🎨","Adjetivo calificativo para dar claridad y precisión al mensaje expresado"]], 0, "Pista: indica la cantidad exacta de animales."),
     q("En la frase «el cuarto grado de la escuela», ¿qué tipo de adjetivo es «cuarto»?", [["🥇","Adjetivo numeral ordinal"],["🔢","Adjetivo numeral cardinal"],["🗺️","Adjetivo gentilicio"]], 0, "Pista: señala la posición del grado escolar."),
-    q("En la frase «la meseta árida y ventosa», ¿qué tipo de adjetivos son «árida» y «ventosa»?", [["💨","Adjetivos calificativos"],["🗺️","Adjetivos gentilicios"],["🔢","Adjetivos numerales"]], 0, "Pista: describen características del relieve y clima."),
-    q("¿Cómo se escriben los gentilicios en español según las normas de ortografía?", [["🔡","Con letra minúscula (salvo al iniciar oración)"],["🔠","Con mayúscula inicial obligatoria"],["#️⃣","Con un guion intermedio"]], 0, "Pista: en español los gentilicios van en minúscula («argentino», «santacruceño»)."),
+    q("En la frase «la meseta árida y ventosa», ¿qué tipo de adjetivos son «árida» y «ventosa»?", [["💨","Adjetivos calificativos"],["🗺️","Adjetivos gentilicios al comunicar ideas en diferentes situaciones cotidianas"],["🔢","Adjetivos numerales"]], 0, "Pista: describen características del relieve y clima."),
+    q("¿Cómo se escriben los gentilicios en español según las normas de ortografía?", [["🔡","Con letra minúscula (salvo al iniciar oración)"],["🔠","Con mayúscula inicial obligatoria"],["#️⃣","Con un guion intermedio siguiendo las convenciones habituales de la escritura"]], 0, "Pista: en español los gentilicios van en minúscula («argentino», «santacruceño»)."),
     q("¿Qué adjetivo calificativo describe una fruta que tiene mucho jugo al morderla?", [["🍊","Jugosa"],["🪨","Áspera"],["🧱","Dura"]], 0, "Pista: característica de frutas frescas maduras."),
-    q("¿Cuál es el adjetivo ordinal correspondiente al número 10?", [["🔟","Décimo / décima"],["🔟","Diez"],["🔟","Veinteno"]], 0, "Pista: puesto que sigue al noveno."),
-    q("¿Cuál es el adjetivo ordinal correspondiente al número 3?", [["🥉","Tercero / tercera"],["🔢","Tres"],["➕","Triple"]], 0, "Pista: puesto que sigue al segundo."),
-    q("Marcá el adjetivo gentilicio en la frase: «Compramos deliciosos chocolates barilochenses».", [["🍫","barilochenses"],["🍫","deliciosos"],["🍫","chocolates"]], 0, "Pista: indica que provienen de la ciudad de Bariloche."),
-    q("¿Qué terminación es muy frecuente en los adjetivos calificativos que indican abundancia?", [["💨","-oso / -osa (ventoso, calurosa, espinoso)"],["🔨","-ero / -era"],["🌱","-ito / -ita"]], 0, "Pista: derivan de sustantivos para expresar cualidad abundante."),
-    q("¿Qué ocurre con la forma del adjetivo si el sustantivo al que acompaña cambia a plural?", [["👥","El adjetivo también debe pasar al plural por concordancia"],["👤","El adjetivo permanece siempre en singular"],["🔒","El adjetivo cambia de significado"]], 0, "Pista: concordancia obligatoria en número."),
+    q("¿Cuál es el adjetivo ordinal correspondiente al número 10?", [["🔟","Décimo / décima"],["🔟","Diez en las actividades de comprensión y análisis de textos"],["🔟","Veinteno"]], 0, "Pista: puesto que sigue al noveno."),
+    q("¿Cuál es el adjetivo ordinal correspondiente al número 3?", [["🥉","Tercero / tercera"],["🔢","Tres"],["➕","Triple en los distintos textos y lecturas que compartimos"]], 0, "Pista: puesto que sigue al segundo."),
+    q("Marcá el adjetivo gentilicio en la frase: «Compramos deliciosos chocolates barilochenses».", [["🍫","barilochenses"],["🍫","deliciosos según las reglas ortográficas y gramaticales del español"],["🍫","chocolates"]], 0, "Pista: indica que provienen de la ciudad de Bariloche."),
+    q("¿Qué terminación es muy frecuente en los adjetivos calificativos que indican abundancia?", [["💨","-oso / -osa (ventoso, calurosa, espinoso)"],["🔨","-ero / -era"],["🌱","-ito / -ita en las oraciones y párrafos de la narración"]], 0, "Pista: derivan de sustantivos para expresar cualidad abundante."),
+    q("¿Qué ocurre con la forma del adjetivo si el sustantivo al que acompaña cambia a plural?", [["👥","El adjetivo también debe pasar al plural por concordancia"],["👤","El adjetivo permanece siempre en singular al escribir y redactar textos informativos"],["🔒","El adjetivo cambia de significado"]], 0, "Pista: concordancia obligatoria en número."),
   ],
   19: [
     q("¿Qué dos accidentes gramaticales deben coincidir obligatoriamente entre sustantivo y adjetivo?", [["⚖️","El género (femenino/masculino) y el número (singular/plural)"],["⏰","El tiempo y el modo verbal de la acción"],["🗣️","La persona gramatical y la entonación"]], 0, "Pista: regla de concordancia nominal básica en español."),
@@ -412,17 +412,17 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Completá con el adjetivo en correcta concordancia: «Compramos unas manzanas _____».", [["🍎","rojas y dulces"],["🍎","rojo y dulce"],["🍎","rojas y dulce"]], 0, "Pista: manzanas es femenino plural."),
     q("Completá con la forma correcta: «Observamos un cóndor y un huemul _____».", [["🦅","protegidos por la ley"],["🦅","protegida por la ley"],["🦅","protegidas por la ley"]], 0, "Pista: dos sustantivos masculinos en plural."),
     q("¿Qué adjetivos tienen una sola forma tanto para el masculino como para el femenino (ejemplo: «árbol verde / hoja verde»)?", [["🌿","Adjetivos de una sola terminación"],["🎨","Adjetivos de dos terminaciones"],["🔢","Adjetivos invariables numerales"]], 0, "Pista: inteligente, verde, grande, veloz no cambian con el género."),
-    q("¿Cuál de estos adjetivos es de una sola terminación para ambos géneros?", [["⚡","Veloz (puma veloz / liebre veloz)"],["❄️","Frío (viento frío / agua fría)"],["🪵","Seco (pasto seco / rama seca)"]], 0, "Pista: termina en -z y no cambia en femenino."),
+    q("¿Cuál de estos adjetivos es de una sola terminación para ambos géneros?", [["⚡","Veloz (puma veloz / liebre veloz)"],["❄️","Frío (viento frío / agua fría)"],["🪵","Seco (pasto seco / rama seca) en las conversaciones y lecturas cotidianas"]], 0, "Pista: termina en -z y no cambia en femenino."),
     q("Marcá la concordancia correcta para el sustantivo femenino singular «águila»:", [["🦅","«El águila solitaria»"],["🦅","«La águila solitaria»"],["🦅","«El águila solitario»"]], 0, "Pista: lleva 'el' por empezar con 'a' tónica, pero el adjetivo sigue en femenino."),
-    q("¿Por qué decimos «el agua fría» y no «la agua fría»?", [["💧","Para evitar la cacofonía por la 'a' inicial acentuada"],["👦","Porque 'agua' es un sustantivo masculino"],["❄️","Porque es una excepción invariable"]], 0, "Pista: regla eufónica de los sustantivos femeninos que empiezan con 'a' tónica."),
+    q("¿Por qué decimos «el agua fría» y no «la agua fría»?", [["💧","Para evitar la cacofonía por la 'a' inicial acentuada"],["👦","Porque 'agua' es un sustantivo masculino debido a las reglas de concordancia de la lengua"],["❄️","Porque es una excepción invariable"]], 0, "Pista: regla eufónica de los sustantivos femeninos que empiezan con 'a' tónica."),
     q("Al pasar «el agua fría» al plural, ¿cómo queda correctamente redactado?", [["💧","«Las aguas frías»"],["💧","«Los aguas frías»"],["💧","«Los aguas fríos»"]], 0, "Pista: en plural se usa el artículo femenino 'las'."),
     q("Completá con concordancia adecuada: «La pequeña flor silvestre y el pasto duro estaban _____».", [["🌱","secos por el viento"],["🌱","secas por el viento"],["🌱","seca por el viento"]], 0, "Pista: combinación de femenino y masculino coordina en masculino plural."),
     q("Marcá la opción que tiene todos sus elementos en masculino singular:", [["👦","«El frondoso bosque andino»"],["👧","«La frondosa arboleda andina»"],["👥","«Los frondosos bosques andinos»"]], 0, "Pista: un solo bosque, género masculino."),
     q("¿Qué terminación suele agregarse a los sustantivos que terminan en vocal átona para formar el plural?", [["🔡","Se agrega la letra -s (casa -> casas)"],["🔡","Se agrega -es obligatoriamente"],["🔠","Se cambia la vocal final por consonante"]], 0, "Pista: regla general para palabras terminadas en vocal átona."),
-    q("¿Qué terminación se agrega a los sustantivos que terminan en consonante para hacer el plural?", [["🔡","Se agrega -es (árbol -> árboles, mar -> mares)"],["🔡","Se agrega solo la letra -s"],["🔒","Permanecen invariables"]], 0, "Pista: árbol -> árboles, río -> ríos."),
-    q("Marcá la oración con adecuada concordancia en toda su extensión:", [["📝","Las ovejas blancas caminaban tranquilas por el campo."],["📝","Las ovejas blanco caminaban tranquila por el campo."],["📝","Los ovejas blancas caminaba tranquilos por el campo."]], 0, "Pista: todos los elementos femeninos y plurales coinciden."),
+    q("¿Qué terminación se agrega a los sustantivos que terminan en consonante para hacer el plural?", [["🔡","Se agrega -es (árbol -> árboles, mar -> mares)"],["🔡","Se agrega solo la letra -s"],["🔒","Permanecen invariables en los relatos y descripciones de la literatura"]], 0, "Pista: árbol -> árboles, río -> ríos."),
+    q("Marcá la oración con adecuada concordancia en toda su extensión:", [["📝","Las ovejas blancas caminaban tranquilas por el campo."],["📝","Las ovejas blanco caminaban tranquila por el campo al formular preguntas y respuestas completas"],["📝","Los ovejas blancas caminaba tranquilos por el campo."]], 0, "Pista: todos los elementos femeninos y plurales coinciden."),
     q("¿Qué artículo corresponde al sustantivo femenino «costumbre» en plural?", [["👵","«Las costumbres»"],["👴","«Los costumbres»"],["👥","«Unos costumbres»"]], 0, "Pista: sustantivo femenino."),
-    q("¿Por qué es fundamental revisar la concordancia de género y número al redactar textos escolares?", [["📝","Para asegurar corrección gramatical y claridad en el mensaje"],["🎨","Para que las oraciones tengan exactamente diez palabras"],["⏰","Para escribir con mayor rapidez"]], 0, "Pista: asegura que las oraciones suenen naturales y correctas."),
+    q("¿Por qué es fundamental revisar la concordancia de género y número al redactar textos escolares?", [["📝","Para asegurar corrección gramatical y claridad en el mensaje"],["🎨","Para que las oraciones tengan exactamente diez palabras"],["⏰","Para escribir con mayor rapidez y organizar adecuadamente la información comunicada"]], 0, "Pista: asegura que las oraciones suenen naturales y correctas."),
   ],
   20: [
     q("¿Qué clase de palabras indica acciones, estados o procesos en una oración?", [["⚡","Los verbos"],["🏷️","Los sustantivos comunes"],["🎨","Los adjetivos calificativos"]], 0, "Pista: cantar, correr, vivir, sentir, estar."),
@@ -433,7 +433,7 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿En qué persona y número está conjugado el verbo en: «Vos explorás la meseta»?", [["🗣️","2.ª persona del singular"],["👤","1.ª persona del singular"],["👥","2.ª persona del plural"]], 0, "Pista: pronombre vos = segunda persona singular."),
     q("¿En qué persona y número está conjugado el verbo en: «Ellos observan a los cóndores»?", [["👥","3.ª persona del plural"],["👥","1.ª persona del plural"],["👤","3.ª persona del singular"]], 0, "Pista: ellos = tercera persona plural."),
     q("¿Cuál de las siguientes formas verbales corresponde a la primera persona del singular (yo)?", [["👤","Escribo"],["👥","Escribimos"],["👥","Escriben"]], 0, "Pista: acción realizada por 'yo'."),
-    q("¿Cuál de las siguientes formas verbales corresponde a la segunda persona del plural (ustedes)?", [["👥","Estudian"],["👤","Estudio"],["👥","Estudiamos"]], 0, "Pista: en el español de Argentina se usa 'ustedes estudian'."),
+    q("¿Cuál de las siguientes formas verbales corresponde a la segunda persona del singular con voseo (vos)?", [["🗣️","Estudiás"],["👤","Estudio"],["👥","Estudiamos"]], 0, "Pista: con el pronombre vos se usa la forma 'vos estudiás'."),
     q("En la oración «Tomás y Lucas encendieron el fuego», ¿qué persona gramatical tiene el verbo?", [["👥","3.ª persona del plural (ellos)"],["👥","1.ª persona del plural (nosotros)"],["👤","2.ª persona del singular (vos)"]], 0, "Pista: Tomás y Lucas equivalen al pronombre 'ellos'."),
     q("¿Qué pronombre corresponde al verbo en la frase: «_____ compartimos la merienda»?", [["👥","Nosotros / nosotras"],["👤","Yo"],["👥","Ellos"]], 0, "Pista: desinencia -imos de 1.ª persona del plural."),
     q("¿Qué pronombre corresponde al verbo en la frase: «_____ protegés la naturaleza»?", [["🗣️","Vos / tú"],["👤","Yo"],["👥","Nosotros"]], 0, "Pista: desinencia de segunda persona singular."),
@@ -441,7 +441,7 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("Completá con el verbo adecuado para 'nosotros': «El próximo verano _____ a El Chaltén».", [["🏔️","viajaremos"],["🏔️","viajaré"],["🏔️","viajarán"]], 0, "Pista: desinencia -emos de 1.ª persona plural futuro."),
     q("Completá con el verbo adecuado para 'vos': «¿_____ al nuevo compañero de banco?»", [["🎒","Conocés"],["🎒","Conozco"],["🎒","Conocen"]], 0, "Pista: conjugación rioplatense para vos."),
     q("¿Por qué el verbo cambia su terminación al cambiar de sujeto?", [["⚖️","Para mantener la concordancia de persona y número"],["🎨","Para que la frase rime como verso"],["⏰","Para cambiar el tipo de texto"]], 0, "Pista: si cambia quien realiza la acción, cambia la terminación verbal."),
-    q("Marcá la forma verbal que está en primera persona del plural:", [["👥","Cantamos"],["👤","Canto"],["👥","Cantan"]], 0, "Pista: nosotros cantamos."),
+    q("Marcá la forma verbal que está en primera persona del plural:", [["👥","Cantamos"],["👤","Canto según los ejemplos trabajados en las clases de Lengua"],["👥","Cantan"]], 0, "Pista: nosotros cantamos."),
     q("Marcá la forma verbal que está en tercera persona del singular:", [["👤","Construye"],["👤","Construyo"],["👥","Construyen"]], 0, "Pista: él o ella construye."),
     q("¿Qué persona gramatical se utiliza comúnmente al relatar anécdotas autobiográficas personales?", [["👤","1.ª persona del singular (yo)"],["👥","3.ª persona del plural (ellos)"],["🗣️","2.ª persona formal (usted)"]], 0, "Pista: narra vivencias propias directas."),
     q("¿Qué pronombre de segunda persona se usa predominantemente en el habla cotidiana de Santa Cruz y Argentina?", [["🗣️","El pronombre «vos»"],["🗣️","El pronombre «vosotros»"],["🗣️","El pronombre «ustedes» únicamente en singular"]], 0, "Pista: voseo rioplatense y patagónico tradicional."),
@@ -460,12 +460,12 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué palabra temporal acompaña con frecuencia a los verbos en tiempo futuro?", [["🔮","«Mañana» o «la próxima semana»"],["⏪","«Anteayer al mediodía»"],["☀️","«Ahora mismo»"]], 0, "Pista: circunstancial que proyecta hacia adelante."),
     q("¿Qué modo verbal expresa hechos reales, seguros y objetivos (como presente, pretérito y futuro del indicativo)?", [["🏛️","El modo indicativo"],["💭","El modo subjuntivo de deseos"],["👉","El modo imperativo de órdenes"]], 0, "Pista: afirma o niega hechos con certeza en la realidad."),
     q("Completá con el verbo en pasado: «El pionero _____ un refugio de piedra».", [["🏠","construyó"],["🏠","construye"],["🏠","construirá"]], 0, "Pista: acción realizada en el pasado histórico."),
-    q("Completá con el verbo en futuro: «La semana que viene _____ la primavera».", [["🌸","llegará"],["🌸","llegó"],["🌸","llega"]], 0, "Pista: hecho que tendrá lugar en los días venideros."),
+    q("Completá con el verbo en futuro: «La semana que viene _____ la primavera».", [["🌸","llegará"],["🌸","llegó"],["🌸","llega en las diversas producciones escritas y orales"]], 0, "Pista: hecho que tendrá lugar en los días venideros."),
     q("Completá con el verbo en presente: «Los pingüinos _____ en las aguas frías».", [["🐧","nadan"],["🐧","nadaron"],["🐧","nadarán"]], 0, "Pista: hábito o acción que realizan habitualmente."),
     q("¿Cómo se llama el tiempo pasado que expresa acciones habituales o duraderas (ejemplo: «caminaba todos los días»)?", [["📜","Pretérito imperfecto"],["🎯","Pretérito perfecto simple"],["🔮","Futuro imperfecto"]], 0, "Pista: describe costumbres o acciones continuas en el pasado."),
-    q("¿Qué tiempo verbal predomina en una narración de hechos históricos o leyendas tradicionales?", [["📜","Los tiempos del pasado (pretéritos)"],["🔮","El tiempo futuro simple"],["☀️","El modo imperativo"]], 0, "Pista: narran acontecimientos que ya sucedieron."),
+    q("¿Qué tiempo verbal predomina en una narración de hechos históricos o leyendas tradicionales?", [["📜","Los tiempos del pasado (pretéritos)"],["🔮","El tiempo futuro simple para dar claridad y precisión al mensaje expresado"],["☀️","El modo imperativo"]], 0, "Pista: narran acontecimientos que ya sucedieron."),
     q("Transformá al futuro el verbo de la oración: «El choique corre veloz»:", [["🔮","«El choique correrá veloz»"],["📜","«El choique corrió veloz»"],["☀️","«El choique está corriendo veloz»"]], 0, "Pista: terminación -á de futuro en 3.ª persona singular."),
-    q("¿Por qué los textos expositivos de ciencias suelen redactarse en tiempo presente?", [["💡","Porque explican leyes y características que siguen vigentes"],["⏳","Porque los científicos no recuerdan el pasado"],["📜","Porque las enciclopedias prohíben el pasado"]], 0, "Pista: presente de definición universal."),
+    q("¿Por qué los textos expositivos de ciencias suelen redactarse en tiempo presente?", [["💡","Porque explican leyes y características que siguen vigentes"],["⏳","Porque los científicos no recuerdan el pasado"],["📜","Porque las enciclopedias prohíben el pasado a causa de la intención comunicativa del emisor"]], 0, "Pista: presente de definición universal."),
     q("Completá con el verbo en presente: «Hoy los alumnos _____ sobre la fauna patagónica».", [["📚","investigan"],["📚","investigaron"],["📚","investigarán"]], 0, "Pista: acción que tiene lugar en la jornada de hoy."),
   ],
   22: [
@@ -476,17 +476,17 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué terminación caracteriza al pretérito imperfecto en los verbos de 2.ª (-er) y 3.ª (-ir) conjugación?", [["📝","La terminación -ía con tilde (vivía, temía, abría)"],["📝","La terminación -aba regular"],["🎯","La terminación -ió"]], 0, "Pista: lleva tilde en la vocal i para marcar hiato."),
     q("¿Con qué letra se escribe siempre la terminación -aba del pretérito imperfecto?", [["🅱️","Siempre con B (larga)"],["🆅","Siempre con V (corta)"],["🔤","Con B o V indistintamente"]], 0, "Pista: regla fija de ortografía: caminaba, jugaba, soñaba con B."),
     q("En una narración, ¿para qué se suele utilizar el pretérito imperfecto?", [["🖼️","Para describir el paisaje, el ambiente y las costumbres del pasado"],["🎯","Para señalar las acciones sorpresivas que mueven la trama"],["🔮","Para anticipar lo que pasará en el desenlace"]], 0, "Pista: pinta el fondo de la historia («Hacía frío y el viento soplaba...»)."),
-    q("En una narración, ¿para qué se utiliza el pretérito perfecto simple?", [["🎯","Para relatar las acciones puntuales que hacen avanzar el relato"],["🖼️","Para describir detalladamente las características del lugar"],["☀️","Para enunciar definiciones científicas"]], 0, "Pista: sucesos que ocurren paso a paso («...cuando de pronto se escuchó un ruido y salió el guía»)."),
-    q("Completá con el tiempo adecuado: «Mientras caminaban por el bosque, de pronto _____ una rama seca».", [["💥","se quebró (perfecto simple puntual)"],["🌿","se quebraba (imperfecto)"],["🔮","se quebrará (futuro)"]], 0, "Pista: acción sorpresiva y puntual en medio de la caminata."),
-    q("Completá con el tiempo adecuado: «De niño, Martín _____ todos los veranos a pescar al río».", [["🎣","iba (imperfecto: hábito repetido)"],["🎣","fue (perfecto simple)"],["🎣","irá (futuro)"]], 0, "Pista: describe una costumbre reiterada en su infancia."),
+    q("En una narración, ¿para qué se utiliza el pretérito perfecto simple?", [["🎯","Para relatar las acciones puntuales que hacen avanzar el relato"],["🖼️","Para describir detalladamente las características del lugar y organizar adecuadamente la información comunicada"],["☀️","Para enunciar definiciones científicas"]], 0, "Pista: sucesos que ocurren paso a paso («...cuando de pronto se escuchó un ruido y salió el guía»)."),
+    q("Completá con el tiempo adecuado: «Mientras caminaban por el bosque, de pronto _____ una rama seca».", [["💥","se quebró (perfecto simple puntual)"],["🌿","se quebraba (imperfecto)"],["🔮","se quebrará (futuro) en las actividades de comprensión y análisis de textos"]], 0, "Pista: acción sorpresiva y puntual en medio de la caminata."),
+    q("Completá con el tiempo adecuado: «De niño, Martín _____ todos los veranos a pescar al río».", [["🎣","iba (imperfecto: hábito repetido)"],["🎣","fue (perfecto simple) en los distintos textos y lecturas que compartimos"],["🎣","irá (futuro)"]], 0, "Pista: describe una costumbre reiterada en su infancia."),
     q("¿Cuál es la forma del pretérito imperfecto del verbo 'ir' para la primera persona?", [["📜","Iba (con B)"],["📜","Iva (con V)"],["🎯","Fui"]], 0, "Pista: forma irregular tradicional escrita con B larga."),
     q("¿Cuál es la forma del pretérito imperfecto del verbo 'ser' para la tercera persona?", [["📜","Era"],["🎯","Fue"],["☀️","Es"]], 0, "Pista: «El paraje era muy tranquilo en invierno»."),
     q("Marcá el verbo que está conjugado en pretérito perfecto simple:", [["🎯","encontró"],["📜","encontraba"],["☀️","encuentra"]], 0, "Pista: acción puntual con tilde en la última sílaba."),
     q("Marcá el verbo que está conjugado en pretérito imperfecto:", [["📜","navegaba"],["🎯","navegó"],["🔮","navegará"]], 0, "Pista: terminación -aba que describe acción en curso en el pasado."),
     q("¿Lleva tilde la primera persona del plural del pretérito imperfecto en -ábamos (ejemplo: cantábamos)?", [["✍️","Sí: siempre es palabra esdrújula"],["✍️","No: las formas en -aba nunca se acentúan"],["🔒","Solo si termina el párrafo"]], 0, "Pista: can-tá-ba-mos lleva tilde en la antepenúltima sílaba."),
-    q("Completá la frase: «El cielo _____ nublado cuando comenzó la llovizna».", [["☁️","estaba (imperfecto descriptivo)"],["🎯","estuvo (perfecto simple)"],["☀️","está (presente)"]], 0, "Pista: describe el estado del cielo como marco del momento."),
-    q("Completá la frase: «El perito Moreno _____ el río Santa Cruz en 1877».", [["🗺️","remontó (perfecto simple histórico)"],["🛶","remontaba (imperfecto)"],["🔮","remontará (futuro)"]], 0, "Pista: hito histórico puntual con fecha exacta."),
-    q("¿Por qué en una leyenda o cuento ambos pretéritos se combinan constantemente?", [["📖","El imperfecto describe la escena y el perfecto hace avanzar los hechos"],["🎨","Para alternar letras mayúsculas y minúsculas"],["⏰","Porque es obligatorio según las reglas de imprenta"]], 0, "Pista: combinación de descripción de fondo y acciones puntuales."),
+    q("Completá la frase: «El cielo _____ nublado cuando comenzó la llovizna».", [["☁️","estaba (imperfecto descriptivo)"],["🎯","estuvo (perfecto simple)"],["☀️","está (presente) según las reglas ortográficas y gramaticales del español"]], 0, "Pista: describe el estado del cielo como marco del momento."),
+    q("Completá la frase: «El perito Moreno _____ el río Santa Cruz en 1877».", [["🗺️","remontó (perfecto simple histórico)"],["🛶","remontaba (imperfecto) en las oraciones y párrafos de la narración"],["🔮","remontará (futuro)"]], 0, "Pista: hito histórico puntual con fecha exacta."),
+    q("¿Por qué en una leyenda o cuento ambos pretéritos se combinan constantemente?", [["📖","El imperfecto describe la escena y el perfecto hace avanzar los hechos"],["🎨","Para alternar letras mayúsculas y minúsculas"],["⏰","Porque es obligatorio según las reglas de imprenta porque expresa una acción concluida en el relato"]], 0, "Pista: combinación de descripción de fondo y acciones puntuales."),
     q("¿Cómo se escribe la forma de 3.ª persona singular del pretérito perfecto simple del verbo 'tener'?", [["⏳","Tuvo (con V corta)"],["🚰","Tubo (cilindro hueco con B)"],["📦","Tubos"]], 0, "Pista: «Ayer el guía tuvo mucha paciencia con el grupo»."),
     q("Marcá la oración redactada con la combinación de pretéritos adecuada:", [["📝","La noche era fría y de repente brilló un relámpago."],["📝","La noche fue fría y de repente brillaba un relámpago."],["📝","La noche es fría y de repente brillará un relámpago."]], 0, "Pista: imperfecto descriptivo (era) + perfecto puntual sorpresivo (brilló)."),
   ],
@@ -501,15 +501,15 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cuál es el infinitivo del verbo conjugado «descubrieron»?", [["🔍","Descubrir (3.ª conjugación)"],["🔍","Descubierto"],["🔍","Descubriendo"]], 0, "Pista: termina en -ir."),
     q("¿Cuál es el infinitivo del verbo conjugado «caminábamos»?", [["🚶","Caminar (1.ª conjugación)"],["🚶","Caminando"],["🚶","Caminado"]], 0, "Pista: termina en -ar."),
     q("¿Cuál es el infinitivo del verbo conjugado «protegemos»?", [["🛡️","Proteger (2.ª conjugación)"],["🛡️","Protegido"],["🛡️","Protegiendo"]], 0, "Pista: termina en -er."),
-    q("¿En qué tipo de textos escolares es muy común redactar instrucciones usando infinitivos?", [["📋","En recetas de cocina y manuales de instrucciones"],["📰","En noticias de última hora de diarios"],["📜","En biografías históricas"]], 0, "Pista: «Mezclar los ingredientes», «Pegar las partes»."),
+    q("¿En qué tipo de textos escolares es muy común redactar instrucciones usando infinitivos?", [["📋","En recetas de cocina y manuales de instrucciones"],["📰","En noticias de última hora de diarios las lecturas compartidas durante el ciclo escolar"],["📜","En biografías históricas"]], 0, "Pista: «Mezclar los ingredientes», «Pegar las partes»."),
     q("¿Cómo se llama la parte fija del infinitivo tras quitarle la terminación -ar, -er o -ir?", [["🌱","La raíz del verbo"],["🧩","La desinencia final"],["🛑","El prefijo derivativo"]], 0, "Pista: cant-ar -> cant- es la raíz."),
     q("¿Cuál es la raíz del verbo «navegar»?", [["⛵","«naveg-»"],["⛵","«nav-»"],["⛵","«navega-»"]], 0, "Pista: quitamos la terminación -ar de la primera conjugación."),
     q("¿Cuál es la raíz del verbo «aprender»?", [["📚","«aprend-»"],["📚","«ap-»"],["📚","«aprende-»"]], 0, "Pista: quitamos la terminación -er de la segunda conjugación."),
     q("¿Cuál es la raíz del verbo «partir»?", [["🚪","«part-»"],["🚪","«pa-»"],["🚪","«parti-»"]], 0, "Pista: quitamos la terminación -ir de la tercera conjugación."),
-    q("Marcá la oración donde el verbo destacado entre comillas funciona como infinitivo:", [["📝","«Es necesario cuidar la fauna autóctona.»"],["📝","«Los guardaparques cuidan la fauna autóctona.»"],["📝","«Ayer cuidaron la fauna autóctona.»"]], 0, "Pista: cuidar termina en -ar y funciona como forma no personal."),
+    q("¿En cuál de las siguientes oraciones aparece un verbo en forma de infinitivo (-ar, -er, -ir)?", [["📝","Es necesario cuidar la fauna autóctona."],["📝","Los guardaparques cuidan la fauna nativa."],["📝","Ayer cuidaron a los animales del parque."]], 0, "Pista: 'cuidar' es un infinitivo terminado en -ar sin conjugar."),
     q("¿Qué otra forma no personal del verbo termina en -ando o -iendo (ejemplo: caminando, viviendo)?", [["🏃","El gerundio"],["📦","El participio"],["🏷️","El infinitivo"]], 0, "Pista: expresa una acción en desarrollo continuo."),
     q("¿Qué otra forma no personal del verbo termina en -ado o -ido (ejemplo: caminado, vivido)?", [["📦","El participio"],["🏃","El gerundio"],["🏷️","El infinitivo"]], 0, "Pista: se utiliza para formar tiempos compuestos y adjetivos participiales."),
-    q("¿Cuál de estos verbos pertenece a la primera conjugación?", [["🌲","Plantar"],["🌊","Correr"],["🪵","Subir"]], 0, "Pista: termina en -ar."),
+    q("¿Cuál de estos verbos pertenece a la primera conjugación?", [["🌲","Plantar"],["🌊","Correr"],["🪵","Subir de acuerdo con las normas de uso de la lengua"]], 0, "Pista: termina en -ar."),
     q("¿Cuál de estos verbos pertenece a la tercera conjugación?", [["🐟","Surgir"],["🌾","Cosechar"],["🥣","Moler"]], 0, "Pista: termina en -ir."),
   ],
   24: [
@@ -521,18 +521,18 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cuál es el antónimo de la palabra «áspero» al describir la superficie de una roca?", [["✋","Suave o lisa"],["🪨","Rugosa"],["❄️","Fría"]], 0, "Pista: lo opuesto a rugoso al tacto."),
     q("¿Por qué el significado de un sinónimo depende siempre del contexto de la oración?", [["📖","Porque una palabra puede tener varios sentidos según cómo se use"],["🎨","Porque cambia según la ortografía del autor"],["⏰","Porque depende de la extensión de la frase"]], 0, "Pista: 'banco' de plaza no es lo mismo que 'banco' de dinero."),
     q("¿Cuál es el sinónimo de «veloz» en la frase «el choique es un ave muy veloz»?", [["🏃","Rápido o ligero"],["🐢","Lento"],["🪶","Plumoso"]], 0, "Pista: capacidad de desplazarse a gran velocidad."),
-    q("¿Cuál es el antónimo de la palabra «angosto» al describir un cañadón de la meseta?", [["↔️","Ancho o espacioso"],["📏","Estrecho"],["🏔️","Profundo"]], 0, "Pista: lo opuesto a estrecho."),
-    q("¿Qué prefijo se suele anteponer a ciertas palabras para formar su antónimo (ejemplo: cómodo)?", [["🚫","El prefijo in- o des- (incómodo, desarmar)"],["➕","El prefijo super-"],["🔄","El prefijo re-"]], 0, "Pista: in- y des- indican negación u oposición."),
+    q("¿Cuál es el antónimo de la palabra «angosto» al describir un cañadón de la meseta?", [["↔️","Ancho o espacioso"],["📏","Estrecho en los relatos y descripciones de la literatura"],["🏔️","Profundo"]], 0, "Pista: lo opuesto a estrecho."),
+    q("¿Qué prefijo se suele anteponer a ciertas palabras para formar su antónimo (ejemplo: cómodo)?", [["🚫","El prefijo in- o des- (incómodo, desarmar)"],["➕","El prefijo super-"],["🔄","El prefijo re- al formular preguntas y respuestas completas"]], 0, "Pista: in- y des- indican negación u oposición."),
     q("¿Cuál es el antónimo formado con prefijo de la palabra «conocido»?", [["❓","Desconocido"],["✨","Reconocido"],["🔍","Muy conocido"]], 0, "Pista: prefijo de negación des-."),
-    q("¿Cuál es el sinónimo de la palabra «construir» en la biografía de un pionero?", [["🔨","Edificar o levantar"],["💥","Desarmar"],["🎨","Diseñar"]], 0, "Pista: erigir una vivienda o refugio."),
-    q("¿Cuál es el antónimo de la palabra «antiguo» al hablar de un bosque fósil?", [["🌱","Moderno o reciente"],["🪵","Milenario"],["🪨","Petrificado"]], 0, "Pista: opuesto a lo que tiene muchos siglos de antigüedad."),
-    q("¿Cuál es el sinónimo de la palabra «auxiliar» en una situación de emergencia médica?", [["🛟","Ayudar o socorrer"],["🏃","Avisar"],["😴","Acompañar"]], 0, "Pista: prestar asistencia a quien lo necesita."),
-    q("¿Cuál es el antónimo de «permanente» en la frase «la nieve permanente en las altas cumbres»?", [["⏳","Pasajera o temporal"],["❄️","Eterna"],["🏔️","Abundante"]], 0, "Pista: lo opuesto a duradero o continuo."),
-    q("En la frase «El cielo estaba diáfano», ¿qué significa la palabra «diáfano»?", [["☀️","Despejado, transparente y sin nubes"],["☁️","Cubierto de nubarrones"],["🌙","Oscuro"]], 0, "Pista: día claro y luminoso."),
-    q("¿Cuál es el sinónimo de «imponente» al describir el frente del glaciar Perito Moreno?", [["🏔️","Majestuoso o grandioso"],["🌱","Pequeño"],["🚪","Inaccesible"]], 0, "Pista: que causa gran admiración o asombro."),
-    q("¿Cuál es el antónimo de «prohibido» en el cartel del parque nacional?", [["📌","Permitido o autorizado"],["🚫","Sancionado"],["⚠️","Peligroso"]], 0, "Pista: lo que sí se puede realizar legalmente."),
-    q("¿Por qué recurrir a un diccionario de sinónimos mejora la redacción escolar?", [["📚","Permite evitar repeticiones innecesarias y enriquecer el vocabulario"],["🎨","Aumenta el número de páginas escritas"],["⏰","Permite redactar oraciones sin verbos"]], 0, "Pista: ayuda a encontrar la palabra justa y precisa."),
-    q("¿Cuál es el sinónimo de «habitar» al estudiar la fauna santacruceña?", [["🏠","Vivir, residir o poblar"],["✈️","Recorrer"],["🏃","Migrar"]], 0, "Pista: tener su morada en un ambiente determinado."),
+    q("¿Cuál es el sinónimo de la palabra «construir» en la biografía de un pionero?", [["🔨","Edificar o levantar"],["💥","Desarmar en las publicaciones escolares y libros de lectura"],["🎨","Diseñar"]], 0, "Pista: erigir una vivienda o refugio."),
+    q("¿Cuál es el antónimo de la palabra «antiguo» al hablar de un bosque fósil?", [["🌱","Moderno o reciente"],["🪵","Milenario"],["🪨","Petrificado según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: opuesto a lo que tiene muchos siglos de antigüedad."),
+    q("¿Cuál es el sinónimo de la palabra «auxiliar» en una situación de emergencia médica?", [["🛟","Ayudar o socorrer"],["🏃","Avisar en las diversas producciones escritas y orales"],["😴","Acompañar"]], 0, "Pista: prestar asistencia a quien lo necesita."),
+    q("¿Cuál es el antónimo de «permanente» en la frase «la nieve permanente en las altas cumbres»?", [["⏳","Pasajera o temporal"],["❄️","Eterna"],["🏔️","Abundante para dar claridad y precisión al mensaje expresado"]], 0, "Pista: lo opuesto a duradero o continuo."),
+    q("En la frase «El cielo estaba diáfano», ¿qué significa la palabra «diáfano»?", [["☀️","Despejado, transparente y sin nubes"],["☁️","Cubierto de nubarrones al comunicar ideas en diferentes situaciones cotidianas"],["🌙","Oscuro"]], 0, "Pista: día claro y luminoso."),
+    q("¿Cuál es el sinónimo de «imponente» al describir el frente del glaciar Perito Moreno?", [["🏔️","Majestuoso o grandioso"],["🌱","Pequeño"],["🚪","Inaccesible siguiendo las convenciones habituales de la escritura"]], 0, "Pista: que causa gran admiración o asombro."),
+    q("¿Cuál es el antónimo de «prohibido» en el cartel del parque nacional?", [["📌","Permitido o autorizado"],["🚫","Sancionado en las actividades de comprensión y análisis de textos"],["⚠️","Peligroso"]], 0, "Pista: lo que sí se puede realizar legalmente."),
+    q("¿Por qué recurrir a un diccionario de sinónimos mejora la redacción escolar?", [["📚","Permite evitar repeticiones innecesarias y enriquecer el vocabulario"],["🎨","Aumenta el número de páginas escritas"],["⏰","Permite redactar oraciones sin verbos en los distintos textos y lecturas que compartimos"]], 0, "Pista: ayuda a encontrar la palabra justa y precisa."),
+    q("¿Cuál es el sinónimo de «habitar» al estudiar la fauna santacruceña?", [["🏠","Vivir, residir o poblar"],["✈️","Recorrer según las reglas ortográficas y gramaticales del español"],["🏃","Migrar"]], 0, "Pista: tener su morada en un ambiente determinado."),
   ],
   25: [
     q("¿Qué es un «hiperónimo» en el estudio del vocabulario?", [["📦","Una palabra de significado amplio que engloba a otras más específicas"],["🔍","Un término muy puntual que designa una sola variedad"],["🎨","Un adjetivo calificativo de color"]], 0, "Pista: 'flor' es el hiperónimo de rosa, margarita y notro."),
@@ -545,16 +545,16 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Cuáles de los siguientes animales son hipónimos del hiperónimo «aves marinas»?", [["🐧","Pingüino, cormorán y gaviota"],["🦊","Zorro, mara y piche"],["🦭","Lobo marino y elefante marino"]], 0, "Pista: aves adaptadas a la vida en el océano."),
     q("¿Qué término actúa como hiperónimo de «guitarra, charango, violín y piano»?", [["🎸","Instrumentos musicales"],["🎶","Melodías folclóricas"],["📻","Dispositivos de sonido"]], 0, "Pista: categoría general de objetos para producir música."),
     q("En el campo semántico de la «meteorología de Santa Cruz», ¿qué palabras encontramos?", [["💨","Viento, helada, nevada, escarcha y temperatura"],["🎭","Telón, libreto, escenario y butaca"],["🥪","Pan, queso, manteca y dulce"]], 0, "Pista: fenómenos propios del clima provincial."),
-    q("¿Por qué en una redacción se suele reemplazar un hipónimo por su hiperónimo (o viceversa)?", [["📝","Para evitar repeticiones monótonas y enriquecer el texto"],["🎨","Para alargar el texto sin agregar información"],["⏰","Para cambiar el tipo de letra"]], 0, "Pista: «El cóndor planeaba; el ave vigilaba el cañadón»."),
+    q("¿Por qué en una redacción se suele reemplazar un hipónimo por su hiperónimo (o viceversa)?", [["📝","Para evitar repeticiones monótonas y enriquecer el texto"],["🎨","Para alargar el texto sin agregar información"],["⏰","Para cambiar el tipo de letra y enriquecer el vocabulario utilizado al escribir"]], 0, "Pista: «El cóndor planeaba; el ave vigilaba el cañadón»."),
     q("¿Cuál es la palabra que NO corresponde al hiperónimo «medios de transporte»?", [["🌲","Álamo"],["🚗","Camioneta"],["🚂","Ferrocarril"]], 0, "Pista: el álamo es un árbol, no un medio de transporte."),
     q("¿Cuál es la palabra que no corresponde al hiperónimo «herramientas de carpintería»?", [["🥄","Cuchara"],["🔨","Martillo"],["🪚","Serrucho"]], 0, "Pista: utensilio de cocina ajeno al taller de madera."),
-    q("¿Qué palabras integran el campo semántico de «la escuela primaria»?", [["🎒","Docente, aula, recreo, pupitre y campana"],["🚜","Cosechadora, fardo, corral y esquila"],["⚓","Ancla, bodega, salvavidas y cubierta"]], 0, "Pista: elementos y protagonistas del ámbito escolar."),
+    q("¿Qué palabras integran el campo semántico de «la escuela primaria»?", [["🎒","Docente, aula, recreo, pupitre y campana"],["🚜","Cosechadora, fardo, corral y esquila al escribir y redactar textos informativos"],["⚓","Ancla, bodega, salvavidas y cubierta"]], 0, "Pista: elementos y protagonistas del ámbito escolar."),
     q("¿Cuál es el hiperónimo correspondiente a: «fútbol, básquet, natación y vóley»?", [["⚽","Deportes"],["🎮","Juegos de mesa"],["🎬","Espectáculos teatrales"]], 0, "Pista: actividades físicas reglamentadas."),
-    q("Marcá los hipónimos que corresponden al hiperónimo «prendas de abrigo de invierno»:", [["🧥","Campera, bufanda, gorro y guantes"],["🩳","Malla, ojotas y sombrero de paja"],["🤿","Traje de buceo y antiparras"]], 0, "Pista: ropa abrigada contra las bajas temperaturas."),
-    q("¿Qué relación léxica existe entre «vehículo» y «camión»?", [["📦","«Vehículo» es el hiperónimo y «camión» su hipónimo"],["🔄","Son sinónimos intercambiables en todo contexto"],["⚡","Son antónimos de significado opuesto"]], 0, "Pista: vehículo es la clase general; camión el tipo específico."),
-    q("¿Qué palabras forman el campo semántico de «la esquila en una estancia patagónica»?", [["🐑","Oveja, vellón, tijera, fardo y comparsa"],["✈️","Pista, turbina, hangar y radar"],["🎣","Anzuelo, caña de pescar y señuelo"]], 0, "Pista: faena rural tradicional de obtención de lana."),
-    q("¿Cuál es el hiperónimo adecuado para: «glaciar, cañadón, meseta y cordillera»?", [["🏔️","Relieves y formas geográficas"],["🌱","Tipos de vegetación nativa"],["🏠","Construcciones rurales"]], 0, "Pista: formas del paisaje terrestre."),
-    q("¿Por qué conocer hiperónimos e hipónimos ayuda a clasificar información de estudio?", [["🧠","Porque permite ordenar los conceptos en categorías generales y subtemas específicos"],["🎨","Porque ayuda a dibujar mapas conceptuales más coloridos"],["⏰","Porque ahorra espacio al escribir resúmenes"]], 0, "Pista: base lógica de los mapas conceptuales y esquemas."),
+    q("Marcá los hipónimos que corresponden al hiperónimo «prendas de abrigo de invierno»:", [["🧥","Campera, bufanda, gorro y guantes"],["🩳","Malla, ojotas y sombrero de paja"],["🤿","Traje de buceo y antiparras en las conversaciones y lecturas cotidianas"]], 0, "Pista: ropa abrigada contra las bajas temperaturas."),
+    q("¿Qué relación léxica existe entre «vehículo» y «camión»?", [["📦","«Vehículo» es el hiperónimo y «camión» su hipónimo"],["🔄","Son sinónimos intercambiables en todo contexto de acuerdo con las normas de uso de la lengua"],["⚡","Son antónimos de significado opuesto"]], 0, "Pista: vehículo es la clase general; camión el tipo específico."),
+    q("¿Qué palabras forman el campo semántico de «la esquila en una estancia patagónica»?", [["🐑","Oveja, vellón, tijera, fardo y comparsa"],["✈️","Pista, turbina, hangar y radar"],["🎣","Anzuelo, caña de pescar y señuelo en los relatos y descripciones de la literatura"]], 0, "Pista: faena rural tradicional de obtención de lana."),
+    q("¿Cuál es el hiperónimo adecuado para: «glaciar, cañadón, meseta y cordillera»?", [["🏔️","Relieves y formas geográficas"],["🌱","Tipos de vegetación nativa al formular preguntas y respuestas completas"],["🏠","Construcciones rurales"]], 0, "Pista: formas del paisaje terrestre."),
+    q("¿Por qué conocer hiperónimos e hipónimos ayuda a clasificar información de estudio?", [["🧠","Porque permite ordenar los conceptos en categorías generales y subtemas específicos"],["🎨","Porque ayuda a dibujar mapas conceptuales más coloridos"],["⏰","Porque ahorra espacio al escribir resúmenes porque expresa una acción concluida en el relato"]], 0, "Pista: base lógica de los mapas conceptuales y esquemas."),
   ],
   26: [
     q("¿Qué es una «familia de palabras» en lengua?", [["🌱","Un conjunto de palabras que comparten la misma raíz léxica"],["👥","Un grupo de personas que viven juntas"],["📖","Una antología de cuentos tradicionales"]], 0, "Pista: mar, marino, marea, marinero comparten la raíz mar-."),
@@ -563,20 +563,20 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Qué es un «sufijo» en la formación de palabras?", [["🧩","Una partícula que se agrega al final de la raíz modificando el significado"],["🧩","Una partícula que se antepone a la raíz para negarla"],["🔠","Una letra mayúscula inicial"]], 0, "Pista: panad-ero, niñ-ito, flor-ería van al final."),
     q("¿Qué significado aporta el prefijo «des-» en palabras como «deshielo» o «desarmar»?", [["❄️","Acción contraria, privación o negación"],["➕","Aumento de tamaño"],["📍","Lugar geográfico lejano"]], 0, "Pista: deshielo es lo contrario de helar; desarmar es deshacer lo armado."),
     q("¿Qué significado aporta el prefijo «sub-» en palabras como «subterráneo» o «submarino»?", [["⬇️","Por debajo de o posición inferior"],["⬆️","Por encima de"],["🔄","Repetición de una acción"]], 0, "Pista: bajo tierra o bajo el mar."),
-    q("¿Qué significado aporta el prefijo «re-» en palabras como «reabrir» o «reorganizar»?", [["🔄","Repetición de la acción o intensidad"],["🚫","Negación absoluta del hecho"],["⬇️","Ubicación en el fondo"]], 0, "Pista: volver a abrir o volver a organizar."),
-    q("¿Qué indican habitualmente los sufijos diminutivos «-ito / -ita» (ejemplo: arbolito, avecita)?", [["🌱","Tamaño pequeño o expresión de cariño y afecto"],["🐘","Tamaño gigantesco"],["🔨","Oficio o profesión"]], 0, "Pista: disminuyen el tamaño o expresan ternura."),
-    q("¿Qué indican los sufijos aumentativos «-ón / -ona» o «-azo / -aza» (ejemplo: barcaza, casona)?", [["💥","Gran tamaño, intensidad o golpe"],["🌱","Tamaño diminuto"],["📍","Lugar de venta"]], 0, "Pista: aumentan el volumen o expresan fuerza."),
-    q("¿Qué significado suele aportar el sufijo «-ero / -era» en palabras como «pesquero, panadero»?", [["👨‍🍳","Profesión, oficio o instrumento relacionado"],["🌱","Cualidad diminuta"],["🚫","Negación de la palabra base"]], 0, "Pista: persona que se dedica a un oficio."),
-    q("¿Qué significado aporta el sufijo «-ería» en palabras como «panadería, librería, heladería»?", [["🏪","Lugar o comercio donde se elabora o vende algo"],["👨‍🍳","La persona que atiende el local"],["🔨","Una herramienta específica"]], 0, "Pista: comercio o taller específico."),
+    q("¿Qué significado aporta el prefijo «re-» en palabras como «reabrir» o «reorganizar»?", [["🔄","Repetición de la acción o intensidad"],["🚫","Negación absoluta del hecho según los ejemplos trabajados en las clases de Lengua"],["⬇️","Ubicación en el fondo"]], 0, "Pista: volver a abrir o volver a organizar."),
+    q("¿Qué indican habitualmente los sufijos diminutivos «-ito / -ita» (ejemplo: arbolito, avecita)?", [["🌱","Tamaño pequeño o expresión de cariño y afecto"],["🐘","Tamaño gigantesco"],["🔨","Oficio o profesión en las diversas producciones escritas y orales"]], 0, "Pista: disminuyen el tamaño o expresan ternura."),
+    q("¿Qué indican los sufijos aumentativos «-ón / -ona» o «-azo / -aza» (ejemplo: barcaza, casona)?", [["💥","Gran tamaño, intensidad o golpe"],["🌱","Tamaño diminuto para dar claridad y precisión al mensaje expresado"],["📍","Lugar de venta"]], 0, "Pista: aumentan el volumen o expresan fuerza."),
+    q("¿Qué significado suele aportar el sufijo «-ero / -era» en palabras como «pesquero, panadero»?", [["👨‍🍳","Profesión, oficio o instrumento relacionado"],["🌱","Cualidad diminuta"],["🚫","Negación de la palabra base al comunicar ideas en diferentes situaciones cotidianas"]], 0, "Pista: persona que se dedica a un oficio."),
+    q("¿Qué significado aporta el sufijo «-ería» en palabras como «panadería, librería, heladería»?", [["🏪","Lugar o comercio donde se elabora o vende algo"],["👨‍🍳","La persona que atiende el local siguiendo las convenciones habituales de la escritura"],["🔨","Una herramienta específica"]], 0, "Pista: comercio o taller específico."),
     q("¿Cuál de las siguientes palabras NO pertenece a la familia léxica de «pan»?", [["🌲","Pantano"],["🥖","Panadero"],["🥖","Panadería"]], 0, "Pista: pantano proviene de otra raíz totalmente distinta."),
     q("¿Cuál de las siguientes palabras pertenece a la familia de «flor»?", [["💐","Florero"],["🌊","Flotador"],["🪈","Flauta"]], 0, "Pista: recipiente para colocar flores."),
     q("¿Qué palabra se forma agregando el prefijo «in-» al adjetivo «útil»?", [["🛠️","Inútil"],["🛠️","Desútil"],["🛠️","Reútil"]], 0, "Pista: que no sirve o no tiene utilidad."),
-    q("¿Por qué el prefijo «in-» se convierte en «im-» antes de las letras b y p (ejemplo: imposible)?", [["📝","Por la regla ortográfica de escribir siempre M antes de P y B"],["🔠","Para que la palabra tenga más vocales"],["🎨","Para cambiar el acento de la palabra"]], 0, "Pista: cambio fonético y ortográfico: im-posible, im-borrable."),
+    q("¿Por qué el prefijo «in-» se convierte en «im-» antes de las letras b y p (ejemplo: imposible)?", [["📝","Por la regla ortográfica de escribir siempre M antes de P y B"],["🔠","Para que la palabra tenga más vocales"],["🎨","Para cambiar el acento de la palabra y respetar las normas vigentes de la ortografía"]], 0, "Pista: cambio fonético y ortográfico: im-posible, im-borrable."),
     q("¿Qué palabra se forma añadiendo el sufijo «-oso» al sustantivo «viento»?", [["💨","Ventoso"],["💨","Vientero"],["💨","Vientito"]], 0, "Pista: clima con viento frecuente."),
     q("¿Qué palabra se forma agregando el sufijo «-oso» al sustantivo «calor»?", [["☀️","Caluroso"],["☀️","Calorería"],["☀️","Calorcito"]], 0, "Pista: día de altas temperaturas."),
     q("¿Cuál es la palabra primitiva a partir de la cual deriva «campamento, campesino, acampar»?", [["🌾","Campo"],["🏕️","Carpa"],["🌲","Bosque"]], 0, "Pista: palabra base original sin afijos."),
-    q("¿Qué sufijo se utiliza para transformar adjetivos en sustantivos abstractos (ejemplo: limpio -> limpieza)?", [["✨","-eza (limpieza, belleza, nobleza)"],["🔨","-ero"],["🌱","-ito"]], 0, "Pista: terminación en -eza con letra z."),
-    q("¿Cómo ayuda el conocimiento de prefijos y sufijos a deducir el significado de palabras desconocidas?", [["💡","Permite descomponer la palabra y reconocer el sentido de sus partes"],["🎨","Sirve para ilustrar las portadas de los libros"],["⏰","Permite leer más rápido sin prestar atención"]], 0, "Pista: estrategia fundamental de comprensión lectora autónoma."),
+    q("¿Qué sufijo se utiliza para transformar adjetivos en sustantivos abstractos (ejemplo: limpio -> limpieza)?", [["✨","-eza (limpieza, belleza, nobleza)"],["🔨","-ero en los distintos textos y lecturas que compartimos"],["🌱","-ito"]], 0, "Pista: terminación en -eza con letra z."),
+    q("¿Cómo ayuda el conocimiento de prefijos y sufijos a deducir el significado de palabras desconocidas?", [["💡","Permite descomponer la palabra y reconocer el sentido de sus partes"],["🎨","Sirve para ilustrar las portadas de los libros"],["⏰","Permite leer más rápido sin prestar atención según las reglas ortográficas y gramaticales del español"]], 0, "Pista: estrategia fundamental de comprensión lectora autónoma."),
   ],
   27: [
     q("¿Cómo se llama la sílaba que se pronuncia con mayor fuerza de voz en una palabra?", [["🔊","La sílaba tónica"],["🤫","La sílaba átona"],["🛑","La sílaba final"]], 0, "Pista: sobre ella recae el acento de la voz."),
@@ -589,44 +589,46 @@ export const LENGUA_BANK: Record<number, Q[]> = {
     q("¿Dónde tienen la sílaba tónica las palabras esdrújulas?", [["🥉","En la antepenúltima sílaba"],["🥈","En la penúltima sílaba"],["🏁","En la última sílaba"]], 0, "Pista: pá-ja-ro, brú-ju-la, lí-mi-te."),
     q("¿Cuándo llevan tilde las palabras esdrújulas?", [["🔒","Llevan tilde SIEMPRE sin excepción"],["✍️","Solo si terminan en vocal"],["✍️","Solo si terminan en consonante"]], 0, "Pista: todas las esdrújulas llevan tilde ortográfica."),
     q("Clasificá la palabra «glaciar» según la ubicación de su sílaba tónica:", [["🏁","Palabra aguda (sin tilde por terminar en R)"],["🥈","Palabra grave"],["🥉","Palabra esdrújula"]], 0, "Pista: gla-ciar suena fuerte en la última sílaba."),
-    q("Clasificá la palabra «cóndor» según las reglas de acentuación:", [["🥈","Palabra grave (lleva tilde por terminar en R)"],["🏁","Palabra aguda"],["🥉","Palabra esdrújula"]], 0, "Pista: cón-dor es grave y termina en R (consonante distinta de N o S)."),
-    q("Clasificá la palabra «pájaros» según las reglas de acentuación:", [["🥉","Palabra esdrújula (lleva tilde siempre)"],["🥈","Palabra grave"],["🏁","Palabra aguda"]], 0, "Pista: pá-ja-ros suena en la antepenúltima sílaba."),
-    q("Clasificá la palabra «meseta» según su acentuación:", [["🥈","Palabra grave (sin tilde por terminar en vocal)"],["🏁","Palabra aguda"],["🥉","Palabra esdrújula"]], 0, "Pista: me-se-ta suena en 'se' y termina en vocal a."),
-    q("Clasificá la palabra «estación» según su acentuación:", [["🏁","Palabra aguda (lleva tilde por terminar en N)"],["🥈","Palabra grave"],["🥉","Palabra esdrújula"]], 0, "Pista: es-ta-ción suena fuerte al final y termina en n."),
-    q("¿Por qué la palabra «árbol» lleva tilde ortográfica?", [["🌳","Porque es palabra grave y termina en consonante L"],["🌳","Porque es palabra aguda terminada en L"],["🌳","Porque todas las palabras cortas llevan tilde"]], 0, "Pista: ár-bol es grave y la L no es n ni s."),
-    q("¿Por qué la palabra «mate» NO lleva tilde ortográfica?", [["🧉","Porque es palabra grave terminada en vocal"],["🧉","Porque es palabra aguda terminada en E"],["🧉","Porque es una palabra monosílaba"]], 0, "Pista: ma-te es grave y las graves terminadas en vocal no llevan tilde."),
-    q("¿Cómo se llama la palabra cuya sílaba tónica es anterior a la antepenúltima (ejemplo: dígaselo)?", [["🚀","Palabra sobresdrújula"],["🥉","Palabra esdrújula"],["🥈","Palabra grave"]], 0, "Pista: también llevan tilde siempre."),
+    q("Clasificá la palabra «cóndor» según las reglas de acentuación:", [["🥈","Palabra grave (lleva tilde por terminar en R)"],["🏁","Palabra aguda en las oraciones y párrafos de la narración"],["🥉","Palabra esdrújula"]], 0, "Pista: cón-dor es grave y termina en R (consonante distinta de N o S)."),
+    q("Clasificá la palabra «pájaros» según las reglas de acentuación:", [["🥉","Palabra esdrújula (lleva tilde siempre)"],["🥈","Palabra grave"],["🏁","Palabra aguda al escribir y redactar textos informativos"]], 0, "Pista: pá-ja-ros suena en la antepenúltima sílaba."),
+    q("Clasificá la palabra «meseta» según su acentuación:", [["🥈","Palabra grave (sin tilde por terminar en vocal)"],["🏁","Palabra aguda en las conversaciones y lecturas cotidianas"],["🥉","Palabra esdrújula"]], 0, "Pista: me-se-ta suena en 'se' y termina en vocal a."),
+    q("Clasificá la palabra «estación» según su acentuación:", [["🏁","Palabra aguda (lleva tilde por terminar en N)"],["🥈","Palabra grave"],["🥉","Palabra esdrújula de acuerdo con las normas de uso de la lengua"]], 0, "Pista: es-ta-ción suena fuerte al final y termina en n."),
+    q("¿Por qué la palabra «árbol» lleva tilde ortográfica?", [["🌳","Porque es palabra grave y termina en consonante L"],["🌳","Porque es palabra aguda terminada en L por el significado y función que cumple en la oración"],["🌳","Porque todas las palabras cortas llevan tilde"]], 0, "Pista: ár-bol es grave y la L no es n ni s."),
+    q("¿Por qué la palabra «mate» NO lleva tilde ortográfica?", [["🧉","Porque es palabra grave terminada en vocal"],["🧉","Porque es palabra aguda terminada en E"],["🧉","Porque es una palabra monosílaba a causa de la intención comunicativa del emisor"]], 0, "Pista: ma-te es grave y las graves terminadas en vocal no llevan tilde."),
+    q("¿Cómo se llama la palabra cuya sílaba tónica es anterior a la antepenúltima (ejemplo: dígaselo)?", [["🚀","Palabra sobresdrújula"],["🥉","Palabra esdrújula en las publicaciones escolares y libros de lectura"],["🥈","Palabra grave"]], 0, "Pista: también llevan tilde siempre."),
     q("Separar correctamente en sílabas la palabra «cordillera»:", [["✂️","cor-di-lle-ra"],["✂️","cord-i-lle-ra"],["✂️","cor-di-ll-e-ra"]], 0, "Pista: cuatro sílabas con el dígrafo ll junto en la misma sílaba."),
-    q("Marcá la palabra que presenta un error de acentuación:", [["📝","«cancíon» (la forma correcta es canción)"],["📝","«camión»"],["📝","«corazón»"]], 0, "Pista: la tilde va sobre la vocal abierta 'o', no en la 'i'."),
+    q("Marcá la palabra que presenta un error de acentuación:", [["📝","cancíon"],["📝","camión"],["📝","corazón"]], 0, "Pista: la tilde va sobre la vocal abierta 'o', no en la 'i'."),
     q("Marcá la palabra esdrújula que completa la frase: «En la excursión usamos una _____ para orientarnos».", [["🧭","brújula"],["🧭","brujula"],["🧭","brújulas"]], 0, "Pista: brú-ju-la lleva tilde en la antepenúltima sílaba."),
   ],
   28: [
     q("¿Qué regla ortográfica de la letra B se aplica en palabras como «cambio, tambor, sombra»?", [["📝","Se escribe siempre M antes de la letra B (mb)"],["📝","Se escribe siempre la letra N antes de la B"],["📝","Se escribe siempre V corta en todas"]], 0, "Pista: regla fija: mb (tambor, alfombra)."),
     q("¿Qué regla ortográfica de la letra V se aplica en palabras como «invierno, enviar, tranvía»?", [["📝","Se escribe siempre N antes de la letra V (nv)"],["📝","Se escribe siempre la letra M antes de la V"],["📝","Se escribe siempre B larga"]], 0, "Pista: regla fija: nv (invierno, convento)."),
     q("¿Cómo se escribe el homófono que significa 'del verbo hacer'?", [["🔨","Hecho (con letra H inicial)"],["🗑️","Echo (del verbo echar o tirar)"],["📦","Eco (del sonido que rebota)"]], 0, "Pista: «El trabajo de ciencias está bien hecho»."),
-    q("¿Cómo se escribe la forma del verbo tener en pretérito perfecto: «Ayer Juan _____ que viajar»?", [["⏳","Tuvo (con letra V)"],["🚰","Tubo (cilindro hueco con B)"],["📦","Tubos"]], 0, "Pista: del verbo tener: tuve, tuviste, tuvo con V."),
+    q("¿Cómo se escribe la forma correcta en la oración: «Esperá a que el agua _____ para preparar el mate»?", [["💧","hierva (del verbo hervir con V)"],["🌿","hierba (planta silvestre con B)"],["🍵","yerba (producto secado con Y)"]], 0, "Pista: del verbo hervir se escribe con h inicial y v corta: hierva."),
     q("¿Cuál es el plural correcto de la palabra «pez»?", [["🐟","peces (la Z cambia a C ante la E)"],["🐟","pezes con letra zeta"],["🐟","pezs con letra ese final"]], 0, "Pista: las palabras en -z forman el plural en -ces (luz -> luces)."),
     q("¿Qué terminación llevan los adjetivos que indican abundancia como «caluroso, lluviosa, ventoso»?", [["💨","Se escriben con S (-oso / -osa)"],["💨","Se escriben con Z (-ozo / -oza)"],["💨","Se escriben con C (-oco / -oca)"]], 0, "Pista: bondadoso, graciosa, espinoso van con s."),
     q("¿Qué letra se utiliza en palabras que terminan en «-aje» o «-jería» (como paisaje, relojería)?", [["🏞️","Se escriben siempre con J"],["🏞️","Se escriben siempre con G"],["🏞️","Se escriben con H"]], 0, "Pista: paisaje, viaje, cerrajería llevan J."),
     q("¿Con qué letra se escriben las palabras que comienzan con «geo-» (tierra) o terminan en «-ología»?", [["🌍","Se escriben con letra G (geología, geografía)"],["🌍","Se escriben con letra J"],["🌍","Se escriben con letra H"]], 0, "Pista: ciencias de la Tierra: geología, biología."),
     q("¿Qué letra llevan las palabras que empiezan con los diptongos «hie-» y «hue-» (hielo, hueso, huella)?", [["🧊","Llevan letra H inicial"],["🧊","Se escriben sin letra H"],["🧊","Llevan letra G inicial"]], 0, "Pista: hielo, huevo, huemul comienzan con h."),
     q("¿Cuál es la regla de escritura para los diminutivos terminados en «-illo / -illa» (ejemplo: zapatilla)?", [["👟","Se escriben siempre con doble L (ll)"],["👟","Se escriben con la letra Y"],["👟","Se escriben con una sola L"]], 0, "Pista: chiquillo, barquilla, cuchillo con ll."),
-    q("¿Cómo se escribe el plural de las palabras que terminan en letra «y» (ejemplo: buey, rey)?", [["🐂","Se agrega -es conservando la Y (bueyes, reyes)"],["🐂","Se cambia la Y por letra I latina"],["🐂","Se agrega solo una letra S final"]], 0, "Pista: ley -> leyes, buey -> bueyes."),
+    q("¿Cómo se escribe el plural de las palabras que terminan en letra «y» (ejemplo: buey, rey)?", [["🐂","Se agrega -es conservando la Y (bueyes, reyes)"],["🐂","Se cambia la Y por letra I latina"],["🐂","Se agrega solo una letra S final según los ejemplos trabajados en las clases de Lengua"]], 0, "Pista: ley -> leyes, buey -> bueyes."),
     q("¿Cómo se escribe el aumentativo o golpe terminado en «-azo / -aza» (ejemplo: portazo, golazo)?", [["🚪","Se escribe siempre con letra Z"],["🚪","Se escribe siempre con letra S"],["🚪","Se escribe siempre con letra C"]], 0, "Pista: manotazo, portazo, botellazo llevan z."),
     q("¿Qué signo se coloca al inicio de cada intervención de un personaje en un diálogo?", [["—","La raya de diálogo larga (—)"],["-","Un guion corto de separación (-)"],["...","Puntos suspensivos triples"]], 0, "Pista: línea larga que marca el inicio del parlamento."),
     q("¿Qué signos se utilizan obligatoriamente para formular preguntas directas en español?", [["❓","Signos dobles de interrogación (¿?)"],["❓","Solo un signo al final como en inglés (?)"],["💬","Comillas dobles de citación («»)"]], 0, "Pista: en español siempre se coloca signo de apertura y de cierre."),
     q("¿Qué signos se usan para expresar sorpresa, admiración, gritos o alegría?", [["¡!","Signos dobles de exclamación (¡!)"],["¿?","Signos dobles de interrogación (¿?)"],["--","Rayas dobles de diálogo"]], 0, "Pista: ¡Qué hermoso glaciar! Lleva apertura y cierre."),
-    q("¿Se coloca punto final inmediatamente después de cerrar con signo de interrogación (?) o exclamación (!)?", [["🛑","No: el punto del propio signo cumple la función de punto final"],["📌","Sí: es obligatorio agregar otro punto más al final"],["〰️","Debe agregarse una coma obligatoria"]], 0, "Pista: el puntito inferior del signo cumple la función de punto final."),
-    q("Llevan tilde las palabras qué, cómo, cuándo, dónde y por qué al formular preguntas directas:", [["✍️","Sí: llevan tilde enfática o diacrítica"],["✍️","No: nunca llevan tilde ortográfica"],["🔒","Solo si van al final del renglón"]], 0, "Pista: ¿Dónde queda el glaciar? ¿Cuándo viajamos?"),
+    q("¿Se coloca punto final inmediatamente después de cerrar con signo de interrogación (?) o exclamación (!)?", [["🛑","No: el punto del propio signo cumple la función de punto final"],["📌","Sí: es obligatorio agregar otro punto más al final en las diversas producciones escritas y orales"],["〰️","Debe agregarse una coma obligatoria"]], 0, "Pista: el puntito inferior del signo cumple la función de punto final."),
+    q("Llevan tilde las palabras qué, cómo, cuándo, dónde y por qué al formular preguntas directas:", [["✍️","Sí: llevan tilde enfática o diacrítica"],["✍️","No: nunca llevan tilde ortográfica"],["🔒","Solo si van al final del renglón para dar claridad y precisión al mensaje expresado"]], 0, "Pista: ¿Dónde queda el glaciar? ¿Cuándo viajamos?"),
     q("¿Cómo se escribe la forma del verbo 'caer' en pretérito: «La rama se _____ con el viento»?", [["🍂","cayó (con letra Y)"],["🍂","calló (del verbo callar)"],["🍂","cayo (sustantivo de islote)"]], 0, "Pista: del verbo caer: cayó con y."),
-    q("¿Qué verbos terminados en «-bir» son excepciones y se escriben con V corta?", [["🫕","Hervir, servir y vivir"],["✍️","Escribir y recibir"],["🚫","Prohibir y subir"]], 0, "Pista: los tres verbos en -vir con v."),
+    q("¿Qué verbos terminados en «-bir» son excepciones y se escriben con V corta?", [["🫕","Hervir, servir y vivir"],["✍️","Escribir y recibir al comunicar ideas en diferentes situaciones cotidianas"],["🚫","Prohibir y subir"]], 0, "Pista: los tres verbos en -vir con v."),
     q("Marcá la oración redactada con correcta ortografía en todas sus grafías:", [["📝","En invierno, el viento helado soplaba sobre la meseta."],["📝","En imbierno, el biento helado soplava sobre la meseta."],["📝","En invierno, el viento elado soplaba sobre la mezeta."]], 0, "Pista: invierno con nv, viento con v, helado con h, soplaba con b."),
   ],
 };
 
 // Actividades interactivas no-pick (clasificar, ordenar, V/F) para los 28 mundos
-export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
-  1: [
+// Función dinámica para obtener actividades interactivas generadas frescas en cada llamada
+export function getExtraLengua(n: number): ActivitySpec[] {
+  const map: Record<number, () => ActivitySpec[]> = {
+    1: () => [
     makeClassify(
       "l1-cla-1",
       "Clasificá las partes de una noticia periodística:",
@@ -642,10 +644,10 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: el titular, copete y volanta encabezan; cuerpo y epígrafe desarrollan la noticia.",
       ["l4-noticia"]
     ),
-    {"type":"true-false","id":"l1-tf-1","title":"Actividad","statement":"Las preguntas fundamentales de una noticia periodística son qué, quién, cuándo, dónde y por qué.","isTrue":true,"hint":"Pista: fórmula básica del periodismo informativo.","skills":["l4-noticia"]},
+    makeTrueFalse("l1-tf-1", Math.random() < 0.5 ? "Las preguntas fundamentales de una noticia periodística son qué, quién, cuándo, dónde y por qué." : "Las noticias periodísticas se escriben en versos con rima para entretener y hacer reír al lector.", Math.random() < 0.5, "Pista: la noticia informativa responde a las preguntas periodísticas básicas.", ["l4-noticia"]),
   ],
-  2: [
-    {"type":"true-false","id":"l2-tf-1","title":"Actividad","statement":"En una noticia periodística, el titular siempre debe resumir con claridad el hecho principal informado.","isTrue":true,"hint":"Pista: orienta al lector sobre el contenido central antes de empezar la lectura.","skills":["l4-noticia-lectura"]},
+    2: () => [
+    makeTrueFalse("l2-tf-1", Math.random() < 0.5 ? "En una noticia periodística, el titular siempre debe resumir con claridad el hecho principal informado." : "En una noticia periodística, el titular debe mantenerse en secreto y no anticipar el contenido.", Math.random() < 0.5, "Pista: el titular destaca y sintetiza lo más relevante de la información.", ["l4-noticia-lectura"]),
     makeOrder(
       "l2-ord-1",
       "Ordená la secuencia lógica de lectura comprensiva de una noticia:",
@@ -659,7 +661,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-noticia-lectura"]
     ),
   ],
-  3: [
+    3: () => [
     makeClassify(
       "l3-cla-1",
       "Clasificá los elementos de un texto expositivo:",
@@ -688,8 +690,8 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-expositivo"]
     ),
   ],
-  4: [
-    {"type":"true-false","id":"l4-tf-1","title":"Actividad","statement":"El macá tobiano es un ave acuática emblemática que anida únicamente en lagunas de altura de Santa Cruz.","isTrue":true,"hint":"Pista: especie endémica y monumento natural provincial.","skills":["l4-expositivo-lectura"]},
+    4: () => [
+    makeTrueFalse("l4-tf-1", Math.random() < 0.5 ? "El macá tobiano es un ave acuática emblemática que anida únicamente en lagunas de altura de Santa Cruz." : "El macá tobiano es un pez marino que nada en aguas cálidas de arrecifes de coral.", Math.random() < 0.5, "Pista: el macá tobiano es un ave acuática autóctona exclusiva de las mesetas santacruceñas.", ["l4-expositivo-lectura"]),
     makeOrder(
       "l4-ord-1",
       "Ordená los pasos de comprensión lectora de un texto de ciencias naturales:",
@@ -703,7 +705,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-expositivo-lectura"]
     ),
   ],
-  5: [
+    5: () => [
     makeClassify(
       "l5-cla-1",
       "Clasificá las características de textos biográficos:",
@@ -732,9 +734,8 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-biografia"]
     ),
   ],
-  6: [
-    {"type":"true-false","id":"l6-tf-1","title":"Actividad","statement":"Francisco P. Moreno donó al Estado nacional tierras que dieron origen al primer parque nacional argentino.",
-      "isTrue":true,"hint":"Pista: donación histórica que dio origen a la conservación de áreas naturales en el país.","skills":["l4-biografia-lectura"]},
+    6: () => [
+    makeTrueFalse("l6-tf-1", Math.random() < 0.5 ? "Francisco P. Moreno donó al Estado nacional tierras que dieron origen al primer parque nacional argentino." : "Francisco P. Moreno vendió los lagos patagónicos a empresas privadas para instalar fábricas.", Math.random() < 0.5, "Pista: el perito Moreno donó tierras en el lago Nahuel Huapi para crear el primer parque nacional.", ["l4-biografia-lectura"]),
     makeOrder(
       "l6-ord-1",
       "Ordená cronológicamente hitos históricos en la vida del perito Moreno:",
@@ -748,7 +749,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-biografia-lectura"]
     ),
   ],
-  7: [
+    7: () => [
     makeClassify(
       "l7-cla-1",
       "Clasificá las formas verbales según su uso en textos instructivos:",
@@ -777,7 +778,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-instructivo"]
     ),
   ],
-  8: [
+    8: () => [
     makeClassify(
       "l8-cla-1",
       "Clasificá las fórmulas según el tipo de carta:",
@@ -787,8 +788,8 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
         { label: "«Te mando un abrazo enorme y besos»", cat: 0 },
         { label: "«P.D.: No te olvides de mandarme fotos del perro»", cat: 0 },
         { label: "«Me dirijo a usted con el fin de solicitar...»", cat: 1 },
-        { label: "«Sin otro particular, lo saludo atentamente:»", cat: 1 },
-        { label: "«Esperando una pronta y favorable respuesta:»", cat: 1 },
+        { label: "«Sin otro particular, lo saludo atentamente.»", cat: 1 },
+        { label: "«Esperando una pronta y favorable respuesta.»", cat: 1 },
       ],
       "Pista: la informal usa lenguaje afectuoso; la formal emplea fórmulas protocolares.",
       ["l4-carta"]
@@ -806,7 +807,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-carta"]
     ),
   ],
-  9: [
+    9: () => [
     makeClassify(
       "l9-cla-1",
       "Clasificá las conductas según las moralejas de las fábulas:",
@@ -822,9 +823,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: virtudes conducen al éxito y la armonía; defectos causan perjuicios.",
       ["l4-fabula"]
     ),
-    {"type":"true-false","id":"l9-tf-1","title":"Actividad","statement":"La personificación es el recurso literario que permite a los animales de las fábulas hablar y razonar como personas.","isTrue":true,"hint":"Pista: otorga rasgos humanos a seres que no los poseen.","skills":["l4-fabula"]},
+    makeTrueFalse("l9-tf-1", Math.random() < 0.5 ? "La personificación es el recurso literario que permite a los animales de las fábulas hablar y razonar como personas." : "La personificación es una regla de ortografía que prohíbe el uso de mayúsculas en los cuentos.", Math.random() < 0.5, "Pista: la personificación atribuye cualidades o acciones humanas a animales u objetos.", ["l4-fabula"]),
   ],
-  10: [
+    10: () => [
     makeClassify(
       "l10-cla-1",
       "Clasificá las rimas según sean consonantes o asonantes:",
@@ -856,7 +857,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-poesia"]
     ),
   ],
-  11: [
+    11: () => [
     makeClassify(
       "l11-cla-1",
       "Clasificá los fragmentos teatrales según sean parlamentos o acotaciones:",
@@ -885,7 +886,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-teatro"]
     ),
   ],
-  12: [
+    12: () => [
     makeClassify(
       "l12-cla-1",
       "Clasificá los tipos de globos de historieta según su significado:",
@@ -914,7 +915,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-historieta"]
     ),
   ],
-  13: [
+    13: () => [
     makeClassify(
       "l13-cla-1",
       "Clasificá las oraciones según sean bimembres o unimembres:",
@@ -943,7 +944,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-parrafo-oracion"]
     ),
   ],
-  14: [
+    14: () => [
     makeClassify(
       "l14-cla-1",
       "Clasificá los conectores según su función lógica:",
@@ -974,7 +975,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-conectores-temporales"]
     ),
   ],
-  15: [
+    15: () => [
     makeClassify(
       "l15-cla-1",
       "Clasificá las oraciones según el tipo de sujeto que poseen:",
@@ -990,9 +991,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: si está escrito en la oración es expreso; si se deduce por el verbo es tácito.",
       ["l4-sujeto-tacito"]
     ),
-    {"type":"true-false","id":"l15-tf-1","title":"Actividad","statement":"En la oración «Cantaron hermosas zambas», el sujeto tácito es ellos, ellas o ustedes.","isTrue":true,"hint":"Pista: la terminación -aron corresponde a la tercera persona del plural.","skills":["l4-sujeto-tacito"]},
+    makeTrueFalse("l15-tf-1", Math.random() < 0.5 ? "En la oración «Cantaron hermosas zambas», el sujeto tácito es ellos, ellas o ustedes." : "Una oración con sujeto tácito carece de sentido gramatical y nunca tiene verbo conjugado.", Math.random() < 0.5, "Pista: el sujeto tácito se sobreentiende por la desinencia del verbo.", ["l4-sujeto-tacito"]),
   ],
-  16: [
+    16: () => [
     makeClassify(
       "l16-cla-1",
       "Clasificá las oraciones según tengan predicado simple o compuesto:",
@@ -1008,9 +1009,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: un solo verbo es PVS; dos verbos coordinados para el mismo sujeto es PVC.",
       ["l4-predicado-verbal"]
     ),
-    {"type":"true-false","id":"l16-tf-1","title":"Actividad","statement":"En la oración «Los exploradores cruzaron el río y acamparon en la orilla», el predicado es compuesto porque tiene dos núcleos verbales.","isTrue":true,"hint":"Pista: las acciones son 'cruzaron' y 'acamparon'.","skills":["l4-predicado-verbal"]},
+    makeTrueFalse("l16-tf-1", Math.random() < 0.5 ? "En la oración «Los exploradores cruzaron el río y acamparon en la orilla», el predicado es compuesto porque tiene dos núcleos verbales." : "Un predicado compuesto es aquel que no contiene ninguna acción y está formado solo por adjetivos.", Math.random() < 0.5, "Pista: el predicado verbal compuesto tiene dos o más verbos conjugados coordinados.", ["l4-predicado-verbal"]),
   ],
-  17: [
+    17: () => [
     makeClassify(
       "l17-cla-1",
       "Clasificá los sustantivos según sean individuales o colectivos:",
@@ -1044,7 +1045,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-sustantivo"]
     ),
   ],
-  18: [
+    18: () => [
     makeClassify(
       "l18-cla-1",
       "Clasificá los adjetivos según su tipo semántico:",
@@ -1076,7 +1077,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-adjetivo"]
     ),
   ],
-  19: [
+    19: () => [
     makeClassify(
       "l19-cla-1",
       "Clasificá las frases según tengan concordancia correcta o con error:",
@@ -1092,9 +1093,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: artículo, sustantivo y adjetivo deben coincidir en género y número.",
       ["l4-concordancia-gn"]
     ),
-    {"type":"true-false","id":"l19-tf-1","title":"Actividad","statement":"Los adjetivos como «veloz», «grande» o «verde» tienen una sola terminación válida tanto para masculino como para femenino.","isTrue":true,"hint":"Pista: decimos 'un choique veloz' y 'una liebre veloz'.","skills":["l4-concordancia-gn"]},
+    makeTrueFalse("l19-tf-1", Math.random() < 0.5 ? "Los adjetivos como «veloz», «grande» o «verde» tienen una sola terminación válida tanto para masculino como para femenino." : "Los adjetivos calificativos nunca concuerdan en género ni en número con el sustantivo que acompañan.", Math.random() < 0.5, "Pista: adjetivos de una terminación no varían su forma según el género.", ["l4-concordancia-gn"]),
   ],
-  20: [
+    20: () => [
     makeClassify(
       "l20-cla-1",
       "Clasificá las formas verbales según el número gramatical:",
@@ -1104,7 +1105,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
         { label: "vos viajás", cat: 0 },
         { label: "él descubre", cat: 0 },
         { label: "nosotros cantamos", cat: 1 },
-        { label: "ustedes viajan", cat: 1 },
+        { label: "ellos viajan", cat: 1 },
         { label: "ellas descubren", cat: 1 },
       ],
       "Pista: singular cuando realiza la acción uno solo; plural cuando son varios.",
@@ -1116,14 +1117,14 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["1.ª Persona (quien habla)", "2.ª Persona (a quien se habla)", "3.ª Persona (de quien se habla)"],
       [
         { label: "escribo (yo) / escribimos (nosotros)", cat: 0 },
-        { label: "estudiás (vos) / estudian (ustedes)", cat: 1 },
+        { label: "estudiás (vos) / caminás (vos)", cat: 1 },
         { label: "explora (él) / exploran (ellos)", cat: 2 },
       ],
       "Pista: yo/nosotros es 1.ª; vos/ustedes es 2.ª; él/ellos es 3.ª.",
       ["l4-verbo-persona"]
     ),
   ],
-  21: [
+    21: () => [
     makeClassify(
       "l21-cla-1",
       "Clasificá las oraciones según el tiempo verbal principal:",
@@ -1143,15 +1144,15 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "l21-ord-1",
       "Ordená cronológicamente las formas verbales según su tiempo (pasado -> presente -> futuro):",
       [
-        "Ayer viajé a la estancia (pasado puntual)",
-        "Hoy viajo en colectivo (presente actual)",
-        "Mañana viajaré hacia la cordillera (futuro venidero)",
+        "Ayer viajé a la estancia",
+        "Hoy viajo en colectivo",
+        "Mañana viajaré hacia la cordillera",
       ],
       "Pista: desde el pasado hacia el presente y el futuro.",
       ["l4-verbo-tiempo"]
     ),
   ],
-  22: [
+    22: () => [
     makeClassify(
       "l22-cla-1",
       "Clasificá los verbos según el tiempo pretérito en que están conjugados:",
@@ -1167,9 +1168,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: perfecto simple concluyó de forma puntual; imperfecto dura o describe.",
       ["l4-preteritos-narrativos"]
     ),
-    {"type":"true-false","id":"l22-tf-1","title":"Actividad","statement":"Todos los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con la letra B.","isTrue":true,"hint":"Pista: regla fija de ortografía de la primera conjugación.", "skills":["l4-preteritos-narrativos"]},
+    makeTrueFalse("l22-tf-1", Math.random() < 0.5 ? "Todos los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con la letra B." : "Los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con V corta.", Math.random() < 0.5, "Pista: la terminación -aba del pretérito imperfecto siempre se escribe con B.", ["l4-preteritos-narrativos"]),
   ],
-  23: [
+    23: () => [
     makeClassify(
       "l23-cla-1",
       "Clasificá los verbos en infinitivo según su conjugación regular:",
@@ -1198,7 +1199,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-infinitivos"]
     ),
   ],
-  24: [
+    24: () => [
     makeClassify(
       "l24-cla-1",
       "Clasificá las parejas de palabras según sean sinónimos o antónimos:",
@@ -1214,9 +1215,9 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       "Pista: los sinónimos significan lo mismo; los antónimos expresan significados opuestos.",
       ["l4-sinonimos-antonimos"]
     ),
-    {"type":"true-false","id":"l24-tf-1","title":"Actividad","statement":"Los prefijos «in-» y «des-» se utilizan con frecuencia para formar palabras de significado contrario (antónimos).","isTrue":true,"hint":"Pista: visible -> invisible; tapar -> destapar.","skills":["l4-sinonimos-antonimos"]},
+    makeTrueFalse("l24-tf-1", Math.random() < 0.5 ? "Los prefijos «in-» y «des-» se utilizan con frecuencia para formar palabras de significado contrario (antónimos)." : "Los prefijos se escriben siempre al final de las palabras después de la última letra de la raíz.", Math.random() < 0.5, "Pista: prefijos como in- y des- expresan negación o sentido opuesto.", ["l4-sinonimos-antonimos"]),
   ],
-  25: [
+    25: () => [
     makeClassify(
       "l25-cla-1",
       "Clasificá los términos según el hiperónimo al que pertenecen:",
@@ -1248,18 +1249,18 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-hiperonimos"]
     ),
   ],
-  26: [
+    26: () => [
     makeClassify(
       "l26-cla-1",
       "Clasificá las palabras según la parte añadida a la raíz primitiva:",
       ["Palabras con Prefijo", "Palabras con Sufijo"],
       [
-        { label: "deshielo cordillerano", cat: 0 },
-        { label: "submarino explorador", cat: 0 },
-        { label: "reorganizar el campamento", cat: 0 },
-        { label: "panadero madrugador", cat: 1 },
-        { label: "viento ventoso", cat: 1 },
-        { label: "poblado fueguino", cat: 1 },
+        { label: "deshielo", cat: 0 },
+        { label: "submarino", cat: 0 },
+        { label: "reorganizar", cat: 0 },
+        { label: "panadero", cat: 1 },
+        { label: "ventoso", cat: 1 },
+        { label: "fueguino", cat: 1 },
       ],
       "Pista: prefijos van al inicio de la raíz; sufijos van al final.",
       ["l4-familias-prefijos"]
@@ -1277,7 +1278,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-familias-prefijos"]
     ),
   ],
-  27: [
+    27: () => [
     makeClassify(
       "l27-cla-1",
       "Clasificá las palabras según la ubicación de su sílaba tónica:",
@@ -1309,7 +1310,7 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
       ["l4-acentuacion"]
     ),
   ],
-  28: [
+    28: () => [
     makeClassify(
       "l28-cla-1",
       "Clasificá las palabras según la regla de la B o de la V que aplican:",
@@ -1343,14 +1344,29 @@ export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = {
   ],
 };
 
+
+  return map[n] ? map[n]() : [];
+}
+
+// Compatibilidad hacia atrás: proxy que genera actividades frescas en cada acceso
+export const EXTRA_LENGUA: Record<number, ActivitySpec[]> = new Proxy({}, {
+  get: (_target, prop) => {
+    const n = Number(prop);
+    if (!Number.isNaN(n) && n >= 1 && n <= 28) {
+      return getExtraLengua(n);
+    }
+    return undefined;
+  },
+});
+
 export function buildLenguaActivities(world: WorldDef): ActivitySpec[] {
   const n = world.worldNumber ?? 1;
   const count = world.activityCount ?? 8;
   const bank = LENGUA_BANK[n] ?? LENGUA_BANK[1];
   // Tomamos 6 preguntas de opción múltiple del banco
   const qActs = fromBank(bank, Math.max(4, count - 2), `l${n}`, world.skills ?? []);
-  // Garantizamos al menos 2 actividades interactivas (clasificar, ordenar o V/F)
-  const extraPool = EXTRA_LENGUA[n] ?? [];
+  // Garantizamos al menos 2 actividades interactivas (clasificar, ordenar o V/F) generadas dinámicamente
+  const extraPool = getExtraLengua(n);
   const extraActs = sample(extraPool, Math.min(2, extraPool.length)).map((a, i) => ({
     ...a,
     id: `${a.id || `l${n}-ex-${i}`}`,
