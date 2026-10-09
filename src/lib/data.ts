@@ -3,6 +3,7 @@ import {
   AVATAR_OPTIONS,
   AccessorySlot,
   AvatarAccessories,
+  AvatarCapa,
   AvatarTweaks,
   TWEAK_LIMITES,
   MAX_NICKNAME_LENGTH,
@@ -20,6 +21,7 @@ import {
   getValidAccessoryIdsForAvatar,
   isBackgroundSelectable,
 } from "@/types";
+import { capasDe, capasToAccessories, validarCapas } from "@/lib/avatarCapas";
 import { getJSON, getJSONMany, setJSON } from "@/lib/store";
 import { generateUniqueCode } from "@/lib/codes";
 import { WORLDS } from "@/lib/worlds";
@@ -395,6 +397,8 @@ const ALL_SLOTS_VALIDOS: AccessorySlot[] = ["headwear", "eyewear", "face", "tors
 export interface ProfileUpdate {
   avatar?: string;
   nickname?: string;
+  // Lista ordenada de capas (máximo 5 accesorios y 3 mascotas).
+  capas?: AvatarCapa[];
   // Un valor por casillero: string para equipar ese accesorio, null para
   // sacárselo. Casilleros ausentes del objeto no se tocan.
   accessories?: Partial<Record<AccessorySlot, string | null>>;
@@ -435,8 +439,26 @@ export async function updateStudentProfile(
   // el resto los accesorios simples de siempre.
   const effectiveAvatar = update.avatar !== undefined ? update.avatar : progress.avatar;
 
+  let nextCapas: AvatarCapa[] | undefined = progress.avatarCapas;
   let nextAccessories: AvatarAccessories | undefined = progress.avatarAccessories;
-  if (update.accessories !== undefined) {
+  let nextTweaks: AvatarTweaks | undefined = progress.avatarTweaks;
+
+  if (update.capas !== undefined) {
+    const unlocked = getEquippableAccessoryIds(
+      progress.completedWorlds.length,
+      effectiveAvatar,
+      progress.seasonalCollection,
+      tiendaConPrestamo(progress)
+    );
+    const valid = validarCapas(update.capas, unlocked);
+    if (!valid.ok) {
+      return null;
+    }
+    nextCapas = valid.capas;
+    const synced = capasToAccessories(nextCapas);
+    nextAccessories = synced.accessories;
+    nextTweaks = Object.keys(synced.tweaks).length ? synced.tweaks : undefined;
+  } else if (update.accessories !== undefined) {
     const unlocked = getEquippableAccessoryIds(
       progress.completedWorlds.length,
       effectiveAvatar,
@@ -457,21 +479,30 @@ export async function updateStudentProfile(
       merged[key] = value;
     }
     nextAccessories = merged;
+    nextCapas = capasDe({ avatarAccessories: nextAccessories, avatarTweaks: progress.avatarTweaks });
   }
+
   // Si el personaje cambió de guardarropa (de "estándar" a uno de siempre, o
   // viceversa), cualquier accesorio que haya quedado equipado del guardarropa
   // anterior ya no es válido acá (otras rutas de imagen, otro catálogo): se
   // saca en vez de dejar un ícono roto.
-  if (update.avatar !== undefined && nextAccessories) {
+  if (update.avatar !== undefined) {
     const validIds = getValidAccessoryIdsForAvatar(effectiveAvatar);
-    const cleaned: AvatarAccessories = {};
-    for (const key of Object.keys(nextAccessories) as AccessorySlot[]) {
-      const value = nextAccessories[key];
-      if (value && validIds.has(value)) {
-        cleaned[key] = value;
+    if (nextCapas) {
+      nextCapas = nextCapas.filter((c) => validIds.has(c.id));
+      const synced = capasToAccessories(nextCapas);
+      nextAccessories = synced.accessories;
+      nextTweaks = Object.keys(synced.tweaks).length ? synced.tweaks : undefined;
+    } else if (nextAccessories) {
+      const cleaned: AvatarAccessories = {};
+      for (const key of Object.keys(nextAccessories) as AccessorySlot[]) {
+        const value = nextAccessories[key];
+        if (value && validIds.has(value)) {
+          cleaned[key] = value;
+        }
       }
+      nextAccessories = cleaned;
     }
-    nextAccessories = cleaned;
   }
 
   if (
@@ -488,8 +519,12 @@ export async function updateStudentProfile(
   if (update.avatar !== undefined) {
     next.avatar = update.avatar;
   }
-  if (update.accessories !== undefined || update.avatar !== undefined) {
+  if (update.capas !== undefined || update.accessories !== undefined || update.avatar !== undefined) {
+    next.avatarCapas = nextCapas;
     next.avatarAccessories = nextAccessories;
+    if (update.capas !== undefined) {
+      next.avatarTweaks = nextTweaks;
+    }
   }
   if (typeof update.insigniaVisible === "boolean" && (progress.torneoVueltas ?? 0) > 0) {
     next.insigniaTorneoOculta = !update.insigniaVisible;
@@ -498,7 +533,7 @@ export async function updateStudentProfile(
     const clean = sanitizeNickname(update.nickname);
     next.nickname = clean.length > 0 ? clean : undefined;
   }
-  if (update.tweaks !== undefined && update.tweaks && typeof update.tweaks === "object") {
+  if (update.capas === undefined && update.tweaks !== undefined && update.tweaks && typeof update.tweaks === "object") {
     const num = (v: unknown, min: number, max: number, def: number) =>
       typeof v === "number" && Number.isFinite(v) ? Math.min(max, Math.max(min, Math.round(v * 10) / 10)) : def;
     const L = TWEAK_LIMITES;
@@ -514,6 +549,17 @@ export async function updateStudentProfile(
       else out[slot] = v;
     }
     next.avatarTweaks = Object.keys(out).length ? out : undefined;
+    if (next.avatarCapas) {
+      next.avatarCapas = next.avatarCapas.map((c) => {
+        const def = getAccessoryById(c.id);
+        const t = def ? out[def.slot] : undefined;
+        const res: AvatarCapa = { id: c.id };
+        if (t?.x !== undefined && t.x !== 0) res.x = t.x;
+        if (t?.y !== undefined && t.y !== 0) res.y = t.y;
+        if (t?.s !== undefined && t.s !== 1) res.s = t.s;
+        return res;
+      });
+    }
   }
   await saveProgress(next);
   return next;

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import {
   AVATAR_FIT_LIKE,
-  AccessorySlot,
   AvatarAccessories,
+  AvatarCapa,
   AvatarTweak,
   AvatarTweaks,
   getAccessoryById,
@@ -12,24 +12,16 @@ import {
 } from "@/types";
 import { resolveBackgroundId } from "@/lib/seasons";
 import { ACCESSORIES_WITH_BACK, AVATAR_FIT } from "@/lib/avatarFit";
+import { capasDe, isPet, isProp } from "@/lib/avatarCapas";
 
 // Recuadro interno (en % del avatar) donde se dibuja el personaje. Deja
 // aire arriba para que gorros, coronas y orejas no queden cortados.
 const STAGE = { left: 7, top: 14, size: 86 };
 
-// Orden de dibujo de los casilleros (de atrás hacia adelante).
-const SLOT_ORDER: AccessorySlot[] = [
-  "torso",
-  "backpack",
-  "face",
-  "pendant",
-  "eyewear",
-  "headwear",
-];
-
 interface Props {
   character?: string;
   accessories?: AvatarAccessories;
+  capas?: AvatarCapa[];
   className?: string;
   alt?: string;
   imageSizes?: string;
@@ -95,6 +87,7 @@ function AccessoryLayer({
 export default function AvatarDisplay({
   character,
   accessories,
+  capas,
   className = "",
   alt = "Avatar",
   imageSizes = "200px",
@@ -106,16 +99,17 @@ export default function AvatarDisplay({
   const characterId = avatarSrc.split("/").pop()!.replace(/\.png$/, "");
   const bg = getBackgroundById(birthday ? "cumple" : resolveBackgroundId(background));
 
-  const equipped: AvatarAccessories = { ...(accessories ?? {}) };
-  if (birthday) equipped.headwear = "corona-cumple";
-  // Ajuste del objeto según el casillero donde está puesto.
-  const tweakDe = (id: string): AvatarTweak | undefined => {
-    const slot = (Object.keys(equipped) as AccessorySlot[]).find((k) => equipped[k] === id);
-    return slot ? tweaks?.[slot] : undefined;
-  };
-  const ids = SLOT_ORDER.map((slot) => equipped[slot]).filter(
-    (id): id is string => !!id && !!getAccessoryById(id)
-  );
+  // Resolver capas ordenadas (usa capas si se envían; si no, migra de accessories + tweaks)
+  const allCapas = capas ?? capasDe({ avatarAccessories: accessories, avatarTweaks: tweaks });
+
+  // Separar mascotas (hasta 3), objeto de mano (prop) y accesorios que van sobre el personaje
+  const petCapas = allCapas.filter((c) => isPet(c.id)).slice(0, 3);
+  const propCapa = allCapas.find((c) => isProp(c.id));
+  let characterCapas = allCapas.filter((c) => !isPet(c.id) && !isProp(c.id));
+
+  if (birthday && !characterCapas.some((c) => c.id === "corona-cumple")) {
+    characterCapas = [...characterCapas, { id: "corona-cumple" }];
+  }
 
   return (
     <span className={`relative block overflow-hidden ${className}`}>
@@ -131,36 +125,89 @@ export default function AvatarDisplay({
           height: `${STAGE.size}%`,
         }}
       >
-        {ids
-          .filter((id) => ACCESSORIES_WITH_BACK.has(id) || ACCESSORIES_WITH_BACK.has(getAccessoryById(id)?.fitLike ?? ""))
-          .map((id) => (
-            <AccessoryLayer key={`${id}-back`} id={id} character={characterId} back imageSizes={imageSizes} tweak={tweakDe(id)} />
+        {characterCapas
+          .filter((c) => ACCESSORIES_WITH_BACK.has(c.id) || ACCESSORIES_WITH_BACK.has(getAccessoryById(c.id)?.fitLike ?? ""))
+          .map((c) => (
+            <AccessoryLayer
+              key={`${c.id}-back`}
+              id={c.id}
+              character={characterId}
+              back
+              imageSizes={imageSizes}
+              tweak={{ x: c.x ?? 0, y: c.y ?? 0, s: c.s ?? 1 }}
+            />
           ))}
         <Image src={avatarSrc} alt={alt} fill sizes={imageSizes} className="object-contain" />
-        {ids.map((id) => (
-          <AccessoryLayer key={id} id={id} character={characterId} back={false} imageSizes={imageSizes} tweak={tweakDe(id)} />
+        {characterCapas.map((c) => (
+          <AccessoryLayer
+            key={c.id}
+            id={c.id}
+            character={characterId}
+            back={false}
+            imageSizes={imageSizes}
+            tweak={{ x: c.x ?? 0, y: c.y ?? 0, s: c.s ?? 1 }}
+          />
         ))}
       </span>
-      {/* Mascota (abajo a la izquierda) y objeto de mano (abajo a la derecha). */}
-      {(["pet", "prop"] as const).map((slot) => {
-        const id = equipped[slot];
-        if (!id || !getAccessoryById(id)) return null;
-        const t = tweaks?.[slot];
+
+      {/* Mascotas (hasta 3, una al lado de la otra abajo del personaje, más chicas cuando son 2 o 3) */}
+      {petCapas.map((c, idx) => {
+        const total = petCapas.length;
+        const sizePct = total === 1 ? 38 : total === 2 ? 28 : 24;
+        let baseLeft = 1;
+        if (total === 2) {
+          baseLeft = idx === 0 ? 1 : 27;
+        } else if (total === 3) {
+          baseLeft = idx === 0 ? 1 : idx === 1 ? 23 : 45;
+        }
+        const leftVal = baseLeft + (c.x ?? 0);
+        const bottomVal = 1 - (c.y ?? 0);
         return (
           <span
-            key={slot}
-            className="absolute w-[40%] h-[40%] pointer-events-none"
+            key={c.id}
+            className="absolute pointer-events-none"
             style={{
-              [slot === "pet" ? "left" : "right"]: `${1 + (slot === "pet" ? t?.x ?? 0 : -(t?.x ?? 0))}%`,
-              bottom: `${1 - (t?.y ?? 0)}%`,
-              transform: t?.s ? `scale(${t.s})` : undefined,
+              width: `${sizePct}%`,
+              height: `${sizePct}%`,
+              left: `${leftVal}%`,
+              bottom: `${bottomVal}%`,
+              transform: c.s ? `scale(${c.s})` : undefined,
               transformOrigin: "50% 100%",
             }}
           >
-            <Image src={getAccessorySrc(id)} alt="" fill sizes={imageSizes} className="object-contain object-bottom drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]" />
+            <Image
+              src={getAccessorySrc(c.id)}
+              alt=""
+              fill
+              sizes={imageSizes}
+              className="object-contain object-bottom drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]"
+            />
           </span>
         );
       })}
+
+      {/* Objeto de mano (prop) en la esquina inferior derecha */}
+      {propCapa && (
+        <span
+          key={propCapa.id}
+          className="absolute w-[38%] h-[38%] pointer-events-none"
+          style={{
+            right: `${1 - (propCapa.x ?? 0)}%`,
+            bottom: `${1 - (propCapa.y ?? 0)}%`,
+            transform: propCapa.s ? `scale(${propCapa.s})` : undefined,
+            transformOrigin: "50% 100%",
+          }}
+        >
+          <Image
+            src={getAccessorySrc(propCapa.id)}
+            alt=""
+            fill
+            sizes={imageSizes}
+            className="object-contain object-bottom drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]"
+          />
+        </span>
+      )}
+
       {birthday && (
         <span
           className="absolute right-[3%] top-[3%] w-[30%] h-[30%] pointer-events-none animate-bounce"

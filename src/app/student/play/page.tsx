@@ -25,6 +25,7 @@ import CaminoRacha from "@/components/CaminoRacha";
 import { estadoRacha } from "@/lib/coleccion/racha";
 import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import { capasDe } from "@/lib/avatarCapas";
 import InsigniaTorneo from "@/components/InsigniaTorneo";
 import { torneoHabilitado } from "@/lib/torneo/tiempos";
 import CloudsBackground from "@/components/CloudsBackground";
@@ -367,15 +368,14 @@ export default function StudentPlayPage() {
         >
           <span className="relative shrink-0">
             <AvatarDisplay
-            character={progress.avatar}
-            accessories={progress.avatarAccessories}
-            tweaks={progress.avatarTweaks}
-            className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
-            alt="Mi avatar"
-            imageSizes="48px"
-            background={progress.avatarBackground}
-            birthday={isBirthday}
-          />
+              character={progress.avatar}
+              capas={capasDe(progress)}
+              className="w-12 h-12 rounded-2xl border-2 border-amber-300/70 shrink-0 bg-black/10"
+              alt="Mi avatar"
+              imageSizes="48px"
+              background={progress.avatarBackground}
+              birthday={isBirthday}
+            />
             {isBirthday && (
               <span
                 className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white border-2 border-pink-400 flex items-center justify-center text-sm shadow animate-bounce"
@@ -498,6 +498,7 @@ export default function StudentPlayPage() {
           currentAvatar={progress.avatar}
           currentAccessories={progress.avatarAccessories}
           currentTweaks={progress.avatarTweaks}
+          currentCapas={progress.avatarCapas}
           currentNickname={progress.nickname}
           currentBackground={progress.avatarBackground}
           isBirthday={isBirthday}
@@ -511,13 +512,14 @@ export default function StudentPlayPage() {
           torneoPrestados={progress.torneoPrestados}
           prestamo={progress.prestamo67}
           onClose={() => setEditingProfile(false)}
-          onSaved={({ avatar, accessories, nickname, background, tweaks, insigniaOculta }) => {
+          onSaved={({ avatar, accessories, capas, nickname, background, tweaks, insigniaOculta }) => {
             setProgress((p) =>
               p
                 ? {
                     ...p,
                     avatar,
                     avatarAccessories: accessories,
+                    avatarCapas: capas,
                     nickname,
                     avatarBackground: background,
                     avatarTweaks: tweaks,

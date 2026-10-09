@@ -11,7 +11,6 @@ import {
   ACCESSORY_CATALOG_TIENDA,
   AVATAR_INFO,
   AccessoryDef,
-  AvatarAccessories,
   SHOP_AVATARS,
   SHOP_CATEGORY_LABEL,
   ShopAvatar,
@@ -19,7 +18,9 @@ import {
   getAccessoryById,
   getAccessorySrc,
   getAvatarSrc,
+  getValidAccessoryIdsForAvatar,
 } from "@/types";
+import { capasDe } from "@/lib/avatarCapas";
 
 type Tab = "avatares" | "objetos";
 
@@ -64,16 +65,18 @@ export default function ShopModal({
   const alDia = estaAlDia(progress);
 
   const previewAvatar = preview?.avatar ?? progress.avatar;
-  const previewAccessories: AvatarAccessories = { ...(progress.avatarAccessories ?? {}) };
-  if (preview?.avatar) {
-    // Con otro personaje se ven solo los accesorios que le quedan bien a
-    // cualquiera (los de la tienda y los de temporada).
-    for (const k of Object.keys(previewAccessories) as (keyof AvatarAccessories)[]) {
-      const id = previewAccessories[k];
-      if (id && !ACCESSORY_CATALOG_TIENDA.some((a) => a.id === id)) delete previewAccessories[k];
+  const previewCapas = useMemo(() => {
+    let list = capasDe(progress);
+    if (preview?.avatar) {
+      const valid = getValidAccessoryIdsForAvatar(preview.avatar);
+      list = list.filter((c) => valid.has(c.id));
     }
-  }
-  if (preview?.accessory) previewAccessories[preview.accessory.slot] = preview.accessory.id;
+    if (preview?.accessory) {
+      const accId = preview.accessory.id;
+      list = [...list.filter((c) => c.id !== accId), { id: accId }];
+    }
+    return list;
+  }, [progress, preview]);
 
   async function buy(itemId: string, label: string) {
     setBusy(true);
@@ -214,8 +217,7 @@ export default function ShopModal({
         <div className="flex items-center gap-3 rounded-2xl bg-slate-800/70 p-2">
           <AvatarDisplay
             character={previewAvatar}
-            accessories={previewAccessories}
-            tweaks={preview ? undefined : progress.avatarTweaks}
+            capas={previewCapas}
             background={progress.avatarBackground}
             className="w-24 h-24 rounded-2xl shrink-0"
             imageSizes="96px"

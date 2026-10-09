@@ -47,14 +47,16 @@ async function guardarRegalos(lista: RegaloObjeto[]): Promise<void> {
 
 const nuevoId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
-function sinObjeto(p: StudentProgress, itemId: string): StudentProgress {
+export function sinObjeto(p: StudentProgress, itemId: string): StudentProgress {
   const acc = { ...(p.avatarAccessories ?? {}) };
   for (const k of Object.keys(acc) as (keyof typeof acc)[]) if (acc[k] === itemId) delete acc[k];
   const regalados = p.objetosRegalados ?? [];
+  const capas = p.avatarCapas ? p.avatarCapas.filter((c) => c.id !== itemId) : undefined;
   return {
     ...p,
     seasonalCollection: (p.seasonalCollection ?? []).filter((id) => id !== itemId),
     avatarAccessories: acc,
+    avatarCapas: capas,
     objetosRegalados: regalados.includes(itemId) ? regalados : [...regalados, itemId],
   };
 }

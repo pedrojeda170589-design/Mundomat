@@ -29,7 +29,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
 | AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-21) |
-| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-24) |
+| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
 | AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🟡 UNIDA A MAIN con arreglos de Claude; 4.º SIGUE OCULTO: falta AG-24 |
 | AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-26) |
@@ -57,6 +57,75 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-20 · Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR.
+
+#### Resumen de implementación punto por punto
+
+1. **Nuevo modelo de capas ordenadas (`avatarCapas`) y módulo puro (`src/lib/avatarCapas.ts`) [HECHO]**
+   - Se añadió `AvatarCapa = { id: string; x?: number; y?: number; s?: number }` y `avatarCapas?: AvatarCapa[]` a `StudentProgress` (`src/types/index.ts`).
+   - Módulo puro `src/lib/avatarCapas.ts` con funciones especializadas: `capasDe`, `capasToAccessories`, `agregarCapa`, `quitarCapa`, `moverCapaAdelante`, `moverCapaAtras`, `actualizarTweakCapa`, `validarCapas`.
+   - **Migración automática sin pérdida:** si un alumno no tiene `avatarCapas`, `capasDe(progress)` lo construye automáticamente desde `avatarAccessories` y `avatarTweaks` respetando el orden histórico de dibujo (`SLOT_ORDER_LEGACY`).
+   - **Compatibilidad continua:** se sigue sincronizando y escribiendo `avatarAccessories` (el primero de cada casillero) y `avatarTweaks` vía `capasToAccessories` para que código existente o clientes sin actualizar sigan funcionando sin cambios.
+
+2. **Límites y reglas de capas (5 accesorios + 3 mascotas) [HECHO]**
+   - Máximo **5 accesorios** (todo lo que no es slot `pet`) y **3 mascotas** (slot `pet`). Total hasta 8 elementos simultáneos.
+   - Ya no hay restricción de «uno por casillero»: se pueden vestir por ejemplo dos accesorios para la cabeza (gorra + vincha) y anteojos a la vez.
+   - Prohibición de duplicados del mismo objeto (`id` único en el avatar).
+
+3. **`AvatarDisplay.tsx` actualizado [HECHO]**
+   - Acepta la prop `capas?: AvatarCapa[]` y mantiene fallback transparente con `accessories` y `tweaks` viejos vía `capasDe`.
+   - Dibuja los accesorios en el orden exacto de la lista (el primero más atrás, el último más adelante / z-index mayor).
+   - Renderiza hasta **3 mascotas** distribuidas horizontalmente al pie del personaje (sin tapar la cara), con escalado adaptativo (38 % para 1 mascota, 28 % para 2, 24 % para 3).
+   - Mantiene objetos de mano (`prop`) en la esquina inferior derecha y corona de cumpleaños por encima de todo.
+
+4. **Editor de perfil («Mi perfil») y controles táctiles de 44 px [HECHO]**
+   - **`ProfileEditor.tsx`**:
+     - Al tocar un objeto del catálogo/tienda/temporada, si no está puesto se agrega arriba de todo. Si se alcanzan los límites, se despliega el cartel de aviso: «Ya tenés 5 accesorios: sacate uno» o «Ya tenés 3 mascotas: sacate una». Tocar un objeto puesto lo quita.
+     - Sección interactiva **«Lo que tengo puesto»**: lista de capas puestas con nombre e ícono, y botones táctiles de 44 px para **⬆️ Adelante** (`moverCapaAdelante`), **⬇️ Atrás** (`moverCapaAtras`) y **✕ Sacar** (`quitarCapa`).
+     - Ejemplo pedido por Pedro verificado: con gorra + lentes, al tocar «Adelante» en los lentes, estos quedan visualmente sobre la visera de la gorra.
+   - **`AcomodarObjetos.tsx`**:
+     - Adaptado para editar la capa elegida por `id` (no por casillero fijo).
+     - Todos los botones táctiles (selección de objeto, tamaño − / +, flechas de desplazamiento ⬅️, ⬆️, ⬇️, ➡️ y «↩️ A su lugar») cumplen con la dimensión mínima de 44 px para uso táctil en celulares chicos.
+
+5. **Validación del servidor (`/api/profile` y `src/lib/data.ts`) [HECHO]**
+   - `/api/profile` recibe `capas` y lo envía a `updateStudentProfile`.
+   - `updateStudentProfile`: valida con `validarCapas` que cada `id` exista, pertenezca al alumno (`getEquippableAccessoryIds` contemplando colección ganada y préstamos vigentes con `tiendaConPrestamo`), respete límites (<= 5 accesorios, <= 3 mascotas), no contenga repetidos y que los valores de corrimiento/escala estén dentro de `TWEAK_LIMITES`. Si algo no es válido, rechaza la operación completa.
+
+6. **Preservación de préstamos vencidos, devoluciones y regalos [HECHO]**
+   - Préstamo Six-Seven vencido (`devolverPrestamoVencido` en `src/lib/torneo/prestamo.ts`): remueve el objeto vencido tanto de `avatarAccessories` como de `avatarCapas`.
+   - Premios del torneo prestados vencidos (`ordenarPrestadosTorneo` en `src/lib/torneo/vueltas.ts`): se remueven automáticamente de `avatarCapas`.
+   - Regalar objetos a compañeros (`sinObjeto` en `src/lib/regalosObjetos.ts`): saca el objeto regalado de `avatarCapas` y `avatarAccessories`.
+
+7. **Pruebas y verificación exhaustiva [HECHO]**
+   - **`scripts/test-avatar-capas.ts`**: suite integral con 7 bloques en verde:
+     1. Migración desde formato viejo y preservación de orden `SLOT_ORDER_LEGACY` y tweaks.
+     2. Límites 5 + 3, prohibición de duplicados, operaciones `moverCapaAdelante` y `moverCapaAtras`, `quitarCapa`, corrimiento de tweaks.
+     3. Validación de servidor pura (`validarCapas`).
+     4. Persistencia en la base local con `updateStudentProfile` (éxito y rechazo de objetos no poseídos).
+     5. Préstamo Six-Seven vencido desequipa de `avatarCapas`.
+     6. Premios del torneo devueltos limpian `avatarCapas`.
+     7. Regalo de objeto desequipa de `avatarCapas`.
+     - Respaldo y restauración automática de `.data/db.json` garantizada.
+   - **Captura Playwright (`scripts/captura-avatar-capas.ts`)**: generada con Microsoft Edge / Chromium headless y guardada en `public/capturas/avatar-capas.png` y en la carpeta de artifacts (`avatar-capas.png`). Muestra con nitidez:
+     - 1. Lentes sobre la gorra (`gorra` capa 1, `lentes` capa 2).
+     - 2. Gorra sobre los lentes (`lentes` capa 1, `gorra` capa 2).
+     - 3. Avatar con 3 mascotas (`squishy-6`, `squishy-7`, `squishy-tostada`) distribuidas horizontalmente al pie sin tapar la cara.
+   - **Tests de regresión del proyecto:**
+     - `npx tsx scripts/test-avatar-capas.ts`: **7/7 pruebas OK**.
+     - `npx tsx scripts/test-torneo.ts`: **OK**.
+     - `npx tsx scripts/test-regalos.ts`: **OK**.
+     - `npx tsx scripts/test-colecciones.ts`: **OK**.
+     - `npx tsx scripts/test-privacidad.ts`: **OK**.
+     - `npx tsx scripts/test-grado4.ts`: **15/15 verificaciones OK**.
+     - `npx tsc --noEmit`: **0 errores**.
+     - `npx eslint src`: **0 errores y 0 warnings**.
+     - `npm run build`: **compilación de producción limpia (49 páginas estáticas)**.
+     - `publicado: false` para 4.º grado preservado intacto en `src/lib/grades.ts`.
+
+---
 
 ### AG-24 · Cuarta corrección de 4.º grado (Antigravity)
 

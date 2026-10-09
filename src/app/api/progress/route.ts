@@ -59,7 +59,11 @@ export async function GET(request: NextRequest) {
     if (newRewards.length) {
       progress = conPremios;
       if (newRewards.includes("gorrito-aniversario") && !progress.avatarAccessories?.headwear) {
-        progress = { ...progress, avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" } };
+        progress = {
+          ...progress,
+          avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" },
+          avatarCapas: progress.avatarCapas ? [...progress.avatarCapas.filter((c) => c.id !== "gorrito-aniversario"), { id: "gorrito-aniversario" }] : undefined,
+        };
       }
       await saveProgress(progress);
     }

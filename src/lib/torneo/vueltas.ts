@@ -213,6 +213,9 @@ export function ordenarPrestadosTorneo<T extends StudentProgress>(p: T, now: Dat
       for (const k of Object.keys(acc) as (keyof typeof acc)[]) if (acc[k] && devolver.has(acc[k]!)) delete acc[k];
       next.avatarAccessories = acc;
     }
+    if (p.avatarCapas) {
+      next.avatarCapas = p.avatarCapas.filter((c) => !devolver.has(c.id));
+    }
   }
   return next;
 }

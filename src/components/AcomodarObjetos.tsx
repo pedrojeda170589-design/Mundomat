@@ -4,52 +4,53 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
 import {
-  AccessorySlot,
   AvatarAccessories,
+  AvatarCapa,
   AvatarTweak,
   AvatarTweaks,
   TWEAK_LIMITES,
   getAccessoryById,
   getAccessorySrc,
 } from "@/types";
+import { actualizarTweakCapa, capasDe, capasToAccessories, isPet, isProp } from "@/lib/avatarCapas";
 
 // Vista grande del avatar para acomodar los objetos puestos: el alumno elige
-// un objeto, lo arrastra con el dedo (o el mouse) y lo agranda o achica.
+// un objeto/capa, lo arrastra con el dedo (o el mouse) y lo agranda o achica.
 // Pedido de Pedro: «que puedan ubicar y agrandar o achicar los objetos».
-const ORDEN: AccessorySlot[] = ["headwear", "eyewear", "face", "pendant", "torso", "backpack", "pet", "prop"];
-const NOMBRE: Record<AccessorySlot, string> = {
-  headwear: "Cabeza",
-  eyewear: "Ojos",
-  face: "Cuello",
-  pendant: "Colgante",
-  torso: "Campera",
-  backpack: "Mochila",
-  pet: "Mascota",
-  prop: "En la mano",
-};
+// Botones táctiles de al menos 44 px para celulares chicos.
 const STAGE = 0.86; // los objetos de la cara se miden sobre el recuadro del personaje
+
+interface Props {
+  avatar: string;
+  capas?: AvatarCapa[];
+  accessories?: AvatarAccessories;
+  background: string;
+  birthday?: boolean;
+  tweaks?: AvatarTweaks;
+  onChange?: (t: AvatarTweaks) => void;
+  onChangeCapas?: (c: AvatarCapa[]) => void;
+}
 
 export default function AcomodarObjetos({
   avatar,
+  capas,
   accessories,
   background,
   birthday,
   tweaks,
   onChange,
-}: {
-  avatar: string;
-  accessories: AvatarAccessories;
-  background: string;
-  birthday?: boolean;
-  tweaks: AvatarTweaks;
-  onChange: (t: AvatarTweaks) => void;
-}) {
-  const puestos = ORDEN.filter((s) => accessories[s] && getAccessoryById(accessories[s]!));
-  const [slot, setSlot] = useState<AccessorySlot | null>(null);
+  onChangeCapas,
+}: Props) {
+  const efectivasCapas = capas ?? capasDe({ avatarAccessories: accessories, avatarTweaks: tweaks });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const caja = useRef<HTMLDivElement>(null);
   const drag = useRef<{ px: number; py: number; t: AvatarTweak } | null>(null);
-  const activo = slot && accessories[slot] ? slot : null;
-  const t: AvatarTweak = (activo && tweaks[activo]) || { x: 0, y: 0, s: 1 };
+
+  const activo = selectedId && efectivasCapas.some((c) => c.id === selectedId) ? selectedId : null;
+  const capaActiva = activo ? efectivasCapas.find((c) => c.id === activo) : null;
+  const t: AvatarTweak = capaActiva
+    ? { x: capaActiva.x ?? 0, y: capaActiva.y ?? 0, s: capaActiva.s ?? 1 }
+    : { x: 0, y: 0, s: 1 };
   const L = TWEAK_LIMITES;
 
   function poner(nuevo: AvatarTweak) {
@@ -59,7 +60,26 @@ export default function AcomodarObjetos({
       y: Math.max(-L.pos, Math.min(L.pos, Math.round(nuevo.y * 10) / 10)),
       s: Math.max(L.sMin, Math.min(L.sMax, Math.round(nuevo.s * 100) / 100)),
     };
-    onChange({ ...tweaks, [activo]: v });
+    const nextCapas = actualizarTweakCapa(efectivasCapas, activo, v);
+    if (onChangeCapas) {
+      onChangeCapas(nextCapas);
+    }
+    if (onChange) {
+      const synced = capasToAccessories(nextCapas);
+      onChange(synced.tweaks);
+    }
+  }
+
+  function resetearLugar() {
+    if (!activo) return;
+    const nextCapas = actualizarTweakCapa(efectivasCapas, activo, { x: 0, y: 0, s: 1 });
+    if (onChangeCapas) {
+      onChangeCapas(nextCapas);
+    }
+    if (onChange) {
+      const synced = capasToAccessories(nextCapas);
+      onChange(synced.tweaks);
+    }
   }
 
   function down(e: React.PointerEvent) {
@@ -68,13 +88,16 @@ export default function AcomodarObjetos({
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { px: e.clientX, py: e.clientY, t };
   }
+
   function move(e: React.PointerEvent) {
     const d = drag.current;
     const box = caja.current?.getBoundingClientRect();
     if (!d || !box || !activo) return;
-    const base = activo === "pet" || activo === "prop" ? box.width : box.width * STAGE;
+    const esPetOProp = isPet(activo) || isProp(activo);
+    const base = esPetOProp ? box.width : box.width * STAGE;
     poner({ ...d.t, x: d.t.x + ((e.clientX - d.px) / base) * 100, y: d.t.y + ((e.clientY - d.py) / base) * 100 });
   }
+
   function up() {
     drag.current = null;
   }
@@ -92,8 +115,7 @@ export default function AcomodarObjetos({
       >
         <AvatarDisplay
           character={avatar}
-          accessories={accessories}
-          tweaks={tweaks}
+          capas={efectivasCapas}
           className="w-full h-full"
           alt="Vista previa de tu avatar"
           imageSizes="224px"
@@ -107,28 +129,41 @@ export default function AcomodarObjetos({
         )}
       </div>
 
-      {puestos.length > 0 ? (
+      {efectivasCapas.length > 0 ? (
         <>
           <p className="text-slate-400 text-[11px]">Tocá un objeto para acomodarlo:</p>
           <div className="flex flex-wrap justify-center gap-1.5">
-            {puestos.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSlot(activo === s ? null : s)}
-                title={NOMBRE[s]}
-                className={`relative w-11 h-11 rounded-xl border-2 bg-slate-800 ${activo === s ? "border-sky-400 ring-2 ring-sky-400/50" : "border-slate-600"}`}
-              >
-                <Image src={getAccessorySrc(accessories[s]!)} alt={NOMBRE[s]} fill sizes="44px" className="object-contain p-1" />
-                {tweaks[s] && <span className="absolute -top-1 -right-1 text-[10px]">✋</span>}
-              </button>
-            ))}
+            {efectivasCapas.map((c) => {
+              const def = getAccessoryById(c.id);
+              if (!def) return null;
+              const hasTweak = (c.x !== undefined && c.x !== 0) || (c.y !== undefined && c.y !== 0) || (c.s !== undefined && c.s !== 1);
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setSelectedId(activo === c.id ? null : c.id)}
+                  title={def.label}
+                  aria-label={def.label}
+                  className={`relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl border-2 bg-slate-800 ${
+                    activo === c.id ? "border-sky-400 ring-2 ring-sky-400/50" : "border-slate-600"
+                  }`}
+                >
+                  <Image src={getAccessorySrc(c.id)} alt={def.label} fill sizes="44px" className="object-contain p-1" />
+                  {hasTweak && <span className="absolute -top-1 -right-1 text-[10px]">✋</span>}
+                </button>
+              );
+            })}
           </div>
           {activo && (
-            <div className="w-full flex flex-col gap-1.5 rounded-2xl bg-slate-800/80 p-2">
+            <div className="w-full flex flex-col gap-2 rounded-2xl bg-slate-800/80 p-2.5">
               <label className="flex items-center gap-2 text-xs text-slate-200">
                 <span className="w-16 shrink-0">Tamaño</span>
-                <button type="button" className="rounded-lg bg-slate-700 w-8 h-8 text-lg font-black" onClick={() => poner({ ...t, s: t.s - 0.1 })}>
+                <button
+                  type="button"
+                  aria-label="Achicar tamaño"
+                  className="min-w-[44px] min-h-[44px] rounded-xl bg-slate-700 active:bg-slate-600 text-lg font-black flex items-center justify-center text-white"
+                  onClick={() => poner({ ...t, s: t.s - 0.1 })}
+                >
                   −
                 </button>
                 <input
@@ -140,26 +175,33 @@ export default function AcomodarObjetos({
                   onChange={(e) => poner({ ...t, s: Number(e.target.value) })}
                   className="flex-1 accent-sky-400"
                 />
-                <button type="button" className="rounded-lg bg-slate-700 w-8 h-8 text-lg font-black" onClick={() => poner({ ...t, s: t.s + 0.1 })}>
+                <button
+                  type="button"
+                  aria-label="Agrandar tamaño"
+                  className="min-w-[44px] min-h-[44px] rounded-xl bg-slate-700 active:bg-slate-600 text-lg font-black flex items-center justify-center text-white"
+                  onClick={() => poner({ ...t, s: t.s + 0.1 })}
+                >
                   +
                 </button>
               </label>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center gap-1">
                 <div className="flex gap-1">
-                  {([["⬅️", -2, 0], ["⬆️", 0, -2], ["⬇️", 0, 2], ["➡️", 2, 0]] as const).map(([e, dx, dy]) => (
-                    <button key={e} type="button" className="rounded-lg bg-slate-700 w-8 h-8" onClick={() => poner({ ...t, x: t.x + dx, y: t.y + dy })}>
+                  {([["⬅️", -2, 0, "Mover a la izquierda"], ["⬆️", 0, -2, "Mover arriba"], ["⬇️", 0, 2, "Mover abajo"], ["➡️", 2, 0, "Mover a la derecha"]] as const).map(([e, dx, dy, label]) => (
+                    <button
+                      key={e}
+                      type="button"
+                      aria-label={label}
+                      className="min-w-[44px] min-h-[44px] rounded-xl bg-slate-700 active:bg-slate-600 flex items-center justify-center text-sm"
+                      onClick={() => poner({ ...t, x: t.x + dx, y: t.y + dy })}
+                    >
                       {e}
                     </button>
                   ))}
                 </div>
                 <button
                   type="button"
-                  className="rounded-lg bg-slate-700 px-2 text-[11px] font-bold text-slate-200"
-                  onClick={() => {
-                    const next = { ...tweaks };
-                    delete next[activo];
-                    onChange(next);
-                  }}
+                  className="min-h-[44px] rounded-xl bg-slate-700 active:bg-slate-600 px-3 text-xs font-bold text-slate-200 flex items-center justify-center"
+                  onClick={resetearLugar}
                 >
                   ↩️ A su lugar
                 </button>

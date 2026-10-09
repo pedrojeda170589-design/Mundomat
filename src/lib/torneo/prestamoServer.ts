@@ -57,9 +57,11 @@ export async function elegirPrestamo(code: string, id: string, now: Date = new D
   // Si cambia de accesorio, el anterior se saca del avatar.
   const anterior = progress.prestamo67?.id;
   const acc = { ...(progress.avatarAccessories ?? {}) };
+  let capas = progress.avatarCapas;
   if (anterior && anterior !== id && !(progress.shopCollection ?? []).includes(anterior)) {
     for (const k of Object.keys(acc) as (keyof typeof acc)[]) if (acc[k] === anterior) delete acc[k];
+    if (capas) capas = capas.filter((c) => c.id !== anterior);
   }
-  await saveProgress({ ...progress, avatarAccessories: acc, prestamo67: { id, hasta, semana } });
+  await saveProgress({ ...progress, avatarAccessories: acc, avatarCapas: capas, prestamo67: { id, hasta, semana } });
   return { ok: true, hasta };
 }

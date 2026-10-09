@@ -70,8 +70,10 @@ export interface StudentProgress {
   avatar?: string; // personaje base elegido, uno de AVATAR_OPTIONS
   // Accesorios equipados (gorro, lentes, remera, etc.), uno por casillero
   // (AccessorySlot). Se desbloquean progresivamente completando mundos: ver
-  // ACCESSORY_CATALOG y getUnlockedAccessoryIds().
   avatarAccessories?: AvatarAccessories;
+  // Lista ordenada de capas del avatar (de atrás hacia adelante).
+  // Máximo 5 accesorios y 3 mascotas. Ver src/lib/avatarCapas.ts.
+  avatarCapas?: AvatarCapa[];
   // Fondo detrás del avatar (los personajes son PNG con fondo transparente):
   // AUTO_BACKGROUND (el de la estación/festividad del momento), uno de los
   // fondos de siempre, o uno de temporada ya ganado. Ver BACKGROUND_OPTIONS.
@@ -396,6 +398,9 @@ export type AccessorySlot =
   | "prop";
 
 export type AvatarAccessories = Partial<Record<AccessorySlot, string>>;
+
+// Capa individual del avatar con su identificador de accesorio y ajustes opcionales.
+export type AvatarCapa = { id: string; x?: number; y?: number; s?: number };
 
 // Corrimiento x/y en % del retrato (−35 a 35) y escala (0,5 a 1,8).
 export type AvatarTweak = { x: number; y: number; s: number };
