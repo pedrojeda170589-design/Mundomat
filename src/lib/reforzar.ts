@@ -2,10 +2,12 @@
 import { Student, StudentProgress, WorldDef } from "@/types";
 import {
   CurriculoId,
+  CurriculumEntry,
   getCurriculoActivo,
   getCurriculumEntry,
 } from "@/lib/curriculo";
 import { getWorld } from "@/lib/worlds";
+import { GRADES } from "@/lib/grades";
 import { getStudentWorldSummary } from "@/lib/courseSummary";
 import { SkillLevel, subjectLabel } from "@/lib/platform/shared";
 
@@ -38,6 +40,9 @@ export type WorldReinforcementInput =
     };
 
 export interface ContenidosAReforzarOptions {
+  // Entradas curriculares ya resueltas por el panel (currículo elegido por el
+  // docente y vínculos que validó). Si están, mandan sobre curriculoId.
+  entradas?: Record<string, CurriculumEntry>;
   curriculoId?: CurriculoId;
   validatedIds?: Set<number> | number[];
   worlds?: WorldDef[];
@@ -84,6 +89,20 @@ function normalizeMateria(rawSubject: string | undefined, areaFromCurriculo: str
   }
   return { materia: "Otros", materiaId: "otros" };
 }
+
+// Lugar del mundo en el mapa de su grado (para ordenar ejes y contenidos
+// como aparecen en el mapa, no por cómo llegan).
+let ordenCache: Map<number, number> | null = null;
+export function ordenEnMapa(worldId: number): number {
+  if (!ordenCache) {
+    ordenCache = new Map();
+    for (const g of GRADES) g.worlds.forEach((w, i) => ordenCache!.set(w.id, g.grade * 10000 + i));
+  }
+  return ordenCache.get(worldId) ?? 999999 + worldId;
+}
+
+const esZonaDePractica = (id: number) => (id >= 19000 && id < 20000) || (id >= 29000 && id < 30000);
+const esDictado = (id: number) => id === 28001 || id === 38001 || id === 48001;
 
 function resolveWorld(worldId: number, customWorlds?: WorldDef[]): WorldDef | undefined {
   if (customWorlds) {
@@ -187,10 +206,19 @@ export function contenidosAReforzar(
   for (let idx = 0; idx < rawList.length; idx++) {
     const raw = rawList[idx];
     const w = resolveWorld(raw.worldId, customWorlds);
-    const curr = getCurriculumEntry(raw.worldId, curriculoId, validatedIds);
+    const curr = options?.entradas ? options.entradas[String(raw.worldId)] : getCurriculumEntry(raw.worldId, curriculoId, validatedIds);
 
-    const { materia, materiaId } = normalizeMateria(w?.subject, curr?.area);
-    const eje = curr?.eje ? curr.eje.trim() : "Otros";
+    let { materia, materiaId } = normalizeMateria(w?.subject, curr?.area);
+    let eje = curr?.eje ? curr.eje.trim() : "Otros";
+    if (esDictado(raw.worldId)) {
+      // El dictado semanal mezcla palabras y números: va con Lengua.
+      materia = "Lengua";
+      materiaId = "lengua";
+      eje = "Dictado (palabras y números)";
+    }
+    if (esZonaDePractica(raw.worldId) && !raw.contenido) {
+      raw.contenido = "Zona de práctica (refuerzo automático de una habilidad)";
+    }
 
     // Contenido resumido: WorldDef.description si existe, o raw.contenido, o curr.contenido
     const contenidoPrincipal = (
@@ -208,7 +236,7 @@ export function contenidosAReforzar(
         materia,
         materiaId,
         eje,
-        firstWorldOrder: idx,
+        firstWorldOrder: ordenEnMapa(raw.worldId),
         itemsMap: new Map(),
       };
       groupsMap.set(groupKey, group);
@@ -227,10 +255,12 @@ export function contenidosAReforzar(
       contenidoDetallado: curr?.contenido,
       fuente: curr?.fuente,
       validado: curr?.validado,
-      mundo: w?.name ?? `Mundo ${raw.worldId}`,
+      mundo: w?.name ?? (esZonaDePractica(raw.worldId) ? "Zona de práctica" : `Mundo ${raw.worldId}`),
       nivel: raw.nivel,
       precision: raw.precision,
     };
+    const orden = ordenEnMapa(raw.worldId);
+    if (orden < group.firstWorldOrder) group.firstWorldOrder = orden;
 
     if (group.itemsMap.has(contentKey)) {
       // Si dos mundos del mismo eje tienen el mismo contenido: conservar el peor nivel
@@ -238,19 +268,9 @@ export function contenidosAReforzar(
       const existingSev = LEVEL_SEVERITY[existing.nivel] ?? 99;
       const newSev = LEVEL_SEVERITY[newItem.nivel] ?? 99;
 
-      if (newSev < existingSev) {
-        // El nuevo es peor: actualizar nivel y mundo
-        existing.nivel = newItem.nivel;
-        existing.worldId = newItem.worldId;
-        existing.mundo = newItem.mundo;
-      }
-      // Mantener la peor precisión (mínima)
-      if (newItem.precision !== undefined) {
-        if (existing.precision === undefined) {
-          existing.precision = newItem.precision;
-        } else {
-          existing.precision = Math.min(existing.precision, newItem.precision);
-        }
+      if (newSev < existingSev || (newSev === existingSev && (newItem.precision ?? 101) < (existing.precision ?? 101))) {
+        // El nuevo es peor: queda el nuevo entero (nivel, mundo, precisión y detalle curricular).
+        group.itemsMap.set(contentKey, newItem);
       }
     } else {
       group.itemsMap.set(contentKey, newItem);
@@ -265,7 +285,7 @@ export function contenidosAReforzar(
     materia: g.materia,
     materiaId: g.materiaId,
     eje: g.eje,
-    items: Array.from(g.itemsMap.values()),
+    items: Array.from(g.itemsMap.values()).sort((a, b) => ordenEnMapa(a.worldId) - ordenEnMapa(b.worldId)),
     order: g.firstWorldOrder,
   }));
 
@@ -298,10 +318,11 @@ export function resumirEjes(grupos: GrupoRefuerzoPorEje[]): string[] {
 export function formatWorldRefuerzoCSV(
   worldId: number,
   curriculoId: CurriculoId = getCurriculoActivo(),
-  worlds?: WorldDef[]
+  worlds?: WorldDef[],
+  entradas?: Record<string, CurriculumEntry>
 ): string {
   const w = resolveWorld(worldId, worlds);
-  const curr = getCurriculumEntry(worldId, curriculoId);
+  const curr = entradas ? entradas[String(worldId)] : getCurriculumEntry(worldId, curriculoId);
   const eje = curr?.eje ? curr.eje.trim() : "Otros";
   const contenido = (w?.description || curr?.contenido || w?.name || `Mundo ${worldId}`).trim();
   return `${eje}: ${contenido}`;
@@ -310,7 +331,8 @@ export function formatWorldRefuerzoCSV(
 export function formatWorldsRefuerzoCSV(
   worldIds: number[],
   curriculoId: CurriculoId = getCurriculoActivo(),
-  worlds?: WorldDef[]
+  worlds?: WorldDef[],
+  entradas?: Record<string, CurriculumEntry>
 ): string {
-  return worldIds.map((id) => formatWorldRefuerzoCSV(id, curriculoId, worlds)).join("; ");
+  return worldIds.map((id) => formatWorldRefuerzoCSV(id, curriculoId, worlds, entradas)).join("; ");
 }

@@ -7,6 +7,7 @@ import {
   formatWorldRefuerzoCSV,
   formatWorldsRefuerzoCSV,
   LEVEL_SEVERITY,
+  ordenEnMapa,
 } from "../src/lib/reforzar";
 import {
   getCurriculoActivo,
@@ -349,6 +350,35 @@ async function run() {
   const csvMulti = formatWorldsRefuerzoCSV([1, 2]);
   assert.ok(csvMulti.includes("; "), "CSV múltiple debe separar con '; '");
   assert.ok(csvMulti.includes("Número y Operaciones"), "CSV múltiple debe incluir eje");
+
+  // =========================================================================
+  // Bloque 7 (revisión de Claude): orden del mapa, entradas del panel,
+  // dictado, zonas de práctica y deduplicado con el detalle correcto.
+  // =========================================================================
+  console.log("7. Revisión de Claude: orden del mapa, currículo del panel, dictado y zonas...");
+  const desordenado = contenidosAReforzar([31101, 17, 16, 15, 4, 1, 14]);
+  const ordenMat = desordenado.filter((g) => g.materiaId === "matematica").flatMap((g) => g.items.map((i) => i.worldId));
+  assert.deepEqual(ordenMat, [...ordenMat].sort((a, b) => ordenEnMapa(a) - ordenEnMapa(b)), "Matemática en el orden del mapa");
+  const ordenLen = desordenado.filter((g) => g.materiaId === "lengua");
+  for (let k = 1; k < ordenLen.length; k++) {
+    assert.ok(ordenEnMapa(ordenLen[k - 1].items[0].worldId) <= ordenEnMapa(ordenLen[k].items[0].worldId), "ejes de Lengua en el orden del mapa");
+  }
+  const entradas = { "1": { area: "Matemática", eje: "EJE DEL PANEL", contenido: "Texto del panel", fuente: "NAP", validado: true } };
+  const conEntradas = contenidosAReforzar([1], { entradas });
+  assert.equal(conEntradas[0].eje, "EJE DEL PANEL", "usa las entradas del panel");
+  assert.equal(conEntradas[0].items[0].validado, true, "respeta lo validado por el docente");
+  const dict = contenidosAReforzar([38001]);
+  assert.equal(dict[0].materiaId, "lengua", "el dictado va con Lengua");
+  const zona = contenidosAReforzar([19001]);
+  assert.ok(!/Mundo 19001/.test(JSON.stringify(zona)), "una zona de práctica no se muestra como «Mundo 19001»");
+  const dup = contenidosAReforzar([
+    { worldId: 1, nivel: "necesita-practica", precision: 70 },
+    { worldId: 1, nivel: "practica-guiada", precision: 40 },
+  ]);
+  assert.equal(dup[0].items.length, 1);
+  assert.equal(dup[0].items[0].nivel, "practica-guiada");
+  assert.equal(dup[0].items[0].precision, 40);
+  console.log("  ✓ Orden del mapa, currículo del panel, dictado, zonas y deduplicado OK.");
 
   console.log("\n✅ TODAS LAS PRUEBAS DE AG-23 PASARON EXITOSAMENTE.");
 }

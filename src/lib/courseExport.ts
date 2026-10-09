@@ -69,13 +69,16 @@ export function generateCourseCSV(
       totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
     const timeMin = Math.round(totalTimeSec / 60);
 
+    // «eje: contenido» separados por «; » (las descripciones tienen comas),
+    // con el currículo y las validaciones que eligió el docente.
+    const entradas = Object.keys(curriculumEntries).length ? curriculumEntries : undefined;
     const needingReviewNames = (p?.worldsNeedingTeacherReview ?? [])
-      .map((id) => formatWorldRefuerzoCSV(id))
-      .join(", ");
+      .map((id) => formatWorldRefuerzoCSV(id, undefined, undefined, entradas))
+      .join("; ");
 
     const pendingRetryNames = (p?.worldsPendingReinforcementRetry ?? [])
-      .map((id) => formatWorldRefuerzoCSV(id))
-      .join(", ");
+      .map((id) => formatWorldRefuerzoCSV(id, undefined, undefined, entradas))
+      .join("; ");
 
     const rowCells = [
       `"${s.name.replace(/"/g, '""')}"`,

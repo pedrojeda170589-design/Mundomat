@@ -297,7 +297,7 @@ export const SOCIALES_BANK: Record<number, Q[]> = {
     q("¿Qué modo de vida sedentario distinguió a los Diaguitas respecto a los nómadas patagónicos?", [["🌾","Eran agricultores con aldeas estables de piedra"],["🏹","Cazadores que cambiaban de toldo cada semana"],["🛶","Canoeros que habitaban en islas marinas"]], 0, "Pista: los Diaguitas construyeron poblados fijos de piedra y cultivaron la tierra."),
     q("¿Qué ingenioso sistema construían en las laderas de los cerros para sembrar sin que el agua lave la tierra?", [["🪜","Terrazas de cultivo con andenes de piedra"],["🏊","Grandes piletas de natación comunitaria"],["🏢","Rascacielos escalonados de cemento"]], 0, "Pista: las terrazas escalonadas escalaban las montañas aprovechando el agua de riego."),
     q("¿Qué cultivo alimenticio americano fundamental sembraban en sus andenes de cultivo?", [["🌽","El maíz (junto a zapallo, papa y porotos)"],["🌾","El trigo traído por los europeos"],["🍌","El plátano de clima selvático tropical"]], 0, "Pista: el maíz era la base de su dieta andina, complementado con porotos y papas."),
-    q("¿Cómo se llamaban los poblados fortificados de piedra levantados en cumbres de cerros para defensa?", [["🏰","Los pucaráes (como la Ciudad Sagrada de Quilmes)"],["🎪","Las carpas de circo itinerante"],["⛺","Los campamentos de toldos de cuero en las distintas regiones provincial y patagónico"]], 0, "Pista: los pucaráes eran pueblos fortaleza ubicados estratégicamente para vigilar los valles."),
+    q("¿Cómo se llamaban los poblados fortificados de piedra levantados en cumbres de cerros para defensa?", [["🏰","Los pucarás (como la Ciudad Sagrada de Quilmes)"],["🎪","Las carpas de circo itinerante"],["⛺","Los campamentos de toldos de cuero en las distintas regiones provincial y patagónico"]], 0, "Pista: los pucarás eran pueblos fortaleza ubicados estratégicamente para vigilar los valles."),
     q("¿Qué animal camélido andino domesticado criaban para transporte de carga y lana?", [["🦙","La llama"],["🐎","El caballo español"],["🐄","La vaca lechera"]], 0, "Pista: la llama resiste la altura, transporta cargas y brinda lana gruesa."),
     q("¿Qué arte cerámico decorativo caracterizó a la cultura santamariana de los diaguitas?", [["🏺","Urnas funerarias de barro cocido con dibujos geométricos"],["☕","Pocillos de porcelana importada vidriada durante los diferentes períodos de la historia regional"],["🥛","Vasos transparentes de cristal pulido"]], 0, "Pista: las urnas funerarias santamarianas tenían figuras de lechuzas, serpientes y motivos sagrados."),
     q("¿Qué metales sabían fundir y alear los metalúrgicos diaguitas en hornos de barro?", [["🥇","El cobre, el bronce, el oro y la plata"],["🔩","El acero inoxidable industrial moderno"],["🧱","El cemento fraguado al agua"]], 0, "Pista: dominaban la fundición del bronce para hacer hachas, campanas y pectorales."),
@@ -603,8 +603,8 @@ const TF_SOCIALES: Record<number, TfPair> = {
     falseHint: "Pista: confeccionaban quillangos de guanaco y finos tejidos de lana al telar tradicional.",
   },
   16: {
-    trueStmt: "Los Diaguitas construyeron pucaráes de piedra en cerros elevados para defender sus valles agrícolas.",
-    trueHint: "Pista: los pucaráes eran poblados fortificados para la defensa y control del territorio.",
+    trueStmt: "Los Diaguitas construyeron pucarás de piedra en cerros elevados para defender sus valles agrícolas.",
+    trueHint: "Pista: los pucarás eran poblados fortificados para la defensa y control del territorio.",
     falseStmt: "Los pueblos diaguitas vivían como nómadas en la estepa comiendo únicamente peces de agua helada sin cultivar la tierra.",
     falseHint: "Pista: eran agricultores sedentarios del noroeste que cultivaban maíz, zapallo y papas en terrazas.",
   },
@@ -772,7 +772,7 @@ export function getExtraSociales(n: number): ActivitySpec[] {
       ];
     case 16:
       return [
-        makeClassify("s16-ex-0", "Clasificá las innovaciones de la sociedad diaguita:", ["Agricultura e Hidráulica","Arquitectura y Cerámica"], [{"label":"Terrazas de cultivo escalonadas en cerros","cat":0},{"label":"Pucaráes o aldeas fortificadas de piedra","cat":1},{"label":"Canales y acequias de riego en laderas","cat":0},{"label":"Urnas de cerámica con dibujos geométricos","cat":1}], "Pista: terrazas y canales son agrícolas; pucaráes y urnas son construcciones y alfarería.", ["s4-diaguitas"]),
+        makeClassify("s16-ex-0", "Clasificá las innovaciones de la sociedad diaguita:", ["Agricultura e Hidráulica","Arquitectura y Cerámica"], [{"label":"Terrazas de cultivo escalonadas en cerros","cat":0},{"label":"Pucarás o aldeas fortificadas de piedra","cat":1},{"label":"Canales y acequias de riego en laderas","cat":0},{"label":"Urnas de cerámica con dibujos geométricos","cat":1}], "Pista: terrazas y canales son agrícolas; pucarás y urnas son construcciones y alfarería.", ["s4-diaguitas"]),
         makeOrder("s16-ex-1", "Ordená los pasos de producción agrícola en las terrazas diaguitas:", ["Construcción de los muros de contención de piedra en la pendiente","Relleno con tierra fértil y trazado de acequias de riego","Siembra de semillas de maíz, zapallo y porotos para la cosecha"], "Pista: primero se arman los muros de piedra, luego se prepara la tierra con canales y se siembra.", ["s4-diaguitas"]),
         getTfActivity(16, "s16-ex-2", ["s4-diaguitas"]),
       ];
@@ -809,7 +809,7 @@ export function getExtraSociales(n: number): ActivitySpec[] {
     case 22:
       return [
         makeClassify("s22-ex-0", "Clasificá los grupos sociales de la época colonial rioplatense:", ["Sectores Privilegiados","Sectores Trabajadores y Subalternos"], [{"label":"Españoles peninsulares (virreyes y obispos)","cat":0},{"label":"Población afrodescendiente esclavizada","cat":1},{"label":"Criollos hacendados y comerciantes","cat":0},{"label":"Mestizos, peones rurales e indígenas","cat":1}], "Pista: peninsulares y criollos concentraban tierras y cargos; mestizos, indígenas y esclavizados trabajaban sin privilegios.", ["s4-sociedad-colonial"]),
-        makeOrder("s22-ex-1", "Ordená la jerarquía social colonial desde el grupo con mayores privilegios al más desfavorecido:", ["Españoles peninsulares nacidos en Europa que ocupaban altos cargos","Criollos nacidos en América propietarios de tierras y comerciantes","Mestizos e indígenas sometidos a tributos y encomiendas","Personas africanas esclavizadas sin libertad ni derechos civiles"], "Pista: arriba peninsulares, seguidos de criollos, luego mestizos/indígenas y en la base los esclavizados.", ["s4-sociedad-colonial"]),
+        makeOrder("s22-ex-1", "Ordená la jerarquía social colonial desde el grupo con mayores privilegios al más desfavorecido:", ["Españoles peninsulares nacidos en Europa que ocupaban altos cargos","Criollos nacidos en América propietarios de tierras y comerciantes","Indígenas sometidos a tributos y encomiendas, y mestizos con pocos derechos","Personas africanas esclavizadas sin libertad ni derechos civiles"], "Pista: arriba peninsulares, seguidos de criollos, luego mestizos/indígenas y en la base los esclavizados.", ["s4-sociedad-colonial"]),
         getTfActivity(22, "s22-ex-2", ["s4-sociedad-colonial"]),
       ];
     case 23:

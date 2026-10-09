@@ -63,15 +63,25 @@ export default function ReforzarPorEje({
               const itemKey = `${grupo.materiaId}-${grupo.eje}-${item.worldId}-${idx}`;
               const isExpanded = printable || defaultExpanded || expandedKeys.has(itemKey);
               const info = SKILL_INFO[item.nivel] ?? { emoji: "⚪", label: "Práctica" };
+              const tieneDetalle = !!(item.contenidoDetallado || item.fuente);
 
               return (
                 <li key={itemKey} className="group">
                   <div
-                    onClick={() => toggleExpand(itemKey)}
+                    onClick={() => tieneDetalle && toggleExpand(itemKey)}
+                    onKeyDown={(e) => {
+                      if (tieneDetalle && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault();
+                        toggleExpand(itemKey);
+                      }
+                    }}
+                    role={!printable && tieneDetalle ? "button" : undefined}
+                    tabIndex={!printable && tieneDetalle ? 0 : undefined}
+                    aria-expanded={!printable && tieneDetalle ? isExpanded : undefined}
                     className={`flex items-start gap-1.5 leading-snug ${
-                      !printable ? "cursor-pointer hover:bg-slate-50 rounded px-1 -mx-1 py-0.5 transition" : ""
+                      !printable && tieneDetalle ? "cursor-pointer hover:bg-slate-50 rounded px-1 -mx-1 py-0.5 transition" : ""
                     }`}
-                    title={!printable ? "Tocá para ver el detalle curricular" : undefined}
+                    title={!printable && tieneDetalle ? "Tocá para ver el detalle curricular" : undefined}
                   >
                     <span className="shrink-0 text-sm leading-none mt-0.5" aria-hidden="true">
                       {info.emoji}
@@ -92,7 +102,7 @@ export default function ReforzarPorEje({
                   </div>
 
                   {/* Detalle curricular desplegado */}
-                  {isExpanded && (item.contenidoDetallado || item.fuente || item.validado === false) && (
+                  {isExpanded && tieneDetalle && (
                     <div className="mt-1 mb-1.5 ml-5 p-2 rounded-lg bg-amber-50/70 border border-amber-200/80 text-[11px] text-slate-700 space-y-1">
                       {item.contenidoDetallado && (
                         <p className="leading-relaxed">

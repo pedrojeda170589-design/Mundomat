@@ -21,6 +21,8 @@ import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
 import EventosAdmin from "@/components/admin/EventosAdmin";
+import ReforzarPorEje from "@/components/admin/ReforzarPorEje";
+import { contenidosAReforzar } from "@/lib/reforzar";
 import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
@@ -896,20 +898,17 @@ export default function AdminDashboardPage() {
                     <p className="text-xs text-orange-900/70 mb-1">
                       Mundos que el alumno ya jugó pero todavía no llegó al {getGrade(selectedStudent.grade ?? 3).masteryPct}%. Conviene repasarlos.
                     </p>
-                    <p className="text-amber-950/80 text-sm">
-                      {selectedProgress.worldsNeedingTeacherReview
-                        .map((id) => {
-                          const name = getWorld(id)?.name ?? "?";
-                          const curr = curriculumEntries[String(id)];
-                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
-                          const score =
-                            selectedProgress.lastWorldAttemptScore?.[id];
-                          return score !== undefined
-                            ? `${name}${tag} (${score}%)`
-                            : `${name}${tag}`;
-                        })
-                        .join(", ")}
-                    </p>
+                    <ReforzarPorEje
+                      className="bg-white/70 rounded-xl p-2"
+                      grupos={contenidosAReforzar(
+                        selectedProgress.worldsNeedingTeacherReview.map((id) => ({
+                          worldId: id,
+                          nivel: "practica-guiada" as const,
+                          precision: selectedProgress.lastWorldAttemptScore?.[id],
+                        })),
+                        { entradas: curriculumEntries }
+                      )}
+                    />
                   </div>
                 )}
 
@@ -918,16 +917,17 @@ export default function AdminDashboardPage() {
                     <p className="text-amber-700 font-semibold text-sm mb-1">
                       ⭐ A un repaso de completar
                     </p>
-                    <p className="text-amber-950/80 text-sm">
-                      {selectedProgress.worldsPendingReinforcementRetry
-                        .map((id) => {
-                          const name = getWorld(id)?.name ?? "?";
-                          const curr = curriculumEntries[String(id)];
-                          const tag = curr ? ` · ${curr.area} · ${curr.eje}` : "";
-                          return `${name}${tag}`;
-                        })
-                        .join(", ")}
-                    </p>
+                    <ReforzarPorEje
+                      className="bg-white/70 rounded-xl p-2"
+                      grupos={contenidosAReforzar(
+                        selectedProgress.worldsPendingReinforcementRetry.map((id) => ({
+                          worldId: id,
+                          nivel: "necesita-practica" as const,
+                          precision: selectedProgress.lastWorldAttemptScore?.[id],
+                        })),
+                        { entradas: curriculumEntries }
+                      )}
+                    />
                   </div>
                 )}
 

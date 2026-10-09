@@ -3,7 +3,8 @@
 // más actividades interactivas (clasificar, ordenar, verdadero/falso).
 import type { ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
-import { fromBank, makeClassify, makeOrder, makeTrueFalse, numbered, Q, q, sample, shuffle } from "./util";
+import { fromBank, makeClassify, makeOrder,
+  makeVF, numbered, Q, q, sample, shuffle } from "./util";
 
 export const LENGUA_BANK: Record<number, Q[]> = {
   1: [
@@ -644,10 +645,10 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: el titular, copete y volanta encabezan; cuerpo y epígrafe desarrollan la noticia.",
       ["l4-noticia"]
     ),
-    makeTrueFalse("l1-tf-1", Math.random() < 0.5 ? "Las preguntas fundamentales de una noticia periodística son qué, quién, cuándo, dónde y por qué." : "Las noticias periodísticas se escriben en versos con rima para entretener y hacer reír al lector.", Math.random() < 0.5, "Pista: la noticia informativa responde a las preguntas periodísticas básicas.", ["l4-noticia"]),
+    makeVF("l1-tf-1", "Las preguntas fundamentales de una noticia periodística son qué, quién, cuándo, dónde y por qué.", "Las noticias periodísticas se escriben en versos con rima para entretener y hacer reír al lector.", "Pista: la noticia informativa responde a las preguntas periodísticas básicas.", ["l4-noticia"]),
   ],
     2: () => [
-    makeTrueFalse("l2-tf-1", Math.random() < 0.5 ? "En una noticia periodística, el titular siempre debe resumir con claridad el hecho principal informado." : "En una noticia periodística, el titular debe mantenerse en secreto y no anticipar el contenido.", Math.random() < 0.5, "Pista: el titular destaca y sintetiza lo más relevante de la información.", ["l4-noticia-lectura"]),
+    makeVF("l2-tf-1", "En una noticia periodística, el titular siempre debe resumir con claridad el hecho principal informado.", "En una noticia periodística, el titular debe mantenerse en secreto y no anticipar el contenido.", "Pista: el titular destaca y sintetiza lo más relevante de la información.", ["l4-noticia-lectura"]),
     makeOrder(
       "l2-ord-1",
       "Ordená la secuencia lógica de lectura comprensiva de una noticia:",
@@ -691,7 +692,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
     ),
   ],
     4: () => [
-    makeTrueFalse("l4-tf-1", Math.random() < 0.5 ? "El macá tobiano es un ave acuática emblemática que anida únicamente en lagunas de altura de Santa Cruz." : "El macá tobiano es un pez marino que nada en aguas cálidas de arrecifes de coral.", Math.random() < 0.5, "Pista: el macá tobiano es un ave acuática autóctona exclusiva de las mesetas santacruceñas.", ["l4-expositivo-lectura"]),
+    makeVF("l4-tf-1", "El macá tobiano es un ave acuática emblemática que anida únicamente en lagunas de altura de Santa Cruz.", "El macá tobiano es un pez marino que nada en aguas cálidas de arrecifes de coral.", "Pista: el macá tobiano es un ave acuática autóctona exclusiva de las mesetas santacruceñas.", ["l4-expositivo-lectura"]),
     makeOrder(
       "l4-ord-1",
       "Ordená los pasos de comprensión lectora de un texto de ciencias naturales:",
@@ -735,7 +736,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
     ),
   ],
     6: () => [
-    makeTrueFalse("l6-tf-1", Math.random() < 0.5 ? "Francisco P. Moreno donó al Estado nacional tierras que dieron origen al primer parque nacional argentino." : "Francisco P. Moreno vendió los lagos patagónicos a empresas privadas para instalar fábricas.", Math.random() < 0.5, "Pista: el perito Moreno donó tierras en el lago Nahuel Huapi para crear el primer parque nacional.", ["l4-biografia-lectura"]),
+    makeVF("l6-tf-1", "Francisco P. Moreno donó al Estado nacional tierras que dieron origen al primer parque nacional argentino.", "Francisco P. Moreno vendió los lagos patagónicos a empresas privadas para instalar fábricas.", "Pista: el perito Moreno donó tierras en el lago Nahuel Huapi para crear el primer parque nacional.", ["l4-biografia-lectura"]),
     makeOrder(
       "l6-ord-1",
       "Ordená cronológicamente hitos históricos en la vida del perito Moreno:",
@@ -823,7 +824,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: virtudes conducen al éxito y la armonía; defectos causan perjuicios.",
       ["l4-fabula"]
     ),
-    makeTrueFalse("l9-tf-1", Math.random() < 0.5 ? "La personificación es el recurso literario que permite a los animales de las fábulas hablar y razonar como personas." : "La personificación es una regla de ortografía que prohíbe el uso de mayúsculas en los cuentos.", Math.random() < 0.5, "Pista: la personificación atribuye cualidades o acciones humanas a animales u objetos.", ["l4-fabula"]),
+    makeVF("l9-tf-1", "La personificación es el recurso literario que permite a los animales de las fábulas hablar y razonar como personas.", "La personificación es una regla de ortografía que prohíbe el uso de mayúsculas en los cuentos.", "Pista: la personificación atribuye cualidades o acciones humanas a animales u objetos.", ["l4-fabula"]),
   ],
     10: () => [
     makeClassify(
@@ -991,7 +992,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: si está escrito en la oración es expreso; si se deduce por el verbo es tácito.",
       ["l4-sujeto-tacito"]
     ),
-    makeTrueFalse("l15-tf-1", Math.random() < 0.5 ? "En la oración «Cantaron hermosas zambas», el sujeto tácito es ellos, ellas o ustedes." : "Una oración con sujeto tácito carece de sentido gramatical y nunca tiene verbo conjugado.", Math.random() < 0.5, "Pista: el sujeto tácito se sobreentiende por la desinencia del verbo.", ["l4-sujeto-tacito"]),
+    makeVF("l15-tf-1", "En la oración «Cantaron hermosas zambas», el sujeto tácito es ellos, ellas o ustedes.", "Una oración con sujeto tácito carece de sentido gramatical y nunca tiene verbo conjugado.", "Pista: el sujeto tácito se sobreentiende por la desinencia del verbo.", ["l4-sujeto-tacito"]),
   ],
     16: () => [
     makeClassify(
@@ -1009,7 +1010,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: un solo verbo es PVS; dos verbos coordinados para el mismo sujeto es PVC.",
       ["l4-predicado-verbal"]
     ),
-    makeTrueFalse("l16-tf-1", Math.random() < 0.5 ? "En la oración «Los exploradores cruzaron el río y acamparon en la orilla», el predicado es compuesto porque tiene dos núcleos verbales." : "Un predicado compuesto es aquel que no contiene ninguna acción y está formado solo por adjetivos.", Math.random() < 0.5, "Pista: el predicado verbal compuesto tiene dos o más verbos conjugados coordinados.", ["l4-predicado-verbal"]),
+    makeVF("l16-tf-1", "En la oración «Los exploradores cruzaron el río y acamparon en la orilla», el predicado es compuesto porque tiene dos núcleos verbales.", "Un predicado compuesto es aquel que no contiene ninguna acción y está formado solo por adjetivos.", "Pista: el predicado verbal compuesto tiene dos o más verbos conjugados coordinados.", ["l4-predicado-verbal"]),
   ],
     17: () => [
     makeClassify(
@@ -1093,7 +1094,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: artículo, sustantivo y adjetivo deben coincidir en género y número.",
       ["l4-concordancia-gn"]
     ),
-    makeTrueFalse("l19-tf-1", Math.random() < 0.5 ? "Los adjetivos como «veloz», «grande» o «verde» tienen una sola terminación válida tanto para masculino como para femenino." : "Los adjetivos calificativos nunca concuerdan en género ni en número con el sustantivo que acompañan.", Math.random() < 0.5, "Pista: adjetivos de una terminación no varían su forma según el género.", ["l4-concordancia-gn"]),
+    makeVF("l19-tf-1", "Los adjetivos como «veloz», «grande» o «verde» tienen una sola terminación válida tanto para masculino como para femenino.", "Los adjetivos calificativos nunca concuerdan en género ni en número con el sustantivo que acompañan.", "Pista: adjetivos de una terminación no varían su forma según el género.", ["l4-concordancia-gn"]),
   ],
     20: () => [
     makeClassify(
@@ -1168,7 +1169,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: perfecto simple concluyó de forma puntual; imperfecto dura o describe.",
       ["l4-preteritos-narrativos"]
     ),
-    makeTrueFalse("l22-tf-1", Math.random() < 0.5 ? "Todos los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con la letra B." : "Los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con V corta.", Math.random() < 0.5, "Pista: la terminación -aba del pretérito imperfecto siempre se escribe con B.", ["l4-preteritos-narrativos"]),
+    makeVF("l22-tf-1", "Todos los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con la letra B.", "Los verbos del pretérito imperfecto terminados en -aba se escriben obligatoriamente con V corta.", "Pista: la terminación -aba del pretérito imperfecto siempre se escribe con B.", ["l4-preteritos-narrativos"]),
   ],
     23: () => [
     makeClassify(
@@ -1215,7 +1216,7 @@ export function getExtraLengua(n: number): ActivitySpec[] {
       "Pista: los sinónimos significan lo mismo; los antónimos expresan significados opuestos.",
       ["l4-sinonimos-antonimos"]
     ),
-    makeTrueFalse("l24-tf-1", Math.random() < 0.5 ? "Los prefijos «in-» y «des-» se utilizan con frecuencia para formar palabras de significado contrario (antónimos)." : "Los prefijos se escriben siempre al final de las palabras después de la última letra de la raíz.", Math.random() < 0.5, "Pista: prefijos como in- y des- expresan negación o sentido opuesto.", ["l4-sinonimos-antonimos"]),
+    makeVF("l24-tf-1", "Los prefijos «in-» y «des-» se utilizan con frecuencia para formar palabras de significado contrario (antónimos).", "Los prefijos se escriben siempre al final de las palabras después de la última letra de la raíz.", "Pista: prefijos como in- y des- expresan negación o sentido opuesto.", ["l4-sinonimos-antonimos"]),
   ],
     25: () => [
     makeClassify(

@@ -29,12 +29,14 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-16 | [Contenidos de 4.º, 5.º, 6.º y 7.º grado (un grado por vez)](./tareas/AG-16-segundo-ciclo.md) | Antigravity | 🟡 4.º UNIDO PERO OCULTO (`publicado: false`): correcciones en AG-17; 5.º a 7.º esperan |
 | AG-17 | [Corrección del contenido de 4.º grado](./tareas/AG-17-correccion-cuarto.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la segunda corrección (AG-18) |
 | AG-19 | [Mundo especial «Viaje a Monte León» (3.º, hasta el 27/10): etapas, dictado, mochila, avatares, medalla](./tareas/AG-19-monte-leon.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-21) |
-| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-23) |
+| AG-20 | [Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios](./tareas/AG-20-editor-avatar.md) | Antigravity | 🔴 PENDIENTE (después de AG-24) |
 | AG-18 | [Segunda corrección de 4.º: Naturales y Sociales corridos, opciones que delatan, duplicados](./tareas/AG-18-cuarto-segunda-correccion.md) | Antigravity | 🟡 UNIDA A MAIN, 4.º SIGUE OCULTO: falta la tercera corrección (AG-21) |
-| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | ✅ LISTA PARA REVISAR |
-| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | ✅ LISTA PARA REVISAR |
+| AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🟡 UNIDA A MAIN con arreglos de Claude; 4.º SIGUE OCULTO: falta AG-24 |
+| AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-26) |
+| AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | 🔴 PENDIENTE: **es la que sigue** |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
+| CL-26 | Revisión de AG-21 y AG-23: clave del verdadero/falso de Lengua de 4.º (`makeVF`), tabla de 42014 como apoyo visual, precios con `pesosAR`; reforzar por eje con el currículo y las validaciones del panel, orden del mapa, dictado con Lengua, zonas de práctica, detalle del alumno en el panel, informe imprimible sin cortes, CSV con «; », accesibilidad | Claude | 🟢 UNIDA A MAIN |
 | CL-25 | Apoyos visuales (`apoyo` en las actividades: fila y cuadro de números, recta con saltos, bloques de base 10, reloj, dinero, grupos) en Matemática de 1.º, 2.º y 3.º; dibujo del tema en las actividades de texto de 2.º y 3.º; los cuentos se narran siempre con la voz del navegador | Claude | 🟢 UNIDA A MAIN |
 | CL-24 | Las 108 islas de 4.º grado (estilo glaciares, `public/theme/grados/4/islas/`) y ambiente `THEMES.glaciar`; script `scripts/coleccion/islas_lamina.py` | Claude | 🟢 UNIDA A MAIN |
 | CL-23 | Opciones de las actividades mezcladas en todos los grados (en 3.º la correcta quedaba primera en el 89 % de las de opción múltiple y casi todas las de «encontrá el error» y justificaciones); pestaña «🗓️ Desafíos y eventos» del panel: cada desafío, festividad, estación, temporada de la tienda y drop se pone en Automático / Siempre / Entre fechas / Apagado, con días de la semana y grados; mundos de 4.º en «Habilitar Mundos»; el servidor no acredita mundos bloqueados | Claude | 🟢 UNIDA A MAIN |
@@ -130,7 +132,16 @@ Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablar
 
 ### AG-23 · Panel docente: qué contenidos reforzar, por eje (Antigravity)
 
-**Estado:** ✅ LISTA PARA REVISAR (para revisión de Claude y Pedro).
+**Estado:** 🟢 UNIDA A MAIN el 9/10/2026 con arreglos de Claude (CL-26).
+
+#### Revisión de Claude (9/10/2026)
+- Las pantallas no usaban el currículo elegido ni lo validado por el docente (todo salía «sin validar» y siempre Santa Cruz): ahora `contenidosAReforzar(…, { entradas })` recibe las entradas que ya trae el panel.
+- Los ejes y contenidos salían en el orden en que llegaban: ahora van en el **orden del mapa** (`ordenEnMapa`).
+- El detalle del alumno en el panel (al tocarlo en «A quién ayudar primero») seguía mostrando nombres de mundos: ahora usa `ReforzarPorEje`.
+- Dictado semanal va con Lengua («Dictado (palabras y números)»); las zonas de práctica ya no salen como «Mundo 19001».
+- Al deduplicar, queda el ítem peor **entero** (nivel, mundo, precisión y detalle curricular).
+- Informe imprimible: las tarjetas no se cortan entre páginas y muestran el % de aciertos. CSV con «; » (las descripciones tienen comas). El detalle se abre con teclado (`role="button"`, `aria-expanded`).
+- Queda pendiente: el legajo de la plataforma (`/docente/alumno`) usa el currículo por defecto (no tiene el del panel); 4.º agrupa en «Otros» hasta que tenga entradas curriculares (cuando se publique).
 
 #### Resumen punto por punto
 
@@ -199,7 +210,13 @@ Lo que se corrigió al unir (Antigravity: **no lo vuelvas a cambiar** sin hablar
 
 ### AG-21 · Tercera corrección de 4.º grado (Antigravity)
 
-**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` para revisión de Claude).
+**Estado:** 🟡 UNIDA A MAIN el 9/10/2026 con arreglos de Claude (CL-26); 4.º sigue oculto. Lo que falta está en **AG-24**.
+
+#### Revisión de Claude (9/10/2026)
+- **Grave:** en 10 mundos de Lengua el verdadero/falso sorteaba la afirmación y la respuesta por separado (la clave salía al azar). Corregido con `makeVF`.
+- **Grave:** el largo parejo de las opciones se logró pegando frases de relleno a 329 opciones incorrectas. Pasa a AG-24.
+- Siguen los distractores de chiste (~75 % en Sociales y Naturales), falsos absurdos en el verdadero/falso, pistas que regalan la respuesta (punto 1.6 no hecho), y poca variedad en varios mundos de Matemática. Pasa a AG-24.
+- Corregido por Claude: tabla en markdown de 42014 (ahora apoyo visual), precios de 42023, «pucarás», encomiendas.
 
 #### Resumen punto por punto
 
