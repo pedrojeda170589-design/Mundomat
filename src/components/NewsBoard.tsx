@@ -198,7 +198,8 @@ export default function NewsBoard({ code }: { code: string }) {
               <li key={n.id} className="flex items-start gap-2 text-white/95 text-sm leading-snug">
                 <span className="text-base shrink-0">{n.emoji}</span>
                 <span className="flex-1">
-                  <b className="text-sky-200">{n.who}</b> {n.text}
+                  {/* Las novedades viejas traen «con 95%»: no se muestra la nota. */}
+                  <b className="text-sky-200">{n.who}</b> {n.text.replace(/ con \d+ ?%$/, "")}
                   {n.kind !== "racha" && " 👏"}
                 </span>
                 <span className="text-[11px] text-white/50 shrink-0 mt-0.5">{timeAgo(n.at)}</span>

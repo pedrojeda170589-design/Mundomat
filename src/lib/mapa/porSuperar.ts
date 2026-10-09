@@ -8,7 +8,8 @@ export function esPorSuperar(world: WorldDef, playableIds: number[], completed: 
   return playableIds.includes(world.id) && !completed.includes(world.id);
 }
 
-// Cuántos mundos quedan por superar en cada materia.
+// Cuántos mundos quedan por superar en cada materia (la pantalla solo usa
+// si hay o no: al alumno no se le muestra la cantidad).
 export function porSuperarPorMateria(
   worlds: WorldDef[],
   playableIds: number[],

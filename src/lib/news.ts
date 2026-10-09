@@ -121,14 +121,14 @@ export function newsForWorldProgress(
   for (const id of after.worldsPendingReinforcementRetry ?? []) {
     if (pendingBefore.has(id)) continue;
     const world = getWorld(id);
-    const pct = after.lastWorldAttemptScore?.[id];
     if (world) {
       out.push({
         code: student.code,
         who,
         kind: "superado",
         emoji: "⭐",
-        text: `superó ${world.name}${pct !== undefined ? ` con ${pct}%` : ""}`,
+        // Sin el porcentaje: en el pizarrón se celebra el logro, no la nota.
+        text: `superó ${world.name}`,
       });
     }
   }

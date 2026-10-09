@@ -294,9 +294,9 @@ export default function StudentPlayPage() {
     }
     mapWorlds = [dictWorld, ...mapWorlds];
   }
-  // Cuántos mundos le quedan por superar en cada materia (para las pestañas).
+  // Materias con mundos por superar (para marcar las pestañas, sin contar cuántos).
   const pendientesPorMateria = porSuperarPorMateria(gradeWorlds, playableIds, progress.completedWorlds);
-  const pendientesAca = mapWorlds.filter((w) => esPorSuperar(w, playableIds, progress.completedWorlds)).length;
+  const pendientesAca = mapWorlds.some((w) => esPorSuperar(w, playableIds, progress.completedWorlds));
   // ¿Hay algún mundo habilitado en esta materia? (Si el docente no habilitó
   // ninguno, no se muestra el aviso.)
   const habilitadosAca = mapWorlds.some(
@@ -598,7 +598,7 @@ export default function StudentPlayPage() {
             <button
               key={s}
               onClick={() => setSubject(s)}
-              aria-label={`${info.label}${pendientes ? `: ${pendientes} ${pendientes === 1 ? "mundo" : "mundos"} por superar` : ""}`}
+              aria-label={`${info.label}${pendientes ? ": hay actividades nuevas" : ""}`}
               className={`relative flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1.5 text-xs sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm ${
                 active
                   ? "bg-white text-slate-900 border-amber-500"
@@ -609,10 +609,10 @@ export default function StudentPlayPage() {
               {info.label}
               {pendientes > 0 && (
                 <span
-                  className="absolute -top-2 -right-2 min-w-[1.35rem] h-[1.35rem] px-1 rounded-full bg-rose-500 border-2 border-white text-[11px] font-black text-white flex items-center justify-center shadow"
-                  title={`${pendientes} ${pendientes === 1 ? "mundo" : "mundos"} por superar`}
+                  className="absolute -top-2.5 -right-2 rounded-full bg-rose-500 border-2 border-white px-1.5 py-px text-[10px] font-black text-white shadow"
+                  title="Hay actividades nuevas"
                 >
-                  {pendientes}
+                  ✨ ¡Nuevo!
                 </span>
               )}
             </button>
@@ -666,7 +666,7 @@ export default function StudentPlayPage() {
           }`}
         >
           {pendientesAca
-            ? `🎯 ${pendientesAca === 1 ? "Te queda 1 mundo" : `Te quedan ${pendientesAca} mundos`} por superar en ${SUBJECT_INFO[subject].label}: ${pendientesAca === 1 ? "brilla" : "brillan"} en el mapa.`
+            ? `✨ ¡Hay actividades nuevas en ${SUBJECT_INFO[subject].label}! Buscá los mundos que brillan en el mapa.`
             : `🏆 ¡Superaste todos los mundos habilitados de ${SUBJECT_INFO[subject].label}!`}
         </p>
       </div>
