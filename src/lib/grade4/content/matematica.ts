@@ -7,6 +7,7 @@ import type { ActivitySpec } from "@/lib/activities";
 import { WorldDef } from "@/types";
 import {
   decimalAR,
+  pesosAR,
   makeClassify,
   makeInput,
   makeOrder,
@@ -977,27 +978,30 @@ function buildMundo42014(): ActivitySpec[] {
       const choices = distinctChoices(unitario, [unitario + 2, Math.max(2, unitario - 2), unitario * 2], 3);
       const tablaEscenarios = [
         {
-          pregunta: `Observá la siguiente tabla de proporcionalidad directa:\n\n| Cajas | Alfajores |\n| :---: | :---: |\n| 1 | ? |\n| 2 | ${total2} |\n| ${cantCajas} | ${totalCajas} |\n\n¿Cuántos alfajores contiene 1 caja?`,
+          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántos alfajores contiene 1 caja?`,
+          columnas: ["Cajas", "Alfajores"],
           icono: "📦",
           item: "alfajores por caja",
           pista: `Pista: calculá el valor de una caja dividiendo ${total2} ÷ 2 o ${totalCajas} ÷ ${cantCajas}.`,
         },
         {
-          pregunta: `Observá la siguiente tabla de proporcionalidad directa:\n\n| Cajones | Botellas de jugo |\n| :---: | :---: |\n| 1 | ? |\n| 2 | ${total2} |\n| ${cantCajas} | ${totalCajas} |\n\n¿Cuántas botellas contiene 1 cajón?`,
+          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántas botellas contiene 1 cajón?`,
+          columnas: ["Cajones", "Botellas de jugo"],
           icono: "🧃",
           item: "botellas por cajón",
           pista: `Pista: dividí las botellas entre los cajones para encontrar cuántas van en 1 solo (${total2} ÷ 2).`,
         },
         {
-          pregunta: `Observá la siguiente tabla de proporcionalidad directa:\n\n| Bandejas | Medialunas |\n| :---: | :---: |\n| 1 | ? |\n| 2 | ${total2} |\n| ${cantCajas} | ${totalCajas} |\n\n¿Cuántas medialunas hay en 1 bandeja?`,
+          pregunta: `Mirá la tabla de proporcionalidad directa. ¿Cuántas medialunas hay en 1 bandeja?`,
+          columnas: ["Bandejas", "Medialunas"],
           icono: "🥐",
           item: "medialunas por bandeja",
           pista: `Pista: dividí la cantidad total por el número de bandejas para hallar la unidad (${total2} ÷ 2).`,
         },
       ];
-      const tEsc = tablaEscenarios[Math.floor(i / 4) % tablaEscenarios.length];
-      acts.push(
-        qToPick(
+      const tEsc = pickOne(tablaEscenarios);
+      acts.push({
+        ...qToPick(
           q(
             tEsc.pregunta,
             choices.map((c) => [tEsc.icono, `${c} ${tEsc.item}`]),
@@ -1007,8 +1011,9 @@ function buildMundo42014(): ActivitySpec[] {
           `m42014-${i}`,
           "",
           skills
-        )
-      );
+        ),
+        apoyo: { tipo: "tabla", columnas: tEsc.columnas, filas: [[1, "?"], [2, total2], [cantCajas, totalCajas]] },
+      });
     } else if (mod === 2) {
       // Múltiplos
       const base = pickOne([6, 7, 8, 9, 12, 15]);
@@ -1798,38 +1803,38 @@ function buildMundo42023(): ActivitySpec[] {
 
   const sumaEscenarios = [
     (p1: number, p2: number) => ({
-      txt: `En la librería escolar, Lucía compró un cuaderno a $${decimalAR(p1, 2)} y una cartuchera a $${decimalAR(p2, 2)}. ¿Cuánto gastó en total?`,
+      txt: `En la librería escolar, Lucía compró un cuaderno a $${pesosAR(p1)} y una cartuchera a $${pesosAR(p2)}. ¿Cuánto gastó en total?`,
       ico: "🧾",
     }),
     (p1: number, p2: number) => ({
-      txt: `En la panadería del barrio, Martín compró pan por $${decimalAR(p1, 2)} y medialunas por $${decimalAR(p2, 2)}. ¿Cuánto pagó en total?`,
+      txt: `En la panadería del barrio, Martín compró pan por $${pesosAR(p1)} y medialunas por $${pesosAR(p2)}. ¿Cuánto pagó en total?`,
       ico: "🥖",
     }),
     (p1: number, p2: number) => ({
-      txt: `En la verdulería, Sofía compró papas a $${decimalAR(p1, 2)} y manzanas a $${decimalAR(p2, 2)}. ¿Cuál fue el gasto total?`,
+      txt: `En la verdulería, Sofía compró papas a $${pesosAR(p1)} y manzanas a $${pesosAR(p2)}. ¿Cuál fue el gasto total?`,
       ico: "🍎",
     }),
     (p1: number, p2: number) => ({
-      txt: `En la farmacia, Julián compró alcohol en gel a $${decimalAR(p1, 2)} y apósitos a $${decimalAR(p2, 2)}. ¿Cuánto abonó en total?`,
+      txt: `En la farmacia, Julián compró alcohol en gel a $${pesosAR(p1)} y apósitos a $${pesosAR(p2)}. ¿Cuánto abonó en total?`,
       ico: "🩹",
     }),
   ];
 
   const restaEscenarios = [
     (gasto: number, billete: number) => ({
-      txt: `En el quiosco, Joaquín hizo una compra por $${decimalAR(gasto, 2)} y pagó con un billete de $${billete}. ¿Cuánto dinero le dieron de vuelto?`,
+      txt: `En el quiosco, Joaquín hizo una compra por $${pesosAR(gasto)} y pagó con un billete de $${pesosAR(billete)}. ¿Cuánto dinero le dieron de vuelto?`,
       ico: "💵",
     }),
     (gasto: number, billete: number) => ({
-      txt: `En la fiambrería, Camila pagó una compra de $${decimalAR(gasto, 2)} con un billete de $${billete}. ¿Cuánto recibió de cambio?`,
+      txt: `En la fiambrería, Camila pagó una compra de $${pesosAR(gasto)} con un billete de $${pesosAR(billete)}. ¿Cuánto recibió de cambio?`,
       ico: "🧀",
     }),
     (gasto: number, billete: number) => ({
-      txt: `En la feria de artesanos, Mateo compró un recuerdo por $${decimalAR(gasto, 2)} y entregó un billete de $${billete}. ¿Cuánto le devolvieron?`,
+      txt: `En la feria de artesanos, Mateo compró un recuerdo por $${pesosAR(gasto)} y entregó un billete de $${pesosAR(billete)}. ¿Cuánto le devolvieron?`,
       ico: "🏺",
     }),
     (gasto: number, billete: number) => ({
-      txt: `En el supermercado, Valentina gastó $${decimalAR(gasto, 2)} y abonó con un billete de $${billete}. ¿Cuál es el vuelto correcto?`,
+      txt: `En el supermercado, Valentina gastó $${pesosAR(gasto)} y abonó con un billete de $${pesosAR(billete)}. ¿Cuál es el vuelto correcto?`,
       ico: "🛒",
     }),
   ];
@@ -1849,10 +1854,10 @@ function buildMundo42023(): ActivitySpec[] {
       usedValues.add(p2);
 
       const total = p1 + p2;
-      const totalStr = `$${decimalAR(total, 2)}`;
-      const fake1 = `$${decimalAR(total + 10, 2)}`;
-      const fake2 = `$${decimalAR(total - 10, 2)}`;
-      const choices = distinctChoices(totalStr, [fake1, fake2, `$${decimalAR(total + 5, 2)}`], 3);
+      const totalStr = `$${pesosAR(total)}`;
+      const fake1 = `$${pesosAR(total + 10)}`;
+      const fake2 = `$${pesosAR(total - 10)}`;
+      const choices = distinctChoices(totalStr, [fake1, fake2, `$${pesosAR(total + 5)}`], 3);
       const sc = sumaEscenarios[Math.floor(i / 2) % sumaEscenarios.length](p1, p2);
 
       acts.push(
@@ -1890,7 +1895,7 @@ function buildMundo42023(): ActivitySpec[] {
             sc.txt,
             choices.map((c) => [sc.ico, c]),
             choices.indexOf(vueltoStr),
-            `Pista: restá el gasto al billete ($${billete},00 - $${decimalAR(gasto, 2)}).`
+            `Pista: restá el gasto al billete ($${pesosAR(billete)},00 - $${pesosAR(gasto)}).`
           ),
           `m42023-${i}`,
           "",

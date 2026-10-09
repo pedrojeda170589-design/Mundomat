@@ -292,12 +292,16 @@ function CourseReportContent() {
               {helpList.slice(0, 6).map((h) => {
                 const ids = h.redWorldIds && h.redWorldIds.length > 0 ? h.redWorldIds : [];
                 const grupos = ids.length > 0
-                  ? contenidosAReforzar(ids, { worlds: relevantWorlds })
+                  ? contenidosAReforzar(
+                      ids.map((id) => ({ worldId: id, nivel: "practica-guiada" as const, precision: progressMap[h.student.code]?.lastWorldAttemptScore?.[id] })),
+                      { worlds: relevantWorlds, entradas: curriculumEntries }
+                    )
                   : [];
                 return (
                   <div
                     key={h.student.code}
-                    className="p-3 rounded-xl border border-rose-200 bg-rose-50/50 text-xs flex flex-col justify-between"
+                    className="p-3 rounded-xl border border-rose-200 bg-rose-50/50 text-xs flex flex-col justify-between break-inside-avoid"
+                    style={{ breakInside: "avoid" }}
                   >
                     <div>
                       <div className="flex items-center justify-between mb-1">

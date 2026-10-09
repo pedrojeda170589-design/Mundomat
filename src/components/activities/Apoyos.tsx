@@ -278,5 +278,26 @@ export default function ApoyoVisual({ apoyo }: { apoyo: Apoyo }) {
       return <Dinero piezas={apoyo.piezas} />;
     case "grupos":
       return <Grupos a={apoyo} />;
+    case "tabla":
+      return (
+        <table className="border-collapse text-sm font-bold text-slate-800">
+          <thead>
+            <tr>
+              {apoyo.columnas.map((c) => (
+                <th key={c} className="border-2 border-slate-400 bg-sky-100 px-3 py-1">{c}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {apoyo.filas.map((f, i) => (
+              <tr key={i}>
+                {f.map((v, j) => (
+                  <td key={j} className={`border-2 border-slate-300 px-3 py-1 text-center tabular-nums ${v === "?" ? "bg-amber-100 text-amber-700" : "bg-white"}`}>{v}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
   }
 }

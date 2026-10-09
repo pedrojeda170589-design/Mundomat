@@ -46,6 +46,8 @@ export type Apoyo =
   | { tipo: "reloj"; h: number; m: number }
   // Billetes y monedas.
   | { tipo: "dinero"; piezas: { valor: number; cantidad: number }[] }
+  // Tabla de valores (proporcionalidad, datos).
+  | { tipo: "tabla"; columnas: string[]; filas: (string | number)[][] }
   // Grupos de puntos (para sumar, repartir, multiplicar).
   | { tipo: "grupos"; grupos: number[]; tachados?: number; titulo?: string };
 

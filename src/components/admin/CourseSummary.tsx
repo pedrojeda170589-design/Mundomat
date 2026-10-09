@@ -113,7 +113,14 @@ export default function CourseSummary({
   const helpItemsWithEjes = useMemo(() => {
     return studentsNeedingHelp.map((item) => {
       const ids = item.redWorldIds ?? [];
-      const grupos = ids.length > 0 ? contenidosAReforzar(ids, { worlds: gridWorlds }) : [];
+      const pr = progressMap[item.student.code];
+      const grupos =
+        ids.length > 0
+          ? contenidosAReforzar(
+              ids.map((id) => ({ worldId: id, nivel: "practica-guiada" as const, precision: pr?.lastWorldAttemptScore?.[id] })),
+              { worlds: gridWorlds, entradas: curriculumEntries }
+            )
+          : [];
       const ejesList = resumirEjes(grupos);
       return {
         ...item,
@@ -121,7 +128,7 @@ export default function CourseSummary({
         ejesList,
       };
     });
-  }, [studentsNeedingHelp, gridWorlds]);
+  }, [studentsNeedingHelp, gridWorlds, progressMap, curriculumEntries]);
 
   // Evolución semanal del aula (últimas 6 semanas)
   const classroomEvolution = useMemo(() => {
@@ -281,7 +288,7 @@ export default function CourseSummary({
                     ))}
                   </div>
                   {item.ejesList.length > 0 ? (
-                    <p className="text-[11px] text-rose-900/80 mt-1.5 line-clamp-2">
+                    <p className="text-[11px] text-rose-900/80 mt-1.5">
                       ⚠️ {item.ejesList.join(" · ")}
                     </p>
                   ) : null}

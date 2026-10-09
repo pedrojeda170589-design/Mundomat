@@ -284,3 +284,19 @@ export function makeMatch(
   };
 }
 
+
+// Verdadero/falso al azar con la clave CORRECTA: elige la afirmación
+// verdadera o la falsa y marca isTrue en consecuencia (revisión de Claude,
+// 9/10/2026: antes la afirmación y la respuesta se sorteaban por separado).
+export function makeVF(id: string, verdadera: string, falsa: string, hint: string, skills?: string[]): ActivitySpec {
+  const v = Math.random() < 0.5;
+  return makeTrueFalse(id, v ? verdadera : falsa, v, hint, skills);
+}
+
+// Pesos en formato argentino: «$1.157,50», «$2.000», «$842,50».
+export function pesosAR(n: number): string {
+  const r = Math.round((n + Number.EPSILON) * 100) / 100;
+  const [ent, dec] = r.toFixed(2).split(".");
+  const miles = ent.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return dec === "00" ? miles : `${miles},${dec}`;
+}
