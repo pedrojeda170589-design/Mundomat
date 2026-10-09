@@ -5,6 +5,7 @@ import { WorldDef } from "@/types";
 import { THEMES, themeForWorld } from "@/lib/grades";
 import type { TramoMapa } from "@/lib/mapa/modulos";
 import Profe from "@/components/Profe";
+import { esPorSuperar } from "@/lib/mapa/porSuperar";
 
 // Cada mundo se ve como una pequeña isla ilustrada (PNG con fondo
 // transparente) que representa su tema: una aldea, un bosque, un castillo...
@@ -71,6 +72,11 @@ export default function WorldMap({
   // queda unos 95 px por encima del centro.)
   const arribaIsla = (i: number) => points[i].yPx - 95;
   const inicioTramo = (t: TramoMapa) => (t.desde === 0 ? 0 : arribaIsla(t.desde) - CARTEL - 6);
+  // Mundos por superar (habilitados y sin completar) y el próximo del recorrido.
+  const porSuperar = new Set(
+    worlds.filter((w) => esPorSuperar(w, enabledWorldIds, completedWorlds)).map((w) => w.id)
+  );
+  const proximo = worlds.find((w) => porSuperar.has(w.id))?.id;
 
   return (
     <div
@@ -149,6 +155,8 @@ export default function WorldMap({
         const needsReview = worldsNeedingReview.includes(world.id);
         const classmatesHere = classmateCounts[world.id] ?? 0;
         const point = points[i];
+        const pendiente = porSuperar.has(world.id);
+        const esProximo = world.id === proximo;
 
         return (
           <div
@@ -165,15 +173,37 @@ export default function WorldMap({
               disabled={!enabled}
               onClick={() => onSelectWorld(world)}
               className="w-full flex flex-col items-center gap-1 transition active:scale-95 hover:-translate-y-0.5 disabled:cursor-not-allowed"
-              aria-label={`${world.name}${enabled ? "" : " (bloqueado)"}`}
+              aria-label={`${world.name}${enabled ? "" : " (bloqueado)"}${pendiente ? " (por superar)" : ""}${esProximo ? ", el próximo" : ""}`}
             >
               <span className="relative block" style={{ width: ISLAND_SIZE, height: ISLAND_SIZE }}>
+                {pendiente && (
+                  <span
+                    aria-hidden
+                    className="mm-halo absolute -inset-6 rounded-full pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(254,240,138,1) 0%, rgba(250,204,21,0.8) 38%, rgba(251,191,36,0) 70%)",
+                    }}
+                  />
+                )}
+                {esProximo && (
+                  <span
+                    aria-hidden
+                    className="mm-flecha absolute -top-7 left-1/2 z-20 whitespace-nowrap rounded-full bg-rose-500 border-2 border-white px-2 py-0.5 text-[11px] font-black text-white shadow-lg"
+                  >
+                    👇 ¡Te toca!
+                  </span>
+                )}
                 <Image
                   src={world.image ?? themeForWorld(world).island(world.id)}
                   alt=""
                   fill
                   sizes="124px"
-                  className={`object-contain drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)] ${
+                  className={`object-contain ${
+                    pendiente
+                      ? "drop-shadow-[0_0_10px_rgba(250,204,21,1)]"
+                      : "drop-shadow-[0_6px_6px_rgba(0,0,0,0.35)]"
+                  } ${
                     enabled ? "" : "grayscale opacity-70"
                   } ${world.kind === "refuerzo" ? "animate-pulse" : ""}`}
                 />
@@ -224,8 +254,19 @@ export default function WorldMap({
                   </span>
                 )}
               </span>
-              <span className="wood-panel-light rounded-lg px-2 py-1 text-[11px] font-black text-center leading-tight w-full">
+              <span
+                className={`rounded-lg px-2 py-1 text-[11px] font-black text-center leading-tight w-full ${
+                  pendiente
+                    ? "bg-yellow-200 text-amber-950 border-2 border-amber-500 shadow-md"
+                    : "wood-panel-light"
+                }`}
+              >
                 {world.emoji} {world.name}
+                {pendiente && (
+                  <span className="block text-[10px] font-black uppercase tracking-wide text-rose-700">
+                    🎯 Por superar
+                  </span>
+                )}
               </span>
               {world.tables && world.tables.length > 0 && (
                 <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">

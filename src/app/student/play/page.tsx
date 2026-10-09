@@ -48,6 +48,7 @@ import MonteLeonCard from "@/components/monte-leon/MonteLeonCard";
 import MonteLeonModal from "@/components/monte-leon/MonteLeonModal";
 import BuenViajeDialog from "@/components/monte-leon/BuenViajeDialog";
 import { debeMostrarMonteLeon, debeMostrarBuenViaje } from "@/lib/monteLeon/fechas";
+import { esPorSuperar, porSuperarPorMateria } from "@/lib/mapa/porSuperar";
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -293,6 +294,14 @@ export default function StudentPlayPage() {
     }
     mapWorlds = [dictWorld, ...mapWorlds];
   }
+  // Cuántos mundos le quedan por superar en cada materia (para las pestañas).
+  const pendientesPorMateria = porSuperarPorMateria(gradeWorlds, playableIds, progress.completedWorlds);
+  const pendientesAca = mapWorlds.filter((w) => esPorSuperar(w, playableIds, progress.completedWorlds)).length;
+  // ¿Hay algún mundo habilitado en esta materia? (Si el docente no habilitó
+  // ninguno, no se muestra el aviso.)
+  const habilitadosAca = mapWorlds.some(
+    (w) => playableIds.includes(w.id) && w.kind !== "dictado" && w.kind !== "refuerzo"
+  );
   // Módulos de contenido: cada uno con su paisaje de Santa Cruz.
   const tramos = tramosDelMapa(grade, subject, mapWorlds);
   const tramoHoy = tramoActual(tramos, mapWorlds, progress.completedWorlds);
@@ -584,11 +593,13 @@ export default function StudentPlayPage() {
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {
           const info = SUBJECT_INFO[s];
           const active = s === subject;
+          const pendientes = pendientesPorMateria[s] ?? 0;
           return (
             <button
               key={s}
               onClick={() => setSubject(s)}
-              className={`flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1.5 text-xs sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm ${
+              aria-label={`${info.label}${pendientes ? `: ${pendientes} ${pendientes === 1 ? "mundo" : "mundos"} por superar` : ""}`}
+              className={`relative flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1.5 text-xs sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm ${
                 active
                   ? "bg-white text-slate-900 border-amber-500"
                   : "bg-white/70 text-slate-700 border-white/60"
@@ -596,6 +607,14 @@ export default function StudentPlayPage() {
             >
               <SubjectBadge subject={s} size={24} />
               {info.label}
+              {pendientes > 0 && (
+                <span
+                  className="absolute -top-2 -right-2 min-w-[1.35rem] h-[1.35rem] px-1 rounded-full bg-rose-500 border-2 border-white text-[11px] font-black text-white flex items-center justify-center shadow"
+                  title={`${pendientes} ${pendientes === 1 ? "mundo" : "mundos"} por superar`}
+                >
+                  {pendientes}
+                </span>
+              )}
             </button>
           );
         })}
@@ -636,6 +655,22 @@ export default function StudentPlayPage() {
         </div>
         )}
       </div>
+
+      {habilitadosAca && (
+      <div className="relative z-10 max-w-md w-full mx-auto px-4 mb-3">
+        <p
+          className={`rounded-xl px-3 py-2 text-xs font-black text-center border-2 shadow-sm ${
+            pendientesAca
+              ? "bg-yellow-100 border-amber-400 text-amber-950"
+              : "bg-emerald-50 border-emerald-400 text-emerald-900"
+          }`}
+        >
+          {pendientesAca
+            ? `🎯 ${pendientesAca === 1 ? "Te queda 1 mundo" : `Te quedan ${pendientesAca} mundos`} por superar en ${SUBJECT_INFO[subject].label}: ${pendientesAca === 1 ? "brilla" : "brillan"} en el mapa.`
+            : `🏆 ¡Superaste todos los mundos habilitados de ${SUBJECT_INFO[subject].label}!`}
+        </p>
+      </div>
+      )}
 
       <div className="relative z-10">
         <WorldMap
