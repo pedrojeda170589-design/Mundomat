@@ -364,3 +364,24 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .torneo-sacudir { animation: none; }
 }
+
+/* Mapa: mundos por superar (habilitados y todavía no completados). Un halo
+   dorado que «respira» detrás de la isla y una flecha que salta sobre el
+   próximo mundo del recorrido. */
+@keyframes mm-halo {
+  0%, 100% { opacity: 0.55; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+.mm-halo {
+  animation: mm-halo 2.2s ease-in-out infinite;
+}
+@keyframes mm-flecha {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -7px); }
+}
+.mm-flecha {
+  animation: mm-flecha 1.1s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-halo, .mm-flecha { animation: none !important; }
+}
