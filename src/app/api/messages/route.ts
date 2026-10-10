@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { checkAdminPassword } from "@/lib/auth";
 import { classmatesOf, findStudentByCode, getClassSnapshot, getProgress, getStudents, sameClassroom, saveProgress } from "@/lib/data";
+import { capasDe } from "@/lib/avatarCapas";
 import { displayName } from "@/lib/news";
 import { isBirthdayToday } from "@/lib/seasons";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
@@ -99,6 +100,7 @@ export async function GET(request: NextRequest) {
         avatar: p?.avatar,
         accessories: p?.avatarAccessories,
         tweaks: p?.avatarTweaks,
+        capas: p ? capasDe(p) : undefined,
         background: p?.avatarBackground,
         online: isOnline(presence[s.code]),
         birthdayToday: isBirthdayToday(s.birthday),

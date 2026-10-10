@@ -104,9 +104,36 @@ export function qToPick(item: Q, id: string, title: string, defaultSkills: strin
   };
 }
 
+const bankRecent = new Map<string, Set<number>>();
+
 export function fromBank(bank: Q[], n: number, prefix: string, skills: string[]): ActivitySpec[] {
-  return sample(bank, Math.min(n, bank.length)).map((item, i) =>
-    qToPick(item, `${prefix}-${i}`, `Actividad ${i + 1}`, skills)
+  const count = Math.min(n, bank.length);
+  if (count <= 0) return [];
+
+  let recent = bankRecent.get(prefix);
+  if (!recent) {
+    recent = new Set<number>();
+    bankRecent.set(prefix, recent);
+  }
+
+  const available: number[] = [];
+  for (let idx = 0; idx < bank.length; idx++) {
+    if (!recent.has(idx)) available.push(idx);
+  }
+
+  const pool = available.length >= count ? available : Array.from({ length: bank.length }, (_, i) => i);
+  if (pool.length === bank.length) {
+    recent.clear();
+  }
+
+  const pickedIndices = sample(pool, count);
+  recent.clear();
+  for (const idx of pickedIndices) {
+    recent.add(idx);
+  }
+
+  return pickedIndices.map((origIdx, i) =>
+    qToPick(bank[origIdx], `${prefix}-${i}`, `Actividad ${i + 1}`, skills)
   );
 }
 

@@ -33,6 +33,7 @@ import {
   capasDe,
   capasToAccessories,
   isPet,
+  isProp,
   moverCapaAdelante,
   moverCapaAtras,
   quitarCapa,
@@ -267,12 +268,6 @@ export default function ProfileEditor({
           onChangeCapas={setCapas}
         />
 
-        {error && (
-          <div role="alert" className="rounded-xl bg-amber-500/20 border-2 border-amber-400 p-2.5 text-center text-amber-200 text-xs font-bold">
-            ⚠️ {error}
-          </div>
-        )}
-
         {/* Lo que tengo puesto */}
         {capas.length > 0 && (
           <div className="flex flex-col gap-2 rounded-2xl bg-slate-800/80 border border-slate-700 p-3">
@@ -301,43 +296,50 @@ export default function ProfileEditor({
                       <span className="text-xs text-white truncate font-medium">{acc.label}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <button
-                        type="button"
-                        disabled={!canMoveAdelante}
-                        onClick={() => {
-                          setError(null);
-                          setCapas((prev) => moverCapaAdelante(prev, c.id));
-                        }}
-                        title="Mover adelante"
-                        aria-label="Mover adelante"
-                        className="min-w-[44px] min-h-[44px] rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-xs font-bold text-slate-200 flex items-center justify-center transition border border-slate-700"
-                      >
-                        ⬆️
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!canMoveAtras}
-                        onClick={() => {
-                          setError(null);
-                          setCapas((prev) => moverCapaAtras(prev, c.id));
-                        }}
-                        title="Mover atrás"
-                        aria-label="Mover atrás"
-                        className="min-w-[44px] min-h-[44px] rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-xs font-bold text-slate-200 flex items-center justify-center transition border border-slate-700"
-                      >
-                        ⬇️
-                      </button>
+                      {!isPet(c.id) && !isProp(c.id) && (
+                        <>
+                          <button
+                            type="button"
+                            disabled={!canMoveAdelante}
+                            onClick={() => {
+                              setError(null);
+                              setCapas((prev) => moverCapaAdelante(prev, c.id));
+                            }}
+                            title={`Mover ${acc.label} adelante`}
+                            aria-label={`Mover ${acc.label} adelante`}
+                            className="min-h-[44px] px-2 rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-[11px] font-bold text-slate-200 flex items-center justify-center gap-1 transition border border-slate-700"
+                          >
+                            <span>⬆️</span>
+                            <span>Adelante</span>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!canMoveAtras}
+                            onClick={() => {
+                              setError(null);
+                              setCapas((prev) => moverCapaAtras(prev, c.id));
+                            }}
+                            title={`Mover ${acc.label} atrás`}
+                            aria-label={`Mover ${acc.label} atrás`}
+                            className="min-h-[44px] px-2 rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-[11px] font-bold text-slate-200 flex items-center justify-center gap-1 transition border border-slate-700"
+                          >
+                            <span>⬇️</span>
+                            <span>Atrás</span>
+                          </button>
+                        </>
+                      )}
                       <button
                         type="button"
                         onClick={() => {
                           setError(null);
                           setCapas((prev) => quitarCapa(prev, c.id));
                         }}
-                        title="Sacar"
-                        aria-label="Sacar"
-                        className="min-w-[44px] min-h-[44px] rounded-xl bg-red-900/40 active:bg-red-800/60 text-xs font-bold text-red-300 flex items-center justify-center transition border border-red-700/50"
+                        title={`Sacar ${acc.label}`}
+                        aria-label={`Sacar ${acc.label}`}
+                        className="min-w-[44px] min-h-[44px] px-2 rounded-xl bg-red-900/40 active:bg-red-800/60 text-[11px] font-bold text-red-300 flex items-center justify-center gap-1 transition border border-red-700/50"
                       >
-                        ✕
+                        <span>✕</span>
+                        <span>Sacar</span>
                       </button>
                     </div>
                   </div>
@@ -658,6 +660,12 @@ export default function ProfileEditor({
             Panel Docente. Este es solo el nombre que ves vos al jugar.
           </p>
         </div>
+
+        {error && (
+          <div role="alert" className="rounded-xl bg-amber-500/20 border-2 border-amber-400 p-2.5 text-center text-amber-200 text-xs font-bold">
+            ⚠️ {error}
+          </div>
+        )}
 
         <div className="flex gap-2">
           <button

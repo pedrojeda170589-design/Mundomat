@@ -13,6 +13,7 @@ interface Invite {
   avatar?: string;
   accessories?: AvatarAccessories;
   tweaks?: import("@/types").AvatarTweaks;
+  capas?: import("@/types").AvatarCapa[];
   background?: string;
   presetId: string;
 }
@@ -101,7 +102,8 @@ export default function CompetitionBanner({ code }: { code: string }) {
               <AvatarDisplay
                 character={invite.avatar}
                 accessories={invite.accessories}
-                  tweaks={invite.tweaks}
+                tweaks={invite.tweaks}
+                capas={invite.capas}
                 background={invite.background}
                 className="w-20 h-20 rounded-2xl"
                 imageSizes="80px"

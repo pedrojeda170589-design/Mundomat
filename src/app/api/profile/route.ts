@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
     insigniaVisible: typeof insigniaVisible === "boolean" ? insigniaVisible : undefined,
     tweaks: tweaks as Partial<Record<AccessorySlot, { x?: number; y?: number; s?: number } | null>> | undefined,
   });
-  if (!updated) {
+  if (!updated || !updated.ok) {
     return Response.json(
-      { error: "Avatar, accesorio o fondo inválido." },
+      { error: (updated as { error?: string })?.error || "Avatar, accesorio o fondo inválido." },
       { status: 400 }
     );
   }

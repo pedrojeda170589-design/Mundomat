@@ -58,6 +58,38 @@ function pickDistinctPreguntas<T extends { p: string }>(items: T[], count: numbe
   return out;
 }
 
+const mathRecentByWorld = new Map<number, Set<string>>();
+const mathRecentClassify = new Map<number, number>();
+
+function pickDistinctPreguntasForWorld<T extends { p: string }>(worldId: number, items: T[], count: number): T[] {
+  let recent = mathRecentByWorld.get(worldId);
+  if (!recent) {
+    recent = new Set<string>();
+    mathRecentByWorld.set(worldId, recent);
+  }
+
+  const fresh = items.filter((it) => !recent!.has(it.p));
+  const pool = fresh.length >= count ? fresh : items;
+  if (pool === items) {
+    recent.clear();
+  }
+
+  const picked = pickDistinctPreguntas(pool, count);
+  recent.clear();
+  for (const it of picked) {
+    recent.add(it.p);
+  }
+  return picked;
+}
+
+function rotatePickOne<T>(worldId: number, items: T[]): T {
+  if (items.length <= 1) return items[0];
+  const lastIdx = mathRecentClassify.get(worldId) ?? -1;
+  const nextIdx = (lastIdx + 1) % items.length;
+  mathRecentClassify.set(worldId, nextIdx);
+  return items[nextIdx];
+}
+
 function distinctChoices<T>(correct: T, candidates: T[], count = 3): T[] {
   const set = new Set<T>([correct]);
   for (const c of shuffle(candidates)) {
@@ -1246,7 +1278,7 @@ function buildMundo42015(): ActivitySpec[] {
 
   const dynItems = dynGenerators.map((gen) => gen());
   const allPreguntas = [...dynItems, ...staticPreguntas];
-  const seleccionadas = pickDistinctPreguntas(allPreguntas, 8);
+  const seleccionadas = pickDistinctPreguntasForWorld(42015, allPreguntas, 8);
   for (let i = 0; i < 8; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.opts.filter(o => o !== item.ans), 3);
@@ -1345,50 +1377,191 @@ function buildMundo42017(): ActivitySpec[] {
   const acts: ActivitySpec[] = [];
   const skills = ["m4-frac-equivalentes"];
 
-  const baseFracs: [number, number][] = [
-    [1, 2], [1, 3], [2, 3], [1, 4], [3, 4],
-    [1, 5], [2, 5], [3, 5], [4, 5],
-    [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8],
-    [1, 10], [3, 10], [7, 10], [9, 10]
+  // 1. ¿Cuál es mayor?
+  const compararGens = [
+    () => {
+      const [, , ans, fakes] = pickOne([
+        [3, 4, "3/4", ["1/4", "2/8", "1/6"]],
+        [2, 3, "2/3", ["1/3", "1/6", "2/8"]],
+        [4, 5, "4/5", ["2/5", "1/5", "3/10"]],
+        [5, 8, "5/8", ["3/8", "2/8", "1/8"]],
+      ]);
+      return {
+        p: `¿Cuál de las siguientes fracciones es MAYOR que 1/2?`,
+        ans,
+        fakes,
+        hint: "Pista: compará con la mitad del denominador (en 4 la mitad es 2; en 8 es 4).",
+        ico: "⚖️"
+      };
+    },
+    () => {
+      const den = pickOne([5, 6, 8, 10]);
+      const maxN = randInt(3, den - 1);
+      const ans = `${maxN}/${den}`;
+      const fakes = [`${maxN - 1}/${den}`, `${Math.max(1, maxN - 2)}/${den}`];
+      return {
+        p: `Entre estas fracciones de igual denominador, ¿cuál representa la MAYOR cantidad?`,
+        ans,
+        fakes,
+        hint: "Pista: a igual denominador, la fracción mayor es la que tiene mayor numerador.",
+        ico: "📈"
+      };
+    },
+    () => {
+      const ans = "1/2";
+      const fakes = ["1/4", "1/8"];
+      return {
+        p: `¿Cuál de las siguientes fracciones unitarias es la MAYOR?`,
+        ans,
+        fakes,
+        hint: "Pista: si dividís una torta en menos partes, cada porción es más grande.",
+        ico: "🍰"
+      };
+    }
   ];
 
-  const pickedBases = shuffle(baseFracs).slice(0, 8);
-  for (let i = 0; i < 8; i++) {
-    const [num, den] = pickedBases[i];
-    const isAmpliar = Math.random() < 0.6;
-    let baseStr: string;
-    let equivStr: string;
-    let fakes: string[];
-
-    if (isAmpliar) {
-      const mult = pickOne([2, 3, 4, 5]);
-      baseStr = `${num}/${den}`;
-      equivStr = `${num * mult}/${den * mult}`;
-      fakes = [
-        `${num * mult + 1}/${den * mult}`,
-        `${num}/${den * mult}`,
-        `${num * mult}/${den * mult + 1}`
-      ];
-    } else {
-      const mult = pickOne([2, 3, 4]);
-      baseStr = `${num * mult}/${den * mult}`;
-      equivStr = `${num}/${den}`;
-      fakes = [
-        `${num + 1}/${den}`,
-        `${num}/${den * mult}`,
-        `${Math.max(1, num - 1)}/${den}`
-      ];
+  // 2. Ubicar en la recta numérica
+  const rectaGens = [
+    () => {
+      return {
+        p: "¿Qué fracción se ubica exactamente en el punto medio entre 0 y 1 en la recta numérica?",
+        ans: "1/2",
+        fakes: ["1/4", "3/4"],
+        hint: "Pista: buscá la fracción que divide el tramo unitario en dos partes iguales.",
+        ico: "📍"
+      };
+    },
+    () => {
+      const [impropia, enteros, fakes] = pickOne([
+        ["5/4", "Entre 1 y 2", ["Entre 0 y 1", "Entre 2 y 3"]],
+        ["7/4", "Entre 1 y 2", ["Entre 0 y 1", "Entre 2 y 3"]],
+        ["5/2", "Entre 2 y 3", ["Entre 1 y 2", "Entre 3 y 4"]],
+        ["7/3", "Entre 2 y 3", ["Entre 1 y 2", "Entre 3 y 4"]],
+      ]);
+      return {
+        p: `¿Entre qué dos números enteros se ubica la fracción ${impropia} en la recta numérica?`,
+        ans: enteros,
+        fakes,
+        hint: "Pista: como el numerador es mayor que el denominador, la fracción es mayor que 1.",
+        ico: "📏"
+      };
+    },
+    () => {
+      const d = pickOne([4, 8]);
+      const n = d / 2;
+      return {
+        p: `En una recta numérica dividida en ${d} partes iguales, ¿qué fracción coincide con la posición de 1/2?`,
+        ans: `${n}/${d}`,
+        fakes: [`${n - 1}/${d}`, `${n + 1}/${d}`],
+        hint: "Pista: calculá la mitad exacta del denominador.",
+        ico: "🎯"
+      };
     }
+  ];
 
-    const choices = distinctChoices(equivStr, fakes, 3);
+  // 3. Completar el numerador / denominador equivalente
+  const completarGens = [
+    () => {
+      const mult = pickOne([2, 3, 4]);
+      const [n, d] = pickOne([[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [2, 5]]);
+      const targetN = n * mult;
+      const targetD = d * mult;
+      return {
+        p: `Para que la fracción sea EQUIVALENTE a ${n}/${d}, ¿qué número completa el numerador: ___/${targetD}?`,
+        ans: `${targetN}`,
+        fakes: [`${targetN + 1}`, `${Math.max(1, targetN - 1)}`],
+        hint: `Pista: el denominador se multiplicó por ${mult}, así que hacé ${n} × ${mult}.`,
+        ico: "✏️"
+      };
+    },
+    () => {
+      const mult = pickOne([2, 4]);
+      const baseD = 2;
+      const targetD = baseD * mult;
+      return {
+        p: `¿Qué fracción con denominador ${targetD} es EQUIVALENTE a 1/2?`,
+        ans: `${mult}/${targetD}`,
+        fakes: [`${mult - 1}/${targetD}`, `${mult + 1}/${targetD}`],
+        hint: `Pista: multiplicá numerador y denominador por ${mult}.`,
+        ico: "🔢"
+      };
+    },
+    () => {
+      const [n, d, mult] = pickOne([[1, 3, 3], [2, 5, 2], [3, 4, 2], [1, 5, 2]]);
+      return {
+        p: `Si multiplicamos numerador y denominador de ${n}/${d} por ${mult}, ¿qué fracción equivalente obtenemos?`,
+        ans: `${n * mult}/${d * mult}`,
+        fakes: [`${n * mult + 1}/${d * mult}`, `${n}/${d * mult}`],
+        hint: `Pista: calculá ${n} × ${mult} y ${d} × ${mult}.`,
+        ico: "✨"
+      };
+    }
+  ];
+
+  // 4. Fracción de un dibujo / representación gráfica
+  const dibujoGens = [
+    () => {
+      const [tot, pintadas, equiv] = pickOne([
+        [8, 4, "1/2"],
+        [6, 3, "1/2"],
+        [4, 2, "1/2"],
+        [6, 2, "1/3"],
+        [8, 2, "1/4"],
+        [8, 6, "3/4"],
+      ]);
+      return {
+        p: `Un chocolate rectangular tiene ${tot} barritas iguales y comimos ${pintadas}. ¿A qué fracción irreducible equivale lo consumido?`,
+        ans: equiv,
+        fakes: [`1/${tot}`, `${tot - pintadas}/${tot}`],
+        hint: `Pista: ${pintadas} de ${tot} barritas se puede simplificar dividiendo ambos números.`,
+        ico: "🍫"
+      };
+    },
+    () => {
+      const [tot, pintadas, fracDirecta] = pickOne([
+        [4, 2, "2/4"],
+        [8, 4, "4/8"],
+        [6, 3, "3/6"],
+        [10, 5, "5/10"]
+      ]);
+      return {
+        p: `Una pizza se corta en ${tot} porciones iguales y se comen ${pintadas}. ¿Cuál de estas fracciones EQUIVALENTES a 1/2 representa lo comido?`,
+        ans: fracDirecta,
+        fakes: [`1/${tot}`, `${pintadas + 1}/${tot}`],
+        hint: "Pista: buscá la fracción cuyo numerador sea exactamente la mitad del denominador.",
+        ico: "🍕"
+      };
+    },
+    () => {
+      const [, cant, frac] = pickOne([
+        [12, 6, "1/2 de la docena"],
+        [12, 4, "1/3 de la docena"],
+        [12, 3, "1/4 de la docena"]
+      ]);
+      return {
+        p: `En una caja de 12 alfajores santacruceños quedan ${cant}. ¿Qué fracción de la docena representa?`,
+        ans: frac,
+        fakes: ["2/3 de la docena", "1/6 de la docena"],
+        hint: `Pista: pensá qué parte de 12 representa el número ${cant}.`,
+        ico: "📦"
+      };
+    }
+  ];
+
+  const pool = [
+    ...compararGens.map(g => g()),
+    ...rectaGens.map(g => g()),
+    ...completarGens.map(g => g()),
+    ...dibujoGens.map(g => g()),
+  ];
+
+  const items = pickDistinctPreguntasForWorld(42017, pool, 8);
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
-        q(
-          `¿Cuál de las siguientes fracciones es EQUIVALENTE a ${baseStr}?`,
-          choices.map((c) => ["🍰", c]),
-          choices.indexOf(equivStr),
-          "Pista: multiplicá o dividí el numerador y el denominador por el mismo número."
-        ),
+        q(item.p, choices.map((c) => [item.ico, c]), choices.indexOf(item.ans), item.hint),
         `m42017-${i}`,
         "",
         skills
@@ -1421,6 +1594,12 @@ function buildMundo42018(): ActivitySpec[] {
     ["19/4", "4 3/4", ["3 3/4", "5 1/4"]],
     ["13/3", "4 1/3", ["3 2/3", "5 1/3"]],
     ["17/5", "3 2/5", ["2 2/5", "4 1/5"]],
+    ["9/5", "1 4/5", ["1 2/5", "2 1/5"]],
+    ["11/5", "2 1/5", ["2 3/5", "1 4/5"]],
+    ["13/5", "2 3/5", ["2 1/5", "3 1/5"]],
+    ["16/5", "3 1/5", ["2 4/5", "3 3/5"]],
+    ["13/6", "2 1/6", ["1 5/6", "2 5/6"]],
+    ["17/6", "2 5/6", ["2 1/6", "3 1/6"]],
   ];
 
   const recetas = [
@@ -1428,19 +1607,25 @@ function buildMundo42018(): ActivitySpec[] {
     (f: string) => `En una panadería de Río Gallegos se compraron ${f} kg de manteca. ¿Cuál es su expresión como número mixto?`,
     (f: string) => `Para preparar dulce de calafate se necesitan ${f} kg de azúcar. ¿Cómo se anota esa cantidad en número mixto?`,
     (f: string) => `En la estancia se repartieron ${f} kg de queso de campo. ¿Cuál es su expresión mixta equivalente?`,
+    (f: string) => `Para hornear pan casero se utilizaron ${f} kg de harina leudante. ¿Cuál es su valor en número mixto?`,
   ];
 
-  const shuffledList = shuffle(mixtos).slice(0, 8);
+  const allItems = mixtos.map(([impropia, mixto, fakes], idx) => ({
+    p: recetas[idx % recetas.length](impropia),
+    ans: mixto,
+    fakes,
+  }));
+
+  const seleccionados = pickDistinctPreguntasForWorld(42018, allItems, 8);
   for (let i = 0; i < 8; i++) {
-    const [impropia, mixto, fakes] = shuffledList[i];
-    const choices = distinctChoices(mixto, fakes, 3);
-    const prText = recetas[i % recetas.length](impropia);
+    const item = seleccionados[i];
+    const choices = distinctChoices(item.ans, item.fakes, 3);
     acts.push(
       qToPick(
         q(
-          prText,
+          item.p,
           choices.map((c) => ["🥖", `${c} kg`]),
-          choices.indexOf(mixto),
+          choices.indexOf(item.ans),
           "Pista: dividí el numerador por el denominador para obtener los enteros y la fracción restante."
         ),
         `m42018-${i}`,
@@ -1537,12 +1722,12 @@ function buildMundo42019(): ActivitySpec[] {
     }
   ];
 
-  const ordItem = pickOne(ordenes);
+  const ordItem = rotatePickOne(42019, ordenes);
   acts.push(makeOrder(`m42019-${ordItem.id}`, ordItem.prompt, ordItem.items, ordItem.hint, skills));
 
   const dynItems = dynGenerators.map((gen) => gen());
   const allPreguntas = [...dynItems, ...staticPreguntas];
-  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
+  const seleccionadas = pickDistinctPreguntasForWorld(42019, allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.opts.filter(o => o !== item.ans), 3);
@@ -2036,7 +2221,7 @@ function buildMundo42024(): ActivitySpec[] {
     { p: "Las líneas de las rayas de un paso de peatones (senda peatonal) son entre sí:", ans: "Paralelas", fakes: ["Perpendiculares", "Secantes oblicuas"], hint: "Pista: todas conservan la misma orientación sin tocarse." },
     { p: "Los lados opuestos de un rectángulo son siempre:", ans: "Paralelos e iguales", fakes: ["Perpendiculares", "Secantes oblicuos"], hint: "Pista: están enfrentados y conservan idéntica separación." },
     { p: "Los lados adyacentes de un cuadrado forman entre sí:", ans: "Rectas perpendiculares", fakes: ["Rectas paralelas", "Rectas oblicuas"], hint: "Pista: en cada vértice del polígono regular se produce una esquina de noventa." },
-    { p: "Si dos rectas tienen distinta inclinación y no son paralelas, en el plano:", ans: "Se cortan en un punto", fakes: ["Nunca se cruzan", "Se vuelven curvas"], hint: "Pista: al prolongarse en la superficie plana terminarán coincidiendo." },
+    { p: "Si dos rectas tienen distinta inclinación y no son paralelas, en el plano:", ans: "Se cortan en un punto", fakes: ["Nunca se cruzan", "Se vuelven curvas"], hint: "Pista: al prolongarse en la superficie plana se van a cruzar." },
     { p: "Para trazar dos rectas paralelas prolijas con regla y escuadra se suele:", ans: "Deslizar la escuadra sobre el borde de la regla", fakes: ["Usar únicamente el compás con punta seca", "Girar la regla en círculos"], hint: "Pista: se fija un instrumento de apoyo y se traslada el otro." },
     { p: "¿Qué clase de ángulo mide MENOS de 90°?", ans: "Ángulo agudo", fakes: ["Ángulo obtuso", "Ángulo recto"], hint: "Pista: es una abertura más cerrada que la de una escuadra." },
     { p: "¿Qué clase de ángulo mide MÁS de 90° y menos de 180°?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: es una abertura más abierta que la esquina recta." },
@@ -2078,10 +2263,10 @@ function buildMundo42024(): ActivitySpec[] {
     }
   ];
 
-  acts.push(pickOne(clasificaciones));
+  acts.push(rotatePickOne(42024, clasificaciones));
   const dynItems = dynGenerators.map((gen) => gen());
   const allPreguntas = [...dynItems, ...staticPreguntas];
-  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
+  const seleccionadas = pickDistinctPreguntasForWorld(42024, allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
@@ -2224,8 +2409,8 @@ function buildMundo42025(): ActivitySpec[] {
     { p: "¿Qué clase de ángulo forman las agujas de un reloj a las 5:00?", ans: "Ángulo obtuso", fakes: ["Ángulo agudo", "Ángulo recto"], hint: "Pista: su separación supera la de una esquina recta." }
   ];
 
-  acts.push(pickOne(clasificaciones));
-  const seleccionados = shuffle(angulos).slice(0, 7);
+  acts.push(rotatePickOne(42025, clasificaciones));
+  const seleccionados = pickDistinctPreguntasForWorld(42025, angulos, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionados[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
@@ -2361,10 +2546,10 @@ function buildMundo42026(): ActivitySpec[] {
     }
   ];
 
-  acts.push(pickOne(clasificaciones));
+  acts.push(rotatePickOne(42026, clasificaciones));
   const dynItems = dynGenerators.map((gen) => gen());
   const allPreguntas = [...dynItems, ...staticPreguntas];
-  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
+  const seleccionadas = pickDistinctPreguntasForWorld(42026, allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
@@ -2501,7 +2686,7 @@ function buildMundo42027(): ActivitySpec[] {
     { p: "Si un cuerpo geométrico puede rodar sobre una mesa, ¿puede ser un cubo?", ans: "No, porque todas sus caras son planas", fakes: ["Sí, si tiene vértices redondeados", "Sí, siempre"], hint: "Pista: los cuerpos poliedros carecen de superficies curvas." }
   ];
 
-  acts.push(pickOne(clasificaciones));
+  acts.push(rotatePickOne(42027, clasificaciones));
   const dynGenerators = [
     () => {
       const lado = randInt(4, 25);
@@ -2529,7 +2714,7 @@ function buildMundo42027(): ActivitySpec[] {
 
   const dynItems = dynGenerators.map((gen) => gen());
   const allPreguntas = [...dynItems, ...preguntasGeo];
-  const seleccionadas = pickDistinctPreguntas(allPreguntas, 7);
+  const seleccionadas = pickDistinctPreguntasForWorld(42027, allPreguntas, 7);
   for (let i = 0; i < 7; i++) {
     const item = seleccionadas[i];
     const choices = distinctChoices(item.ans, item.fakes, 3);
@@ -2557,7 +2742,7 @@ function buildMundo42028(): ActivitySpec[] {
     { lugar: "Una cancha de vóley en el polideportivo de Caleta Olivia", largo: randInt(16, 36), ancho: randInt(9, 22) },
     { lugar: "Un cantero de flores en la costanera de El Calafate", largo: randInt(12, 30), ancho: randInt(6, 18) }
   ];
-  const pLugar = pickOne(perimLugares);
+  const pLugar = rotatePickOne(420281, perimLugares);
   const perimVal = 2 * pLugar.largo + 2 * pLugar.ancho;
   acts.push(
     makeInput(
@@ -2576,7 +2761,7 @@ function buildMundo42028(): ActivitySpec[] {
     { lugar: "Un taller artesanal en Gobernador Gregores", base: randInt(7, 16), alt: randInt(4, 8) },
     { lugar: "Un invernadero municipal en Río Turbio", base: randInt(8, 18), alt: randInt(5, 11) }
   ];
-  const aLugar = pickOne(areaLugares);
+  const aLugar = rotatePickOne(420282, areaLugares);
   const areaVal = aLugar.base * aLugar.alt;
   acts.push(
     makeInput(
@@ -2589,7 +2774,7 @@ function buildMundo42028(): ActivitySpec[] {
   );
 
   // Peso / Masa variado
-  const kg = pickOne([2, 3, 4, 5, 6, 8, 10]);
+  const kg = rotatePickOne(420285, [2, 3, 4, 5, 6, 8, 10]);
   const g = kg * 1000;
   const choicesPeso = distinctChoices(`${g.toLocaleString("es-AR")} gramos`, [`${(kg * 100).toLocaleString("es-AR")} gramos`, `${(kg * 10).toLocaleString("es-AR")} gramos`], 3);
   acts.push(
@@ -2607,7 +2792,7 @@ function buildMundo42028(): ActivitySpec[] {
   );
 
   // Capacidad variado
-  const litros = pickOne([2, 3, 4, 5, 6, 8]);
+  const litros = rotatePickOne(420286, [2, 3, 4, 5, 6, 8]);
   const ml = litros * 1000;
   const choicesCap = distinctChoices(`${ml.toLocaleString("es-AR")} ml`, [`${(litros * 100).toLocaleString("es-AR")} ml`, `${(litros * 500).toLocaleString("es-AR")} ml`], 3);
   acts.push(
@@ -2625,7 +2810,7 @@ function buildMundo42028(): ActivitySpec[] {
   );
 
   // Tiempo: Horas a minutos variado
-  const horasViaje = pickOne([2, 3, 4, 5, 6]);
+  const horasViaje = rotatePickOne(420287, [2, 3, 4, 5, 6]);
   const minutosViaje = horasViaje * 60;
   const choicesTiempo = distinctChoices(`${minutosViaje} minutos`, [`${minutosViaje - 30} minutos`, `${minutosViaje + 60} minutos`], 3);
   acts.push(
@@ -2643,7 +2828,7 @@ function buildMundo42028(): ActivitySpec[] {
   );
 
   // Tiempo: Minutos a segundos variado
-  const min = pickOne([2, 3, 4, 5, 8]);
+  const min = rotatePickOne(420288, [2, 3, 4, 5, 8]);
   const seg = min * 60;
   const choicesSeg = distinctChoices(`${seg} segundos`, [`${seg - 20} segundos`, `${seg + 30} segundos`], 3);
   acts.push(
@@ -2669,7 +2854,7 @@ function buildMundo42028(): ActivitySpec[] {
     { p: "¿Cuántos vasos de 250 ml se pueden llenar con una botella de 2 litros de agua mineral?", ans: "8 vasos", fakes: ["4 vasos", "6 vasos"], hint: "Pista: cada litro rinde cuatro vasos de un cuarto." },
     { p: "Si tenemos un bidón de 3 litros de jugo, ¿cuántos recipientes de 500 ml podemos llenar?", ans: "6 recipientes", fakes: ["3 recipientes", "8 recipientes"], hint: "Pista: duplicá la cantidad de litros para obtener los medios litros." }
   ];
-  const vItem = pickOne(vasosPool);
+  const vItem = rotatePickOne(420283, vasosPool);
   const choicesV = distinctChoices(vItem.ans, vItem.fakes, 3);
   acts.push(
     qToPick(
@@ -2744,7 +2929,7 @@ function buildMundo42028(): ActivitySpec[] {
     }
   ];
 
-  const estCase = pickOne(estadisticaEscenarios)();
+  const estCase = rotatePickOne(420284, estadisticaEscenarios)();
   acts.push(
     qToPick(
       q(

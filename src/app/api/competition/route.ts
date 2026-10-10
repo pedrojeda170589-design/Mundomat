@@ -6,7 +6,8 @@ import { classmatesOf, findStudentByCode, getClassSnapshot, getEnabledWorldIdsFo
 import { addNews, displayName } from "@/lib/news";
 import { getMessages, getPresenceMap, isOnline, saveMessages } from "@/lib/messages";
 import { CHALLENGE_MESSAGES, ClassMessage, sameArgDay } from "@/lib/messagesShared";
-import { Student, StudentProgress } from "@/types";
+import { Student, StudentProgress, AvatarCapa } from "@/types";
+import { capasDe } from "@/lib/avatarCapas";
 import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShared";
 import {
   DUEL_COINS,
@@ -62,7 +63,7 @@ async function playersInfo(students: Student[]) {
   const worlds = { enabledWorldIds };
   const map = new Map<
     string,
-    { code: string; name: string; avatar?: string; accessories?: StudentProgress["avatarAccessories"]; tweaks?: StudentProgress["avatarTweaks"]; background?: string; online: boolean; eligible: boolean }
+    { code: string; name: string; avatar?: string; accessories?: StudentProgress["avatarAccessories"]; tweaks?: StudentProgress["avatarTweaks"]; background?: string; online: boolean; eligible: boolean; capas?: AvatarCapa[] }
   >();
   students.forEach((s) => {
     const p = snapshot.progress.get(s.code) ?? { code: s.code, completedWorlds: [], activityLog: [], coins: 0 };
@@ -73,6 +74,7 @@ async function playersInfo(students: Student[]) {
       avatar: p.avatar,
       accessories: p.avatarAccessories,
       tweaks: p.avatarTweaks,
+      capas: capasDe(p),
       background: p.avatarBackground,
       online: isOnline(presence[s.code]),
       eligible: pending <= MAX_PENDING_WORLDS,
@@ -171,6 +173,7 @@ export async function GET(request: NextRequest) {
           avatar: p?.avatar,
           accessories: p?.avatarAccessories,
           tweaks: p?.avatarTweaks,
+          capas: p ? capasDe(p) : undefined,
           background: p?.avatarBackground,
           presetId: d.presetId,
         };
@@ -202,6 +205,7 @@ export async function GET(request: NextRequest) {
         avatar: otherProgress.avatar,
         accessories: otherProgress.avatarAccessories,
         tweaks: otherProgress.avatarTweaks,
+        capas: capasDe(otherProgress),
         background: otherProgress.avatarBackground,
       },
       coinsEarned,

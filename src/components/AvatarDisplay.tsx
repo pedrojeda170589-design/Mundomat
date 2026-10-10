@@ -107,8 +107,12 @@ export default function AvatarDisplay({
   const propCapa = allCapas.find((c) => isProp(c.id));
   let characterCapas = allCapas.filter((c) => !isPet(c.id) && !isProp(c.id));
 
-  if (birthday && !characterCapas.some((c) => c.id === "corona-cumple")) {
-    characterCapas = [...characterCapas, { id: "corona-cumple" }];
+  if (birthday) {
+    // La corona del cumpleaños reemplaza cualquier accesorio en la cabeza (A5)
+    const sinCabeza = characterCapas.filter(
+      (c) => getAccessoryById(c.id)?.slot !== "headwear" && c.id !== "corona-cumple"
+    );
+    characterCapas = [...sinCabeza, { id: "corona-cumple" }];
   }
 
   return (
@@ -150,15 +154,15 @@ export default function AvatarDisplay({
         ))}
       </span>
 
-      {/* Mascotas (hasta 3, una al lado de la otra abajo del personaje, más chicas cuando son 2 o 3) */}
+      {/* Mascotas (hasta 3, una al lado de la otra abajo del personaje; la 3.ª no tapa el objeto de mano) */}
       {petCapas.map((c, idx) => {
         const total = petCapas.length;
-        const sizePct = total === 1 ? 38 : total === 2 ? 28 : 24;
+        const sizePct = total === 1 ? 38 : total === 2 ? 28 : 22;
         let baseLeft = 1;
         if (total === 2) {
           baseLeft = idx === 0 ? 1 : 27;
         } else if (total === 3) {
-          baseLeft = idx === 0 ? 1 : idx === 1 ? 23 : 45;
+          baseLeft = idx === 0 ? 1 : idx === 1 ? 19 : 37;
         }
         const leftVal = baseLeft + (c.x ?? 0);
         const bottomVal = 1 - (c.y ?? 0);
@@ -190,7 +194,7 @@ export default function AvatarDisplay({
       {propCapa && (
         <span
           key={propCapa.id}
-          className="absolute w-[38%] h-[38%] pointer-events-none"
+          className="absolute w-[38%] h-[38%] pointer-events-none z-10"
           style={{
             right: `${1 - (propCapa.x ?? 0)}%`,
             bottom: `${1 - (propCapa.y ?? 0)}%`,

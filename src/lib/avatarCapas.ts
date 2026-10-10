@@ -108,6 +108,15 @@ export function agregarCapa(
     if (petCount >= MAX_MASCOTAS) {
       return { ok: false, error: "Ya tenés 3 mascotas: sacate una." };
     }
+  } else if (isProp(id)) {
+    const propCount = capas.filter((c) => isProp(c.id)).length;
+    if (propCount >= 1) {
+      return { ok: false, error: "Ya tenés un objeto en la mano: sacalo para poner otro." };
+    }
+    const accCount = capas.filter((c) => !isPet(c.id)).length;
+    if (accCount >= MAX_ACCESORIOS) {
+      return { ok: false, error: "Ya tenés 5 accesorios: sacate uno." };
+    }
   } else {
     const accCount = capas.filter((c) => !isPet(c.id)).length;
     if (accCount >= MAX_ACCESORIOS) {
@@ -202,6 +211,7 @@ export function validarCapas(
 
   let accCount = 0;
   let petCount = 0;
+  let propCount = 0;
 
   for (let i = 0; i < input.length; i++) {
     const item = input[i];
@@ -226,6 +236,9 @@ export function validarCapas(
       petCount++;
     } else {
       accCount++;
+      if (def.slot === "prop") {
+        propCount++;
+      }
     }
 
     const capa: AvatarCapa = { id };
@@ -254,6 +267,9 @@ export function validarCapas(
   }
   if (petCount > MAX_MASCOTAS) {
     return { ok: false, error: `Como máximo podés poner ${MAX_MASCOTAS} mascotas.` };
+  }
+  if (propCount > 1) {
+    return { ok: false, error: "Ya tenés un objeto en la mano: sacalo para poner otro." };
   }
 
   return { ok: true, capas: cleanCapas };

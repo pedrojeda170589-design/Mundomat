@@ -8,19 +8,11 @@ import fs from "node:fs";
 import path from "node:path";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { chromium } from "playwright";
 import AvatarDisplay from "../src/components/AvatarDisplay";
 import { AvatarCapa } from "../src/types";
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
-const OUT_DIR = path.join(PUBLIC_DIR, "capturas");
-const ARTIFACT_DIR = path.join(
-  process.env.USERPROFILE || "C:\\Users\\Remberto Pedro",
-  ".gemini",
-  "antigravity",
-  "brain",
-  "72583c7a-fca6-42b5-a9ea-7ffdf1397434"
-);
+const OUT_DIR = path.join(process.cwd(), "docs", "equipo", "capturas");
 
 function fileToDataUri(relPath: string): string {
   const cleanPath = relPath.startsWith("/") ? relPath.slice(1) : relPath;
@@ -58,7 +50,7 @@ function inlineImages(html: string): string {
 function renderCard(title: string, subtitle: string, capas: AvatarCapa[]): string {
   const raw = renderToString(
     React.createElement(AvatarDisplay, {
-      character: "zorro",
+      character: "estudiante-1",
       capas,
       className: "w-48 h-48 rounded-3xl bg-slate-800/90 border-2 border-amber-400/80 shadow-2xl",
       imageSizes: "192px",
@@ -91,25 +83,26 @@ async function main() {
   console.log("📸 Generando captura de pantalla de avatares con capas...");
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  // 1. Gorra primero (atrás), lentes segundo (adelante, sobre la gorra)
+  // 1. Gorra primero (atrás), lentes segundo (adelante, sobre la visera de la gorra)
   const orden1: AvatarCapa[] = [
-    { id: "gorra" },
-    { id: "lentes" },
+    { id: "gorra", y: 2 },
+    { id: "lentes", y: -2 },
   ];
 
-  // 2. Lentes primero (atrás), gorra segundo (adelante, sobre los lentes)
+  // 2. Lentes primero (atrás), gorra segundo (adelante, la visera sobre los lentes)
   const orden2: AvatarCapa[] = [
-    { id: "lentes" },
-    { id: "gorra" },
+    { id: "lentes", y: -2 },
+    { id: "gorra", y: 2 },
   ];
 
-  // 3. Avatar con 3 mascotas abajo
+  // 3. Avatar con 3 mascotas abajo y objeto de mano (sin tapar el objeto de mano)
   const con3Mascotas: AvatarCapa[] = [
     { id: "gorra" },
     { id: "lentes" },
     { id: "squishy-6" },
     { id: "squishy-7" },
-    { id: "squishy-tostada" },
+    { id: "pinguino-peluche-ml" },
+    { id: "globos-67" },
   ];
 
   const html = `<!DOCTYPE html>
@@ -261,30 +254,19 @@ async function main() {
 
   const htmlPath = path.join(OUT_DIR, "preview.html");
   fs.writeFileSync(htmlPath, html, "utf8");
-
-  // Iniciar Playwright y tomar screenshot
-  const browser = await chromium.launch({ channel: "msedge", headless: true });
-  const page = await browser.newPage({
-    viewport: { width: 1024, height: 560 },
-    deviceScaleFactor: 2,
-  });
-
-  await page.goto(`file://${htmlPath.replace(/\\/g, "/")}`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(500);
-
   const pngPath = path.join(OUT_DIR, "avatar-capas.png");
-  await page.screenshot({ path: pngPath, fullPage: true });
-  if (fs.existsSync(htmlPath)) fs.unlinkSync(htmlPath);
 
-  // Guardar también en la carpeta de artifacts para que el usuario pueda verla
-  if (fs.existsSync(ARTIFACT_DIR)) {
-    fs.copyFileSync(pngPath, path.join(ARTIFACT_DIR, "avatar-capas.png"));
-  }
-
-  await browser.close();
-  console.log(`✅ Captura guardada con éxito en:\n   - ${pngPath}`);
-  if (fs.existsSync(ARTIFACT_DIR)) {
-    console.log(`   - ${path.join(ARTIFACT_DIR, "avatar-capas.png")}`);
+  try {
+    const { execSync } = await import("node:child_process");
+    const url = `file:///${htmlPath.replace(/\\/g, "/")}`;
+    execSync(`npx playwright screenshot --channel=msedge --viewport-size="1024,560" --wait-for-timeout=500 "${url}" "${pngPath}"`, {
+      stdio: "inherit",
+    });
+    console.log(`✅ Captura guardada con éxito en:\n   - ${pngPath}`);
+  } catch (e) {
+    console.warn("  [warn] Error al tomar captura con npx playwright:", e);
+  } finally {
+    if (fs.existsSync(htmlPath)) fs.unlinkSync(htmlPath);
   }
 }
 

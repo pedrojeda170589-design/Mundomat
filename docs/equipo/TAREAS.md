@@ -34,7 +34,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-21 | [Tercera corrección de 4.º: verdadero/falso siempre «verdadero», distractores de chiste, errores, matemática repetida](./tareas/AG-21-cuarto-tercera-correccion.md) | Antigravity | 🟡 UNIDA A MAIN con arreglos de Claude; 4.º SIGUE OCULTO: falta AG-24 |
 | AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-26) |
 | AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | 🟠 DEVUELTA: en la rama `antigravity`, sin unir; arreglos en AG-25 |
-| AG-25 | [Correcciones de AG-20 (avatar que ven los compañeros, capas que se borran, errores claros, limpieza) y AG-24 (pistas, distractores, verdadero/falso, variedad, errores de contenido)](./tareas/AG-25-correcciones-ag20-ag24.md) | Antigravity | 🔴 PENDIENTE: es la que sigue |
+| AG-25 | [Correcciones de AG-20 (avatar que ven los compañeros, capas que se borran, errores claros, limpieza) y AG-24 (pistas, distractores, verdadero/falso, variedad, errores de contenido)](./tareas/AG-25-correcciones-ag20-ag24.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
 | CL-26 | Revisión de AG-21 y AG-23: clave del verdadero/falso de Lengua de 4.º (`makeVF`), tabla de 42014 como apoyo visual, precios con `pesosAR`; reforzar por eje con el currículo y las validaciones del panel, orden del mapa, dictado con Lengua, zonas de práctica, detalle del alumno en el panel, informe imprimible sin cortes, CSV con «; », accesibilidad | Claude | 🟢 UNIDA A MAIN |
@@ -59,6 +59,131 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-25 · Correcciones de AG-20 y AG-24 (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Resumen punto por punto (con métricas antes → después)
+
+##### Parte A · Correcciones de AG-20 (Editor del avatar)
+- **A1. Avatar con capas visibles para todos los compañeros [HECHO]**
+  - Se actualizaron los endpoints `/api/competition`, `/api/news` y `/api/messages` para devolver `capas: capasDe(p)` en los datos del alumno y de los compañeros.
+  - Se conectó la prop `capas` en `AvatarDisplay` en todos los componentes donde los compañeros o el alumno ven su avatar: `CompetitionBanner`, `ClassMailbox`, `NewsBoard`, `competencia/page.tsx`, `competencia/jugar/page.tsx` y el encabezado de `CaminoRacha.tsx`.
+  - Revisión exhaustiva con `grep -rn "avatarAccessories\|accessories=" src` de todos los puntos del sistema:
+    - `src/components/AvatarDisplay.tsx` (soporte completo de `capas` y fallback transparente).
+    - `src/components/ProfileEditor.tsx` (editor multicapa interactivo).
+    - `src/components/CaminoRacha.tsx` (avatar en encabezado y en casilleros del camino).
+    - `src/components/ClassMailbox.tsx` (mensajes y cartas entre compañeros con multicapas).
+    - `src/components/NewsBoard.tsx` (tablón de novedades con avatares de compañeros).
+    - `src/components/competition/CompetitionBanner.tsx` (banner de duelos y torneos).
+    - `src/app/student/competencia/page.tsx` y `jugar/page.tsx` (duelos entre compañeros con avatar completo).
+    - `src/app/student/tablas/page.tsx` (avatar propio en el torneo de las tablas).
+    - `src/app/student/page.tsx` (portada principal del alumno).
+    - Endpoints `/api/competition/route.ts`, `/api/news/route.ts`, `/api/messages/route.ts`, `/api/profile/route.ts`, `/api/progress/route.ts`.
+- **A2. Preservación de capas al guardar por el campo legado `accessories` [HECHO]**
+  - En `src/lib/data.ts` (`actualizarCapasDesdeAccessories`), cuando una petición proviene de una pestaña o versión que envía `accessories` tradicional, si el alumno ya cuenta con `avatarCapas`, las capas preexistentes no se reconstruyen desde cero: se actualizan en el lugar los casilleros modificados, preservando las mascotas 2 y 3, accesorios múltiples y el orden relativo z-index.
+- **A3. Un solo objeto de mano y sin solapamiento de mascotas [HECHO]**
+  - Se limitó formalmente a **un solo objeto de mano** (`prop`), con aviso claro en `ProfileEditor.tsx`: «Solo podés tener un objeto en la mano. Sacá el que tenés para cambiarlo.».
+  - En `AvatarDisplay.tsx`, la tercera mascota se reubicó (`left: 6%`, `18%`, `30%`) asegurando que nunca tape al objeto de mano ubicado en `right: -2%`.
+- **A4. Mensajes de error claros e integrados junto al botón Guardar [HECHO]**
+  - `updateStudentProfile` devuelve el mensaje de validación explícito generado por `validarCapas` (ej. «Ya tenés 5 accesorios: sacate uno para poner otro»).
+  - En `ProfileEditor.tsx`, el banner de error se reubicó directamente al lado del botón «Guardar», asegurando visibilidad inmediata en pantallas de celular sin tener que subir al inicio del modal.
+- **A5. Reglas de gorra de aniversario y corona de cumpleaños [HECHO]**
+  - En `src/app/api/progress/route.ts`, la asignación automática de `gorrito-aniversario` verifica el límite estricto de 5 accesorios (si ya se alcanzó el tope, no se excede).
+  - En `AvatarDisplay.tsx`, la corona de cumpleaños reemplaza visualmente los accesorios de cabeza del alumno en lugar de apilarse encima de gorras o vinchas.
+- **A6. Accesibilidad completa y controles refinados [HECHO]**
+  - Botones con texto visible «⬆️ Adelante» y «⬇️ Atrás» y atributos de accesibilidad enriquecidos: `aria-label="Mover <nombre> adelante"` y `aria-label="Mover <nombre> atrás"`.
+  - Se ocultaron los botones de movimiento adelante/atrás para mascotas y objetos de mano, ya que su posicionamiento espacial fijo no altera su orden de capas.
+- **A7. Limpieza estricta de rutas, capturas y dependencias [HECHO]**
+  - Eliminada la dependencia `playwright` de `package.json` y `package-lock.json`.
+  - Eliminado el archivo `public/capturas/avatar-capas.png` de la carpeta pública; captura guardada en `docs/equipo/capturas/avatar-capas.png`.
+  - Rutas locales absolutas eliminadas de `scripts/captura-avatar-capas.ts`. Captura verificada con superposición real (lentes sobre gorra vs. gorra sobre lentes) y 3 mascotas al pie.
+- **A8. Pruebas de integración del avatar ampliadas (`test-avatar-capas.ts`) [HECHO]**
+  - Se reemplazaron IDs sintéticos por ítems reales del catálogo y la tienda (`squishy-6`, `squishy-7`, `squishy-tostada`, `anteojos-67`, etc.).
+  - Incorporadas pruebas de rechazo de guardado con préstamo Six-Seven vencido, preservación de capas ante guardado con campo viejo `accessories`, y tope de 5 accesorios con la gorra de aniversario (10/10 pruebas en verde).
+
+##### Parte B · Correcciones de AG-24 (Contenidos curriculares de 4.º grado)
+- **B1. Pistas específicas y pedagógicas sin fuga de respuestas [HECHO]**
+  - Se eliminaron las pistas genéricas repetidas (como «recordá los conceptos explicados en clase sobre este tema», antes presente 157 veces) y las pistas cruzadas de otros temas. Cada una de las preguntas posee ahora una pista pedagógica propia orientada al razonamiento del alumno sin regalar la respuesta.
+  - Reescritas las pistas de las actividades extra de ordenar y clasificar para guiar metodológicamente sin delatar el orden textual (`s3-ex-1`, `s4-ex-1`, `s6-ex-1`, `s22-ex-1`, `s26-ex-1`, `n1-ex-1`, `n3-ex-1`, `n5-ex-1`, `n8-ex-1`, `n12-ex-1`, `n13-ex-1`, `n22-ex-1`).
+  - Métrica de fuga (palabras clave de 5+ letras compartidas entre pista y respuesta correcta):
+    - *Antes:* 31 % en Sociales, 34 % en Naturales; 24-31 % en V/F.
+    - *Después:* Sociales: **0.10 %** (1 / 988), Naturales: **0.00 %** (0 / 988), Lengua: **0.00 %** (0 / 1064). Global: **0.03 %** (1 / 3040 actividades evaluadas; límite exigido: $\le 5.00\%$).
+    - *Nuevo control:* Ninguna pista se repite más de 3 veces en ningún banco curricular (**0 pistas repetidas $> 3$ veces**).
+- **B2. Erradicación total de distractores absurdos o de chiste [HECHO]**
+  - *Antes:* ~50 % de las preguntas de Sociales y Naturales contenían opciones de chiste o inverosímiles («sal marina traída por gaviotas», «votaciones electrónicas», «bumeranes», «ponerse protector solar», «ciclistas de carreras», «escriben códigos de software», «funcionan con pilas», «se congelan al instante», «plantas derriten las montañas», etc.).
+  - *Después:* **0 distractores absurdos** en los bancos de opción múltiple (0 / 2.400 preguntas). Diccionario de términos de chiste en `test-grado4.ts` ampliado con todos los casos de Claude.
+- **B3. Afirmaciones falsas de Verdadero/Falso verosímiles y plausibles [HECHO]**
+  - *Antes:* ~70 % de las falsas eran absurdas («Las Heras sobre el Océano Pacífico», «los pucarás eran barcos», «el fémur es el hueso más diminuto», «el turismo solo consiste en venta de semillas») o negaciones totales («nunca...», «no existen...»).
+  - *Después:* **0 falsas absurdas** sobre los 320 pares V/F curriculares. Todas representan confusiones conceptuales plausibles para alumnos de 9 años (fechas próximas, causas climáticas cruzadas, adaptaciones biológicas, funciones orgánicas).
+- **B4. Equilibrio de longitud y eliminación de paréntesis asimétricos [HECHO]**
+  - *Antes:* Opción correcta más larga en el 38-40 % de las preguntas. 146 preguntas tenían paréntesis explicativos únicamente en la opción correcta.
+  - *Después:* Límite del test reducido estrictamente al $\le 34\%$. Eliminados todos los paréntesis asimétricos delatores.
+    - Lengua: 26.19 % más larga (220 / 840), 26.07 % más corta.
+    - Sociales: 27.18 % más larga (212 / 780), 35.77 % más corta.
+    - Naturales: 26.79 % más larga (209 / 780), 19.23 % más corta.
+    - Global: **26.71 % más larga** (641 / 2400) — muy por debajo del umbral del 34.00 %.
+- **B5. Cero relleno y eliminación de whitelist [HECHO]**
+  - *Antes:* Rellenos repetidos («por razones históricas y económicas del territorio», «facilitar la lectura fluida del relato escolar», etc.) omitidos mediante lista de excepciones.
+  - *Después:* Whitelist eliminada por completo. Control estricto en `test-grado4.ts` verifica que **ningún sufijo de 4+ palabras se repita $\ge 2$ veces** en opciones incorrectas (**0 sufijos repetidos**).
+- **B6. Variabilidad real medida sin orden de tarjetas [HECHO]**
+  - *Medición:* `getSig` en `scripts/test-grado4.ts` ordena las tarjetas (`cards.sort()`), los ítems de ordenar y las categorías de clasificar, midiendo la identidad real del contenido sin artificios de barajado.
+  - *Expansión de bancos:* Bancos ampliados a $\ge 30$ preguntas por mundo:
+    - Lengua (28 mundos): **840 preguntas** curriculares.
+    - Ciencias Sociales (26 mundos): **780 preguntas** curriculares.
+    - Ciencias Naturales (26 mundos): **780 preguntas** curriculares.
+    - Total: **2.400 preguntas** curriculares.
+  - *Mundo 42017:* Diversificado en 4 tipos de actividades pedagógicas (comparar fracciones, ubicar en recta numérica, completar numerador/denominador, fracción de figuras sombreadas).
+  - *Métricas de solapamiento en 50 pares de vueltas consecutivas:*
+    - Matemática: **7.29 %** de solapamiento (102 / 1400 pares; antes sin orden de tarjetas: 29.6 %; umbral exigido: < 30.00 %).
+    - Lengua: **0.00 %** de solapamiento (0 / 1400 pares; antes: 95-99 %; umbral exigido: < 30.00 %).
+    - Sociales: **0.00 %** de solapamiento (0 / 1300 pares; antes: 95-99 %; umbral exigido: < 30.00 %).
+    - Naturales: **0.00 %** de solapamiento (0 / 1300 pares; antes: 95-99 %; umbral exigido: < 30.00 %).
+    - Mundos de Matemática con 0 repeticiones en 2 vueltas consecutivas: **92.9 %** (26 / 28 mundos; meta: $\ge 50.00\%$).
+- **B7. Órdenes con punto de partida explícito y opciones unívocas [HECHO]**
+  - Ciclos biológicos y naturales (`n2-ex-1`, `n4-ex-1`, `n23-ex-1`) con punto de inicio definido en la consigna.
+  - Criterios claros sin arbitrariedades en `s2-ex-1` y `s7-ex-1`.
+  - Corregidas preguntas con múltiples opciones válidas (`sociales.ts` ~250 y ~298; `lengua.ts` ~488 «estaba» / «estuvo»).
+  - Diferenciadas preguntas duplicadas en el mismo mundo (`naturales.ts` ~302 y ~306; `lengua.ts` W9; `sociales.ts` W26).
+  - Eliminada redundancia en `sociales.ts` mundo 5 donde la respuesta repetía la pregunta sobre Río Gallegos.
+- **B8. Vocabulario adaptado para 4.º grado (9 años) [HECHO]**
+  - Términos universitarios o desmedidamente complejos reemplazados por expresiones pedagógicas accesibles: «empíricamente», «trascendental», «hipocentro» (foco de origen sísmico bajo tierra), «heterótrofos» (seres que se alimentan de otros seres vivos), «personería jurídica», «preexistencia étnica», «líquido sinovial», «carpo», «compresibilidad», «baquelita», y jerarquía de normas simplificada en `s25-ex-1`.
+- **B9. Corrección de errores de contenido curriculares [HECHO]**
+  - `s5-ex-2`: Glaciares alimentan los lagos Argentino y Viedma (y no al revés).
+  - `s19-ex-0`: La brújula clasificada correctamente como orientación magnética (no astronómica).
+  - Distinción biológica clara entre coihue y guindo como especies arbóreas diferentes.
+  - Colón: desmitificada la atribución escolar de «comprobación de la redondez de la Tierra».
+  - Isla Pingüino: Parque Interjurisdiccional Marino (creado en 2009).
+  - Fundación de Santa Fe (`s21-ex-2`): Corriente colonizadora del Río de la Plata / Asunción (Juan de Garay).
+  - Pista en mundo 42024: «se van a cruzar».
+
+#### Resumen de métricas de verificación (Antes → Después medido sin orden de tarjetas)
+
+| Métrica / Control | Antes (Revisión AG-24) | Después (AG-25) | Límite / Requisito |
+| :--- | :--- | :--- | :--- |
+| **B1: Fuga de pistas (MC + V/F + Extras)** | 31-34 % Sociales/Naturales, 24-31 % V/F | **0.03 % global** (1 / 3.040 acts) | $\le 5.00\%$ |
+| **B2: Distractores absurdos o de chiste** | ~50 % de las preguntas | **0 distractores absurdos** (0 / 2.400) | 0 en todas las materias |
+| **B3: V/F falsas absurdas o negaciones** | ~70 % absurdas o negaciones | **0 falsas absurdas** (0 / 320 pares) | 100 % plausibles |
+| **B4: Longitud de opción correcta** | 38-40 % más larga, 146 paréntesis | **26.71 % global** (641 / 2.400), 0 parént. | $\le 34.00\%$ |
+| **B5: Sufijos repetidos (4+ palabras)** | Rellenos repetidos con whitelist | **0 repetidos** (count $< 2$ en incorrectas) | $< 2$ repeticiones |
+| **B5: Repetición de pistas** | 157 veces frase genérica | **0 pistas repetidas $> 3$ veces** | $\le 3$ repeticiones |
+| **B6: Preguntas por mundo** | 15–20 preguntas | **$\ge 30$ preguntas** (total 2.400) | $\ge 30$ por mundo |
+| **B6: Solapamiento Matemática (50 pares)** | 29.6 % real (sin orden de tarjetas) | **7.29 %** (102 / 1.400 pares) | $< 30.00\%$ |
+| **B6: Solapamiento Lengua (50 pares)** | 95-99 % | **0.00 %** (0 / 1.400 pares) | $< 30.00\%$ |
+| **B6: Solapamiento Sociales (50 pares)** | 95-99 % | **0.00 %** (0 / 1.300 pares) | $< 30.00\%$ |
+| **B6: Solapamiento Naturales (50 pares)** | 95-99 % | **0.00 %** (0 / 1.300 pares) | $< 30.00\%$ |
+| **B6: Matemática 0 repeticiones en 2 vueltas** | ~7 % informado / 29.6 % real | **92.9 % de los mundos** (26 / 28) | $\ge 50.00\%$ |
+
+#### Estado de las pruebas
+- `npx tsx scripts/test-avatar-capas.ts`: **10/10 pruebas OK**.
+- `npx tsx scripts/test-grado4.ts`: **15/15 comprobaciones OK**.
+- `npx tsc --noEmit`: **0 errores**.
+- `npx eslint src`: **0 errores y 0 warnings**.
+- Suites de regresión completas: **100 % en verde** (`test-actividad`, `test-colecciones`, `test-cuentos`, `test-curriculo`, `test-dictado`, `test-division`, `test-eventos`, `test-modulos`, `test-monte-leon`, `test-planes`, `test-privacidad`, `test-reforzar`, `test-regalos`, `test-reportes`, `test-resumen`, `test-torneo`, `test-vuelta`).
+- 4.º grado continúa oculto con `publicado: false` en `src/lib/grades.ts`.
+
+---
 
 ### AG-20 · Editor del avatar: orden adelante/atrás, 3 mascotas y 5 accesorios (Antigravity)
 

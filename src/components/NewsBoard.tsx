@@ -24,6 +24,7 @@ interface BirthdayInfo {
   avatar?: string;
   accessories?: AvatarAccessories;
   tweaks?: import("@/types").AvatarTweaks;
+  capas?: import("@/types").AvatarCapa[];
   background?: string;
   me: boolean;
   greeted: boolean;
@@ -142,6 +143,7 @@ export default function NewsBoard({ code }: { code: string }) {
                   character={b.avatar}
                   accessories={b.accessories}
                   tweaks={b.tweaks}
+                  capas={b.capas}
                   background={b.background}
                   birthday
                   className="w-14 h-14 rounded-xl shrink-0"
@@ -220,6 +222,7 @@ export default function NewsBoard({ code }: { code: string }) {
                   character={greeting.avatar}
                   accessories={greeting.accessories}
                   tweaks={greeting.tweaks}
+                  capas={greeting.capas}
                   background={greeting.background}
                   birthday
                   className="w-14 h-14 rounded-xl"

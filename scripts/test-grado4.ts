@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { GRADE4_WORLDS } from "../src/lib/grade4/worlds";
 import { GRADE4_SKILLS } from "../src/lib/grade4/skills";
-import { SOCIALES_BANK, TF_PAIRS_SOCIALES } from "../src/lib/grade4/content/sociales";
-import { NATURALES_BANK, TF_PAIRS_NATURALES } from "../src/lib/grade4/content/naturales";
-import { LENGUA_BANK, TF_PAIRS_LENGUA } from "../src/lib/grade4/content/lengua";
+import { SOCIALES_BANK, TF_PAIRS_SOCIALES, getExtraSociales } from "../src/lib/grade4/content/sociales";
+import { NATURALES_BANK, TF_PAIRS_NATURALES, getExtraNaturales } from "../src/lib/grade4/content/naturales";
+import { LENGUA_BANK, TF_PAIRS_LENGUA, getExtraLengua } from "../src/lib/grade4/content/lengua";
 import { buildActivitiesForWorld, ActivitySpec, ActivityCard } from "../src/lib/activities";
 import { getWorld, WORLDS } from "../src/lib/worlds";
 import { GRADE1_WORLDS } from "../src/lib/grade1/worlds";
@@ -126,27 +126,27 @@ check("Validación de grafo de prerrequisitos (sin ciclos y dentro de 4.º)", ()
 // ---------------------------------------------------------------------------
 // 2. Bancos de Contenido (Mínimos: 20 Lengua, 15 Sociales, 15 Naturales)
 // ---------------------------------------------------------------------------
-check("Bancos de Lengua tienen >= 20 preguntas en cada uno de los 28 mundos", () => {
+check("Bancos de Lengua tienen >= 30 preguntas en cada uno de los 28 mundos", () => {
   for (let n = 1; n <= 28; n++) {
     const bank = LENGUA_BANK[n];
     assert(bank, `Falta banco LENGUA_BANK para el mundo ${n}`);
-    assert(bank.length >= 20, `Mundo Lengua ${n} tiene ${bank.length} preguntas (mínimo requerido: 20)`);
+    assert(bank.length >= 30, `Mundo Lengua ${n} tiene ${bank.length} preguntas (mínimo requerido: 30)`);
   }
 });
 
-check("Bancos de Ciencias Sociales tienen >= 15 preguntas en cada uno de los 26 mundos", () => {
+check("Bancos de Ciencias Sociales tienen >= 30 preguntas en cada uno de los 26 mundos", () => {
   for (let n = 1; n <= 26; n++) {
     const bank = SOCIALES_BANK[n];
     assert(bank, `Falta banco SOCIALES_BANK para el mundo ${n}`);
-    assert(bank.length >= 15, `Mundo Sociales ${n} tiene ${bank.length} preguntas (mínimo requerido: 15)`);
+    assert(bank.length >= 30, `Mundo Sociales ${n} tiene ${bank.length} preguntas (mínimo requerido: 30)`);
   }
 });
 
-check("Bancos de Ciencias Naturales tienen >= 15 preguntas en cada uno de los 26 mundos", () => {
+check("Bancos de Ciencias Naturales tienen >= 30 preguntas en cada uno de los 26 mundos", () => {
   for (let n = 1; n <= 26; n++) {
     const bank = NATURALES_BANK[n];
     assert(bank, `Falta banco NATURALES_BANK para el mundo ${n}`);
-    assert(bank.length >= 15, `Mundo Naturales ${n} tiene ${bank.length} preguntas (mínimo requerido: 15)`);
+    assert(bank.length >= 30, `Mundo Naturales ${n} tiene ${bank.length} preguntas (mínimo requerido: 30)`);
   }
 });
 
@@ -160,7 +160,7 @@ interface McBankItem {
   hint?: string;
 }
 
-check("Distribución de longitud de opciones en bancos de opción múltiple (máximo 40% más larga)", () => {
+check("Distribución de longitud de opciones en bancos de opción múltiple (máximo 34% más larga)", () => {
   function evaluateBank(bankName: string, bank: Record<number, McBankItem[]>, count: number) {
     let total = 0;
     let longest = 0;
@@ -181,8 +181,8 @@ check("Distribución de longitud de opciones en bancos de opción múltiple (má
     const pctS = (shortest / total) * 100;
     console.log(`   [Balance ${bankName}] Total: ${total}, Más larga: ${longest} (${pctL.toFixed(2)}%), Más corta: ${shortest} (${pctS.toFixed(2)}%)`);
     assert(
-      pctL <= 40,
-      `Banco de ${bankName}: la opción correcta es la más larga en ${pctL.toFixed(2)}% (límite máximo permitido: 40%)`
+      pctL <= 34,
+      `Banco de ${bankName}: la opción correcta es la más larga en ${pctL.toFixed(2)}% (límite máximo permitido: 34%)`
     );
     return { total, longest, shortest };
   }
@@ -195,8 +195,8 @@ check("Distribución de longitud de opciones en bancos de opción múltiple (má
   const correctStrictlyLongest = lenguaStats.longest + socialesStats.longest + naturalesStats.longest;
   const pctGlobal = (correctStrictlyLongest / totalMCQuestions) * 100;
   console.log(`   [Balance Global] Total: ${totalMCQuestions}, Más larga: ${correctStrictlyLongest} (${pctGlobal.toFixed(2)}%)`);
-  assert(pctGlobal <= 40, `Global: la opción correcta es la más larga en ${pctGlobal.toFixed(2)}% (máximo: 40%)`);
-  assert(totalMCQuestions >= 1300, `Se esperaban >= 1300 preguntas evaluadas, se hallaron ${totalMCQuestions}`);
+  assert(pctGlobal <= 34, `Global: la opción correcta es la más larga en ${pctGlobal.toFixed(2)}% (máximo: 34%)`);
+  assert(totalMCQuestions >= 2400, `Se esperaban >= 2400 preguntas evaluadas, se hallaron ${totalMCQuestions}`);
 });
 
 // ---------------------------------------------------------------------------
@@ -283,16 +283,7 @@ check("Calidad lingüística: sin frases de relleno prohibidas ni palabras dupli
   checkBank(SOCIALES_BANK, "Sociales");
   checkBank(NATURALES_BANK, "Naturales");
 
-  // Control de colas/finales repetidos: ninguna frase de 4+ palabras se repite al final en 3+ opciones
-  const allowedSuffixes = new Set([
-    "ciudad de puerto san julián",
-    "de puerto san julián",
-    "localidad de gobernador gregores",
-    "localidad de los antiguos",
-    "de la nueva andalucía",
-    "de puerto santa cruz",
-  ]);
-
+  // Control de colas/finales repetidos: ninguna frase de 4+ palabras se repite al final en 2+ opciones incorrectas (AG-25 B5)
   const suffixCounts = new Map<string, number>();
   const allBanks = [
     { name: "Lengua", bank: LENGUA_BANK, count: 28 },
@@ -302,13 +293,15 @@ check("Calidad lingüística: sin frases de relleno prohibidas ni palabras dupli
   for (const b of allBanks) {
     for (let w = 1; w <= b.count; w++) {
       for (const q of b.bank[w] ?? []) {
-        for (const opt of q.options ?? []) {
+        if (!q.options) continue;
+        for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+          const isCorrect = Array.isArray(q.answer) ? q.answer.includes(optIdx) : optIdx === (q.answer ?? 0);
+          if (isCorrect) continue;
+          const opt = q.options[optIdx];
           const words = opt[1].trim().split(/\s+/);
           for (let len = 4; len <= 8 && len < words.length; len++) {
             const ending = words.slice(words.length - len).join(" ").toLowerCase().replace(/[.,;:!?»"’)]+$/g, "");
-            if (!allowedSuffixes.has(ending)) {
-              suffixCounts.set(ending, (suffixCounts.get(ending) || 0) + 1);
-            }
+            suffixCounts.set(ending, (suffixCounts.get(ending) || 0) + 1);
           }
         }
       }
@@ -317,13 +310,31 @@ check("Calidad lingüística: sin frases de relleno prohibidas ni palabras dupli
 
   for (const [ending, count] of suffixCounts.entries()) {
     assert(
-      count < 3,
-      `Frase de relleno repetida como final en ${count} opciones distintas: "${ending}"`
+      count < 2,
+      `Frase de relleno repetida como final en ${count} opciones incorrectas distintas: "${ending}"`
+    );
+  }
+
+  // Control nuevo AG-25: ninguna pista se repite en más de 3 preguntas
+  const hintCounts = new Map<string, number>();
+  for (const b of allBanks) {
+    for (let w = 1; w <= b.count; w++) {
+      for (const q of b.bank[w] ?? []) {
+        if (!q.hint) continue;
+        const hKey = q.hint.trim().toLowerCase();
+        hintCounts.set(hKey, (hintCounts.get(hKey) || 0) + 1);
+      }
+    }
+  }
+  for (const [hint, count] of hintCounts.entries()) {
+    assert(
+      count <= 3,
+      `Pista repetida en más de 3 preguntas (${count} veces): "${hint}"`
     );
   }
 });
 
-check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y afirmaciones V/F (AG-24)", () => {
+check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y afirmaciones V/F (AG-24 y AG-25)", () => {
   const JOKE_PHRASES = [
     "freno de bicicleta",
     "piano de cola",
@@ -358,6 +369,20 @@ check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y
     "platillos voladores",
     "submarino amarillo",
     "montaña rusa",
+    "sal marina traída por gaviotas",
+    "votaciones electrónicas",
+    "bumeranes",
+    "ponerse protector solar",
+    "ciclistas de carreras",
+    "escriben códigos de software",
+    "funcionan con pilas",
+    "se congelan al instante",
+    "derriten las montañas",
+    "plantas derriten las montañas",
+    "sobre el océano pacífico",
+    "los pucarás eran barcos",
+    "el hueso más diminuto",
+    "semillas de trigo",
   ];
 
   const banks = [
@@ -536,32 +561,71 @@ check("Check 5: Las consignas de Sociales y Naturales comparten palabras clave c
   }
 });
 
-check("Check 6: Fuga de pistas: coincidencia de palabras de 5+ letras entre la pista y la opción correcta <= 5% (AG-24)", () => {
-  function evaluatePistas(bankName: string, bank: Record<number, McBankItem[]>, worldCount: number) {
+check("Check 6: Fuga de pistas: coincidencia de palabras de 5+ letras entre la pista y la opción correcta <= 5% (incluye MC, V/F y extras)", () => {
+  function evaluatePistas(
+    bankName: string,
+    bank: Record<number, McBankItem[]>,
+    tfPairs: Record<number, { v: string; f: string; hint: string }[]>,
+    getExtra: (w: number) => ActivitySpec[],
+    worldCount: number
+  ) {
     let total = 0;
     let leaks = 0;
+
+    // 1. Preguntas de opción múltiple
     for (let w = 1; w <= worldCount; w++) {
       for (let i = 0; i < (bank[w] ?? []).length; i++) {
         const q = bank[w][i];
         if (!q.hint || !q.options || q.options.length === 0) continue;
         total++;
-        const cWords = new Set(normalizeWords(q.options[0][1]).filter((w) => w.length >= 5));
+        const ansIdx = typeof q.answer === "number" ? q.answer : 0;
+        const cWords = new Set(normalizeWords(q.options[ansIdx][1]).filter((w) => w.length >= 5));
         const hWords = normalizeWords(q.hint).filter((w) => w.length >= 5);
-        const leaked = hWords.some((w) => cWords.has(w));
-        if (leaked) {
+        if (hWords.some((w) => cWords.has(w))) {
           leaks++;
         }
       }
     }
+
+    // 2. Pares de Verdadero / Falso
+    for (let w = 1; w <= worldCount; w++) {
+      for (const pair of tfPairs[w] ?? []) {
+        if (!pair.hint) continue;
+        total++;
+        const vWords = new Set(normalizeWords(pair.v).filter((w) => w.length >= 5));
+        const fWords = new Set(normalizeWords(pair.f).filter((w) => w.length >= 5));
+        const vOnly = new Set([...vWords].filter((w) => !fWords.has(w)));
+        const hWords = normalizeWords(pair.hint).filter((w) => w.length >= 5);
+        if (hWords.some((w) => vOnly.has(w))) {
+          leaks++;
+        }
+      }
+    }
+
+    // 3. Actividades extra
+    for (let w = 1; w <= worldCount; w++) {
+      for (const act of getExtra(w) ?? []) {
+        if (!act.hint) continue;
+        total++;
+        if (act.type === "pick") {
+          const ansIds = new Set(act.answerIds);
+          const correctCards = (act.cards || []).filter((c) => ansIds.has(c.id));
+          const cWords = new Set(correctCards.flatMap((c) => normalizeWords(c.label || c.big || "")).filter((w) => w.length >= 5));
+          const hWords = normalizeWords(act.hint).filter((w) => w.length >= 5);
+          if (hWords.some((w) => cWords.has(w))) leaks++;
+        }
+      }
+    }
+
     const pct = total > 0 ? (leaks / total) * 100 : 0;
     console.log(`   [Fuga de pistas ${bankName}] Total: ${total}, Fugas: ${leaks} (${pct.toFixed(2)}%)`);
     assert(pct <= 5, `Fuga de pistas en ${bankName} supera el 5% (actual: ${pct.toFixed(2)}%)`);
     return { total, leaks };
   }
 
-  const s = evaluatePistas("Sociales", SOCIALES_BANK, 26);
-  const n = evaluatePistas("Naturales", NATURALES_BANK, 26);
-  const l = evaluatePistas("Lengua", LENGUA_BANK, 28);
+  const s = evaluatePistas("Sociales", SOCIALES_BANK, TF_PAIRS_SOCIALES, getExtraSociales, 26);
+  const n = evaluatePistas("Naturales", NATURALES_BANK, TF_PAIRS_NATURALES, getExtraNaturales, 26);
+  const l = evaluatePistas("Lengua", LENGUA_BANK, TF_PAIRS_LENGUA, getExtraLengua, 28);
 
   const globalTotal = s.total + n.total + l.total;
   const globalLeaks = s.leaks + n.leaks + l.leaks;
@@ -825,20 +889,23 @@ check("Simulación exhaustiva de 500 iteraciones por cada uno de los 108 mundos 
 });
 
 // ---------------------------------------------------------------------------
-// 8. Variabilidad en Matemática: Ninguna Actividad Igual en 2 Vueltas Seguidas en > 50% de Mundos
+// 8. Variabilidad en Todas las Materias (Repetición sin orden de tarjetas < 30% en 50 pares seguidos)
 // ---------------------------------------------------------------------------
-check("Matemática: variabilidad entre vueltas consecutivas (sin actividades idénticas en > 50% de los mundos y repetición < 30% en 50 pares seguidos)", () => {
+check("Variabilidad entre vueltas consecutivas (sin orden de tarjetas, repetición < 30% en 50 pares en las 4 materias)", () => {
   const mathWorlds = GRADE4_WORLDS.filter((w) => w.subject === "matematica");
   assert.equal(mathWorlds.length, 28, "Deben haber 28 mundos de Matemática");
 
   const getSig = (a: ActivitySpec) => {
     if (a.type === "pick") {
-      const cardSigs = (a.cards || []).map((c) => `${c.label || ""}-${c.big || ""}`).join("|");
+      const cardSigs = (a.cards || []).map((c) => `${c.label || ""}-${c.big || ""}`).sort().join("|");
       return `pick:${a.prompt}:${cardSigs}`;
     }
     if (a.type === "true-false") return `tf:${a.statement}`;
-    if (a.type === "order") return `order:${a.prompt}:${(a.items || []).join("|")}`;
-    if (a.type === "classify") return `classify:${a.prompt}:${(a.items || []).map((i) => i.label).join("|")}`;
+    if (a.type === "order") return `order:${a.prompt}:${(a.items || []).slice().sort().join("|")}`;
+    if (a.type === "classify") {
+      const itemSigs = (a.items || []).map((i) => `${i.label}:${i.categoryIndex}`).sort().join("|");
+      return `classify:${a.prompt}:${itemSigs}`;
+    }
     if ("prompt" in a) return `${a.type}:${a.prompt}`;
     return `${a.type}:${a.id}`;
   };
@@ -869,26 +936,36 @@ check("Matemática: variabilidad entre vueltas consecutivas (sin actividades id�
     `Al menos el 50% de los mundos de Matemática deben tener 0 actividades repetidas en 2 vueltas seguidas (actual: ${pctZero.toFixed(1)}%)`
   );
 
-  // AG-24: en 50 pares de vueltas seguidas, menos del 30% con alguna actividad repetida
+  // AG-25 B6: en 50 pares de vueltas seguidas, menos del 30% con alguna actividad repetida en las 4 materias
   const PAIRS = 50;
-  let totalOverlapPairs = 0;
-  for (const world of mathWorlds) {
-    for (let p = 0; p < PAIRS; p++) {
-      const run1 = buildActivitiesForWorld(world);
-      const run2 = buildActivitiesForWorld(world);
-      const sigs1 = new Set(run1.map(getSig));
-      if (run2.some((a) => sigs1.has(getSig(a)))) {
-        totalOverlapPairs++;
+  const subjects = [
+    { name: "Matemática", key: "matematica" },
+    { name: "Lengua", key: "lengua" },
+    { name: "Sociales", key: "sociales" },
+    { name: "Naturales", key: "naturales" },
+  ] as const;
+
+  for (const s of subjects) {
+    const sWorlds = GRADE4_WORLDS.filter((w) => w.subject === s.key);
+    let totalOverlapPairs = 0;
+    for (const world of sWorlds) {
+      for (let p = 0; p < PAIRS; p++) {
+        const run1 = buildActivitiesForWorld(world);
+        const run2 = buildActivitiesForWorld(world);
+        const sigs1 = new Set(run1.map(getSig));
+        if (run2.some((a) => sigs1.has(getSig(a)))) {
+          totalOverlapPairs++;
+        }
       }
     }
+    const totalPairsTested = sWorlds.length * PAIRS;
+    const pctOverlap = (totalOverlapPairs / totalPairsTested) * 100;
+    console.log(`   [Variabilidad ${s.name} AG-25] Pares con solapamiento: ${totalOverlapPairs}/${totalPairsTested} (${pctOverlap.toFixed(2)}%)`);
+    assert(
+      pctOverlap < 30,
+      `Repetición entre vueltas en ${s.name}: ${pctOverlap.toFixed(2)}% (máximo permitido: < 30%)`
+    );
   }
-  const totalPairsTested = mathWorlds.length * PAIRS;
-  const pctOverlap = (totalOverlapPairs / totalPairsTested) * 100;
-  console.log(`   [Variabilidad Matemática AG-24] Pares con solapamiento: ${totalOverlapPairs}/${totalPairsTested} (${pctOverlap.toFixed(1)}%)`);
-  assert(
-    pctOverlap < 30,
-    `Repetición entre vueltas en Matemática: ${pctOverlap.toFixed(1)}% (máximo permitido: < 30%)`
-  );
 });
 
 console.log(`\n=================================================`);

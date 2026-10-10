@@ -66,6 +66,7 @@ export default function CaminoRacha({
               character={progress.avatar}
               accessories={progress.avatarAccessories}
               tweaks={progress.avatarTweaks}
+              capas={capasDe(progress)}
               background={progress.avatarBackground}
               className="w-12 h-12 rounded-full border-2 border-amber-500 shrink-0"
               imageSizes="48px"
