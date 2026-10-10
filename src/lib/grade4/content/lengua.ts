@@ -1526,11 +1526,14 @@ export const TF_PAIRS_LENGUA: Record<number, Array<{ v: string; f: string; hint:
 
 const tfRecentLengua = new Map<number, number>();
 
-function getTfActivity(worldNum: number, id: string, skills: string[]): ActivitySpec {
+function getTfActivity(worldNum: number, id: string, skills: string[], advance?: boolean): ActivitySpec {
   const pairs = TF_PAIRS_LENGUA[worldNum] || TF_PAIRS_LENGUA[1];
+  const shouldAdvance = advance ?? !id.includes("-ex-");
   const lastIdx = tfRecentLengua.get(worldNum) ?? -1;
-  const nextIdx = (lastIdx + 1) % pairs.length;
-  tfRecentLengua.set(worldNum, nextIdx);
+  const nextIdx = shouldAdvance ? (lastIdx + 1) % pairs.length : (lastIdx === -1 ? 0 : lastIdx);
+  if (shouldAdvance) {
+    tfRecentLengua.set(worldNum, nextIdx);
+  }
   const pair = pairs[nextIdx];
   return makeVF(id, pair.v, pair.f, pair.hint, skills);
 }

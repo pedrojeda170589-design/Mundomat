@@ -3,6 +3,7 @@ import {
   AvatarAccessories,
   AvatarCapa,
   AvatarTweaks,
+  StudentProgress,
   TWEAK_LIMITES,
   getAccessoryById,
 } from "@/types";
@@ -127,6 +128,10 @@ export function agregarCapa(
   return { ok: true, capas: [...capas, { id }] };
 }
 
+export function isPersonajeAccessory(id: string): boolean {
+  return !isPet(id) && !isProp(id);
+}
+
 /**
  * Quita una capa del avatar por su id.
  */
@@ -136,8 +141,27 @@ export function quitarCapa(capas: AvatarCapa[], id: string): AvatarCapa[] {
 
 /**
  * Mueve una capa una posición adelante (hacia arriba / z-index mayor).
+ * Para los accesorios del personaje, el movimiento y los vecinos se calculan
+ * exclusivamente entre las capas del personaje (excluyendo mascotas y objetos de mano).
  */
 export function moverCapaAdelante(capas: AvatarCapa[], id: string): AvatarCapa[] {
+  if (isPersonajeAccessory(id)) {
+    const charIndices: number[] = [];
+    capas.forEach((c, idx) => {
+      if (isPersonajeAccessory(c.id)) {
+        charIndices.push(idx);
+      }
+    });
+    const pos = charIndices.findIndex((idx) => capas[idx].id === id);
+    if (pos < 0 || pos >= charIndices.length - 1) return capas;
+    const currIdx = charIndices[pos];
+    const nextIdx = charIndices[pos + 1];
+    const res = [...capas];
+    const tmp = res[currIdx];
+    res[currIdx] = res[nextIdx];
+    res[nextIdx] = tmp;
+    return res;
+  }
   const idx = capas.findIndex((c) => c.id === id);
   if (idx < 0 || idx >= capas.length - 1) return capas;
   const res = [...capas];
@@ -149,8 +173,27 @@ export function moverCapaAdelante(capas: AvatarCapa[], id: string): AvatarCapa[]
 
 /**
  * Mueve una capa una posición atrás (hacia abajo / z-index menor).
+ * Para los accesorios del personaje, el movimiento y los vecinos se calculan
+ * exclusivamente entre las capas del personaje (excluyendo mascotas y objetos de mano).
  */
 export function moverCapaAtras(capas: AvatarCapa[], id: string): AvatarCapa[] {
+  if (isPersonajeAccessory(id)) {
+    const charIndices: number[] = [];
+    capas.forEach((c, idx) => {
+      if (isPersonajeAccessory(c.id)) {
+        charIndices.push(idx);
+      }
+    });
+    const pos = charIndices.findIndex((idx) => capas[idx].id === id);
+    if (pos <= 0) return capas;
+    const currIdx = charIndices[pos];
+    const prevIdx = charIndices[pos - 1];
+    const res = [...capas];
+    const tmp = res[currIdx];
+    res[currIdx] = res[prevIdx];
+    res[prevIdx] = tmp;
+    return res;
+  }
   const idx = capas.findIndex((c) => c.id === id);
   if (idx <= 0) return capas;
   const res = [...capas];
@@ -273,4 +316,27 @@ export function validarCapas(
   }
 
   return { ok: true, capas: cleanCapas };
+}
+
+/**
+ * Equipa el gorrito de aniversario si corresponde:
+ * Solo si el alumno no tiene nada en la cabeza (headwear) y no supera el límite de 5 accesorios.
+ */
+export function equiparGorritoAniversario(progress: StudentProgress): StudentProgress {
+  if (progress.avatarAccessories?.headwear) {
+    return progress;
+  }
+  let capas = progress.avatarCapas;
+  if (capas) {
+    const accCount = capas.filter((c) => !isPet(c.id)).length;
+    if (accCount >= MAX_ACCESORIOS) {
+      return progress;
+    }
+    capas = [...capas.filter((c) => c.id !== "gorrito-aniversario"), { id: "gorrito-aniversario" }];
+  }
+  return {
+    ...progress,
+    avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" },
+    avatarCapas: capas,
+  };
 }

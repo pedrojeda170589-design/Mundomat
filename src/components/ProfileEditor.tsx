@@ -268,6 +268,12 @@ export default function ProfileEditor({
           onChangeCapas={setCapas}
         />
 
+        {error && (
+          <div role="alert" className="rounded-xl bg-amber-500/20 border-2 border-amber-400 p-2.5 text-center text-amber-200 text-xs font-bold">
+            ⚠️ {error}
+          </div>
+        )}
+
         {/* Lo que tengo puesto */}
         {capas.length > 0 && (
           <div className="flex flex-col gap-2 rounded-2xl bg-slate-800/80 border border-slate-700 p-3">
@@ -278,12 +284,13 @@ export default function ProfileEditor({
               </span>
             </div>
             <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
-              {[...capas].reverse().map((c, revIdx) => {
+              {[...capas].reverse().map((c) => {
                 const acc = getAccessoryById(c.id);
                 if (!acc) return null;
-                const realIdx = capas.length - 1 - revIdx;
-                const canMoveAdelante = realIdx < capas.length - 1;
-                const canMoveAtras = realIdx > 0;
+                const charCapas = capas.filter((capa) => !isPet(capa.id) && !isProp(capa.id));
+                const charIdx = charCapas.findIndex((capa) => capa.id === c.id);
+                const canMoveAdelante = charIdx >= 0 && charIdx < charCapas.length - 1;
+                const canMoveAtras = charIdx > 0;
                 return (
                   <div
                     key={c.id}

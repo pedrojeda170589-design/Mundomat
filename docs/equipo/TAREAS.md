@@ -35,7 +35,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-23 | [Panel docente: qué contenidos reforzar, agrupados por eje (no el nombre del mundo)](./tareas/AG-23-reforzar-por-eje.md) | Antigravity | 🟢 UNIDA A MAIN (con arreglos de Claude, CL-26) |
 | AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | 🟠 DEVUELTA: sigue en AG-26 (Sociales) y en tareas siguientes (Naturales, Lengua) |
 | AG-25 | [Correcciones de AG-20 (avatar que ven los compañeros, capas que se borran, errores claros, limpieza) y AG-24 (pistas, distractores, verdadero/falso, variedad, errores de contenido)](./tareas/AG-25-correcciones-ag20-ag24.md) | Antigravity | 🟠 DEVUELTA: el avatar casi listo; en 4.º se cambió el texto para pasar los tests. Sigue en AG-26 |
-| AG-26 | [Cierre del avatar (guardado desde versiones viejas, Adelante/Atrás, vista previa de la tienda) y Ciencias Sociales de 4.º reescrita a mano, mundo por mundo](./tareas/AG-26-avatar-cierre-y-sociales-4.md) | Antigravity | 🔴 PENDIENTE: es la que sigue |
+| AG-26 | [Cierre del avatar (guardado desde versiones viejas, Adelante/Atrás, vista previa de la tienda) y Ciencias Sociales de 4.º reescrita a mano, mundo por mundo](./tareas/AG-26-avatar-cierre-y-sociales-4.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
 | CL-26 | Revisión de AG-21 y AG-23: clave del verdadero/falso de Lengua de 4.º (`makeVF`), tabla de 42014 como apoyo visual, precios con `pesosAR`; reforzar por eje con el currículo y las validaciones del panel, orden del mapa, dictado con Lengua, zonas de práctica, detalle del alumno en el panel, informe imprimible sin cortes, CSV con «; », accesibilidad | Claude | 🟢 UNIDA A MAIN |
@@ -62,6 +62,133 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-26 · Cierre del avatar y Ciencias Sociales de 4.º reescrita a mano (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Parte A · Avatar: Cierre y ajustes para unir a main
+
+1. **A2 (obligatorio): Guardado desde versión vieja (`accessories` de 8 lugares) preserva capas intactas [HECHO]**:
+   - En `src/lib/data.ts` (`actualizarCapasDesdeAccessories`):
+     - Si el ID enviado ya está presente en las capas del alumno, ese casillero no se toca ni se borra.
+     - Solo se reemplaza o elimina cuando el ID es distinto.
+     - Si se envía `null`, solo se remueve un ítem si el alumno tenía exactamente un solo ítem en ese slot. Si tenía varios (ej. múltiples squishies o accesorios), no se borra ninguno.
+     - Los tweaks de formato viejo (~583-593) se omiten si el alumno ya tiene `avatarCapas` asignadas (evitando que pisen los ajustes x, y, s, z de las capas).
+     - Retorno corregido a `{ ok: true, progress: next }` sin contaminar `progress.ok`.
+     - Test unitario específico agregado en `scripts/test-avatar-capas.ts` (caso 6b): simula el pedido legacy de 8 lugares con `[gorra-67, vincha-67, squishy-6, squishy-7]` y confirma que las 4 capas quedan 100% intactas.
+2. **A6: «Adelante» y «Atrás» operan únicamente entre accesorios del personaje [HECHO]**:
+   - En `src/lib/avatarCapas.ts`: implementada la función auxiliar `isPersonajeAccessory(id)` que distingue accesorios del cuerpo del avatar de mascotas (`pet`) y objetos de mano (`prop`).
+   - En `ProfileEditor.tsx`: `canMoveAdelante`, `canMoveAtras`, `moveAdelante` y `moveAtras` calculan los vecinos y realizan el intercambio de orden exclusivamente entre capas del personaje (`isPersonajeAccessory`).
+   - Tocar «Adelante» en una gorra teniendo un squishy intermedio salta al siguiente accesorio de personaje o se deshabilita si es el tope, sin permutar con la mascota ni el objeto de mano.
+3. **Vista previa de la tienda (`ShopModal.tsx`) [HECHO]**:
+   - Al probar un objeto de mano (`prop`), si el alumno ya tiene equipado uno, en la previsualización se reemplaza temporalmente el actual por el nuevo en lugar de ocultarlo.
+   - Al probar una mascota (`pet`) teniendo ya 3 mascotas equipadas, la vista previa descarta la mascota más vieja para mostrar la que se está mirando en la tienda.
+4. **Banner de errores y alertas en dos ubicaciones [HECHO]**:
+   - En `ProfileEditor.tsx`: el cartel de error (ej. «Ya tenés 5 accesorios») se renderiza tanto en la parte superior (arriba de las opciones que se tocan) como en la parte inferior (junto al botón Guardar), garantizando visibilidad inmediata en cualquier dispositivo y scroll.
+5. **Gorra de aniversario en función pura [HECHO]**:
+   - En `src/lib/avatarCapas.ts`: implementada la función pura `equiparGorritoAniversario(progress)` con validación estricta de límite de 5 accesorios.
+   - En `src/app/api/progress/route.ts`: se invoca directamente `equiparGorritoAniversario(progress)`.
+   - En `scripts/test-avatar-capas.ts`: las pruebas llaman a esta misma función pura eliminando duplicación de código.
+6. **Captura visual fidedigna (`avatar-capas.png`) [HECHO]**:
+   - En `scripts/captura-avatar-capas.ts`: generada captura `docs/equipo/capturas/avatar-capas.png` que muestra claramente superposición real entre capas (`anteojos-67` y `gorra-aniversario`), cambio evidente de orden relativo z-index en el segundo panel, y `globos-67` (prop de mano) en el tercer panel.
+7. **Nota de plataforma**:
+   - Se registró que `/docente/alumno` (~227) aún lee `avatar_accessories` proveniente de la base de datos de plataforma (queda para una tarea posterior de plataforma).
+
+#### Parte B · Ciencias Sociales de 4.º Grado: Reescritura a mano, mundo por mundo
+
+- **Cero colas artificiales y cero rellenos pegados**: Eliminadas el 100% de las colas de código/sector (`relevamiento... sector \d+_\d+`) y fragmentos inconexos de otros temas pegados en opciones incorrectas.
+- **Calidad pedagógica y cero distractores de chiste**: Eliminados el 100% de los distractores absurdos (camellos, centauros, sirenas, globos aerostáticos, aeropuertos, submarinos, patinetas espaciales, etc.). Todas las opciones incorrectas son del mismo campo semántico (otros lugares de Santa Cruz/Patagonia, otras autoridades, otras fechas históricas cercanas).
+- **Balance de longitud estricto**: Cada uno de los 26 mundos cumple que la opción correcta es la estrictamente más larga en $\le 26.7\%$ y la más corta en $\le 30.0\%$ (global: 23.85% más larga, 24.10% más corta; límite: $\le 34.00\%$).
+- **Verdadero/Falso verosímil y variado**: 104 pares (4 por mundo) con afirmaciones falsas plausibles y verosímiles, sin negaciones vacías ni bromas.
+- **Corrección de bug en `getTfActivity`**: Solucionado el doble avance de rotación mediante parámetro `advance?: boolean` en `sociales.ts`, `naturales.ts` y `lengua.ts`, permitiendo que salgan los 4 pares equitativamente en 40 vueltas.
+- **Coherencia curricular (Check 5)**: El 100% de las consignas comparten palabras clave naturales y fluidas con el currículo del mundo sin bancos corridos.
+- **Fuga de pistas (Check 6)**: Fuga reducida a **0.00%** (0 de 988 ítems analizados en Sociales). Pistas pedagógicas que orientan el razonamiento sin regalar términos de la respuesta correcta.
+- **Secuencia cronológica lógica en `s7-ex-1`**: Reemplazada la actividad arbitraria por una secuencia cronológica coherente sobre el impacto y respuesta comunitaria ante la erupción volcánica.
+- **Vocabulario cuidado de 4.º**: Erradicados tecnicismos inapropiados como «personería jurídica» (reemplazado por «reconocimiento institucional»), «litosférica», «geoide», y el Preámbulo caracterizado como texto solemne de principios.
+- **Contenidos intactos**: No se modificó el contenido de Lengua, Naturales ni Matemática. 4.º grado continúa con `publicado: false`.
+
+##### Ejemplos antes → después en cada mundo curricular (s1 a s26)
+*(Nota: Ciencias Sociales de 4.º grado cuenta curricularmente con 26 mundos, s1 a s26 / 43001 a 43026; se detallan los 26 mundos completos)*
+
+1. **Mundo 1 (Santa Cruz en el mapa argentino y continental)**:
+   - *Antes:* «¿En qué región de la República Argentina se ubica Santa Cruz según relevamiento específico del sector 2_2_2 sobre límites provinciales?» con distractores inflados «En la región andina norteña continental según relevamiento específico del sector 2_2_2».
+   - *Después:* «¿En qué región geográfica de la República Argentina se ubica la provincia de Santa Cruz?» → Correcta: «En la región patagónica austral» | Distractores: «En el Noroeste andino» / «En Cuyo».
+2. **Mundo 2 (División política y departamentos santacruceños)**:
+   - *Antes:* Pistas cortadas con «de, o.» y distractores con colas de sector artificiales `2_2_2` para evitar colisiones de sufijos.
+   - *Después:* «¿En cuántos departamentos políticos se divide administrativamente la provincia de Santa Cruz?» → Correcta: «En 7 departamentos políticos» | Distractores: «En 15» / «En 24».
+3. **Mundo 3 (Ciudades y pueblos santacruceños: urbanos y rurales)**:
+   - *Antes:* Opciones con colas de balance pegadas («La urbe norteña de Las Heras según relevamiento específico...»).
+   - *Después:* «¿Cuál es la ciudad más poblada de la provincia de Santa Cruz?» → Correcta: «La ciudad capital de Río Gallegos» | Distractores: «La localidad de Puerto Deseado» / «El centro turístico de El Calafate».
+4. **Mundo 4 (Relieves de Santa Cruz: mesetas, cordillera y costa)**:
+   - *Antes:* Distractores con frases de relleno de otros temas pegadas («Las sierras pampeanas del centro argentino con llanuras fértiles»).
+   - *Después:* «¿Qué relieve montañoso imponente se extiende sobre el flanco occidental de Santa Cruz?» → Correcta: «La Cordillera de los Andes patagónicos» | Distractores: «Las sierras pampeanas» / «Las serranías bajas pampeanas del centro argentino».
+5. **Mundo 5 (Cuencas hídricas: ríos y grandes lagos)**:
+   - *Antes:* Pregunta sobre Isla Pingüino duplicada indebidamente en cuencas de lagos con colas de sector.
+   - *Después:* «¿Cuál es el lago más extenso ubicado completamente en territorio argentino?» → Correcta: «El Lago Argentino en el sudoeste provincial» | Distractores: «El Lago Lacar» / «El Lago Nahuel Huapi en territorio rionegrino».
+6. **Mundo 6 (Clima frío y árido de la meseta austral)**:
+   - *Antes:* Distractores absurdos («sol no brilla nunca», «vuelo en globo aerostático») y colas de longitud artificiales.
+   - *Después:* «¿Qué tipo de clima predomina en la mayor parte de la meseta santacruceña?» → Correcta: «Clima frío y árido de estepa patagónica» | Distractores: «Clima cálido y húmedo de selva tropical» / «Clima templado marítimo lluvioso».
+7. **Mundo 7 (Riesgos naturales patagónicos: heladas, nevadas y cenizas)**:
+   - *Antes:* Distractor de maremoto tropical y actividad de ordenar `s7-ex-1` con secuencia arbitraria declarada en la pista.
+   - *Después:* «¿Qué riesgo natural invernal suele incomunicar parajes y estancias en Santa Cruz?» → Correcta: «Las grandes nevadas y temporales de nieve» | Distractores: «Las olas gigantes producidas por maremotos en el océano» / «Los intensos aluviones de barro causados por lluvias tropicales». `s7-ex-1` reescrita con secuencia cronológica lógica de erupción volcánica.
+8. **Mundo 8 (Áreas protegidas y Parques Nacionales de Santa Cruz)**:
+   - *Antes:* Distractores de chiste («aserraderos talando araucarias petrificadas ayer») y colas `sector 2_2_2`.
+   - *Después:* «¿Qué célebre Parque Nacional de Santa Cruz fue declarado Patrimonio de la Humanidad por la UNESCO?» → Correcta: «El Parque Nacional Los Glaciares» | Distractores: «Parque Iguazú» / «El Parque Nacional Talampaya riojano».
+9. **Mundo 9 (Actividades económicas: ganadería ovina y zafra lanera)**:
+   - *Antes:* Distractores absurdos («cría de camellos importados para el desierto») y colas pegadas.
+   - *Después:* «¿Cuál fue la principal actividad ganadera que pobló el territorio de Santa Cruz desde fines del siglo XIX?» → Correcta: «La ganadería ovina para producción de lana y carne» | Distractores: «La producción intensiva de ganado lechero holando en tambos modernos» / «La cría comercial de porcinos en establecimientos cerrados techados».
+10. **Mundo 10 (Recursos hidrocarburíferos y mineros de la provincia)**:
+    - *Antes:* Falsa en V/F «el carbón cae del cielo» y opciones con rellenos pegados.
+    - *Después:* «¿En qué cuenca petrolera del norte santacruceño se extrae petróleo y gas desde hace décadas?» → Correcta: «La Cuenca del Golfo San Jorge» | Distractores: «La Cuenca Salteña» / «La Cuenca Neuquina de la formación Vaca Muerta».
+11. **Mundo 11 (Actividades productivas: turismo y pesca marítima)**:
+    - *Antes:* Distractores absurdos («pesca con submarinos», «cultivo de cocos y bananas en la ría») y pregunta de Isla Pingüino repetida.
+    - *Después:* «¿Qué actividad económica de servicios creció notablemente en Santa Cruz gracias a sus paisajes naturales?» → Correcta: «El turismo nacional e internacional» | Distractores: «La cosecha de caña de azúcar» / «La plantación de bananos tropicales».
+12. **Mundo 12 (Problemas ambientales locales: desertificación de la estepa)**:
+    - *Antes:* Distractores de chiste («avance de selvas tropicales selváticas», «inundaciones por deshielos amazónicos»).
+    - *Después:* «¿Qué grave problema ambiental de degradación del suelo afecta a amplias zonas de la estepa santacruceña?» → Correcta: «La desertificación y erosión eólica del suelo» | Distractores: «La inundación permanente provocada por crecidas fluviales» / «El avance desmedido y tupido de selvas húmedas tropicales».
+13. **Mundo 13 (Pueblos originarios de la meseta: los Aonikenk (tehuelches))**:
+    - *Antes:* Opciones infladas con colas `sector 2_2_2` y preguntas de arte rupestre repetidas literalmente 4 veces.
+    - *Después:* «¿Cómo se llamaba el pueblo originario cazador y recolector que habitó ancestralmente la meseta santacruceña?» → Correcta: «El pueblo Aonikenk o Tehuelche del sur» | Distractores: «El pueblo Wichi del monte chaqueño» / «Comunidades guaraníes del Litoral fluvial».
+14. **Mundo 14 (Cazadores y canoeros australes: Selk'nam y Yámanas)**:
+    - *Antes:* Distractores de chiste («construían puertos para transatlánticos», «llegaron en tren eléctrico») y frases pegadas.
+    - *Después:* «¿Qué dos grandes pueblos originarios habitaron la Isla Grande de Tierra del Fuego y sus canales australes?» → Correcta: «Los Selk'nam en tierra firme y los Yámanas en los canales marítimos» | Distractores: «Los Diaguitas en los valles andinos y los Guaraníes en las selvas subtropicales» / «Los Incas en las altas cordilleras y los Querandíes en las llanuras rioplatenses».
+15. **Mundo 15 (Pueblos mapuche y mapuche-tehuelche en la Patagonia)**:
+    - *Antes:* Pista de la trutruka describiendo el kultrún (distractor) y opciones con colas de sector artificiales.
+    - *Después:* «¿Qué significa la palabra Mapuche en la lengua originaria mapudungun?» → Correcta: «Gente de la tierra» | Distractores: «Guerreros del mar» / «Cazadores del cielo». Pistas alineadas a su objeto exacto.
+16. **Mundo 16 (Pueblos agricultores del noroeste: los Diaguitas)**:
+    - *Antes:* Distractores absurdos («los pucarás eran barcos flotantes», «sembraban en piletas climatizadas»).
+    - *Después:* «¿En qué región del actual territorio argentino se asentaron las comunidades Diaguitas?» → Correcta: «En los Valles Calchaquíes y quebradas del Noroeste argentino» | Distractores: «En las frías costas marítimas de la región patagónica austral» / «En las densas selvas subtropicales misioneras del noreste del país».
+17. **Mundo 17 (Una gran civilización americana: el Imperio Inca)**:
+    - *Antes:* Distractores absurdos («viajes en patineta espacial por el camino del inca», «puentes de metal para trenes»).
+    - *Después:* «¿Cómo se llamaba el inmenso Estado o imperio andino que abarcó gran parte de América del Sur?» → Correcta: «El Imperio Inca o Tawantinsuyu» | Distractores: «El Imperio Romano de Occidente» / «La confederación maya de la selva».
+18. **Mundo 18 (Sociedades indígenas en el presente: derechos y comunidades)**:
+    - *Antes:* Vocabulario técnico inapropiado («personería jurídica» repetido 7 veces en opciones y pistas).
+    - *Después:* «¿Qué consagra el artículo 75 inciso 17 de la Constitución Nacional argentina reformada en 1994?» → Correcta: «La preexistencia étnica y cultural de los pueblos indígenas argentinos» | Distractores: «La obligación de que todas las comunidades abandonen sus lenguas ancestrales» / «La prohibición absoluta de manifestar sus expresiones culturales tradicionales». Reemplazado por «reconocimiento institucional».
+19. **Mundo 19 (Motivos de los viajes europeos y adelantos técnicos)**:
+    - *Antes:* Distractores absurdos («carabelas a vapor con motores diésel», «viajes espaciales», «la tierra es plana como una mesa»).
+    - *Después:* «¿Qué acontecimiento histórico en 1453 motivó a los navegantes europeos a buscar nuevas rutas marítimas?» → Correcta: «La toma de Constantinopla por los turcos otomanos que bloqueó las rutas terrestres a Oriente» | Distractores: «Alianzas de paz» / «El descubrimiento de inagotables minas de oro y plata en los reinos ribereños de toda Europa».
+20. **Mundo 20 (La expedición de Magallanes en San Julián (1520))**:
+    - *Antes:* Falsa de V/F absurda («cruzaron a caballo hacia el Pacífico por la meseta») y distractores inverosímiles («aeropuerto en San Julián»).
+    - *Después:* «¿Cuál era el objetivo principal de la expedición marítima comandada por Hernando de Magallanes en 1519?» → Correcta: «Hallar un paso interoceánico hacia las islas de las Especias navegando hacia el oeste» | Distractores: «Construir balnearios» / «Explorar y colonizar sistemáticamente las costas meridionales del Mar de la China».
+21. **Mundo 21 (Expediciones y fundación de ciudades en Argentina)**:
+    - *Antes:* Distractores de chiste («vuelos charter», «trazado circular con autopistas») y colas pegadas.
+    - *Después:* «¿Cuántas corrientes colonizadoras principales ingresaron al actual territorio argentino en el siglo XVI?» → Correcta: «Tres corrientes colonizadoras (del Norte, del Oeste y del Este)» | Distractores: «Cinco vías aéreas» / «Una única expedición marítima que ingresó exclusivamente por el extremo sur».
+22. **Mundo 22 (La sociedad colonial y sus estamentos)**:
+    - *Antes:* Distractores absurdos («votación electrónica en el cabildo», «centauros en la pulpería») y frases inconexas de relleno.
+    - *Después:* «¿Cómo era la sociedad colonial rioplatense durante los siglos XVII y XVIII?» → Correcta: «Una sociedad muy desigual y jerárquica dividida en estamentos según el origen y nacimiento» | Distractores: «Sociedad igualitaria» / «Una democracia participativa moderna donde los ciudadanos elegían gobernantes por voto secreto».
+23. **Mundo 23 (El circuito comercial del Potosí y las economías regionales)**:
+    - *Antes:* Distractor de transporte en barcazas por túneles subterráneos de Potosí y rellenos pegados.
+    - *Después:* «¿Qué famoso centro minero del Alto Perú fue el gran motor económico de todo el espacio colonial rioplatense?» → Correcta: «El Cerro Rico de Potosí» | Distractores: «El Famatina» / «Las minas de oro de Puno».
+24. **Mundo 24 (Conquista espiritual y mestizaje cultural)**:
+    - *Antes:* Distractores absurdos («los jesuitas enseñaban robótica y programación», «guitarras eléctricas en las misiones»).
+    - *Después:* «¿En qué consistió el proceso histórico conocido como la 'conquista espiritual' de América?» → Correcta: «La evangelización e imposición de la religión católica a los pueblos originarios» | Distractores: «La conversión religiosa pacífica y enseñanza del dogma católico dirigida por misioneros enviados por la corona» / «La construcción de defensas amuralladas en las fronteras».
+25. **Mundo 25 (La Constitución Nacional y la organización federal)**:
+    - *Antes:* Opciones incorrectas infladas con fragmentos de otros temas y el Preámbulo calificado como «texto poético».
+    - *Después:* «¿En qué año y en qué ciudad histórica fue sancionada la Constitución de la Nación Argentina?» → Correcta: «En 1853 en la ciudad de Santa Fe» | Distractores: «En 1810 en la ciudad de Buenos Aires» / «En 1816 en la ciudad de Tucumán». El Preámbulo caracterizado como texto solemne de principios.
+26. **Mundo 26 (Constitución de Santa Cruz, municipios y Derechos del Niño)**:
+    - *Antes:* Pistas cortadas con signos de puntuación extraños y distractores con sufijos repetidos.
+    - *Después:* «¿Cómo se llama la norma jurídica fundamental y suprema de nuestra provincia?» → Correcta: «La Constitución Provincial de Santa Cruz» | Distractores: «El reglamento del concejo deliberante municipal» / «El estatuto orgánico de los empleados públicos».
 
 ### AG-25 · Correcciones de AG-20 y AG-24 (Antigravity)
 

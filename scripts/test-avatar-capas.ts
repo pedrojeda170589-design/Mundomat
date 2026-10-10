@@ -24,6 +24,7 @@ import {
   moverCapaAtras,
   quitarCapa,
   validarCapas,
+  equiparGorritoAniversario,
 } from "../src/lib/avatarCapas";
 import { sinObjeto } from "../src/lib/regalosObjetos";
 import { devolverPrestamoVencido } from "../src/lib/torneo/prestamo";
@@ -249,14 +250,14 @@ async function main() {
       ],
     });
     assert.ok(actualizado && actualizado.ok, "updateStudentProfile debe aceptar capas válidas");
-    assert.equal(actualizado.avatarCapas?.length, 3);
-    assert.equal(actualizado.avatarCapas?.[0].id, "sombrero-paja");
-    assert.equal(actualizado.avatarCapas?.[1].id, "anteojos-67");
-    assert.equal(actualizado.avatarCapas?.[2].id, "squishy-6");
+    assert.equal(actualizado.progress.avatarCapas?.length, 3);
+    assert.equal(actualizado.progress.avatarCapas?.[0].id, "sombrero-paja");
+    assert.equal(actualizado.progress.avatarCapas?.[1].id, "anteojos-67");
+    assert.equal(actualizado.progress.avatarCapas?.[2].id, "squishy-6");
     // avatarAccessories debe sincronizarse
-    assert.equal(actualizado.avatarAccessories?.headwear, "sombrero-paja");
-    assert.equal(actualizado.avatarAccessories?.eyewear, "anteojos-67");
-    assert.equal(actualizado.avatarAccessories?.pet, "squishy-6");
+    assert.equal(actualizado.progress.avatarAccessories?.headwear, "sombrero-paja");
+    assert.equal(actualizado.progress.avatarAccessories?.eyewear, "anteojos-67");
+    assert.equal(actualizado.progress.avatarAccessories?.pet, "squishy-6");
 
     // Intentar guardar un objeto que el alumno NO tiene
     const fallido = await updateStudentProfile(alumno.code, {
@@ -268,7 +269,7 @@ async function main() {
     // 5. Guardar se rechaza cuando el préstamo ya venció (A8)
     console.log("  5. Verificando que guardar se rechaza cuando el préstamo ya venció...");
     await saveProgress({
-      ...actualizado,
+      ...actualizado.progress,
       shopCollection: ["squishy-6"], // No incluye anteojos-67
       prestamo67: {
         id: "anteojos-67",
@@ -285,7 +286,7 @@ async function main() {
     // 6. Guardar por el campo viejo accessories no borra las capas ni las mascotas 2 y 3 (A2, A8)
     console.log("  6. Verificando que guardar por accessories no borra las capas...");
     await saveProgress({
-      ...actualizado,
+      ...actualizado.progress,
       avatar: "estudiante-1",
       shopCollection: ["squishy-6", "squishy-7"],
       seasonalCollection: ["sombrero-paja", "bufanda-rayas"],
@@ -306,27 +307,71 @@ async function main() {
       accessories: { headwear: null },
     });
     assert.ok(guardadoViejo && guardadoViejo.ok);
-    assert.equal(guardadoViejo.avatarCapas?.length, 3, "debe quitar solo headwear");
+    assert.equal(guardadoViejo.progress.avatarCapas?.length, 3, "debe quitar solo headwear");
     assert.equal(
-      guardadoViejo.avatarCapas?.some((c) => c.id === "sombrero-paja"),
+      guardadoViejo.progress.avatarCapas?.some((c) => c.id === "sombrero-paja"),
       false,
       "sombrero-paja debe haber sido quitado"
     );
     assert.equal(
-      guardadoViejo.avatarCapas?.some((c) => c.id === "squishy-7"),
+      guardadoViejo.progress.avatarCapas?.some((c) => c.id === "squishy-7"),
       true,
       "la segunda mascota debe preservarse intacta"
     );
     assert.equal(
-      guardadoViejo.avatarCapas?.some((c) => c.id === "bufanda-rayas"),
+      guardadoViejo.progress.avatarCapas?.some((c) => c.id === "bufanda-rayas"),
       true,
       "los demás accesorios deben preservarse intactos"
+    );
+
+    // Test de Claude A2: pedido completo de 8 lugares con capas múltiples no borra nada
+    console.log("  6b. Verificando que pedido completo de 8 lugares viejo deja intactas las 4 capas (A2)...");
+    await saveProgress({
+      ...actualizado.progress,
+      avatar: "estudiante-1",
+      shopCollection: ["squishy-6", "squishy-7", "gorra-67", "vincha-67"],
+      seasonalCollection: ["sombrero-paja", "bufanda-rayas"],
+      avatarCapas: [
+        { id: "gorra-67" },
+        { id: "vincha-67", x: 3 },
+        { id: "squishy-6" },
+        { id: "squishy-7", s: 1.3 },
+      ],
+      avatarAccessories: {
+        headwear: "gorra-67",
+        pet: "squishy-6",
+      },
+    });
+
+    const guardado8Lugares = await updateStudentProfile(alumno.code, {
+      accessories: {
+        headwear: "gorra-67",
+        pet: "squishy-6",
+        eyewear: null,
+        pendant: null,
+        torso: null,
+        backpack: null,
+        prop: null,
+        face: null,
+      },
+    });
+    assert.ok(guardado8Lugares && guardado8Lugares.ok);
+    assert.equal(guardado8Lugares.progress.avatarCapas?.length, 4, "debe dejar intactas las 4 capas");
+    assert.deepEqual(
+      guardado8Lugares.progress.avatarCapas,
+      [
+        { id: "gorra-67" },
+        { id: "vincha-67", x: 3 },
+        { id: "squishy-6" },
+        { id: "squishy-7", s: 1.3 },
+      ],
+      "las 4 capas y sus corrimientos/escalas deben mantenerse intactos"
     );
 
     // 7. La gorra del aniversario no pasa el límite de 5 accesorios (A5, A8)
     console.log("  7. Verificando que gorrito-aniversario no supera el límite de 5 accesorios...");
     const con5Accesorios: StudentProgress = {
-      ...actualizado,
+      ...actualizado.progress,
       avatarAccessories: {
         face: "bufanda",
         eyewear: "lentes",
@@ -339,19 +384,14 @@ async function main() {
         { id: "lentes" },
       ],
     };
-    // Simular la regla de A5 implementada en api/progress
-    let capasConAniv = con5Accesorios.avatarCapas;
-    const accCount = capasConAniv ? capasConAniv.filter((c) => !isPet(c.id)).length : 0;
-    if (accCount < MAX_ACCESORIOS) {
-      capasConAniv = [...(capasConAniv ?? []), { id: "gorrito-aniversario" }];
-    }
-    assert.equal(accCount, 5);
-    assert.equal(capasConAniv?.length, 5, "no debe agregar el gorrito si ya tiene 5 accesorios");
+    const conAniv = equiparGorritoAniversario(con5Accesorios);
+    assert.equal(conAniv.avatarCapas?.length, 5, "no debe agregar el gorrito si ya tiene 5 accesorios");
+    assert.equal(conAniv.avatarAccessories?.headwear, undefined, "no debe equipar el gorrito en accessories");
 
     // 8. Préstamo vencido saca la capa (devolverPrestamoVencido)
     console.log("  8. Verificando que devolverPrestamoVencido saca la capa...");
     const prestamoVencidoProgress: StudentProgress = {
-      ...actualizado,
+      ...actualizado.progress,
       prestamo67: {
         id: "anteojos-67",
         semana: "2026-W41",
@@ -387,7 +427,7 @@ async function main() {
     // 9. Préstamos del torneo devueltos sacan la capa (ordenarPrestadosTorneo)
     console.log("  9. Verificando que ordenarPrestadosTorneo saca la capa...");
     const torneoVencidoProgress: StudentProgress = {
-      ...actualizado,
+      ...actualizado.progress,
       torneoPrestados: [
         {
           id: "anteojos-67",
@@ -417,7 +457,7 @@ async function main() {
     // 10. Regalar un objeto saca la capa (sinObjeto)
     console.log("  10. Verificando que regalar un objeto saca la capa...");
     const conRegaloProgress: StudentProgress = {
-      ...actualizado,
+      ...actualizado.progress,
       seasonalCollection: ["sombrero-paja", "bufanda-rayas"],
       avatarCapas: [
         { id: "sombrero-paja" },

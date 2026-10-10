@@ -334,9 +334,9 @@ async function main() {
 
   // Insignia: se puede ocultar y volver a mostrar.
   const oculta = await updateStudentProfile(student.code, { insigniaVisible: false });
-  assert.strictEqual(oculta?.insigniaTorneoOculta, true);
+  assert.strictEqual(oculta?.ok && oculta.progress.insigniaTorneoOculta, true);
   const visible = await updateStudentProfile(student.code, { insigniaVisible: true });
-  assert.strictEqual(visible?.insigniaTorneoOculta, false);
+  assert.strictEqual(visible?.ok && visible.progress.insigniaTorneoOculta, false);
   console.log("  ✅ Vueltas completas: dorado/plateado/bronce, nunca baja, insignia ×2→×3→A1, prestados que se quedan y superespeciales.");
 
   // Préstamo Six-Seven: solo quien jugó este finde y está al día.
