@@ -45,6 +45,11 @@ rama, así nunca se pisan los archivos.
   `node_modules/next/dist/docs/`.
 - Comentarios y textos de la interfaz en **español rioplatense** (vos, tenés…),
   claros para chicos de primaria.
+- **Los tests no se engañan (desde el 10/10/2026):** está prohibido cambiar
+  textos solo para que un control pase (frases o códigos de relleno, pistas
+  cortadas, frases de otro tema pegadas a las opciones, distractores inflados)
+  y bajar las exigencias de un test. Si un control no se puede cumplir
+  escribiendo bien, se avisa en `TAREAS.md`.
 - La app la usan **menores**: nada de texto libre entre alumnos, nada de datos
   personales innecesarios, nada de rankings por tiempo de uso ni mensajes que
   presionen a jugar más.
