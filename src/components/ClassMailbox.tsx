@@ -35,6 +35,7 @@ interface Classmate {
   avatar?: string;
   accessories?: AvatarAccessories;
   tweaks?: import("@/types").AvatarTweaks;
+  capas?: import("@/types").AvatarCapa[];
   background?: string;
   online: boolean;
   birthdayToday?: boolean;
@@ -339,7 +340,8 @@ export default function ClassMailbox({
                           <AvatarDisplay
                             character={c.avatar}
                             accessories={c.accessories}
-                  tweaks={c.tweaks}
+                            tweaks={c.tweaks}
+                            capas={c.capas}
                             background={c.background}
                             className="w-14 h-14 rounded-xl"
                             imageSizes="56px"
@@ -369,7 +371,8 @@ export default function ClassMailbox({
                     <AvatarDisplay
                       character={to.avatar}
                       accessories={to.accessories}
-                  tweaks={to.tweaks}
+                      tweaks={to.tweaks}
+                      capas={to.capas}
                       background={to.background}
                       className="w-12 h-12 rounded-xl"
                       imageSizes="48px"

@@ -14,6 +14,7 @@ import { classmatesOf, getClassSnapshot, getProgress } from "@/lib/data";
 import { isBirthdayToday } from "@/lib/seasons";
 import { getMessages, isMessagingEnabled } from "@/lib/messages";
 import { BIRTHDAY_MESSAGES, sameArgDay } from "@/lib/messagesShared";
+import { capasDe } from "@/lib/avatarCapas";
 
 const BIRTHDAY_GIFTS = new Set(["torta", "regalito", "globo"]);
 
@@ -87,6 +88,7 @@ export async function GET(request: NextRequest) {
               avatar: p?.avatar,
               accessories: p?.avatarAccessories,
               tweaks: p?.avatarTweaks,
+              capas: p ? capasDe(p) : undefined,
               background: p?.avatarBackground,
               me: s.code === student.code,
               greeted: received.some((m) => m.from === student.code),

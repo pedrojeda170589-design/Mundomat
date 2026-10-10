@@ -2,7 +2,7 @@ import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt } from "@/lib/
 import { NextRequest } from "next/server";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { findStudentByCode, updateStudentProfile, liteProgress } from "@/lib/data";
-import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
+import { AccessorySlot, AvatarCapa, MAX_NICKNAME_LENGTH } from "@/types";
 
 // El alumno personaliza su avatar (personaje + accesorios) y/o apodo con su
 // propio código de acceso (no requiere clave de docente). El nombre real
@@ -10,7 +10,7 @@ import { AccessorySlot, MAX_NICKNAME_LENGTH } from "@/types";
 // Panel Docente.
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { code, avatar, nickname, accessories, background, tweaks, insigniaVisible } = body as {
+  const { code, avatar, nickname, accessories, background, tweaks, insigniaVisible, capas } = body as {
     insigniaVisible?: boolean;
     tweaks?: Record<string, { x?: number; y?: number; s?: number } | null>;
     code?: string;
@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
     nickname?: string;
     accessories?: Partial<Record<AccessorySlot, string | null>>;
     background?: string;
+    capas?: AvatarCapa[];
   };
 
   if (!code) {
@@ -29,6 +30,7 @@ export async function POST(request: NextRequest) {
     accessories === undefined &&
     background === undefined &&
     tweaks === undefined &&
+    capas === undefined &&
     typeof insigniaVisible !== "boolean"
   ) {
     return Response.json(
@@ -58,13 +60,14 @@ export async function POST(request: NextRequest) {
     avatar,
     nickname,
     accessories,
+    capas,
     background,
     insigniaVisible: typeof insigniaVisible === "boolean" ? insigniaVisible : undefined,
     tweaks: tweaks as Partial<Record<AccessorySlot, { x?: number; y?: number; s?: number } | null>> | undefined,
   });
-  if (!updated) {
+  if (!updated || !updated.ok) {
     return Response.json(
-      { error: "Avatar, accesorio o fondo inválido." },
+      { error: (updated as { error?: string })?.error || "Avatar, accesorio o fondo inválido." },
       { status: 400 }
     );
   }

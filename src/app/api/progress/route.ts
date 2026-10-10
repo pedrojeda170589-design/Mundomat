@@ -7,6 +7,7 @@ import { isOpenClassroomStudent, isTrialExpired } from "@/lib/openClassroomShare
 import { closeTrialIfExpired, getTrialReport, isTrialWorldBlocked } from "@/lib/openClassroom";
 import { anonimizarVencidos, debeAnonimizarse } from "@/lib/privacidadPrueba";
 import { ActivityResult } from "@/types";
+import { isPet, MAX_ACCESORIOS } from "@/lib/avatarCapas";
 import { avanzarVuelta } from "@/lib/vuelta";
 import { reclamarCamino, registrarRespuesta } from "@/lib/coleccion/racha";
 
@@ -59,7 +60,23 @@ export async function GET(request: NextRequest) {
     if (newRewards.length) {
       progress = conPremios;
       if (newRewards.includes("gorrito-aniversario") && !progress.avatarAccessories?.headwear) {
-        progress = { ...progress, avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" } };
+        let capas = progress.avatarCapas;
+        let shouldEquip = true;
+        if (capas) {
+          const accCount = capas.filter((c) => !isPet(c.id)).length;
+          if (accCount >= MAX_ACCESORIOS) {
+            shouldEquip = false;
+          } else {
+            capas = [...capas.filter((c) => c.id !== "gorrito-aniversario"), { id: "gorrito-aniversario" }];
+          }
+        }
+        if (shouldEquip) {
+          progress = {
+            ...progress,
+            avatarAccessories: { ...(progress.avatarAccessories ?? {}), headwear: "gorrito-aniversario" },
+            avatarCapas: capas,
+          };
+        }
       }
       await saveProgress(progress);
     }

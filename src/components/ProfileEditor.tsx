@@ -14,9 +14,11 @@ import {
   AVATAR_INFO,
   AccessorySlot,
   AvatarAccessories,
+  AvatarCapa,
   AvatarTweaks,
   BACKGROUND_OPTIONS,
   MAX_NICKNAME_LENGTH,
+  getAccessoryById,
   getAccessoryCatalogForAvatar,
   getAccessorySrc,
   getAvatarSrc,
@@ -26,6 +28,16 @@ import {
   isBackgroundSelectable,
   isStandardAvatar,
 } from "@/types";
+import {
+  agregarCapa,
+  capasDe,
+  capasToAccessories,
+  isPet,
+  isProp,
+  moverCapaAdelante,
+  moverCapaAtras,
+  quitarCapa,
+} from "@/lib/avatarCapas";
 import InsigniaTorneo from "@/components/InsigniaTorneo";
 import AcomodarObjetos from "@/components/AcomodarObjetos";
 import { AVATARES_LOGRO } from "@/lib/coleccion/logros";
@@ -35,8 +47,8 @@ import {
   getSeasonalEventById,
 } from "@/lib/seasons";
 
-// Todos los casilleros que se mandan al guardar (los que no estén
-// equipados van como null, para sacarlos).
+// Todos los casilleros que se mandan al guardar para compatibilidad
+// con clientes/código viejo.
 const ALL_SLOTS: AccessorySlot[] = [
   "headwear",
   "eyewear",
@@ -53,6 +65,7 @@ interface Props {
   currentAvatar?: string;
   currentAccessories?: AvatarAccessories;
   currentTweaks?: AvatarTweaks;
+  currentCapas?: AvatarCapa[];
   currentNickname?: string;
   currentBackground?: string;
   seasonalCollection?: string[];
@@ -71,6 +84,7 @@ interface Props {
   onSaved: (update: {
     avatar?: string;
     accessories?: AvatarAccessories;
+    capas?: AvatarCapa[];
     nickname?: string;
     background?: string;
     tweaks?: AvatarTweaks;
@@ -103,6 +117,7 @@ export default function ProfileEditor({
   currentAvatar,
   currentAccessories,
   currentTweaks,
+  currentCapas,
   currentNickname,
   currentBackground,
   seasonalCollection = [],
@@ -125,14 +140,14 @@ export default function ProfileEditor({
   const [avatar, setAvatar] = useState<string>(
     currentAvatar || AVATAR_OPTIONS[0]
   );
-  const [accessories, setAccessories] = useState<AvatarAccessories>(
-    currentAccessories ?? {}
-  );
+  const [capas, setCapas] = useState<AvatarCapa[]>(() => {
+    if (currentCapas && currentCapas.length > 0) return currentCapas;
+    return capasDe({ avatarAccessories: currentAccessories, avatarTweaks: currentTweaks });
+  });
   const [nickname, setNickname] = useState<string>(currentNickname || "");
   const [background, setBackground] = useState<string>(
     currentBackground || AUTO_BACKGROUND
   );
-  const [tweaks, setTweaks] = useState<AvatarTweaks>(currentTweaks ?? {});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -165,35 +180,35 @@ export default function ProfileEditor({
   // el servidor igual va a rechazar.
   function handleSelectAvatar(nextAvatar: string) {
     setAvatar(nextAvatar);
+    setError(null);
     const validIds = getValidAccessoryIdsForAvatar(nextAvatar);
-    setAccessories((prev) => {
-      const cleaned: AvatarAccessories = {};
-      for (const key of Object.keys(prev) as AccessorySlot[]) {
-        const value = prev[key];
-        if (value && validIds.has(value)) {
-          cleaned[key] = value;
-        }
-      }
-      return cleaned;
-    });
+    setCapas((prev) => prev.filter((c) => validIds.has(c.id)));
   }
 
-  function toggleAccessory(slot: AccessorySlot, id: string) {
-    setAccessories((prev) => {
-      const next = { ...prev };
-      if (next[slot] === id) {
-        delete next[slot];
+  function toggleAccessory(id: string) {
+    setError(null);
+    if (capas.some((c) => c.id === id)) {
+      setCapas((prev) => quitarCapa(prev, id));
+    } else {
+      const res = agregarCapa(capas, id);
+      if (!res.ok) {
+        setError(res.error);
       } else {
-        next[slot] = id;
+        setCapas(res.capas);
       }
-      return next;
-    });
+    }
+  }
+
+  function removeSlotAccessories(slot: AccessorySlot) {
+    setError(null);
+    setCapas((prev) => prev.filter((c) => getAccessoryById(c.id)?.slot !== slot));
   }
 
   async function handleSave() {
     setSaving(true);
     setError(null);
     try {
+      const synced = capasToAccessories(capas);
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -202,11 +217,11 @@ export default function ProfileEditor({
           avatar,
           nickname: nickname.trim(),
           background,
+          capas,
           accessories: Object.fromEntries(
-            ALL_SLOTS.map((slot) => [slot, accessories[slot] ?? null])
+            ALL_SLOTS.map((slot) => [slot, synced.accessories[slot] ?? null])
           ),
-          // Solo se guardan ajustes de lo que está puesto.
-          tweaks: Object.fromEntries(ALL_SLOTS.map((slot) => [slot, accessories[slot] ? tweaks[slot] ?? null : null])),
+          tweaks: Object.fromEntries(ALL_SLOTS.map((slot) => [slot, synced.tweaks[slot] ?? null])),
           ...(torneoVueltas > 0 ? { insigniaVisible } : {}),
         }),
       });
@@ -219,6 +234,7 @@ export default function ProfileEditor({
       onSaved({
         avatar: data.progress.avatar,
         accessories: data.progress.avatarAccessories,
+        capas: data.progress.avatarCapas,
         nickname: data.progress.nickname,
         background: data.progress.avatarBackground,
         tweaks: data.progress.avatarTweaks,
@@ -246,12 +262,92 @@ export default function ProfileEditor({
 
         <AcomodarObjetos
           avatar={avatar}
-          accessories={accessories}
+          capas={capas}
           background={background}
           birthday={isBirthday}
-          tweaks={tweaks}
-          onChange={setTweaks}
+          onChangeCapas={setCapas}
         />
+
+        {/* Lo que tengo puesto */}
+        {capas.length > 0 && (
+          <div className="flex flex-col gap-2 rounded-2xl bg-slate-800/80 border border-slate-700 p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-white text-xs font-bold">Lo que tengo puesto ({capas.length})</p>
+              <span className="text-[11px] text-slate-400">
+                {capas.filter((c) => !isPet(c.id)).length}/5 accesorios · {capas.filter((c) => isPet(c.id)).length}/3 mascotas
+              </span>
+            </div>
+            <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
+              {[...capas].reverse().map((c, revIdx) => {
+                const acc = getAccessoryById(c.id);
+                if (!acc) return null;
+                const realIdx = capas.length - 1 - revIdx;
+                const canMoveAdelante = realIdx < capas.length - 1;
+                const canMoveAtras = realIdx > 0;
+                return (
+                  <div
+                    key={c.id}
+                    className="flex items-center justify-between gap-2 bg-slate-900/80 rounded-xl px-2 py-1.5 border border-slate-700/60"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="relative w-8 h-8 rounded-lg bg-slate-800 shrink-0 overflow-hidden">
+                        <Image src={getAccessorySrc(c.id)} alt={acc.label} fill sizes="32px" className="object-contain p-0.5" />
+                      </div>
+                      <span className="text-xs text-white truncate font-medium">{acc.label}</span>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {!isPet(c.id) && !isProp(c.id) && (
+                        <>
+                          <button
+                            type="button"
+                            disabled={!canMoveAdelante}
+                            onClick={() => {
+                              setError(null);
+                              setCapas((prev) => moverCapaAdelante(prev, c.id));
+                            }}
+                            title={`Mover ${acc.label} adelante`}
+                            aria-label={`Mover ${acc.label} adelante`}
+                            className="min-h-[44px] px-2 rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-[11px] font-bold text-slate-200 flex items-center justify-center gap-1 transition border border-slate-700"
+                          >
+                            <span>⬆️</span>
+                            <span>Adelante</span>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!canMoveAtras}
+                            onClick={() => {
+                              setError(null);
+                              setCapas((prev) => moverCapaAtras(prev, c.id));
+                            }}
+                            title={`Mover ${acc.label} atrás`}
+                            aria-label={`Mover ${acc.label} atrás`}
+                            className="min-h-[44px] px-2 rounded-xl bg-slate-800 active:bg-slate-700 disabled:opacity-25 disabled:active:bg-slate-800 text-[11px] font-bold text-slate-200 flex items-center justify-center gap-1 transition border border-slate-700"
+                          >
+                            <span>⬇️</span>
+                            <span>Atrás</span>
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setError(null);
+                          setCapas((prev) => quitarCapa(prev, c.id));
+                        }}
+                        title={`Sacar ${acc.label}`}
+                        aria-label={`Sacar ${acc.label}`}
+                        className="min-w-[44px] min-h-[44px] px-2 rounded-xl bg-red-900/40 active:bg-red-800/60 text-[11px] font-bold text-red-300 flex items-center justify-center gap-1 transition border border-red-700/50"
+                      >
+                        <span>✕</span>
+                        <span>Sacar</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div>
           <p className="text-slate-400 text-xs mb-2">Elegí tu personaje</p>
@@ -321,20 +417,15 @@ export default function ProfileEditor({
           </p>
           {slots.map(({ slot, label }) => {
             const options = catalog.filter((a) => a.slot === slot);
+            const hasSlotEquipped = capas.some((c) => getAccessoryById(c.id)?.slot === slot);
             return (
               <div key={slot}>
                 <p className="text-slate-500 text-[11px] mb-1.5">{label}</p>
                 <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={() =>
-                      setAccessories((prev) => {
-                        const next = { ...prev };
-                        delete next[slot];
-                        return next;
-                      })
-                    }
-                    className={`rounded-xl border-2 px-2.5 py-2 text-[11px] font-semibold shrink-0 ${
-                      !accessories[slot]
+                    onClick={() => removeSlotAccessories(slot)}
+                    className={`rounded-xl border-2 px-2.5 py-2 text-[11px] font-semibold shrink-0 min-h-[44px] flex items-center justify-center ${
+                      !hasSlotEquipped
                         ? "border-amber-400 bg-amber-400/10 text-amber-200"
                         : "border-slate-700 text-slate-400"
                     }`}
@@ -343,18 +434,18 @@ export default function ProfileEditor({
                   </button>
                   {options.map((acc) => {
                     const unlocked = unlockedIds.has(acc.id);
-                    const selected = accessories[slot] === acc.id;
+                    const selected = capas.some((c) => c.id === acc.id);
                     return (
                       <button
                         key={acc.id}
                         disabled={!unlocked}
-                        onClick={() => toggleAccessory(slot, acc.id)}
+                        onClick={() => toggleAccessory(acc.id)}
                         title={
                           unlocked
                             ? acc.label
                             : `${acc.label}: se desbloquea completando más mundos`
                         }
-                        className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0 bg-slate-800 ${
+                        className={`relative w-12 h-12 min-w-[44px] min-h-[44px] rounded-xl overflow-hidden border-2 shrink-0 bg-slate-800 ${
                           selected
                             ? "border-amber-400 ring-2 ring-amber-400/50"
                             : "border-slate-700"
@@ -393,13 +484,13 @@ export default function ProfileEditor({
             <p className="text-slate-400 text-xs mb-2">🛍️ Comprados en la tienda{prestamo ? " (y tu préstamo Six-Seven)" : ""}</p>
             <div className="grid grid-cols-4 gap-2">
               {boughtAccessories.map((acc) => {
-                const selected = accessories[acc.slot] === acc.id;
+                const selected = capas.some((c) => c.id === acc.id);
                 return (
                   <button
                     key={acc.id}
-                    onClick={() => toggleAccessory(acc.slot, acc.id)}
+                    onClick={() => toggleAccessory(acc.id)}
                     title={acc.label}
-                    className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-slate-800 ${
+                    className={`relative aspect-square min-w-[44px] min-h-[44px] rounded-xl overflow-hidden border-2 bg-slate-800 ${
                       selected ? "border-amber-400 ring-2 ring-amber-400/50" : "border-slate-700"
                     }`}
                   >
@@ -423,7 +514,7 @@ export default function ProfileEditor({
         )}
 
         {torneoVueltas > 0 && (
-          <label className="flex items-center gap-3 rounded-2xl bg-white/10 border border-white/20 px-3 py-2 text-xs text-white cursor-pointer">
+          <label className="flex items-center gap-3 rounded-2xl bg-white/10 border border-white/20 px-3 py-2 text-xs text-white cursor-pointer min-h-[44px]">
             <InsigniaTorneo vueltas={torneoVueltas} className="min-w-8 h-8 px-1 text-xs shrink-0" />
             <span className="flex-1">
               <b>Insignia del torneo</b>
@@ -454,14 +545,14 @@ export default function ProfileEditor({
           <div className="grid grid-cols-4 gap-2">
             {[...ACCESSORY_CATALOG_TEMPORADA, ...ACCESSORY_CATALOG_PREMIO.filter((a) => owned.has(a.id))].map((acc) => {
               const earned = owned.has(acc.id);
-              const selected = accessories[acc.slot] === acc.id;
+              const selected = capas.some((c) => c.id === acc.id);
               const event = acc.eventId ? getSeasonalEventById(acc.eventId) : undefined;
               const activeNow = !!acc.eventId && activeEventIds.has(acc.eventId);
               return (
                 <button
                   key={acc.id}
                   disabled={!earned}
-                  onClick={() => toggleAccessory(acc.slot, acc.id)}
+                  onClick={() => toggleAccessory(acc.id)}
                   title={
                     earned
                       ? acc.label
@@ -469,7 +560,7 @@ export default function ProfileEditor({
                         ? `${acc.label}: ¡jugá una actividad para ganarlo!`
                         : `${acc.label}: se gana en ${event?.label ?? "su temporada"}`
                   }
-                  className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-slate-800 ${
+                  className={`relative aspect-square min-w-[44px] min-h-[44px] rounded-xl overflow-hidden border-2 bg-slate-800 ${
                     selected
                       ? "border-amber-400 ring-2 ring-amber-400/50"
                       : activeNow && !earned
@@ -512,7 +603,7 @@ export default function ProfileEditor({
             <button
               onClick={() => setBackground(AUTO_BACKGROUND)}
               title="Cambia solo según la estación o la festividad"
-              className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
+              className={`relative aspect-square min-w-[44px] min-h-[44px] rounded-xl overflow-hidden border-2 ${
                 background === AUTO_BACKGROUND
                   ? "border-amber-400 ring-2 ring-amber-400/50"
                   : "border-slate-700"
@@ -536,7 +627,7 @@ export default function ProfileEditor({
                       ? bg.label
                       : `${bg.label}: se gana en ${event?.label ?? "su temporada"}`
                   }
-                  className={`relative aspect-square rounded-xl overflow-hidden border-2 ${
+                  className={`relative aspect-square min-w-[44px] min-h-[44px] rounded-xl overflow-hidden border-2 ${
                     background === bg.id
                       ? "border-amber-400 ring-2 ring-amber-400/50"
                       : "border-slate-700"
@@ -570,19 +661,23 @@ export default function ProfileEditor({
           </p>
         </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && (
+          <div role="alert" className="rounded-xl bg-amber-500/20 border-2 border-amber-400 p-2.5 text-center text-amber-200 text-xs font-bold">
+            ⚠️ {error}
+          </div>
+        )}
 
         <div className="flex gap-2">
           <button
             onClick={onClose}
-            className="flex-1 rounded-xl bg-slate-800 text-slate-300 font-semibold py-2.5"
+            className="flex-1 rounded-xl bg-slate-800 text-slate-300 font-semibold py-2.5 min-h-[44px]"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-bold py-2.5 disabled:opacity-60"
+            className="flex-1 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-900 font-bold py-2.5 min-h-[44px] disabled:opacity-60"
           >
             {saving ? "Guardando..." : "Guardar"}
           </button>

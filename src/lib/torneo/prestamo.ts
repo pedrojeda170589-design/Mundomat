@@ -51,12 +51,17 @@ export function devolverPrestamoVencido<T extends StudentProgress>(p: T, now: Da
   if (!pr || prestamoVigente(p, now)) return p;
   const next = { ...p };
   delete next.prestamo67;
-  if (!(p.shopCollection ?? []).includes(pr.id) && p.avatarAccessories) {
-    const acc = { ...p.avatarAccessories };
-    for (const k of Object.keys(acc) as (keyof typeof acc)[]) {
-      if (acc[k] === pr.id) delete acc[k];
+  if (!(p.shopCollection ?? []).includes(pr.id)) {
+    if (p.avatarAccessories) {
+      const acc = { ...p.avatarAccessories };
+      for (const k of Object.keys(acc) as (keyof typeof acc)[]) {
+        if (acc[k] === pr.id) delete acc[k];
+      }
+      next.avatarAccessories = acc;
     }
-    next.avatarAccessories = acc;
+    if (p.avatarCapas) {
+      next.avatarCapas = p.avatarCapas.filter((c) => c.id !== pr.id);
+    }
   }
   return next;
 }

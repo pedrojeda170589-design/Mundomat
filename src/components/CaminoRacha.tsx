@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import AvatarDisplay from "@/components/AvatarDisplay";
+import { capasDe } from "@/lib/avatarCapas";
 import { StudentProgress, getAccessoryById, getAccessorySrc } from "@/types";
 import {
   CAMINO,
@@ -65,6 +66,7 @@ export default function CaminoRacha({
               character={progress.avatar}
               accessories={progress.avatarAccessories}
               tweaks={progress.avatarTweaks}
+              capas={capasDe(progress)}
               background={progress.avatarBackground}
               className="w-12 h-12 rounded-full border-2 border-amber-500 shrink-0"
               imageSizes="48px"
@@ -181,8 +183,7 @@ function Parada({
         <span className="absolute left-1/2 -translate-x-1/2 -top-12 flex flex-col items-center animate-bounce pointer-events-none">
           <AvatarDisplay
             character={progress.avatar}
-            accessories={progress.avatarAccessories}
-            tweaks={progress.avatarTweaks}
+            capas={capasDe(progress)}
             background={progress.avatarBackground}
             className="w-9 h-9 rounded-full border-[3px] border-white shadow-lg"
             imageSizes="36px"
