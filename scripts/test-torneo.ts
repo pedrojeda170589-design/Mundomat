@@ -334,9 +334,11 @@ async function main() {
 
   // Insignia: se puede ocultar y volver a mostrar.
   const oculta = await updateStudentProfile(student.code, { insigniaVisible: false });
-  assert.strictEqual(oculta?.ok && oculta.progress.insigniaTorneoOculta, true);
+  assert.ok(oculta.ok, "debe poder ocultar la insignia");
+  assert.strictEqual(oculta.progress.insigniaTorneoOculta, true);
   const visible = await updateStudentProfile(student.code, { insigniaVisible: true });
-  assert.strictEqual(visible?.ok && visible.progress.insigniaTorneoOculta, false);
+  assert.ok(visible.ok, "debe poder mostrar la insignia");
+  assert.strictEqual(visible.progress.insigniaTorneoOculta, false);
   console.log("  ✅ Vueltas completas: dorado/plateado/bronce, nunca baja, insignia ×2→×3→A1, prestados que se quedan y superespeciales.");
 
   // Préstamo Six-Seven: solo quien jugó este finde y está al día.
@@ -376,7 +378,7 @@ async function main() {
     assert.strictEqual(pr.prestamo67?.id, id);
     const def = (await import("../src/types")).getAccessoryById(id)!;
     const puesto = await updateStudentProfile(student.code, { accessories: { [def.slot]: id } });
-    assert.ok(puesto, "el prestado se puede poner en el avatar");
+    assert.ok(puesto.ok, "el prestado se puede poner en el avatar");
     console.log(`  ✅ Préstamo elegido (${id}) y puesto en el avatar.`);
   }
 
