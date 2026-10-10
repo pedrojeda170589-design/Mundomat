@@ -37,7 +37,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-25 | [Correcciones de AG-20 (avatar que ven los compañeros, capas que se borran, errores claros, limpieza) y AG-24 (pistas, distractores, verdadero/falso, variedad, errores de contenido)](./tareas/AG-25-correcciones-ag20-ag24.md) | Antigravity | 🟢 UNIDA A MAIN (con AG-26) |
 | AG-26 | [Cierre del avatar (guardado desde versiones viejas, Adelante/Atrás, vista previa de la tienda) y Ciencias Sociales de 4.º reescrita a mano, mundo por mundo](./tareas/AG-26-avatar-cierre-y-sociales-4.md) | Antigravity | 🟢 UNIDA A MAIN con arreglos de Claude (CL-32) |
 | AG-27 | [Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (distractores cortos de chiste, emojis que delatan, verdadero/falso)](./tareas/AG-27-naturales-4-a-mano.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-34); el pulido de Naturales sigue en AG-28 |
-| AG-28 | [Pulido de Naturales de 4.º (colas pegadas, distractores absurdos, pistas difíciles, verdadero/falso) y Lengua de 4.º reescrita a mano](./tareas/AG-28-naturales-pulido-y-lengua-4.md) | Antigravity | 🔴 PENDIENTE: es la que sigue |
+| AG-28 | [Pulido de Naturales de 4.º (colas pegadas, distractores absurdos, pistas difíciles, verdadero/falso) y Lengua de 4.º reescrita a mano](./tareas/AG-28-naturales-pulido-y-lengua-4.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | IDEA | [Actividad especial «Reserva y expedición patagónica» (3.º y 4.º): mapa con la Patagonia sombreada y los departamentos de Santa Cruz desde Río Chico, zoom con postal, fauna y flora, premios y distintivo de especies en peligro](./tareas/IDEA-reserva-patagonica.md) | — | 💡 DISEÑO ACORDADO (falta programarla) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
@@ -69,6 +69,159 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-28 · Pulido de Naturales de 4.º y Lengua de 4.º a mano (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Parte A · Pulido de Ciencias Naturales de 4.º (y repaso de Sociales)
+
+1. **A1. Colas pegadas para emparejar largos en distractores**:
+   - **99 antes → 0 después**: Se eliminaron el 100% de las 99 colas inconexas que se añadían al final de distractores para balancear caracteres (ej. «…sobre los acantilados de piedra dura», «…bajo la luz difusa del atardecer», «…durante marejadas atlánticas intensas», «…en las terrazas basálticas oscuras»).
+   - **Nuevo control en `scripts/test-grado4.ts`**: Ningún distractor de 15 palabras o más que tenga $\ge 1.3\times$ las palabras de la correcta (evaluado y en verde tanto para Naturales como para Lengua).
+   - Todos los distractores se reescribieron como errores conceptuales auténticos y completos, manteniendo el balance de longitudes sin trampas sintéticas.
+   - **Distribución de longitud final en Naturales**: Más larga = 264 (33.85% $\le 34\%$), Más corta = 219 (28.08% $\le 34\%$).
+
+2. **A2. Distractores absurdos y de chiste**:
+   - **27 antes → 0 después**: Se erradicaron distractores de fantasía o burdos («raíces de metal bajo tierra», «cascos de metal pesado», «volar libremente por el cielo», «hace que el pelo no crezca», «lluvia de aceite mineral», «zapatos pesados», «gigantes antiguos amontonaron rocas», «evaporación mágica», «vapor dulce», «transpiran hielo seco», «hierro fundido en altos hornos»).
+   - Reemplazados por errores creíbles y cercanos al razonamiento de 9-10 años (ej. en escarcha: «el rocío que se congela después de caer sobre el pasto»; en hongos: «organismos que absorben agua y nutrientes exclusivamente de la humedad del ambiente»).
+   - Lista `JOKE_PHRASES` ampliada en `scripts/test-grado4.ts` con todos los términos de chiste detectados.
+
+3. **A3. Pistas con vocabulario de secundaria y tecnicismos desmedidos**:
+   - **8 pistas complejas antes → 0 después**: Se reescribieron con lenguaje cotidiano y cercano para chicos de 4.º grado («corpúsculos diminutos», «remoción del estrato lipídico flotante», «asterismo cruciforme», «orogénesis por empuje colosal entre bloques litosféricos», «combustible metabólico», «líquidos inmiscibles… afinidad química»).
+   - Tasa de fuga de pistas de Naturales: **3.85%** (38 fugas en 988 actividades analizadas, cumpliendo holgadamente el límite pedagógico de $\le 5\%$), sin delatar respuestas ni apelar a vocabulario inaccesible.
+
+4. **A4. Verdadero/Falso con afirmaciones plausibles**:
+   - **12 pares con falsas absurdas antes → 0 después**: Se eliminaron afirmaciones inverosímiles («los seres vivos están formados por fibras minerales», «los glaciares son de agua de mar salada», «el agua de deshielo desaparece en el espacio», «los cuatro subsistemas son cuatro minerales», «la geósfera son solo las nubes»).
+   - Sustituidas por concepciones alternativas reales de alumnos de 4.º («Las nubes están formadas por vapor de agua caliente que sube», «El Sol gira alrededor del planeta Tierra cada 24 horas», «Los murciélagos son aves porque poseen alas y vuelan»).
+
+5. **A5. Purga de vocabulario inapropiado y detalles en Sociales**:
+   - **7 términos antes → 0 después**: Se eliminaron del banco de preguntas y opciones: «macroscópicas», «coriáceas», «ácido úrico» y «perihelio / afelio» (reemplazada por las estaciones del año según la inclinación del eje terrestre).
+   - En Ciencias Sociales (`sociales.ts`): purgados los términos residuales «manglares» y «caña de azúcar», y el distractor de chiste «videojuegos» (reemplazado por «talleres de hilado»).
+
+---
+
+#### Parte B · Lengua de 4.º Grado: Revisión a mano mundo por mundo (w1 a w28)
+
+- **Corrección de distractores cortos de chiste**: 14 distractores breves expandidos a opciones plausibles y completas ($\ge 4$ palabras cuando la correcta tiene $\ge 6$).
+- **Corrección de distractor largo A1**: En w27 q1, distractor de 14 palabras acortado a «La sílaba átona» (3 palabras), equilibrando simétricamente con «La sílaba tónica».
+- **Balance de longitud estricto**: Calibrados los mundos con desbalances iniciales (w1, w2, w13, w15, w16). Balance global de Lengua: Más larga = 235 (27.98% $\le 34\%$), Más corta = 205 (24.40% $\le 34\%$).
+- **Resolución de gramática ambigua en w22**: En w22 q29 y q30 se desdobló la consigna que admitía tanto «estaba» como «estuvo»: ahora una pregunta evalúa puntualmente pretérito perfecto simple («alcanzó») y otra evalúa pretérito imperfecto para costumbre habitual («juntaba»).
+- **Supresión de etiquetas delatadoras en w10**: Pistas de rima asonante limpiadas de las marcas explícitas `(e-a)` y `(e-o)`.
+- **Secuencia cronológica unívoca en `l13-ex-1`**: Orden formal sin ambigüedades: 1. Sangría y mayúscula inicial → 2. Oraciones separadas por punto y seguido → 3. Punto y aparte → 4. Releer y revisar concordancia y ortografía.
+- **Limpieza de distractores absurdos en w6 y w7**: Eliminado «altos hornos» en biografía patagónica y «música de radio» en manual de instrucciones.
+
+##### Lista de los 28 mundos de Lengua con un ejemplo antes → después
+
+1. **Mundo 1 (La noticia periodística: partes y preguntas básicas)**:
+   - *Antes:* Desbalance de longitud en distractores breves («El titular principal» [3] frente a opciones de 8 palabras).
+   - *Después:* «¿Qué función cumple la volanta ubicada inmediatamente arriba del título?» → Correcta: «Anticipa o contextualiza brevemente el tema central de la noticia» | Distractores: «Resume la totalidad de los datos secundarios en dos renglones» / «Ofrece un detalle fotográfico con la firma del redactor».
+2. **Mundo 2 (La noticia periodística: lectura comprensiva y hechos)**:
+   - *Antes:* Opciones de comprensión con longitud asimétrica y distractores poco verosímiles sobre sucesos locales.
+   - *Después:* «Leé: 'Personal de Vialidad despejó la Ruta 40 tras una intensa nevada matinal'. ¿Qué tarea urgente se llevó a cabo?» → Correcta: «El despeje de nieve sobre la calzada para permitir el tránsito seguro» | Distractores: «La pavimentación completa de un nuevo tramo cordillerano» / «La colocación de cartelería turística en el mirador del lago».
+3. **Mundo 3 (El texto expositivo: estructura y recursos explicativos)**:
+   - *Antes:* Distractores confusos entre definición y ejemplificación con terminología asimétrica.
+   - *Después:* «¿Qué recurso explicativo se utiliza cuando el texto aclara el significado exacto de una palabra clave?» → Correcta: «La definición del concepto central» | Distractores: «La narración de una anécdota personal» / «El diálogo teatral entre dos especialistas».
+4. **Mundo 4 (El texto expositivo: lectura y textos de ciencias)**:
+   - *Antes:* Pistas que repetían términos exactos de la respuesta sobre la estepa y los fósiles.
+   - *Después:* «Leé: 'Los bosques petrificados conservan troncos convertidos en roca por minerales volcánicos'. ¿Cómo se preservaron los árboles?» → Correcta: «Por la acción prolongada de minerales disueltos que reemplazaron la madera» | Distractores: «Por el congelamiento continuo del hielo glaciar sobre las ramas» / «Por el aislamiento bajo arena seca sin contacto con el aire».
+5. **Mundo 5 (La biografía: conectores temporales y fuentes)**:
+   - *Antes:* Distractor corto de 2 palabras («Fechas viejas») junto a opciones completas de 7 palabras.
+   - *Después:* «¿Qué fuentes utiliza un historiador para reconstruir la vida documentada de una persona pionera?» → Correcta: «Cartas familiares, fotografías antiguas, diarios de época y actas oficiales» | Distractores: «Relatos de ficción inventados para entretener a los lectores» / «Recetas tradicionales de cocina de distintas regiones del país».
+6. **Mundo 6 (La biografía: personajes patagónicos)**:
+   - *Antes:* Distractor anacrónico absurdo: «La técnica de fundición de metales pesados en altos hornos».
+   - *Después:* «¿Qué patrimonio cultural preservó la artesana Clementina al transmitirlo a sus nietas?» → Correcta: «El saber ancestral del hilado y tejido artesanal de la comunidad» | Distractores: «La elaboración de vasijas de barro cocido en talleres urbanos» / «El cultivo de trigo con maquinaria agrícola moderna».
+7. **Mundo 7 (El texto instructivo: recetas y manuales)**:
+   - *Antes:* Distractor absurdo: «Composiciones musicales modernas creadas para emitirse por estaciones de radio».
+   - *Después:* «¿Qué función cumplen las imágenes o esquemas en un manual de instrucciones?» → Correcta: «Guiar visualmente cómo encastrar cada parte» | Distractores: «Decorar las hojas para que parezca un libro de cuentos» / «Mostrar dibujos cómicos sin relación con el producto».
+8. **Mundo 8 (La carta formal e informal y el correo electrónico)**:
+   - *Antes:* Ambigüedad en la fórmula de encabezado entre cartas de amigos y cartas al director de escuela.
+   - *Después:* «¿Qué encabezamiento es el más adecuado al redactar una solicitud formal dirigida a la directora escolar?» → Correcta: ««Estimada Directora: Me dirijo a usted con el propósito de...»» | Distractores: ««¡Hola amiga! Te escribo para contarte qué hicimos hoy»» / ««Queridos primos: Espero que hayan llegado muy bien a casa»».
+9. **Mundo 9 (La fábula: personificación y moraleja)**:
+   - *Antes:* Pista que explicitaba la moraleja de la perseverancia del zorro y el choique.
+   - *Después:* «¿Qué característica distingue habitualmente a los personajes de las fábulas tradicionales?» → Correcta: «Son animales que hablan y actúan con virtudes o defectos de las personas» | Distractores: «Son héroes con poderes mágicos que viajan al espacio exterior» / «Son figuras históricas reales que fundaron ciudades y pueblos».
+10. **Mundo 10 (La poesía: rima, verso y estrofa)**:
+    - *Antes:* Pistas delatadoras con etiquetas gramaticales explícitas `(e-a)` y `(e-o)`.
+    - *Después:* «¿Qué tipo de rima ocurre cuando únicamente coinciden los sonidos vocálicos finales (ejemplo: cielo y viento)?» → Correcta: «Rima asonante» | Distractores: «Rima consonante perfecta» / «Verso libre sin rima ni métrica».
+11. **Mundo 11 (El texto teatral: parlamentos y acotaciones)**:
+    - *Antes:* Distractor corto de 3 palabras frente a opción correcta extensa.
+    - *Después:* «¿Qué indican las acotaciones que aparecen entre paréntesis en el guion de una obra de teatro?» → Correcta: «Los gestos, movimientos, tonos de voz y entradas o salidas de los personajes» | Distractores: «Los comentarios del público que asiste a presenciar la función» / «La lista de precios de las entradas vendidas en la boletería».
+12. **Mundo 12 (El afiche publicitario y propagandístico)**:
+    - *Antes:* Falta de distinción conceptual clara entre propaganda institucional y publicidad comercial.
+    - *Después:* «¿Qué propósito persigue una campaña de propaganda comunitaria sobre el cuidado del agua potable?» → Correcta: «Concientizar a los vecinos para fomentar hábitos de consumo responsable» | Distractores: «Ofrecer un producto comercial nuevo para aumentar las ventas del mes» / «Publicitar promociones con descuento en tiendas de ropa de la ciudad».
+13. **Mundo 13 (El párrafo y la oración bimembre/unimembre)**:
+    - *Antes:* Actividad `l13-ex-1` con orden confuso entre sangría, mayúscula y concordancia; desbalance de opciones en MC.
+    - *Después:* `l13-ex-1` con secuencia cronológica estricta: 1. Sangría y mayúscula inicial → 2. Desarrollo con punto y seguido → 3. Punto y aparte → 4. Releer y revisar concordancia y ortografía. Pregunta de cierre: «¿Qué signo indica que el texto completo ha finalizado definitivamente?» → Correcta: «El punto final de todo el texto» | Distractores: «El punto y aparte del primer párrafo» / «La sangría del encabezado».
+14. **Mundo 14 (Conectores temporales y lógicos en la narración)**:
+    - *Antes:* Distractores de conectores con longitudes dispares y distractores cortos de 2 palabras.
+    - *Después:* «¿Qué conector temporal indica que dos acciones ocurren simultáneamente en el relato?» → Correcta: ««Mientras tanto» o «al mismo tiempo»» | Distractores: ««Al día siguiente por la mañana»» / ««Muchos años después de lo sucedido»».
+15. **Mundo 15 (El sujeto: expreso simple, compuesto y tácito)**:
+    - *Antes:* Desbalance en opciones del sujeto tácito con distractores breves («Sujeto invisible»).
+    - *Después:* «¿Por qué se dice que un sujeto es «desinencial» o «tácito» en una oración?» → Correcta: «Porque no está escrito pero se reconoce claramente por la terminación del verbo» | Distractores: «Porque la oración carece por completo de alguien que realice la acción» / «Porque contiene más de tres sustantivos coordinados en la misma frase».
+16. **Mundo 16 (El predicado verbal: simple, compuesto y circunstanciales)**:
+    - *Antes:* Predicado compuesto con opciones asimétricas y distractor de 4 palabras frente a 10 de la correcta.
+    - *Después:* «Al transformar «El zorro cazó» en un predicado compuesto, ¿qué enunciado es correcto?» → Correcta: ««El zorro cazó una presa y descansó tranquilo bajo la mata negra»» | Distractores: ««El zorro astuto y veloz caminaba con sigilo por la meseta»» / ««El zorro es un mamífero carnívoro de la fauna santacruceña»».
+17. **Mundo 17 (Los sustantivos: propios, comunes, individuales y colectivos)**:
+    - *Antes:* Confusión en sustantivos colectivos patagónicos y distractores con plurales vulgares.
+    - *Después:* «¿Qué sustantivo colectivo designa a un conjunto numeroso de peces que nadan juntos?» → Correcta: «Cardumen» | Distractores: «Enjambre» / «Jauría».
+18. **Mundo 18 (Los adjetivos calificativos, gentilicios y concordancia)**:
+    - *Antes:* Distractor corto de gentilicio («Del sur») que descompensaba la longitud de las alternativas.
+    - *Después:* «¿Qué gentilicio corresponde a una persona nacida en la provincia de Santa Cruz?» → Correcta: «Santacruceño o santacruceña» | Distractores: «Chubutense cordillerano» / «Rionegrino costero».
+19. **Mundo 19 (Los artículos y pronombres personales)**:
+    - *Antes:* Distractores cortos de 1 a 2 palabras para artículos determinados frente a frases completas.
+    - *Después:* «¿Qué función cumplen los pronombres personales «él, ella, ellos» en un texto narrativo?» → Correcta: «Reemplazan a sustantivos ya mencionados para evitar repeticiones innecesarias» | Distractores: «Acompañan siempre al sustantivo señalando su género y número exactos» / «Conectan dos párrafos distintos indicando relaciones de causa y efecto».
+20. **Mundo 20 (El verbo: persona, número y tiempo verbal)**:
+    - *Antes:* Opciones donde la correcta era la única redactada con explicación pedagógica completa.
+    - *Después:* «En la oración «Nosotros exploramos el bosque andino», ¿en qué persona y número está el verbo?» → Correcta: «Primera persona del plural» | Distractores: «Tercera persona del singular» / «Segunda persona del plural».
+21. **Mundo 21 (Tiempos verbales: presente, pasado y futuro)**:
+    - *Antes:* Ejemplos descontextualizados con distractores cortos («Caminó», «Irá»).
+    - *Después:* «¿En qué tiempo verbal se relata la acción: «Mañana visitaremos el glaciar Perito Moreno»?» → Correcta: «En tiempo futuro, porque la visita ocurrirá más adelante» | Distractores: «En tiempo presente, porque la acción transcurre en este instante» / «En tiempo pretérito, porque el viaje ya concluyó días atrás».
+22. **Mundo 22 (Pretérito perfecto simple vs pretérito imperfecto)**:
+    - *Antes:* Pregunta ambigua en líneas 698-699 («El cielo _____ nublado cuando comenzó la llovizna») con debate gramatical entre «estaba» y «estuvo».
+    - *Después:* Se desdobló en dos preguntas con consignas precisas e inequívocas:
+      - Puntual: «Completá con pretérito perfecto simple la acción puntual: «El montañista _____ la cima tras seis horas de marcha»» → Correcta: «alcanzó» | Distractores: «alcanzaba» / «alcanzará».
+      - Habitual: «Completá con pretérito imperfecto la costumbre reiterada: «Todos los inviernos, mi abuelo _____ leña para la estufa»» → Correcta: «juntaba» | Distractores: «juntó» / «juntará».
+23. **Mundo 23 (El infinitivo y las tres conjugaciones)**:
+    - *Antes:* Distractor corto de 3 palabras («En biografías históricas») frente a correcta de 7 palabras.
+    - *Después:* «¿En qué tipo de textos escolares es muy común redactar instrucciones usando infinitivos?» → Correcta: «En recetas de cocina y manuales de instrucciones» | Distractores: «En relatos biográficos y cuentos maravillosos» / «En notas informativas breves de periódicos regionales».
+24. **Mundo 24 (Familia de palabras, raíz y derivación)**:
+    - *Antes:* Ejemplos con distractores morfológicos arbitrarios que delataban por descarte léxico.
+    - *Después:* «Identificá la palabra primitiva a partir de la cual derivan «pescador, pesquería y pescar»:» → Correcta: «Pez o pesca, base de la actividad de captura» | Distractores: «Piscina, estanque artificial de natación» / «Pesa, instrumento para medir el peso de los cuerpos».
+25. **Mundo 25 (Prefijos comunes: des-, re-, sub-, in-)**:
+    - *Antes:* Opciones con distractores asimétricos y terminología abstracta de nivel secundario.
+    - *Después:* «¿Qué significado aporta el prefijo «des-» en palabras como «deshielo» o «desarmar»?» → Correcta: «Acción contraria, privación o negación» | Distractores: «Un prefijo que indica repetición continua de un mismo suceso en el tiempo» / «Ubicación por debajo de un punto de referencia espacial».
+26. **Mundo 26 (Sufijos comunes: -ito/-ita, -ero/-era, -ería)**:
+    - *Antes:* Distractores cortos de 3 palabras («Oficio o profesión», «La persona que atiende el local») frente a correctas de 7 a 9 palabras.
+    - *Después:* «¿Qué significado aporta el sufijo «-ería» en palabras como «panadería, librería, heladería»?» → Correcta: «Lugar o comercio donde se elabora o vende algo» | Distractores: «La persona que atiende o elabora productos» / «El instrumento o herramienta para trabajar».
+27. **Mundo 27 (Acentuación y sílaba tónica: agudas, graves y esdrújulas)**:
+    - *Antes:* Distractor excesivamente largo A1 en w27 q1: «La sílaba que se pronuncia con menor intensidad o fuerza en la voz del hablante» (14 palabras) junto a correcta «La sílaba tónica» (3 palabras).
+    - *Después:* «¿Cómo se llama la sílaba que se pronuncia con mayor fuerza de voz en una palabra?» → Correcta: «La sílaba tónica» | Distractores: «La sílaba átona» / «La sílaba final».
+28. **Mundo 28 (Reglas ortográficas: mp, mb, nv, signos de entonación)**:
+    - *Antes:* Distractores con ortografía arbitraria o términos poco familiares para la región.
+    - *Después:* «¿Qué regla ortográfica se aplica en palabras como «campo», «temprano» o «campamento»?» → Correcta: «Se escribe siempre m antes de la letra p» | Distractores: «Se escribe siempre n antes de la letra p» / «Se alternan libremente m o n según la región».
+
+---
+
+#### Pruebas y verificación de calidad
+
+- `scripts/test-grado4.ts` — **17/17 verificaciones en verde** (442.605 actividades simuladas en 500 vueltas/mundo).
+  - Incluye nuevo Check A1 activo para Naturales y Lengua.
+  - Longitud mínima de distractores validada en Lengua, Sociales y Naturales.
+  - Cero distractores de chiste (lista `JOKE_PHRASES` ampliada y verificada).
+  - Fuga de pistas: Naturales 3.85%, Lengua 0.09%, Sociales 3.34%, Global 2.37% (todas $\le 5\%$).
+- `npx tsc --noEmit` — ✅ Cero errores de TypeScript.
+- `npx eslint src` — ✅ Cero errores de linting.
+- `scripts/test-actividad.ts` — ✅ En verde.
+- `scripts/test-curriculo.ts` — ✅ En verde.
+- `scripts/test-avatar-capas.ts` — ✅ En verde (10/10).
+- `scripts/test-torneo.ts` — ✅ En verde.
+- `scripts/test-metas-vestidor.ts` — ✅ En verde.
+- `scripts/test-informe-contenidos.ts` — ✅ En verde.
+- `scripts/test-tablas-prioridades.ts` — ✅ En verde.
+- Grado 4 continúa con `publicado: false` en `src/lib/grades.ts`.
+- Contenidos de Matemática 100% intactos.
+
+---
 
 ### AG-27 · Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (Antigravity)
 

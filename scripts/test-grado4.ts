@@ -206,8 +206,9 @@ check("Distribución de longitud de opciones en bancos de opción múltiple (má
   assert(totalMCQuestions >= 2400, `Se esperaban >= 2400 preguntas evaluadas, se hallaron ${totalMCQuestions}`);
 });
 
-check("Calidad pedagógica: longitud mínima de distractores cuando la correcta tiene >= 6 palabras (Sociales y Naturales)", () => {
+check("Calidad pedagógica: longitud mínima de distractores cuando la correcta tiene >= 6 palabras (Lengua, Sociales y Naturales)", () => {
   const banks = [
+    { name: "Lengua", bank: LENGUA_BANK, n: 28 },
     { name: "Sociales", bank: SOCIALES_BANK, n: 26 },
     { name: "Naturales", bank: NATURALES_BANK, n: 26 },
   ];
@@ -228,6 +229,32 @@ check("Calidad pedagógica: longitud mínima de distractores cuando la correcta 
               `${b.name} mundo ${w} preg ${i + 1}: distractor "${dText}" tiene ${dWords} palabras (< 4) frente a correcta de ${cWords} palabras`
             );
           }
+        }
+      }
+    }
+  }
+});
+
+check("Calidad pedagógica: ningún distractor con cola pegada de 15+ palabras (>= 1.3x la correcta en Naturales y Lengua) (AG-28 A1)", () => {
+  const banks = [
+    { name: "Lengua", bank: LENGUA_BANK, n: 28 },
+    { name: "Naturales", bank: NATURALES_BANK, n: 26 },
+  ];
+  for (const b of banks) {
+    for (let w = 1; w <= b.n; w++) {
+      for (let i = 0; i < (b.bank[w] ?? []).length; i++) {
+        const q = b.bank[w][i];
+        if (!q.options || typeof q.answer !== "number") continue;
+        const cText = q.options[q.answer][1];
+        const cWords = cText.trim().split(/\s+/).length;
+        for (let o = 0; o < q.options.length; o++) {
+          if (o === q.answer) continue;
+          const dText = q.options[o][1];
+          const dWords = dText.trim().split(/\s+/).length;
+          assert(
+            !(dWords >= 15 && dWords >= cWords * 1.3),
+            `${b.name} mundo ${w} preg ${i + 1}: distractor de ${dWords} palabras es >= 15 palabras y >= 1.3 veces la correcta (${cWords} palabras): "${dText}"`
+          );
         }
       }
     }
@@ -418,6 +445,19 @@ check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y
     "los pucarás eran barcos",
     "el hueso más diminuto",
     "semillas de trigo",
+    "raíces de metal",
+    "cascos de metal",
+    "volar libremente",
+    "pelo no crezca",
+    "lluvia de aceite",
+    "zapatos pesados",
+    "gigantes antiguos",
+    "evaporación mágica",
+    "vapor dulce",
+    "transpiran hielo seco",
+    "hielo seco",
+    "hierro fundido",
+    "altos hornos",
   ];
 
   const banks = [
