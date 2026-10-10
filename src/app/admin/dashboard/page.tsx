@@ -21,8 +21,7 @@ import NewsAdmin from "@/components/admin/NewsAdmin";
 import MailboxAdmin from "@/components/admin/MailboxAdmin";
 import CompetitionAdmin from "@/components/admin/CompetitionAdmin";
 import EventosAdmin from "@/components/admin/EventosAdmin";
-import ReforzarPorEje from "@/components/admin/ReforzarPorEje";
-import { contenidosAReforzar } from "@/lib/reforzar";
+import InformeContenidos from "@/components/admin/InformeContenidos";
 import OpenClassroomAdmin from "@/components/admin/OpenClassroomAdmin";
 import SubjectBadge from "@/components/SubjectBadge";
 import Mountains from "@/components/Mountains";
@@ -890,50 +889,32 @@ export default function AdminDashboardPage() {
                   </div>
                 )}
 
-                {!!selectedProgress.worldsNeedingTeacherReview?.length && (
-                  <div>
-                    <p className="text-orange-700 font-semibold text-sm mb-0.5">
-                      🌱 Mundos jugados con bajo desempeño
-                    </p>
-                    <p className="text-xs text-orange-900/70 mb-1">
-                      Mundos que el alumno ya jugó pero todavía no llegó al {getGrade(selectedStudent.grade ?? 3).masteryPct}%. Conviene repasarlos.
-                    </p>
-                    <ReforzarPorEje
-                      className="bg-white/70 rounded-xl p-2"
-                      grupos={contenidosAReforzar(
-                        selectedProgress.worldsNeedingTeacherReview.map((id) => ({
-                          worldId: id,
-                          nivel: "practica-guiada" as const,
-                          precision: selectedProgress.lastWorldAttemptScore?.[id],
-                        })),
-                        { entradas: curriculumEntries }
-                      )}
-                    />
-                  </div>
-                )}
+                <div>
+                  <p className="text-amber-950 font-black mb-1">📚 Contenidos de {selectedStudent.grade ?? 3}.º grado por eje</p>
+                  <p className="text-xs text-amber-900/70 mb-2">
+                    Qué trabajó, sus fortalezas y dónde conviene hacer énfasis en el repaso.{" "}
+                    <a
+                      href={`/admin/reporte/alumno-contenidos?code=${encodeURIComponent(selectedStudent.code)}`}
+                      target="_blank"
+                      className="underline font-bold text-amber-800"
+                    >
+                      🖨️ Imprimir
+                    </a>
+                  </p>
+                  <InformeContenidos
+                    progress={selectedProgress}
+                    grade={selectedStudent.grade ?? 3}
+                    curriculumEntries={curriculumEntries}
+                    enabledIds={(() => {
+                      const grade = selectedStudent.grade ?? 3;
+                      return grade === 1 ? g1Enabled : grade === 2 ? g2Enabled : grade === 4 ? g4Enabled : enabledWorldIds;
+                    })()}
+                  />
+                </div>
 
-                {!!selectedProgress.worldsPendingReinforcementRetry?.length && (
+                {!!getGrade(selectedStudent.grade ?? 3, { borradores: true }).skills?.length && (
                   <div>
-                    <p className="text-amber-700 font-semibold text-sm mb-1">
-                      ⭐ A un repaso de completar
-                    </p>
-                    <ReforzarPorEje
-                      className="bg-white/70 rounded-xl p-2"
-                      grupos={contenidosAReforzar(
-                        selectedProgress.worldsPendingReinforcementRetry.map((id) => ({
-                          worldId: id,
-                          nivel: "necesita-practica" as const,
-                          precision: selectedProgress.lastWorldAttemptScore?.[id],
-                        })),
-                        { entradas: curriculumEntries }
-                      )}
-                    />
-                  </div>
-                )}
-
-                {(selectedStudent.grade === 1 || selectedStudent.grade === 2) && (
-                  <div>
-                    <p className="text-amber-950 font-black mb-2">📚 Habilidades de {selectedStudent.grade}.º grado</p>
+                    <p className="text-amber-950 font-black mb-2">🧩 Habilidades de {selectedStudent.grade}.º grado</p>
                     <SkillReport progress={selectedProgress} grade={selectedStudent.grade} />
                   </div>
                 )}
@@ -950,64 +931,6 @@ export default function AdminDashboardPage() {
                   <TorneoReport tablasTorneo={selectedProgress.tablasTorneo} />
                 </div>
 
-                <div>
-                  <p className="text-emerald-700 font-semibold text-sm mb-1">
-                    💪 Fortalezas (precisión ≥ 80%)
-                  </p>
-                  {stats.strengths.length ? (
-                    <p className="text-amber-950/80 text-sm">
-                      {stats.strengths.join(", ")}
-                    </p>
-                  ) : (
-                    <p className="text-amber-800/50 text-sm">
-                      Todavía no hay suficientes datos.
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <p className="text-amber-700 font-semibold text-sm mb-0.5">
-                    📌 Contenidos todavía no trabajados
-                  </p>
-                  <p className="text-xs text-amber-900/70 mb-1">
-                    Mundos habilitados del programa que el alumno todavía no empezó a jugar.
-                  </p>
-                  {(() => {
-                    const grade = selectedStudent.grade ?? 3;
-                    const enabled = grade === 1 ? g1Enabled : grade === 2 ? g2Enabled : enabledWorldIds;
-                    const unworked = enabled
-                      .filter((id) => {
-                        const completed = selectedProgress.completedWorlds.includes(id);
-                        const pending = selectedProgress.worldsPendingReinforcementRetry?.includes(id);
-                        const needing = selectedProgress.worldsNeedingTeacherReview?.includes(id);
-                        const inSummary =
-                          selectedProgress.activitySummary?.[id] &&
-                          (selectedProgress.activitySummary[id].correct > 0 ||
-                            selectedProgress.activitySummary[id].incorrect > 0);
-                        const inLog = selectedProgress.activityLog.some((a) => a.worldId === id);
-                        const hasScore = selectedProgress.lastWorldAttemptScore?.[id] !== undefined;
-                        return !completed && !pending && !needing && !inSummary && !inLog && !hasScore;
-                      })
-                      .map((id) => {
-                        const name = getWorld(id)?.name ?? `Mundo ${id}`;
-                        const curr = curriculumEntries[String(id)];
-                        return curr ? `${name} · ${curr.area} · ${curr.eje}` : name;
-                      });
-
-                    if (unworked.length > 0) {
-                      return (
-                        <p className="text-amber-950/80 text-sm">
-                          {unworked.join(", ")}
-                        </p>
-                      );
-                    }
-                    return (
-                      <p className="text-emerald-700 font-semibold text-sm">
-                        ✨ ¡Ya comenzó o completó todos los mundos habilitados!
-                      </p>
-                    );
-                  })()}
-                </div>
 
                 {stats.toImprove.length > 0 && (
                   <div>

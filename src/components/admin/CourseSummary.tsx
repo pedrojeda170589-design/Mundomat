@@ -18,6 +18,7 @@ import { GRADES } from "@/lib/grades";
 import { haParticipadoMonteLeon, tieneMochilaCompleta } from "@/lib/monteLeon";
 import { isOpenClassroomStudent } from "@/lib/openClassroomShared";
 import { contenidosAReforzar, resumirEjes } from "@/lib/reforzar";
+import RepasoDelCurso from "./RepasoDelCurso";
 
 interface CourseSummaryProps {
   students: Student[];
@@ -307,6 +308,19 @@ export default function CourseSummary({
             ))}
           </div>
         )}
+      </div>
+
+      {/* Qué repasar con el curso: contenidos por eje que más alumnos necesitan reforzar */}
+      <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/70 p-4 shadow-sm">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xl">📚</span>
+          <h3 className="font-black text-amber-950 text-base">Dónde hacer énfasis en el repaso</h3>
+        </div>
+        <p className="text-xs text-amber-900/70 mb-3">
+          Contenidos que más alumnos necesitan reforzar, agrupados por eje (entre los que ya los trabajaron). Elegí el grado
+          con los botones de la grilla.
+        </p>
+        <RepasoDelCurso students={filteredStudents} progressMap={progressMap} curriculumEntries={curriculumEntries} />
       </div>
 
       {/* 3. Filtros y cabecera de la grilla */}
