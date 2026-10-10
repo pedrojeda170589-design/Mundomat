@@ -20,7 +20,7 @@ import {
   getAvatarSrc,
   getValidAccessoryIdsForAvatar,
 } from "@/types";
-import { capasDe } from "@/lib/avatarCapas";
+import { capasDe, isPet, isProp } from "@/lib/avatarCapas";
 
 type Tab = "avatares" | "objetos";
 
@@ -73,6 +73,17 @@ export default function ShopModal({
     }
     if (preview?.accessory) {
       const accId = preview.accessory.id;
+      if (isProp(accId)) {
+        list = list.filter((c) => !isProp(c.id));
+      } else if (isPet(accId)) {
+        const pets = list.filter((c) => isPet(c.id));
+        if (pets.length >= 3) {
+          const firstPetIdx = list.findIndex((c) => isPet(c.id));
+          if (firstPetIdx >= 0) {
+            list = list.filter((_, idx) => idx !== firstPetIdx);
+          }
+        }
+      }
       list = [...list.filter((c) => c.id !== accId), { id: accId }];
     }
     return list;

@@ -72,5 +72,5 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return Response.json({ progress: liteProgress(updated) });
+  return Response.json({ progress: liteProgress(updated.progress) });
 }

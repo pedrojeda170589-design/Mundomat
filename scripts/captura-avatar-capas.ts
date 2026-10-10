@@ -83,22 +83,22 @@ async function main() {
   console.log("📸 Generando captura de pantalla de avatares con capas...");
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  // 1. Gorra primero (atrás), lentes segundo (adelante, sobre la visera de la gorra)
+  // 1. Gorra primero (atrás), vincha segundo (adelante, la vincha sobre la gorra)
   const orden1: AvatarCapa[] = [
-    { id: "gorra", y: 2 },
-    { id: "lentes", y: -2 },
+    { id: "gorra" },
+    { id: "vincha-67" },
   ];
 
-  // 2. Lentes primero (atrás), gorra segundo (adelante, la visera sobre los lentes)
+  // 2. Vincha primero (atrás), gorra segundo (adelante, la gorra sobre la vincha)
   const orden2: AvatarCapa[] = [
-    { id: "lentes", y: -2 },
-    { id: "gorra", y: 2 },
+    { id: "vincha-67" },
+    { id: "gorra" },
   ];
 
   // 3. Avatar con 3 mascotas abajo y objeto de mano (sin tapar el objeto de mano)
   const con3Mascotas: AvatarCapa[] = [
     { id: "gorra" },
-    { id: "lentes" },
+    { id: "vincha-67" },
     { id: "squishy-6" },
     { id: "squishy-7" },
     { id: "pinguino-peluche-ml" },
@@ -186,6 +186,9 @@ async function main() {
     .h-full { height: 100%; }
     .w-48 { width: 192px; }
     .h-48 { height: 192px; }
+    .w-\\[38\\%\\] { width: 38%; }
+    .h-\\[38\\%\\] { height: 38%; }
+    .z-10 { z-index: 10; }
     .rounded-3xl { border-radius: 24px; }
     .border-2 { border-width: 2px; }
     .border-amber-400\\/80 { border-color: rgba(251, 191, 36, 0.8); }
@@ -241,9 +244,9 @@ async function main() {
   </div>
 
   <div class="grid">
-    ${renderCard("1. Lentes sobre la gorra", "Gorra en capa #1, Lentes en capa #2", orden1)}
-    ${renderCard("2. Gorra sobre los lentes", "Lentes en capa #1, Gorra en capa #2", orden2)}
-    ${renderCard("3. Avatar con 3 mascotas", "3 mascotas abajo sin tapar la cara", con3Mascotas)}
+    ${renderCard("1. Vincha sobre la gorra", "Gorra en capa #1, Vincha en capa #2", orden1)}
+    ${renderCard("2. Gorra sobre la vincha", "Vincha en capa #1, Gorra en capa #2", orden2)}
+    ${renderCard("3. Avatar con 3 mascotas y globos", "3 mascotas abajo y globos en mano", con3Mascotas)}
   </div>
 
   <div class="footer">

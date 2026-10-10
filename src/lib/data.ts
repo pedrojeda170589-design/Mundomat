@@ -422,8 +422,8 @@ export interface ProfileUpdate {
 // servidor, para que no se puedan "trampear" accesorios bloqueados desde el
 // cliente.
 export type ProfileUpdateResult =
-  | (StudentProgress & { ok: true })
-  | (Partial<StudentProgress> & { ok: false; error: string });
+  | { ok: true; progress: StudentProgress }
+  | { ok: false; error: string };
 
 export async function updateStudentProfile(
   code: string,
@@ -491,13 +491,19 @@ export async function updateStudentProfile(
       for (const key of Object.keys(update.accessories) as AccessorySlot[]) {
         const value = update.accessories[key];
         if (value === null || value === undefined) {
-          currentCapas = currentCapas.filter((c) => getAccessoryById(c.id)?.slot !== key);
+          const inSlot = currentCapas.filter((c) => getAccessoryById(c.id)?.slot === key);
+          if (inSlot.length === 1) {
+            currentCapas = currentCapas.filter((c) => c.id !== inSlot[0].id);
+          }
         } else {
+          // Si el id que llega ya está en las capas, ese lugar no se toca.
+          if (currentCapas.some((c) => c.id === value)) {
+            continue;
+          }
+          // Solo se reemplaza o se saca cuando el id es distinto.
           const existingIdx = currentCapas.findIndex((c) => getAccessoryById(c.id)?.slot === key);
           if (existingIdx >= 0) {
-            const old = currentCapas[existingIdx];
-            currentCapas[existingIdx] = { id: value, x: old.x, y: old.y, s: old.s };
-            currentCapas = currentCapas.filter((c, i) => i === existingIdx || getAccessoryById(c.id)?.slot !== key);
+            currentCapas[existingIdx] = { id: value };
           } else {
             currentCapas.push({ id: value });
           }
@@ -580,20 +586,22 @@ export async function updateStudentProfile(
       else out[slot] = v;
     }
     next.avatarTweaks = Object.keys(out).length ? out : undefined;
-    if (next.avatarCapas) {
-      next.avatarCapas = next.avatarCapas.map((c) => {
-        const def = getAccessoryById(c.id);
-        const t = def ? out[def.slot] : undefined;
-        const res: AvatarCapa = { id: c.id };
-        if (t?.x !== undefined && t.x !== 0) res.x = t.x;
-        if (t?.y !== undefined && t.y !== 0) res.y = t.y;
-        if (t?.s !== undefined && t.s !== 1) res.s = t.s;
-        return res;
-      });
+    if (!progress.avatarCapas || progress.avatarCapas.length === 0) {
+      if (next.avatarCapas) {
+        next.avatarCapas = next.avatarCapas.map((c) => {
+          const def = getAccessoryById(c.id);
+          const t = def ? out[def.slot] : undefined;
+          const res: AvatarCapa = { id: c.id };
+          if (t?.x !== undefined && t.x !== 0) res.x = t.x;
+          if (t?.y !== undefined && t.y !== 0) res.y = t.y;
+          if (t?.s !== undefined && t.s !== 1) res.s = t.s;
+          return res;
+        });
+      }
     }
   }
   await saveProgress(next);
-  return Object.assign(next, { ok: true as const });
+  return { ok: true, progress: next };
 }
 
 // --- Aventura de fin de semana (Memoria Numérica) ---

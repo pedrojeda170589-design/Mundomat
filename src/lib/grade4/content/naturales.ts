@@ -1413,11 +1413,14 @@ export const TF_PAIRS_NATURALES: Record<number, { v: string; f: string; hint: st
 };
 const tfRecentNaturales = new Map<number, number>();
 
-export function getTfActivity(n: number, id: string, skills: string[]): ActivitySpec {
+export function getTfActivity(n: number, id: string, skills: string[], advance?: boolean): ActivitySpec {
   const pool = TF_PAIRS_NATURALES[n] ?? TF_PAIRS_NATURALES[1];
+  const shouldAdvance = advance ?? !id.includes("-ex-");
   const lastIdx = tfRecentNaturales.get(n) ?? -1;
-  const nextIdx = (lastIdx + 1) % pool.length;
-  tfRecentNaturales.set(n, nextIdx);
+  const nextIdx = shouldAdvance ? (lastIdx + 1) % pool.length : (lastIdx === -1 ? 0 : lastIdx);
+  if (shouldAdvance) {
+    tfRecentNaturales.set(n, nextIdx);
+  }
   const item = pool[nextIdx];
   return makeVF(id, item.v, item.f, item.hint, skills);
 }
