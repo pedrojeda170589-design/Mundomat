@@ -72,6 +72,7 @@ import {
   type ResultadoVuelta,
 } from "@/lib/torneo/vueltas";
 import { sumarPartida } from "@/lib/torneo/prioridades";
+import { getPrenda, prendasDe, validarVestimenta } from "@/lib/vestidor/catalogo";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -841,6 +842,17 @@ export type PurchaseResult =
 // Compra un avatar u objeto de la tienda con monedas. Se valida todo en el
 // servidor (precio, monedas y que no lo tenga ya).
 export async function buyShopItem(code: string, itemId: string): Promise<PurchaseResult> {
+  // Ropa del vestidor (se guarda aparte: StudentProgress.prendas).
+  const prenda = getPrenda(itemId);
+  if (prenda) {
+    if (!prenda.precio) return { ok: false, error: prenda.regalo ? "¡Ya la tenés!" : "Esa prenda se gana con una meta especial." };
+    const pr = await getProgress(code);
+    if (prendasDe(pr).includes(itemId)) return { ok: false, error: "¡Ya la tenés!" };
+    if (pr.coins < prenda.precio) return { ok: false, error: `Te faltan ${prenda.precio - pr.coins} monedas.` };
+    const nextP: StudentProgress = { ...pr, coins: pr.coins - prenda.precio, prendas: [...(pr.prendas ?? []), itemId] };
+    await saveProgress(nextP);
+    return { ok: true, progress: nextP };
+  }
   const avatar = getShopAvatar(itemId);
   const accessory = ACCESSORY_CATALOG_TIENDA.find((a) => a.id === itemId);
   const price = avatar?.price ?? accessory?.price;
@@ -867,6 +879,17 @@ export async function buyShopItem(code: string, itemId: string): Promise<Purchas
     coins: progress.coins - price,
     shopCollection: [...owned, itemId],
   };
+  await saveProgress(next);
+  return { ok: true, progress: next };
+}
+
+// Guarda la ropa que tiene puesta en el vestidor (solo cuerpos que existen
+// y prendas que tiene, cada una en su zona).
+export async function saveVestimenta(code: string, raw: unknown): Promise<{ ok: true; progress: StudentProgress } | { ok: false; error: string }> {
+  const progress = await getProgress(code);
+  const v = validarVestimenta(raw, prendasDe(progress));
+  if (!v.ok) return v;
+  const next: StudentProgress = { ...progress, vestimenta: v.vestimenta };
   await saveProgress(next);
   return { ok: true, progress: next };
 }

@@ -4,6 +4,7 @@ import { IMAGENES_LISTAS } from "@/lib/coleccion/imagenes-listas";
 import { DROPS } from "@/lib/coleccion/drops";
 import { OBJETOS_TORNEO_ANTERIORES, TODOS_LOS_PREMIOS_TORNEO } from "@/lib/torneo/vueltas";
 import { CAMINO } from "@/lib/coleccion/racha";
+import { AVATARES_META, OBJETOS_META } from "@/lib/coleccion/metasDatos";
 import { AVATARES_MONTE_LEON, MASCOTA_MONTE_LEON, MEDALLA_MONTE_LEON, MOCHILA_MONTE_LEON } from "@/lib/monteLeon/arte";
 // Tipos compartidos de MundoMat
 
@@ -130,6 +131,14 @@ export interface StudentProgress {
   diasEstudio?: Record<string, { c: number; i: number }>;
   mejorRacha?: number;
   caminoReclamados?: string[];
+  // Metas especiales (racha, etapas, días súper): ids ya entregados y cuántos
+  // días súper tuvo (diasEstudio guarda solo los últimos meses).
+  metasReclamadas?: string[];
+  diasSuperContados?: number;
+  // Vestidor de cuerpo completo (ver lib/vestidor/catalogo.ts): ropa ganada
+  // o comprada (la de regalo no se guarda) y lo que tiene puesto.
+  prendas?: string[];
+  vestimenta?: { cuerpo: string; puesto: Partial<Record<"calzado" | "abajo" | "arriba" | "extra" | "abrigo" | "cabeza", string>> };
   // Ajustes del alumno a cada objeto puesto: corrimiento (en % del retrato)
   // y tamaño. Ver AvatarDisplay y el editor del perfil.
   avatarTweaks?: AvatarTweaks;
@@ -254,6 +263,8 @@ export const AVATAR_OPTIONS: string[] = [
   ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => a.id)).filter((id) => IMAGENES_LISTAS.has(id)),
   ...AVATARES_LOGRO.map((l) => l.id).filter((id) => IMAGENES_LISTAS.has(id)),
   ...AVATARES_MONTE_LEON.map((a) => a.id).filter((id) => IMAGENES_LISTAS.has(id)),
+  // Metas especiales (racha, etapas, días súper): se ganan.
+  ...AVATARES_META.map((a) => a.id).filter((id) => IMAGENES_LISTAS.has(id)),
 ];
 
 // Avatares nuevos (colecciones y logros): personaje de siempre con el mismo
@@ -262,12 +273,14 @@ export const AVATAR_FIT_LIKE: Record<string, string> = Object.fromEntries([
   ...TEMPORADAS.flatMap((t) => t.avatares.map((a) => [a.id, a.comoAvatar ?? "explorador"])),
   ...AVATARES_LOGRO.map((l) => [l.id, l.comoAvatar]),
   ...AVATARES_MONTE_LEON.map((a) => [a.id, a.comoAvatar ?? "explorador"]),
+  ...AVATARES_META.map((a) => [a.id, a.comoAvatar]),
 ]);
 
 // Avatares de logro: se ganan, no se compran (StudentProgress.achievementCollection).
 export const LOGRO_AVATAR_IDS = new Set([
   ...AVATARES_LOGRO.map((l) => l.id),
   ...AVATARES_MONTE_LEON.map((a) => a.id),
+  ...AVATARES_META.map((a) => a.id),
 ]);
 
 // Nombre y emoji decorativo de cada avatar, para el texto alternativo y como
@@ -309,6 +322,7 @@ export const AVATAR_INFO: Record<string, { label: string; emoji: string }> = {
   "explorador-monte-leon": { label: "Explorador de Monte León", emoji: "🧭" },
   "guardaparque-monte-leon": { label: "Guardaparque de Monte León", emoji: "🌳" },
   "pinguino-monte-leon": { label: "Pingüino de Magallanes", emoji: "🐧" },
+  ...Object.fromEntries(AVATARES_META.map((a) => [a.id, { label: a.label, emoji: a.emoji }])),
 };
 
 // --- Tienda ---
@@ -622,6 +636,10 @@ export const ACCESSORY_CATALOG_PREMIO: AccessoryDef[] = [
   // Premios del camino de racha (ver src/lib/coleccion/racha.ts).
   ...CAMINO.flatMap((n) => (n.premio.tipo === "objeto" && IMAGENES_LISTAS.has(n.premio.id) ? [n.premio] : [])).map(
     (o): AccessoryDef => ({ id: o.id, slot: o.slot, label: o.label, emoji: "🔥", group: "premio", fitLike: o.molde })
+  ),
+  // Metas especiales (racha, etapas, días súper; ver src/lib/coleccion/metasDatos.ts).
+  ...OBJETOS_META.filter((o) => IMAGENES_LISTAS.has(o.id)).map(
+    (o): AccessoryDef => ({ id: o.id, slot: o.slot, label: o.label, emoji: o.emoji, group: "premio", ...(o.molde ? { fitLike: o.molde } : {}) })
   ),
   // Mascotas de logro (vienen con el avatar de un texto de comprensión).
   ...AVATARES_LOGRO.filter((l) => l.mascota && IMAGENES_LISTAS.has(l.mascota.id)).map(

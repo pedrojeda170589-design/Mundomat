@@ -22,6 +22,9 @@ import CoinBadge from "@/components/CoinBadge";
 import ProfileEditor from "@/components/ProfileEditor";
 import ShopModal from "@/components/ShopModal";
 import CaminoRacha from "@/components/CaminoRacha";
+import Vestidor from "@/components/Vestidor";
+import MetasEspeciales from "@/components/MetasEspeciales";
+import MetaNueva from "@/components/MetaNueva";
 import { estadoRacha } from "@/lib/coleccion/racha";
 import { ofertaVigente } from "@/lib/tiempo-limitado";
 import AvatarDisplay from "@/components/AvatarDisplay";
@@ -77,6 +80,8 @@ export default function StudentPlayPage() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const [caminoOpen, setCaminoOpen] = useState(false);
+  const [vestidorOpen, setVestidorOpen] = useState(false);
+  const [metasOpen, setMetasOpen] = useState(false);
   const [monteLeonOpen, setMonteLeonOpen] = useState(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
   const [oferta, setOferta] = useState(() => ofertaVigente());
@@ -429,6 +434,22 @@ export default function StudentPlayPage() {
             🔥 {racha.racha}
           </button>
           <button
+            onClick={() => setMetasOpen(true)}
+            className="shrink-0 rounded-full border-2 border-amber-300/70 bg-black/20 px-2 py-0.5 text-xs font-black text-amber-100 shadow active:scale-95"
+            title="Metas especiales: avatares, objetos y ropa para ganar"
+            aria-label="Metas especiales"
+          >
+            🎯
+          </button>
+          <button
+            onClick={() => setVestidorOpen(true)}
+            className="shrink-0 rounded-full border-2 border-sky-300/70 bg-black/20 px-2 py-0.5 text-xs font-black text-sky-100 shadow active:scale-95"
+            title="Mi vestidor: armá tu personaje de cuerpo completo"
+            aria-label="Mi vestidor"
+          >
+            👕
+          </button>
+          <button
             onClick={() => setShopOpen(true)}
             className="relative rounded-full hover:brightness-110 active:scale-95 transition"
             title="Tienda: gastá tus monedas en avatares y objetos"
@@ -463,6 +484,16 @@ export default function StudentPlayPage() {
       </div>
 
       {caminoOpen && <CaminoRacha progress={progress} grade={grade} onClose={() => setCaminoOpen(false)} />}
+      {metasOpen && <MetasEspeciales progress={progress} onClose={() => setMetasOpen(false)} />}
+      {code && <MetaNueva code={code} progress={progress} />}
+      {vestidorOpen && (
+        <Vestidor
+          code={code}
+          progress={progress}
+          onClose={() => setVestidorOpen(false)}
+          onProgress={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
+        />
+      )}
       {shopOpen && (
         <ShopModal
           code={code}

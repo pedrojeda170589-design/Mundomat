@@ -67,6 +67,14 @@ Las escenas son 1536×1024 (3:2), en JPG.
 ## 6 bis. Islas de 4.º grado (`public/theme/grados/4/islas/mundo-<id>.png`)
 Las 108 islas de 4.º (8/10/2026), estilo «glaciares»: isla flotante con hielo celeste, carámbanos, lengas y un hilo de agua turquesa, y el tema de cada mundo arriba. Ambiente `THEMES.glaciar` (`src/lib/grades.ts`). Se hicieron en 12 láminas sobre fondo magenta y se procesaron con `scripts/coleccion/islas_lamina.py <lámina> 4 <id1> … <id9>`; las láminas quedan en `Descargas/cuentos_mm/islas4/`. El fondo del mapa de 4.º usa los paisajes de Santa Cruz de cada módulo.
 
+## 6 ter. Vestidor de cuerpo completo (`public/theme/vestidor/`)
+
+- **Idea de Pedro:** el cuerpo es «invisible». De cada personaje (`cuerpos/<id>.png`) quedan solo la cabeza y las manos (el color de piel). Debajo de todo va una capa común, `cuerpos/_termica.png` (camiseta térmica, calza gris y medias). Así toda la ropa sirve para todos los personajes, y un personaje nuevo es solo cabeza y manos.
+- Las prendas (`prendas/<id>.png` y `<id>-mini.png` para la tienda) se pidieron en ChatGPT como **edición de la misma imagen base** (nene-a, fondo magenta, misma pose y posición). La prenda es lo que cambió entre las dos imágenes: `python3 scripts/coleccion/vestidor.py prenda <base> <vestido> <id> <zona> [umbral] [cierre]`. Los parámetros de cada prenda están en `scripts/coleccion/vestidor-prendas.txt`.
+- Para un personaje nuevo: editar la base cambiando solo la cabeza y las manos, `vestidor.py cuerpo <img> <id>` y `vestidor.py separar <id>`.
+- Prendas claras parecidas al gris (crema, beige): umbral más bajo y cierre más grande. Gorros: la zona `cabeza` llega solo hasta las cejas, para no copiar la cara de nene-a.
+- Calzado alto (botas): `sobrePantalon: true` en el catálogo, para que se dibuje encima del pantalón.
+
 ## 7. Cuentos
 - `public/theme/grados/1/cuentos/tortuga-gigante-2.jpg`: corregida (la tortuga tenía tres ojos).
 

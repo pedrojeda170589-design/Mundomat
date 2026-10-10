@@ -1,0 +1,33 @@
+# id zona [umbral cierre]  — cómo se recortó cada prenda (ver vestidor.py)
+remera-roja arriba
+remera-rayas arriba
+buzo-escolar arriba
+camisa-cuadros arriba
+remera-pinguino arriba
+buzo-guarda arriba 35 10
+chomba-verde arriba
+camiseta-celeste arriba
+jean abajo
+pollera-tableada abajo
+short-verde abajo
+bombacha-campo abajo 30 12
+jogging-azul abajo
+cargo-marron abajo
+zapatillas-rojas calzado
+zapatillas-azules calzado
+botas-lluvia botas
+botas-nieve botas
+alpargatas calzado
+botines calzado
+campera-inflable abrigo
+poncho abrigo
+guardapolvo abrigo
+piloto abrigo
+chaleco-polar abrigo
+campera-jean abrigo
+gorro-pompon cabeza
+gorra-visera cabeza
+casco-bici cabeza
+bufanda arriba
+guantes extra
+rinonera abajo

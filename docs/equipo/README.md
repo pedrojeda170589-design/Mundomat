@@ -89,6 +89,12 @@ rama, así nunca se pisan los archivos.
   regalo, usá `ocultar` para poner un «?» en ese casillero.
 - **Cuentos:** se narran siempre con la voz del navegador, oración por
   oración (no se usan audios grabados).
+- **Vestidor y metas especiales (desde el 10/10/2026):** la ropa del vestidor
+  vive en `src/lib/vestidor/catalogo.ts` (todas las prendas en el mismo lienzo
+  de 512 × 768, ver `docs/equipo/IMAGENES.md` § 6 ter). Los premios por racha,
+  etapas y días súper están en `src/lib/coleccion/metasDatos.ts` y se entregan
+  solos en el servidor (`reclamarMetas`). Para sumar un avatar u objeto ganable,
+  agregalo ahí y corré `npx tsx scripts/coleccion/listar-imagenes.ts`.
 - **Informe del docente por contenidos (desde el 10/10/2026):** cada mundo es
   un contenido del programa con su eje. `src/lib/informeContenidos.ts` decide
   si es fortaleza, en desarrollo, a reforzar o sin trabajar, para **todos los

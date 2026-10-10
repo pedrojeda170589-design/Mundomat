@@ -10,6 +10,7 @@ import { ActivityResult } from "@/types";
 import { equiparGorritoAniversario } from "@/lib/avatarCapas";
 import { avanzarVuelta } from "@/lib/vuelta";
 import { reclamarCamino, registrarRespuesta } from "@/lib/coleccion/racha";
+import { reclamarMetas } from "@/lib/coleccion/metas";
 
 import { checkCodeRateLimit, codigoDe, getClientIp, recordFailedCodeAttempt, recordSuccessfulCodeAttempt } from "@/lib/rateLimit";
 import { proposeDisplayName } from "@/lib/studentNames";
@@ -146,7 +147,9 @@ export async function POST(request: NextRequest) {
     typeof mistake === "string" ? mistake : undefined
   );
   // Racha de estudio: cuenta la respuesta del día y entrega los premios del camino.
-  const { progress: updated, nuevos: camino } = reclamarCamino(registrarRespuesta(afterRound, (correct ?? 0) > 0));
+  const { progress: afterCamino, nuevos: camino } = reclamarCamino(registrarRespuesta(afterRound, (correct ?? 0) > 0));
+  // Metas especiales (racha, etapas, días súper): avatares, objetos y ropa.
+  const { progress: updated, nuevas: metas } = reclamarMetas(afterCamino);
   await saveProgress(updated);
   // Historial académico en la plataforma (después de responder: no demora
   // el juego). `clientId` evita duplicar la misma respuesta.
@@ -163,7 +166,7 @@ export async function POST(request: NextRequest) {
     })
   );
 
-  return Response.json({ progress: liteProgress(updated), coinsEarned, newRewards, camino: camino.map((n) => n.id) });
+  return Response.json({ progress: liteProgress(updated), coinsEarned, newRewards, camino: camino.map((n) => n.id), metas: metas.map((m) => m.id) });
 }
 
 function validClientId(id: unknown): string | null {

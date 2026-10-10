@@ -8,6 +8,7 @@ import { esSemanaDeDictado } from "@/lib/dictado/banco";
 import { terminarVuelta } from "@/lib/vuelta";
 import { aplicarPremiosDeMundo } from "@/lib/coleccion/premios";
 import { reclamarCamino } from "@/lib/coleccion/racha";
+import { reclamarMetas } from "@/lib/coleccion/metas";
 import { getWorld } from "@/lib/worlds";
 import { masteryPctForWorld } from "@/lib/grades";
 import { TOTAL_ACTIVITIES_PER_WORLD } from "@/types";
@@ -116,7 +117,8 @@ export async function POST(request: NextRequest) {
   const pct = Math.round((Math.min(correctCount, totalVuelta) / totalVuelta) * 100);
   const { progress: afterPremios, premios } = aplicarPremiosDeMundo(afterAttempt, worldId, pct, getWorld(worldId)?.storyId);
   // Mundos superados también avanzan el camino de premios (nodos 🏆).
-  const { progress: updated } = reclamarCamino(afterPremios);
+  // …y las metas especiales (etapas superadas).
+  const { progress: updated } = reclamarMetas(reclamarCamino(afterPremios).progress);
   await saveProgress(updated);
   // Aula de prueba: si ya superó los mundos de todas las materias, la prueba
   // termina (al volver al mapa ve su informe final).

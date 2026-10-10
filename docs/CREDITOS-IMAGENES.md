@@ -85,6 +85,8 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
 - **Islas de 4.º grado** (`public/theme/grados/4/islas/`), generadas en ChatGPT el 8/10/2026 (12 láminas de 9): ilustraciones propias de objetos, paisajes y animales; sin marcas, personajes conocidos ni textos.
 - **Viaje a Monte León** (`public/theme/monte-leon/`, `accessories-temporada/*-ml.png`, `medalla-monte-leon`, `avatars/*-monte-leon.png`), generados en ChatGPT el 5/10/2026: objetos de la mochila, pingüino de peluche, medalla, tres avatares superespeciales, seis escenas del parque (ilustraciones, no fotos) e isla del mapa.
 - **Premios del repaso de las tablas en tres metales** (cronómetro, gorra y banderín de las tablas; trofeo, corona y estrella fugaz), ChatGPT, 5/10/2026.
+- **Vestidor de cuerpo completo** (`public/theme/vestidor/`), generado en ChatGPT el 10/10/2026: cuatro personajes originales (solo cabeza y manos; la ropa térmica gris es una capa común) y 31 prendas, cada una pedida como edición de la misma imagen base. **Nota honesta:** el prompt de la imagen base dijo por error «tipo película animada (Pixar)», contra la regla del punto 3. El personaje es original y no hay nada de Pixar en la imagen (un estilo no está protegido), pero si se prefiere se puede regenerar la base con un prompt sin esa palabra y volver a pedir las prendas.
+- **Metas especiales** (`public/theme/avatars/{huemul,lobo-marino,choique,inventora,lectora,artista}.png` y objetos en `accessories-temporada/`), ChatGPT, 10/10/2026: personajes y objetos originales, sin marcas.
 - **Cuento «La tortuga gigante», escena 2**: se le quitó el tercer ojo a la tortuga (retoque local, 5/10/2026).
 
 ## 7. Revisión del 5/10/2026 (imágenes nuevas)
