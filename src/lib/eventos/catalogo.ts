@@ -29,6 +29,7 @@ export const DESAFIOS_CATALOGO: DefEvento[] = [
   { ...D(DESAFIOS.prestamo67), grupo: "desafio", emoji: "6️⃣", nombre: "Préstamo Six-Seven (para quien jugó el repaso y está al día)", auto: "Siempre que el repaso de las tablas esté habilitado." },
   { ...D(DESAFIOS.dictado), grupo: "desafio", gradosPosibles: [2, 3], emoji: "✍️", nombre: "Mundo del Dictado semanal", auto: "Semana por medio (semanas pares).", nota: "Existe en 2.º y 3.º." },
   { ...D(DESAFIOS.monteLeon), grupo: "desafio", emoji: "🐧", nombre: "Viaje a Monte León", auto: "Hasta el 27/10/2026 a las 23:59.", nota: "El cartel de buen viaje y la medalla siguen con su fecha (27 y 28/10)." },
+  { ...D(DESAFIOS.reserva), grupo: "desafio", gradosPosibles: [3, 4, 5, 6], emoji: "🦙", nombre: "Reserva y expedición patagónica (departamentos de Santa Cruz y Patagonia)", auto: "Siempre (en 3.º y 4.º)." },
   { ...D(DESAFIOS.competencia), grupo: "desafio", emoji: "⚔️", nombre: "Competencia (duelos entre compañeros)", auto: "Según la sección Competencia (fines de semana o todos los días).", nota: "Si la apagás en la sección Competencia, queda apagada." },
   { ...D(DESAFIOS.zonasPractica), grupo: "desafio", gradosPosibles: [1, 2], emoji: "🎯", nombre: "Zonas de práctica (refuerzo automático)", auto: "Aparecen solas cuando una habilidad necesita práctica.", nota: "Existen en 1.º y 2.º." },
 ];

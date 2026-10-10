@@ -87,6 +87,16 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
 - **Premios del repaso de las tablas en tres metales** (cronómetro, gorra y banderín de las tablas; trofeo, corona y estrella fugaz), ChatGPT, 5/10/2026.
 - **Vestidor de cuerpo completo** (`public/theme/vestidor/`), generado en ChatGPT el 10/10/2026: cuatro personajes originales (solo cabeza y manos; la ropa térmica gris es una capa común) y 31 prendas, cada una pedida como edición de la misma imagen base. El 10/10/2026 se rehicieron la imagen base, los cuatro personajes y las 33 prendas con prompts **sin nombres de estudios ni marcas** (la primera versión había dicho por error «tipo Pixar»; se reemplazó entera).
 - **Metas especiales** (`public/theme/avatars/{huemul,lobo-marino,choique,inventora,lectora,artista}.png` y objetos en `accessories-temporada/`), ChatGPT, 10/10/2026: personajes y objetos originales, sin marcas.
+- **Reserva y expedición patagónica** (`public/theme/reserva/`), 10/10/2026:
+  - **Mapa:** dibujado por código (`scripts/reserva/mapa.py`). Las provincias y los países vecinos salen de Natural Earth (dominio público). Los departamentos de Santa Cruz salen del IGN, SIG 250 (CC BY 4.0), en la versión GeoJSON de github.com/mgaitan/departamentos_argentina. La atribución se ve debajo del mapa. Incluye las Islas Malvinas y el recuadro de la Antártida Argentina.
+  - **Postales** (`postales/`): ilustraciones de paisajes reales pedidas en ChatGPT, sin texto ni marcas.
+  - **Especies y objetos** (`especies/`, `objetos/`): láminas 3×3 sobre magenta en ChatGPT, cortadas con `scripts/reserva/arte.py`.
+  - **Banderas y escudos oficiales** (`emblemas/`): usados sin modificar, solo achicados. Vienen de Wikimedia Commons:
+    - Bandera de Santa Cruz, Escudo de Santa Cruz, banderas del Chubut, Río Negro y Neuquén, y escudo de El Calafate (autora María de los Ángeles De Vito): CC BY 4.0.
+    - Bandera de Tierra del Fuego: dominio público.
+    - Escudo de Puerto San Julián: CC BY-SA 4.0.
+
+    La ficha de cada uno muestra la fuente. Faltan los escudos de Perito Moreno, Puerto Deseado y Puerto Santa Cruz, que no tienen un archivo con licencia clara; mientras tanto se ve un escudo genérico. Lo ideal es pedirlos a cada municipio.
 - **Cuento «La tortuga gigante», escena 2**: se le quitó el tercer ojo a la tortuga (retoque local, 5/10/2026).
 
 ## 7. Revisión del 5/10/2026 (imágenes nuevas)

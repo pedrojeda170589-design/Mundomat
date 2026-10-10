@@ -1,6 +1,8 @@
 # Actividad especial · Reserva y expedición patagónica (3.º y 4.º grado)
 
-**Estado:** diseño acordado con Pedro (10/10/2026). Todavía no está programada ni asignada.
+**Estado:** programada por Claude en CL-36 (10/10/2026). Código en `src/lib/reserva/` (etapas, fichas, preguntas y reglas), `src/components/reserva/` y `src/app/api/reserva/`; pruebas en `scripts/test-reserva.ts`; mapa generado con `scripts/reserva/mapa.py`; ilustraciones con `scripts/reserva/arte.py`.
+
+**Cómo quedó:** 11 etapas (los 7 departamentos de Santa Cruz y después Tierra del Fuego, Chubut, Río Negro y Neuquén). Cada una tiene postal, datos del lugar, fichas para leer y una vuelta de 8 actividades, que se supera con 6. Siempre trae un «tocá en el mapa». La primera vez que se supera, la etapa da su animal, su planta, su objeto tradicional y su escudo o bandera. Con los siete departamentos se gana la medalla de la expedición por Santa Cruz. Desde el panel se habilita por grado y por fechas («Desafíos y eventos»).
 
 ## Qué es
 Una **actividad especial** (como el Viaje a Monte León o el repaso de las tablas) para **3.º y 4.º grado**. En 4.º se trabaja la provincia de Santa Cruz. Todo gira en torno a la **fauna y la flora autóctonas**, y a la vez se recorre el territorio:
@@ -10,7 +12,7 @@ Una **actividad especial** (como el Viaje a Monte León o el repaso de las tabla
 ## Pantalla de entrada: el mapa
 - **Mapa de la Argentina** con el territorio de la **Patagonia sombreado**.
 - La **provincia de Santa Cruz** con el **contorno remarcado** y sus **departamentos delineados y numerados**.
-- La numeración empieza por **Río Chico** (cabecera: Gobernador Gregores, donde está la escuela) y sigue por los vecinos. Orden propuesto, a confirmar con Pedro:
+- La numeración empieza por **Río Chico** (cabecera: Gobernador Gregores, donde está la escuela) y sigue por los vecinos. Orden confirmado por Pedro el 10/10/2026:
   1. Río Chico (Gobernador Gregores)
   2. Lago Buenos Aires (Perito Moreno, Los Antiguos)
   3. Deseado (Puerto Deseado, Caleta Olivia, Pico Truncado, Las Heras)

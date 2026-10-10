@@ -144,6 +144,7 @@ export const DESAFIOS = {
   prestamo67: { id: "prestamo-67", grados: [3, 4] },
   dictado: { id: "dictado", grados: [2, 3] },
   monteLeon: { id: "monte-leon", grados: [3] },
+  reserva: { id: "reserva-patagonica", grados: [3, 4] },
   competencia: { id: "competencia", grados: [3] },
   zonasPractica: { id: "zonas-practica", grados: [1, 2] },
 } as const;

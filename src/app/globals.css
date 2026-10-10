@@ -418,3 +418,13 @@ body {
   .mm-premio-zoom, .mm-premio-zoom-emoji { animation: none !important; }
   .mm-premio-zoom-emoji { filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.95)); }
 }
+
+/* Reserva patagónica: territorio en foco (late suave). */
+@keyframes mm-territorio {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.18) drop-shadow(0 0 2px #fbbf24); }
+}
+.mm-territorio-foco { animation: mm-territorio 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .mm-territorio-foco { animation: none; }
+}

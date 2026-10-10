@@ -191,6 +191,13 @@ export interface StudentProgress {
   // Accesorio Six-Seven prestado (torneo + al día con los mundos): se puede
   // usar hasta `hasta` (el viernes a la noche) y después se devuelve solo.
   prestamo67?: { id: string; hasta: string; semana: string };
+  // Actividad especial «Reserva y expedición patagónica» (3.º y 4.º):
+  // mejor resultado por etapa (1..11) y lo ganado (animales, plantas, objetos
+  // y símbolos; ver src/lib/reserva).
+  reserva?: {
+    etapas: Record<number, { mejor: number; fecha: string }>;
+    coleccion: string[];
+  };
   // Mundo Especial «Viaje a Monte León» (3.º grado, octubre 2026).
   monteLeon?: {
     etapas: Record<number, { bestScore: number; completedAt: string }>;

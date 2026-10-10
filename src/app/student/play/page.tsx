@@ -50,6 +50,9 @@ import TrialReportCard from "@/components/prueba/TrialReportCard";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 import MonteLeonCard from "@/components/monte-leon/MonteLeonCard";
 import MonteLeonModal from "@/components/monte-leon/MonteLeonModal";
+import ReservaCard from "@/components/reserva/ReservaCard";
+import ReservaModal from "@/components/reserva/ReservaModal";
+import { debeMostrarReserva } from "@/lib/reserva/progreso";
 import BuenViajeDialog from "@/components/monte-leon/BuenViajeDialog";
 import { debeMostrarMonteLeon, debeMostrarBuenViaje } from "@/lib/monteLeon/fechas";
 import { esPorSuperar, porSuperarPorMateria } from "@/lib/mapa/porSuperar";
@@ -83,6 +86,7 @@ export default function StudentPlayPage() {
   const [vestidorOpen, setVestidorOpen] = useState(false);
   const [metasOpen, setMetasOpen] = useState(false);
   const [monteLeonOpen, setMonteLeonOpen] = useState(false);
+  const [reservaOpen, setReservaOpen] = useState(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
   const [oferta, setOferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
@@ -597,6 +601,17 @@ export default function StudentPlayPage() {
         <MonteLeonCard
           progress={progress}
           onClick={() => setMonteLeonOpen(true)}
+        />
+      )}
+
+      {debeMostrarReserva({ grade }) && <ReservaCard progress={progress} onClick={() => setReservaOpen(true)} />}
+
+      {reservaOpen && code && progress && (
+        <ReservaModal
+          studentCode={code}
+          progress={progress}
+          onClose={() => setReservaOpen(false)}
+          onProgressUpdated={(p) => setProgress((prev) => (prev ? { ...prev, ...p } : p))}
         />
       )}
 
