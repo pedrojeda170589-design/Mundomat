@@ -31,3 +31,4 @@ casco-bici cabeza
 bufanda arriba
 guantes extra
 rinonera abajo
+boina cabeza

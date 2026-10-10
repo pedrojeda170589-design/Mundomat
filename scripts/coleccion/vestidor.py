@@ -49,8 +49,18 @@ def guardar(im: Image.Image, carpeta: str, nombre: str) -> str:
     return out
 
 
+def sin_halo(im: Image.Image) -> Image.Image:
+    """Saca los pelitos rosados del borde (restos del fondo magenta)."""
+    a = np.asarray(im).astype(int)
+    r, g, b, al = a[..., 0], a[..., 1], a[..., 2], a[..., 3]
+    borde = ndimage.binary_dilation(al < 128, iterations=3)
+    rosado = ((r > g + 25) & (b > g + 25) & borde) | ((r > 150) & (b > 130) & (g < r - 70) & (g < b - 50))
+    a[..., 3] = np.where(rosado, 0, al)
+    return Image.fromarray(a.astype("uint8"), "RGBA")
+
+
 def cuerpo(src: str, id_: str) -> None:
-    im = sin_fondo(Image.open(src).convert("RGB")).resize((ANCHO, ALTO), Image.LANCZOS)
+    im = sin_halo(sin_fondo(Image.open(src).convert("RGB"))).resize((ANCHO, ALTO), Image.LANCZOS)
     print("ok", guardar(im, "cuerpos", f"{id_}.png"))
 
 

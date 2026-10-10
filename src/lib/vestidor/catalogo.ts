@@ -90,6 +90,7 @@ export const PRENDAS: PrendaDef[] = [
   { id: "poncho", label: "Poncho pampa", zona: "abrigo" }, // meta
   // Gorros
   { id: "gorra-visera", label: "Gorra", zona: "cabeza", precio: 40 },
+  { id: "boina", label: "Boina", zona: "cabeza", precio: 45 },
   { id: "casco-bici", label: "Casco de bici", zona: "cabeza", precio: 50 },
   { id: "gorro-pompon", label: "Gorro con pompón", zona: "cabeza" }, // meta
   // Complementos

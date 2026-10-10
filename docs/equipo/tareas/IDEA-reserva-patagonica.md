@@ -1,37 +1,61 @@
-# Idea a futuro · Reserva natural patagónica
+# Actividad especial · Reserva y expedición patagónica (3.º y 4.º grado)
 
-**Estado:** proyección futura (pedido de Pedro, 10/10/2026). Todavía no está asignada.
+**Estado:** diseño acordado con Pedro (10/10/2026). Todavía no está programada ni asignada.
 
-## La idea
-Una «reserva natural» dentro de la app donde los chicos recorren la Patagonia, conocen animales y plantas autóctonos y los van **ganando** para su reserva a medida que aprenden sobre ellos.
+## Qué es
+Una **actividad especial** (como el Viaje a Monte León o el repaso de las tablas) para **3.º y 4.º grado**. En 4.º se trabaja la provincia de Santa Cruz. Todo gira en torno a la **fauna y la flora autóctonas**, y a la vez se recorre el territorio:
+- primero los departamentos de Santa Cruz y sus localidades;
+- después el resto de la Patagonia, provincia por provincia.
 
-Para cada especie:
-- **Qué come** (alimentación) y quién se la come (cadena alimentaria).
-- **Dónde vive** (hábitat: estepa, bosque andino, costa, mar, lagos y glaciares).
-- **Cómo se relaciona:** si vive solo o en grupo, si migra, cómo cría.
-- **Cuántos hay hoy** (dato aproximado y la fuente) y si está **en peligro de extinción** (categoría de la UICN y la legislación argentina), con qué amenazas y qué se hace para cuidarlo.
-- Otros datos relevantes: un rasgo curioso, cómo se lo reconoce, en qué parque o reserva se lo puede ver.
+## Pantalla de entrada: el mapa
+- **Mapa de la Argentina** con el territorio de la **Patagonia sombreado**.
+- La **provincia de Santa Cruz** con el **contorno remarcado** y sus **departamentos delineados y numerados**.
+- La numeración empieza por **Río Chico** (cabecera: Gobernador Gregores, donde está la escuela) y sigue por los vecinos. Orden propuesto, a confirmar con Pedro:
+  1. Río Chico (Gobernador Gregores)
+  2. Lago Buenos Aires (Perito Moreno, Los Antiguos)
+  3. Deseado (Puerto Deseado, Caleta Olivia, Pico Truncado, Las Heras)
+  4. Magallanes (Puerto San Julián)
+  5. Corpen Aike (Comandante Luis Piedra Buena, Puerto Santa Cruz)
+  6. Lago Argentino (El Calafate, El Chaltén)
+  7. Güer Aike (Río Gallegos, Río Turbio, 28 de Noviembre)
+- Después de Santa Cruz, la expedición sigue por la Patagonia: Tierra del Fuego, Chubut, Río Negro y Neuquén (y, si se decide, el sur de La Pampa y Mendoza).
 
-## El mapa
-Un mapa ilustrado de la Patagonia con sus provincias (Neuquén, Río Negro, Chubut, Santa Cruz y Tierra del Fuego, más el sur de La Pampa y Mendoza, según el criterio que se adopte). En él se marcan:
-- los ambientes;
-- los parques nacionales y las reservas;
-- ríos, lagos y glaciares;
-- las ciudades principales.
+## Cada etapa (un departamento, una provincia o un lugar)
+1. **Zoom** al territorio en el mapa, con la **postal más emblemática** del lugar. Por ejemplo: el Fitz Roy para Lago Argentino, la Cueva de las Manos para Lago Buenos Aires o Río Chico, la ría de Puerto Deseado, el Bosque Petrificado y el glaciar Perito Moreno. Son ilustraciones propias, no fotos de terceros.
+2. **Actividades** sobre los animales y las plantas de ese lugar:
+   - qué comen y quién se los come;
+   - dónde viven (estepa, bosque, costa, mar, lagos);
+   - cómo se relacionan (solos, en grupo, migran, cómo crían);
+   - cuántos hay hoy y si están en peligro, y por qué;
+   - las localidades del departamento y su ubicación.
+3. **Premio** al superar la etapa, que va a la colección del chico (su «reserva»):
+   - un **animal** y una **planta** de ese lugar;
+   - un **objeto tradicional** (mate, boleadoras, quillango, cerámica, poncho…);
+   - el **escudo o la bandera** de la provincia o del municipio.
 
-Cada especie aparece en los lugares donde vive.
+## Animales en peligro
+Los animales en peligro de extinción llevan un **distintivo** visible en la ficha y en la colección (por ejemplo, un sello rojo «En peligro»). La ficha muestra la categoría (UICN o la ley argentina) y qué se hace para cuidarlos. Algunos de la región:
+- **huemul:** monumento natural nacional;
+- **macá tobiano:** especie de Santa Cruz en peligro crítico;
+- **cauquén colorado**;
+- **gato andino**, en el norte de la Patagonia;
+- **ballena franca austral:** monumento natural, ya no está en peligro, pero conviene explicarlo.
 
-## Cómo se ganan
-Opciones para decidir:
-- **Fichas de lectura:** el chico lee la ficha de la especie y responde preguntas.
-- **Expediciones:** se juegan actividades de un ambiente y se desbloquean sus especies.
-- **Metas especiales:** las de racha, etapas y días súper desbloquean especies raras.
+## Ficha de cada especie
+- Nombre común, nombre en tehuelche o mapuche si se conoce, e ilustración.
+- Alimentación, hábitat, comportamiento y reproducción.
+- Población aproximada y estado de conservación, **con la fuente y la fecha**.
+- Un dato curioso y en qué parque o reserva se puede ver.
 
 ## Conexión con lo que ya existe
-- **Mundos de Ciencias Naturales:** seres vivos, ambientes y cadenas alimentarias de 2.º a 4.º.
-- **Viaje a Monte León:** pingüinos, lobos marinos y guanacos.
-- **Metas especiales:** huemul, choique, lobo marino, pichi, vizcacha y cauquén ya existen como avatares o mascotas.
-- **Mapa por módulos de Santa Cruz:** sus paisajes se pueden reutilizar.
+- **Metas especiales:** el huemul, el choique y el lobo marino ya son avatares; el pichi, la vizcacha, el cauquén y el lobito, mascotas.
+- **Viaje a Monte León:** fauna costera.
+- **Mapa por módulos de 3.º y 4.º:** se pueden reutilizar los paisajes de Santa Cruz.
+- **Sociales y Naturales de 4.º:** Santa Cruz, ambientes y seres vivos.
+- **Panel de Desafíos y eventos:** se puede habilitar por grado y por fechas.
 
-## Cuidado con los datos
-Los números de población y el estado de conservación cambian. Cada ficha tiene que citar su fuente (Parques Nacionales, UICN, Ministerio de Ambiente) y la fecha, y conviene revisarlos una vez por año. Las imágenes tienen que ser ilustraciones propias, sin fotos de terceros.
+## Antes de programar
+- Confirmar con Pedro el orden de los departamentos y las localidades.
+- Mapa: dibujarlo **por código (SVG)** a partir de límites de dominio público (IGN), para que los contornos sean exactos y se pueda hacer zoom.
+- Datos de población y conservación: buscarlos en fuentes oficiales y anotar fuente y fecha en cada ficha.
+- **Escudos y banderas** oficiales: son símbolos públicos; usarlos con fines educativos y sin modificarlos. Conviene confirmarlo con quien revise lo legal (ver `docs/CREDITOS-IMAGENES.md`).
