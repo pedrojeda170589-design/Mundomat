@@ -10,7 +10,7 @@ import { SKILL_LEVEL_INFO, SkillLevel, skillLevel } from "@/lib/progressLogic";
 // aprendiendo, dónde tiene dificultades y qué conviene practicar. Los
 // niveles describen la práctica en la app; no son una nota.
 export default function SkillReport({ progress, grade = 1 }: { progress: StudentProgress; grade?: number }) {
-  const g = getGrade(grade);
+  const g = getGrade(grade, { borradores: true });
   const skills = g.skills ?? (grade === 1 ? GRADE1_SKILLS : []);
   const worldsForGrade = g.worlds.length ? g.worlds : GRADE1_WORLDS;
   const rows = skills.map((s) => {

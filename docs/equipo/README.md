@@ -84,3 +84,9 @@ rama, así nunca se pisan los archivos.
   regalo, usá `ocultar` para poner un «?» en ese casillero.
 - **Cuentos:** se narran siempre con la voz del navegador, oración por
   oración (no se usan audios grabados).
+- **Informe del docente por contenidos (desde el 10/10/2026):** cada mundo es
+  un contenido del programa con su eje. `src/lib/informeContenidos.ts` decide
+  si es fortaleza, en desarrollo, a reforzar o sin trabajar, para **todos los
+  grados**. Un mundo nuevo tiene que tener su `description` (el contenido) y su
+  entrada curricular (eje), o aparece en «Otros». No muestres al alumno
+  porcentajes ni cantidades de pendientes: eso es solo para el docente.

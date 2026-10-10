@@ -15,7 +15,7 @@ import {
   subjectLabel,
 } from "@/lib/platform/shared";
 import { getWorld } from "@/lib/worlds";
-import SkillReportByCode from "@/components/admin/SkillReportByCode";
+import InformeContenidosByCode from "@/components/admin/InformeContenidosByCode";
 import DictationReportByCode from "@/components/admin/DictationReportByCode";
 import TorneoReportByCode from "@/components/admin/TorneoReportByCode";
 import { proposeDisplayName } from "@/lib/studentNames";
@@ -330,15 +330,13 @@ export default function StudentRecordPage() {
             )}
           </Panel>
 
-          {student && steps.some((st) => st.status === "active" && (st.grade === 1 || st.grade === 2)) && (() => {
-            const activeGrade = steps.find((st) => st.status === "active" && (st.grade === 1 || st.grade === 2))?.grade ?? 1;
-            return (
-              <Panel>
-                <p className="font-black mb-2">📚 Habilidades de {activeGrade}.º grado</p>
-                <SkillReportByCode code={student.access_code} grade={activeGrade} />
-              </Panel>
-            );
-          })()}
+          {student && current && (
+            <Panel>
+              <p className="font-black mb-1">📚 Contenidos de {current.grade}.º grado por eje</p>
+              <p className="text-xs opacity-70 mb-2">Qué trabajó, sus fortalezas y dónde conviene hacer énfasis en el repaso.</p>
+              <InformeContenidosByCode code={student.access_code} grade={current.grade} />
+            </Panel>
+          )}
 
           {student && steps.some((st) => st.status === "active" && (st.grade === 2 || st.grade === 3)) && (
             <Panel>

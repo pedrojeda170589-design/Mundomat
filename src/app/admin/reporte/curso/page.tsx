@@ -16,6 +16,7 @@ import {
 import { generateCourseCSV, downloadCourseCSV } from "@/lib/courseExport";
 import { contenidosAReforzar } from "@/lib/reforzar";
 import ReforzarPorEje from "@/components/admin/ReforzarPorEje";
+import RepasoDelCurso from "@/components/admin/RepasoDelCurso";
 
 export default function CourseReportPage() {
   return (
@@ -332,10 +333,27 @@ function CourseReportContent() {
           )}
         </section>
 
+        {/* Qué repasar con todo el grupo */}
+        <section className="mb-6">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 flex items-center gap-1.5">
+            <span>📚</span> 3. Dónde hacer énfasis en el repaso (contenidos por eje)
+          </h2>
+          <p className="text-[11px] text-slate-500 mb-2">
+            Contenidos que más alumnos necesitan reforzar, entre los que ya los trabajaron (aciertan menos del 60% en lo último).
+          </p>
+          <RepasoDelCurso
+            students={filteredStudents}
+            progressMap={progressMap}
+            curriculumEntries={curriculumEntries}
+            printable
+            max={20}
+          />
+        </section>
+
         {/* Grilla Resumen del Curso */}
         <section className="mb-6">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            3. Grilla de Desempeño por Alumno y Contenido
+            4. Grilla de Desempeño por Alumno y Contenido
           </h2>
           <div className="overflow-x-auto border border-slate-200 rounded-xl">
             <table className="w-full text-left border-collapse text-xs">
