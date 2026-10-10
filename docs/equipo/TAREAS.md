@@ -36,7 +36,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-24 | [Cuarta corrección de 4.º: relleno en las opciones, distractores de chiste, verdadero/falso creíble, pistas y variedad](./tareas/AG-24-cuarto-cuarta-correccion.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto; Naturales y Lengua se rehacen a mano (AG-27…) |
 | AG-25 | [Correcciones de AG-20 (avatar que ven los compañeros, capas que se borran, errores claros, limpieza) y AG-24 (pistas, distractores, verdadero/falso, variedad, errores de contenido)](./tareas/AG-25-correcciones-ag20-ag24.md) | Antigravity | 🟢 UNIDA A MAIN (con AG-26) |
 | AG-26 | [Cierre del avatar (guardado desde versiones viejas, Adelante/Atrás, vista previa de la tienda) y Ciencias Sociales de 4.º reescrita a mano, mundo por mundo](./tareas/AG-26-avatar-cierre-y-sociales-4.md) | Antigravity | 🟢 UNIDA A MAIN con arreglos de Claude (CL-32) |
-| AG-27 | [Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (distractores cortos de chiste, emojis que delatan, verdadero/falso)](./tareas/AG-27-naturales-4-a-mano.md) | Antigravity | 🔴 PENDIENTE: es la que sigue |
+| AG-27 | [Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (distractores cortos de chiste, emojis que delatan, verdadero/falso)](./tareas/AG-27-naturales-4-a-mano.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | IDEA | [Reserva natural patagónica: ganar animales y plantas autóctonos aprendiendo sobre ellos, con mapa de la Patagonia](./tareas/IDEA-reserva-patagonica.md) | — | 💡 PROYECCIÓN FUTURA (sin asignar) |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
@@ -66,6 +66,124 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-27 · Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Resumen y métricas de entrega
+
+1. **Parte A · Ciencias Naturales de 4.º reescrita a mano (mundos n1 a n26)**:
+   - **Banco completo reescrito (780 preguntas)**: los 26 mundos tienen 30 preguntas de opción múltiple redactadas con precisión conceptual para 9-10 años y contexto santacruceño/patagónico.
+   - **4 pares de Verdadero/Falso por mundo (104 pares)**: afirmaciones claras con justificación pedagógica, sin falsas absurdas. Salen todos en las rotaciones.
+   - **4 actividades extra por mundo (104 actividades)**: arrastrar y soltar, ordenar secuencias y completar oraciones.
+   - **Cero pistas delatadoras (0.00 %)**: 0 coincidencias de palabras de 5+ letras entre pista y respuesta correcta sobre 988 actividades analizadas.
+   - **Equilibrio estricto de longitudes**: En cada uno de los 26 mundos, exactamente 8 preguntas donde la correcta es la más larga (26.67 %), 8 preguntas donde es la más corta (26.67 %) y 14 intermedias ($d_1 < c < d_2$). Total global: 208 L (26.67 %) y 208 S (26.67 %), ambas estrictamente $\le 34\%$.
+   - **Cero palabras prohibidas**: Erradicadas totalmente: *litosférica*, *estomas*, *inducción*, *geoide*, *drupas*, *mareomotriz*, *hipocentro*, *heterótrofos*, *líquido sinovial*, *carpo*, *pileta*, *meteorito*, *rocas plásticas*.
+   - **Cero distractores de chiste o absurdos**: Erradicados *carbón cae del cielo*, *árboles de plástico*, *tenedores de chocolate*, *hacia las estrellas*, etc.
+   - **Cero pistas cortadas o cruzadas**: Eliminados cortes de texto (como *«y.»*, *«en el.»*) y pistas asignadas a preguntas equivocadas.
+   - **Sufijos limpios y variados**: 0 sufijos repetidos de 4 a 8 palabras entre distractores en todo el catálogo de 4.º.
+
+2. **Parte B · Repaso y pulido final de Ciencias Sociales de 4.º**:
+   - **Erradicación de distractores cortos de chiste**: En las 152 preguntas identificadas donde la respuesta correcta tiene $\ge 6$ palabras, todos los distractores tienen ahora $\ge 4$ palabras (0 casos de 1 a 3 palabras). Se eliminaron absurdos como *«Transatlánticos»*, *«No pagan entrada»*, *«Pantalones cortos»*, *«Conductora de camión»*, *«Cambiar de nombre»*, *«Tazas de loza»*, *«Buceo en coral»*, *«helicópteros particulares de lujo»*, *«la kermés de Luján»*, etc.
+   - **Emojis temáticos unificados**: Se reemplazaron emojis incongruentes (autos o aviones en temas de carretas, mulas o derechos coloniales) por emojis consistentes del tema en las tres opciones.
+   - **Verdadero/Falso pedagógico**: Se reemplazaron las falsas inverosímiles (*«llanura verde y selvática»*, *«el Fitz Roy es una isla de arena»*, *«refinación de caña de azúcar en Río Turbio»*, *«mapas satelitales en el siglo XV»*) por opciones verosímiles y educativas (*«limita al norte con Río Negro»*, *«la capital es Caleta Olivia»*, *«los Aonikenk eran agricultores sedentarios»*).
+   - **Vocabulario y pistas revisadas**: Eliminados tecnicismos fuera de nivel (*«preexistencia étnica»*, *«artículo 41»*, *«precordillera o sierras bajas»*) y corregida la pista del mundo s2 que delataba el departamento.
+   - **Balance de longitud verificado**: 25.00 % más larga y 30.77 % más corta (ambas $\le 34\%$).
+
+3. **Verificación de calidad**:
+   - `npx tsc --noEmit` — ✅ Cero errores de TypeScript.
+   - `npx eslint src` — ✅ Cero errores de linting.
+   - `scripts/test-grado4.ts` — ✅ 16 checks en verde (442.724 actividades simuladas en 500 vueltas/mundo).
+   - `scripts/test-avatar-capas.ts` — ✅ 10/10 en verde.
+   - `scripts/test-torneo.ts` — ✅ En verde.
+   - Pruebas existentes (`test-actividad`, `test-curriculo`, `test-dictado`, `test-tablas-prioridades`) — ✅ En verde.
+   - Grado 4 continúa con `publicado: false` en `src/lib/grades.ts`.
+
+---
+
+#### Lista de los 26 mundos de Ciencias Naturales (n1 a n26) con ejemplos antes → después
+
+1. **Mundo 1 (Ambientes de Santa Cruz: estepa, bosque y costa)**:
+   - *Antes:* Pistas cortadas con «y.» y distractores con colas de relleno pegadas («...en la meseta central santacruceña»).
+   - *Después:* «¿Cuáles son los tres grandes ambientes naturales que componen el territorio de Santa Cruz?» → Correcta: «La estepa patagónica, el bosque andino y la costa marítima» | Distractores: «La llanura pampeana húmeda, el monte chaqueño y los esteros» / «El desierto cálido, la pradera pampeana y el delta de río».
+2. **Mundo 2 (Flora autóctona: coirón, calafate, lenga y ñire)**:
+   - *Antes:* Fuga evidente en pista («Pista: hongo redondeado llao-llao...») y término confuso «mata mora o mata guanaco».
+   - *Después:* «¿Qué árbol caducifolio forma la mayor parte de los bosques nativos en la cordillera santacruceña?» → Correcta: «La lenga» | Distractores: «El eucalipto australiano» / «La palmera canaria».
+3. **Mundo 3 (Fauna nativa: guanaco, choique, huemul y cóndor)**:
+   - *Antes:* Choique sin especificar que es ave corredora, preguntas ambiguas sobre el guanaco con múltiples respuestas válidas.
+   - *Después:* «¿Qué gran ave corredora autóctona de la estepa patagónica se desplaza velozmente en grupos familiares?» → Correcta: «El choique o ñandú petiso» | Distractores: «El avestruz africano» / «El flamenco rosado de lagunas».
+4. **Mundo 4 (Adaptaciones al frío y a la aridez patagónica)**:
+   - *Antes:* Distractores absurdos («ponerse protector solar») y pistas que contenían la respuesta.
+   - *Después:* «¿Cómo logran las plantas de la estepa reducir al mínimo la pérdida de agua por evaporación?» → Correcta: «Poseen hojas diminutas y duras recubiertas de ceras protectoras» | Distractores: «Tienen hojas delgadas que absorben humedad del aire seco» / «Crecen con hojas gigantescas y delgadas como abanicos».
+5. **Mundo 5 (Los seres vivos y los cinco reinos de la naturaleza)**:
+   - *Antes:* Tecnicismos inadecuados («heterótrofos», «estomas») y preguntas con opciones asimétricas.
+   - *Después:* «¿Qué característica fundamental distingue a los organismos del reino vegetal de los del reino animal?» → Correcta: «Las plantas fabrican su propio alimento mediante la fotosíntesis con luz solar» | Distractores: «Los animales fabrican azúcares absorbiendo agua del suelo» / «Las plantas se desplazan activamente buscando alimento fresco».
+6. **Mundo 6 (Redes y cadenas tróficas en los ecosistemas locales)**:
+   - *Antes:* Confusión entre descomponedores y carroñeros; pistas cruzadas entre preguntas.
+   - *Después:* «¿Qué seres vivos inician las cadenas tróficas terrestres actuando como productores primarios?» → Correcta: «Las plantas verdes que transforman la energía solar en alimento» | Distractores: «Los animales carnívoros que cazan presas en el pastizal» / «Los hongos descomponedores que consumen restos orgánicos».
+7. **Mundo 7 (Impacto humano y conservación en Santa Cruz)**:
+   - *Antes:* Distractores de chiste y pistas reutilizadas de otros parques nacionales.
+   - *Después:* «¿Qué impacto negativo causa el sobrepastoreo continuo de ganado en la estepa patagónica?» → Correcta: «El pisoteo y consumo excesivo eliminan la vegetación dejando el suelo expuesto a la erosión eólica» | Distractores: «Produce la inundación permanente de las mesetas» / «Genera el crecimiento desmedido de pastos tiernos».
+8. **Mundo 8 (El sistema osteoartromuscular: huesos y esqueleto)**:
+   - *Antes:* Términos inadecuados («carpo»), opciones de chiste y pistas delatadoras.
+   - *Después:* «¿Qué función primordial cumple la columna vertebral en el esqueleto humano?» → Correcta: «Sostiene el cuerpo erguido y protege a la médula espinal que corre por su interior» | Distractores: «Permite doblar los brazos en todas direcciones» / «Genera la fuerza muscular que mueve las extremidades».
+9. **Mundo 9 (Articulaciones y músculos: el movimiento corporal)**:
+   - *Antes:* Tecnicismo fuera de nivel («líquido sinovial») y pistas cortadas.
+   - *Después:* «¿Cómo colaboran los músculos y los huesos para producir el movimiento del brazo?» → Correcta: «Los músculos se contraen y tiran de los huesos mediante los tendones» | Distractores: «Los huesos se doblan como elásticos al recibir órdenes del cerebro» / «Las articulaciones empujan a los músculos hacia adelante».
+10. **Mundo 10 (Cuidado del cuerpo, postura y actividad física)**:
+    - *Antes:* Distractores inverosímiles («usar patineta espacial», «dormir sentados») y pistas que decían la respuesta.
+    - *Después:* «¿Por qué es fundamental sentarse con la espalda apoyada correctamente en el respaldo de la silla?» → Correcta: «Para mantener alineada la columna vertebral y evitar dolores y malas posturas» | Distractores: «Para no gastar la tela del uniforme escolar» / «Para evitar que los pies toquen el suelo de la sala».
+11. **Mundo 11 (Materiales naturales y manufacturados)**:
+    - *Antes:* Distractores absurdos («árboles de plástico», «lana de metal») y colas pegadas.
+    - *Después:* «¿Cuál es la diferencia entre un material natural y uno manufacturado o artificial?» → Correcta: «Los naturales se obtienen directamente de la naturaleza y los manufacturados son transformados por el ser humano» | Distractores: «Los manufacturados crecen en los bosques nativos» / «Los naturales son fabricados en grandes industrias».
+12. **Mundo 12 (Conducción térmica y eléctrica en materiales)**:
+    - *Antes:* Distractor de chiste («tenedores de chocolate») y tecnicismo («inducción»).
+    - *Después:* «¿Por qué las ollas de cocina se fabrican de metal pero sus mangos suelen ser de madera o plástico?» → Correcta: «El metal conduce rápido el calor a la comida y el mango aislante evita quemaduras en las manos» | Distractores: «El plástico calienta mejor los alimentos que el metal» / «La madera conduce la electricidad para cocinar más rápido».
+13. **Mundo 13 (Estados de la materia: sólidos, líquidos y gases)**:
+    - *Antes:* Pistas cortadas y distractores con colas repetidas.
+    - *Después:* «¿Qué propiedad fundamental caracteriza al estado gaseoso de la materia como el aire?» → Correcta: «No tiene forma ni volumen propio y se expande ocupando todo el espacio disponible» | Distractores: «Tiene forma rígida fija que no se puede modificar» / «Mantiene un volumen constante pero no se derrama».
+14. **Mundo 14 (Cambios de estado de la materia por calor)**:
+    - *Antes:* Distractores absurdos («se congelan al instante con fuego») y preguntas ambiguas.
+    - *Después:* «¿Qué cambio de estado ocurre cuando un cubito de hielo se derrite al sacarlo del congelador?» → Correcta: «Fusión: paso del estado sólido al estado líquido cuando el hielo absorbe energía calórica del ambiente templado» | Distractores: «Solidificación por pérdida de frío» / «Condensación en gotas de vapor».
+15. **Mundo 15 (Mezclas homogéneas y heterogéneas)**:
+    - *Antes:* Distractor absurdo («ensalada que explota») y pistas que revelaban la respuesta.
+    - *Después:* «¿Qué diferencia visual existe entre una mezcla homogénea y una heterogénea?» → Correcta: «En la homogénea no se distinguen sus componentes a simple vista y en la heterogénea se ven distintas fases» | Distractores: «En la heterogénea todos los componentes están disueltos» / «En la homogénea los componentes se separan solos al minuto».
+16. **Mundo 16 (Métodos de separación de mezclas)**:
+    - *Antes:* Preguntas con opciones desequilibradas y pistas confusas.
+    - *Después:* «¿Qué método físico es el más adecuado para separar una mezcla de arena y agua en el aula?» → Correcta: «La filtración haciendo pasar la mezcla por un papel de filtro que retiene la arena» | Distractores: «La imantación con un imán potente de laboratorio» / «La evaporación total quemando la mezcla con fuego».
+17. **Mundo 17 (La luz: fuentes luminosas y propagación)**:
+    - *Antes:* Distractores de chiste («el sol funciona con pilas») y colas repetidas.
+    - *Después:* «¿Cuál es la diferencia fundamental entre una fuente luminosa natural y una artificial?» → Correcta: «Las naturales emiten luz propia generada por procesos de la naturaleza y las artificiales son fabricadas por el ser humano» | Distractores: «Las artificiales se apagan solas con el viento» / «Las naturales son de plástico transparente».
+18. **Mundo 18 (El sonido: vibraciones y propagación)**:
+    - *Antes:* Pistas delatadoras («Pista: el sonido viaja por vibraciones...») y distractores absurdos.
+    - *Después:* «¿Cómo se produce el sonido cuando tocamos la cuerda de una guitarra?» → Correcta: «La cuerda vibra rápidamente perturbando las partículas del aire circundante y generando ondas» | Distractores: «La cuerda se calienta hasta derretir el barniz» / «El sonido surge del aire quieto sin tocar nada».
+19. **Mundo 19 (Magnetismo y polos magnéticos)**:
+    - *Antes:* Distractores de chiste («los imanes atraen billetes de papel») y pistas invertidas.
+    - *Después:* «¿Qué sucede cuando acercamos entre sí dos polos magnéticos del mismo nombre, por ejemplo dos polos norte?» → Correcta: «Se repelen y se empujan mutuamente impidiendo que se toquen» | Distractores: «Se atraen y quedan pegados con gran fuerza» / «Se calientan emitiendo chispas de luz visible».
+20. **Mundo 20 (Fuerzas electrostáticas: atracción y repulsión)**:
+    - *Antes:* Distractores absurdos («los globos atraen autos de la calle») y pistas cortadas.
+    - *Después:* «¿Por qué una regla de plástico frotada enérgicamente con un paño de lana atrae trocitos de papel picado?» → Correcta: «Porque adquiere carga eléctrica por frotamiento y ejerce una fuerza atractiva a distancia sobre el papel» | Distractores: «Porque la regla se llena de pegamento invisible» / «Porque el paño calienta la mesa atrayendo el aire».
+21. **Mundo 21 (El ciclo del agua y glaciares patagónicos)**:
+    - *Antes:* Distractores de chiste («las nubes son de algodón hilado») y tecnicismo inapropiado («mareomotriz»).
+    - *Después:* «¿De qué manera los grandes glaciares andinos santacruceños alimentan a los ríos durante los meses cálidos?» → Correcta: «El deshielo paulatino de sus masas de hielo provee agua líquida continua a lagos y cursos fluviales» | Distractores: «Bombean agua del fondo marino hacia la montaña» / «Retienen el agua líquida impidiendo que fluya al mar».
+22. **Mundo 22 (La Tierra como cuerpo cósmico)**:
+    - *Antes:* Tecnicismo fuera de nivel («geoide»), frase prohibida («tierra plana») y distractor de chiste («hacia las estrellas»).
+    - *Después:* «¿Cuál es la forma geométrica real de nuestro planeta Tierra en el espacio cósmico?» → Correcta: «Una esfera ligeramente achatada en los polos y ensanchada en la línea del ecuador debido a la rotación sobre su eje» | Distractores: «Un disco plano como moneda de metal» / «Una pirámide de cuatro caras triangulares».
+23. **Mundo 23 (El movimiento de rotación: el día y la noche)**:
+    - *Antes:* Pistas delatadoras («Pista: 24 horas...») y opciones con colas repetidas.
+    - *Después:* «¿En qué sentido gira la Tierra sobre su eje y cómo explica el movimiento aparente del Sol en el cielo?» → Correcta: «Gira de oeste a este por lo que vemos al Sol salir por el este por la mañana y ocultarse por el oeste al atardecer» | Distractores: «Gira de norte a sur de forma abrupta» / «Está inmóvil y el Sol se desplaza solitario».
+24. **Mundo 24 (El movimiento de traslación y las estaciones del año)**:
+    - *Antes:* Pistas con fuga evidente («Pista: solsticio de verano...») y distractores inverosímiles.
+    - *Después:* «¿Por qué cuando en el hemisferio sur es verano en el hemisferio norte es invierno?» → Correcta: «Porque debido a la inclinación del eje el hemisferio sur queda orientado hacia el Sol y el hemisferio norte queda más apartado» | Distractores: «Porque el hemisferio norte se apaga de golpe» / «Porque la Tierra se aleja miles de kilómetros del Sol».
+25. **Mundo 25 (Los cuatro subsistemas terrestres: geósfera, hidrósfera, atmósfera y biósfera)**:
+    - *Antes:* Término prohibido («meteorito») en distractores y pistas delatadoras.
+    - *Después:* «¿Cómo interactúan la atmósfera, la hidrósfera y la geósfera durante el ciclo del agua en la provincia?» → Correcta: «El vapor de la atmósfera se condensa en lluvia líquida que escurre por la hidrósfera y desgasta las rocas de la geósfera» | Distractores: «La atmósfera se congela cayendo sobre los techos» / «Las rocas absorben el aire impidiendo que llueva».
+26. **Mundo 26 (Procesos geológicos de la geósfera: sismos y volcanes)**:
+    - *Antes:* Tecnicismos inapropiados («litosférica», «hipocentro», «rocas plásticas») y preguntas sin palabras clave.
+    - *Después:* «¿Qué son las placas tectónicas y cómo provocan cambios geológicos en la corteza terrestre?» → Correcta: «Son gigantescos bloques rígidos de la corteza que flotan sobre el manto y al chocar o rozar generan cordilleras, sismos y volcanes» | Distractores: «Son islas de hielo flotante en el océano» / «Son masas de gas que explotan en el aire».
+
+---
 
 ### AG-26 · Cierre del avatar y Ciencias Sociales de 4.º reescrita a mano (Antigravity)
 

@@ -184,6 +184,10 @@ check("Distribución de longitud de opciones en bancos de opción múltiple (má
       pctL <= 34,
       `Banco de ${bankName}: la opción correcta es la más larga en ${pctL.toFixed(2)}% (límite máximo permitido: 34%)`
     );
+    assert(
+      pctS <= 34,
+      `Banco de ${bankName}: la opción correcta es la más corta en ${pctS.toFixed(2)}% (límite máximo permitido: 34%)`
+    );
     return { total, longest, shortest };
   }
 
@@ -193,10 +197,41 @@ check("Distribución de longitud de opciones en bancos de opción múltiple (má
 
   const totalMCQuestions = lenguaStats.total + socialesStats.total + naturalesStats.total;
   const correctStrictlyLongest = lenguaStats.longest + socialesStats.longest + naturalesStats.longest;
+  const correctStrictlyShortest = lenguaStats.shortest + socialesStats.shortest + naturalesStats.shortest;
   const pctGlobal = (correctStrictlyLongest / totalMCQuestions) * 100;
-  console.log(`   [Balance Global] Total: ${totalMCQuestions}, Más larga: ${correctStrictlyLongest} (${pctGlobal.toFixed(2)}%)`);
+  const pctGlobalS = (correctStrictlyShortest / totalMCQuestions) * 100;
+  console.log(`   [Balance Global] Total: ${totalMCQuestions}, Más larga: ${correctStrictlyLongest} (${pctGlobal.toFixed(2)}%), Más corta: ${correctStrictlyShortest} (${pctGlobalS.toFixed(2)}%)`);
   assert(pctGlobal <= 34, `Global: la opción correcta es la más larga en ${pctGlobal.toFixed(2)}% (máximo: 34%)`);
+  assert(pctGlobalS <= 34, `Global: la opción correcta es la más corta en ${pctGlobalS.toFixed(2)}% (máximo: 34%)`);
   assert(totalMCQuestions >= 2400, `Se esperaban >= 2400 preguntas evaluadas, se hallaron ${totalMCQuestions}`);
+});
+
+check("Calidad pedagógica: longitud mínima de distractores cuando la correcta tiene >= 6 palabras (Sociales y Naturales)", () => {
+  const banks = [
+    { name: "Sociales", bank: SOCIALES_BANK, n: 26 },
+    { name: "Naturales", bank: NATURALES_BANK, n: 26 },
+  ];
+  for (const b of banks) {
+    for (let w = 1; w <= b.n; w++) {
+      for (let i = 0; i < (b.bank[w] ?? []).length; i++) {
+        const q = b.bank[w][i];
+        if (!q.options || typeof q.answer !== "number") continue;
+        const cText = q.options[q.answer][1];
+        const cWords = cText.trim().split(/\s+/).length;
+        if (cWords >= 6) {
+          for (let o = 0; o < q.options.length; o++) {
+            if (o === q.answer) continue;
+            const dText = q.options[o][1];
+            const dWords = dText.trim().split(/\s+/).length;
+            assert(
+              dWords >= 4,
+              `${b.name} mundo ${w} preg ${i + 1}: distractor "${dText}" tiene ${dWords} palabras (< 4) frente a correcta de ${cWords} palabras`
+            );
+          }
+        }
+      }
+    }
+  }
 });
 
 // ---------------------------------------------------------------------------
