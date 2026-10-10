@@ -2,10 +2,12 @@
 // Pedro puede ajustar los valores de referencia directamente desde estas constantes.
 import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 
-export const META_ORO_BASE = 35; // segundos para la tabla del 2
-export const META_ORO_INCREMENTO = 3; // +3s por cada tabla adicional (35s, 38s, 41s... hasta 59s en la del 10)
-export const META_PLATA_DELTA = 15; // +15s sobre la meta de oro para clasificar a medalla de plata
-export const PENALIDAD_ERROR_MS = 3000; // 3 segundos de penalidad por intento fallido
+// Pedido de Pedro (10/10/2026): tabla del 2 → oro 25 s, plata 35 s; cada
+// tabla siguiente, 2 s más (del 3: 27/37; del 4: 29/39 … del 10: 41/51).
+export const META_ORO_BASE = 25; // segundos para la tabla del 2
+export const META_ORO_INCREMENTO = 2; // +2s por cada tabla (25s, 27s, 29s... hasta 41s en la del 10)
+export const META_PLATA_DELTA = 10; // +10s sobre la meta de oro para la medalla de plata
+export const PENALIDAD_ERROR_MS = 2000; // 2 segundos más por cada error en la tabla (pedido de Pedro, 10/10/2026)
 
 export const MONEDAS_MEDALLA = {
   oro: 15,
@@ -25,7 +27,7 @@ export interface MetaTabla {
 
 /**
  * Tiempo máximo en segundos para medalla de oro en la tabla dada (2..10).
- * metaOro(n) = 35 + 3 * (n - 2)
+ * metaOro(n) = 25 + 2 * (n - 2)
  */
 export function metaOro(tabla: number): number {
   return META_ORO_BASE + META_ORO_INCREMENTO * (tabla - 2);
@@ -33,7 +35,7 @@ export function metaOro(tabla: number): number {
 
 /**
  * Tiempo máximo en segundos para medalla de plata en la tabla dada (2..10).
- * metaPlata(n) = metaOro(n) + 15
+ * metaPlata(n) = metaOro(n) + 10
  */
 export function metaPlata(tabla: number): number {
   return metaOro(tabla) + META_PLATA_DELTA;
@@ -53,7 +55,7 @@ export function getMetaTabla(tabla: number): MetaTabla {
 
 /**
  * Determina la medalla lograda según el tiempo total en milisegundos.
- * Bordes: 35.0s (35000 ms) es oro; 35.1s (35100 ms) es plata en la del 2.
+ * Bordes: 25.0s (25000 ms) es oro; 25.1s (25100 ms) es plata en la del 2.
  */
 export function calcularMedalla(tabla: number, ms: number): MedallaTorneo {
   const { oroMs, plataMs } = getMetaTabla(tabla);

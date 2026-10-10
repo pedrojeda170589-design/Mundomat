@@ -385,3 +385,36 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .mm-halo, .mm-flecha { animation: none !important; }
 }
+
+/* Premios del repaso de las tablas: el premio «se acerca» a la pantalla
+   (zoom desde lejos) y queda con un contorno de luz dorada que late. */
+@keyframes mm-premio-zoom {
+  0% { transform: scale(0.15) translateZ(0); opacity: 0; }
+  55% { transform: scale(1.14); opacity: 1; }
+  75% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+@keyframes mm-luz-dorada {
+  0%, 100% {
+    box-shadow: 0 0 0 3px #facc15, 0 0 18px 6px rgba(250, 204, 21, 0.75), 0 0 46px 14px rgba(253, 224, 71, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px #fde047, 0 0 30px 12px rgba(250, 204, 21, 0.95), 0 0 80px 26px rgba(253, 224, 71, 0.55);
+  }
+}
+@keyframes mm-luz-dorada-emoji {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.95)) drop-shadow(0 0 16px rgba(253, 224, 71, 0.7)); }
+  50% { filter: drop-shadow(0 0 10px rgba(253, 224, 71, 1)) drop-shadow(0 0 28px rgba(250, 204, 21, 0.85)); }
+}
+.mm-premio-zoom {
+  animation: mm-premio-zoom 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) both, mm-luz-dorada 1.8s ease-in-out 0.9s infinite;
+  box-shadow: 0 0 0 3px #facc15, 0 0 18px 6px rgba(250, 204, 21, 0.75), 0 0 46px 14px rgba(253, 224, 71, 0.4);
+}
+.mm-premio-zoom-emoji {
+  display: inline-block;
+  animation: mm-premio-zoom 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) both, mm-luz-dorada-emoji 1.8s ease-in-out 0.9s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-premio-zoom, .mm-premio-zoom-emoji { animation: none !important; }
+  .mm-premio-zoom-emoji { filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.95)); }
+}

@@ -76,63 +76,62 @@ async function main() {
 
   // 2. Metas de tiempo por tabla (oro y plata)
   console.log("2. Verificando metas por tabla...");
-  assert.strictEqual(metaOro(2), 35);
-  assert.strictEqual(metaPlata(2), 50);
+  assert.strictEqual(metaOro(2), 25);
+  assert.strictEqual(metaPlata(2), 35);
 
-  assert.strictEqual(metaOro(3), 38);
-  assert.strictEqual(metaPlata(3), 53);
+  assert.strictEqual(metaOro(3), 27);
+  assert.strictEqual(metaPlata(3), 37);
 
-  assert.strictEqual(metaOro(4), 41);
-  assert.strictEqual(metaPlata(4), 56);
+  assert.strictEqual(metaOro(4), 29);
+  assert.strictEqual(metaPlata(4), 39);
 
-  assert.strictEqual(metaOro(5), 44);
-  assert.strictEqual(metaPlata(5), 59);
+  assert.strictEqual(metaOro(5), 31);
+  assert.strictEqual(metaPlata(5), 41);
 
-  assert.strictEqual(metaOro(6), 47);
-  assert.strictEqual(metaPlata(6), 62);
+  assert.strictEqual(metaOro(6), 33);
+  assert.strictEqual(metaPlata(6), 43);
 
-  assert.strictEqual(metaOro(7), 50);
-  assert.strictEqual(metaPlata(7), 65);
+  assert.strictEqual(metaOro(7), 35);
+  assert.strictEqual(metaPlata(7), 45);
 
-  assert.strictEqual(metaOro(8), 53);
-  assert.strictEqual(metaPlata(8), 68);
+  assert.strictEqual(metaOro(8), 37);
+  assert.strictEqual(metaPlata(8), 47);
 
-  assert.strictEqual(metaOro(9), 56);
-  assert.strictEqual(metaPlata(9), 71);
+  assert.strictEqual(metaOro(9), 39);
+  assert.strictEqual(metaPlata(9), 49);
 
-  assert.strictEqual(metaOro(10), 59);
-  assert.strictEqual(metaPlata(10), 74);
+  assert.strictEqual(metaOro(10), 41);
+  assert.strictEqual(metaPlata(10), 51);
 
   for (let n = 2; n <= 10; n++) {
     const meta = getMetaTabla(n);
-    assert.strictEqual(meta.oroSegundos, 35 + 3 * (n - 2));
-    assert.strictEqual(meta.plataSegundos, meta.oroSegundos + 15);
+    assert.strictEqual(meta.oroSegundos, 25 + 2 * (n - 2));
+    assert.strictEqual(meta.plataSegundos, meta.oroSegundos + 10);
     assert.strictEqual(meta.oroMs, meta.oroSegundos * 1000);
     assert.strictEqual(meta.plataMs, meta.plataSegundos * 1000);
   }
-  console.log("  ✅ Metas de tiempo verificadas (35s base + 3s por tabla; plata +15s).");
+  console.log("  ✅ Metas de tiempo verificadas (25s base + 2s por tabla; plata +10s).");
 
   // 3. Medallas en los bordes
   console.log("3. Probando asignación de medallas en los bordes exactos...");
-  // Tabla del 2 (Oro <= 35s, Plata <= 50s)
-  assert.strictEqual(calcularMedalla(2, 35000), "oro");
-  assert.strictEqual(calcularMedalla(2, 35001), "plata");
-  assert.strictEqual(calcularMedalla(2, 35100), "plata");
-  assert.strictEqual(calcularMedalla(2, 50000), "plata");
-  assert.strictEqual(calcularMedalla(2, 50001), "bronce");
-  assert.strictEqual(calcularMedalla(2, 50100), "bronce");
+  // Tabla del 2 (Oro <= 25s, Plata <= 35s)
+  assert.strictEqual(calcularMedalla(2, 25000), "oro");
+  assert.strictEqual(calcularMedalla(2, 25001), "plata");
+  assert.strictEqual(calcularMedalla(2, 25100), "plata");
+  assert.strictEqual(calcularMedalla(2, 35000), "plata");
+  assert.strictEqual(calcularMedalla(2, 35001), "bronce");
 
-  // Tabla del 10 (Oro <= 59s, Plata <= 74s)
-  assert.strictEqual(calcularMedalla(10, 59000), "oro");
-  assert.strictEqual(calcularMedalla(10, 59001), "plata");
-  assert.strictEqual(calcularMedalla(10, 74000), "plata");
-  assert.strictEqual(calcularMedalla(10, 74001), "bronce");
+  // Tabla del 10 (Oro <= 41s, Plata <= 51s)
+  assert.strictEqual(calcularMedalla(10, 41000), "oro");
+  assert.strictEqual(calcularMedalla(10, 41001), "plata");
+  assert.strictEqual(calcularMedalla(10, 51000), "plata");
+  assert.strictEqual(calcularMedalla(10, 51001), "bronce");
   console.log("  ✅ Bordes de medallas validados al milisegundo.");
 
   // 4. Penalidad de error
   console.log("4. Verificando penalidad de error...");
-  assert.strictEqual(PENALIDAD_ERROR_MS, 3000);
-  console.log("  ✅ Penalidad de 3000 ms (+3s) confirmada.");
+  assert.strictEqual(PENALIDAD_ERROR_MS, 2000);
+  console.log("  ✅ Penalidad de 2000 ms (+2s por error) confirmada.");
 
   // 5. Monedas por medalla
   console.log("5. Verificando monedas por medalla...");
@@ -264,8 +263,8 @@ async function main() {
   await saveProgress(cleanProgress);
   try {
 
-  // Primera partida: Sábado, Tabla del 2 con 30 segundos (Oro) y 1 error
-  const r1 = await completeTorneoTable(student.code, 2, 30000, 1, sabado);
+  // Primera partida: Sábado, Tabla del 2 con 24 segundos (Oro) y 1 error
+  const r1 = await completeTorneoTable(student.code, 2, 24000, 1, sabado);
   assert.ok(!("error" in r1));
   assert.strictEqual(r1.tabla, 2);
   assert.strictEqual(r1.medalla, "oro");
@@ -274,20 +273,20 @@ async function main() {
   assert.deepStrictEqual(r1.vueltaTablasHechas, [2]);
   assert.strictEqual(r1.vueltaCompleta, undefined);
 
-  // Segunda partida mismo sábado: Tabla del 2 con 28 segundos y sin errores
-  const r2 = await completeTorneoTable(student.code, 2, 28000, 0, sabado);
+  // Segunda partida mismo sábado: Tabla del 2 con 22 segundos y sin errores
+  const r2 = await completeTorneoTable(student.code, 2, 22000, 0, sabado);
   assert.ok(!("error" in r2));
   assert.strictEqual(r2.monedasGanadas, 0, "No debe cobrar monedas dos veces el mismo día para la misma tabla");
   assert.strictEqual(r2.esMejorTiempo, true);
-  assert.strictEqual(r2.mejorMs, 28000);
+  assert.strictEqual(r2.mejorMs, 22000);
   assert.strictEqual((await getProgress(student.code)).vueltaTablas?.tablas[2]?.errores, 0, "de cada tabla cuenta la mejor partida");
 
   // Domingo: otro día, cobra monedas.
-  const r4 = await completeTorneoTable(student.code, 2, 29000, 0, domingo);
+  const r4 = await completeTorneoTable(student.code, 2, 23000, 0, domingo);
   assert.ok(!("error" in r4));
   assert.strictEqual(r4.monedasGanadas, 15, "Domingo es un día nuevo, cobra monedas");
-  assert.strictEqual(r4.esMejorTiempo, false, "29s no supera el récord de 28s del sábado");
-  assert.strictEqual(r4.mejorMs, 28000);
+  assert.strictEqual(r4.esMejorTiempo, false, "23s no supera el récord de 22s del sábado");
+  assert.strictEqual(r4.mejorMs, 22000);
 
   // Completa la vuelta (tablas 3 a 10) sin errores y rápido: dorado e insignia ×2.
   let ultima = r4;
@@ -385,7 +384,7 @@ async function main() {
   console.log("9. Verificando ranking del curso...");
   const rankingTabla2 = await getClassroomTorneoRanking(student.code, 2, domingo);
   assert.ok(rankingTabla2.length > 0, "Debe haber al menos 1 alumno en el ranking");
-  assert.strictEqual(rankingTabla2[0].mejorMs, 28000);
+  assert.strictEqual(rankingTabla2[0].mejorMs, 22000);
   assert.ok(typeof rankingTabla2[0].displayName === "string");
   // Asegurar que respeta privacidad (sin apellidos completos sospechosos de formato compuesto)
   assert.ok(rankingTabla2[0].displayName.length > 0);

@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import PremioAparece from "./PremioAparece";
 import { getAccessoryById, getAccessorySrc } from "@/types";
 import InsigniaTorneo from "@/components/InsigniaTorneo";
 import {
@@ -32,7 +34,10 @@ export interface EstadoVuelta {
 
 function Dibujo({ id, emoji, size = 40 }: { id: string; emoji: string; size?: number }) {
   return (
-    <span className="relative shrink-0 flex items-center justify-center text-2xl" style={{ width: size, height: size }}>
+    <span
+      className="relative shrink-0 flex items-center justify-center"
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.6) }}
+    >
       {getAccessoryById(id) ? <Image src={getAccessorySrc(id)} alt="" fill sizes={`${size}px`} className="object-contain" /> : emoji}
     </span>
   );
@@ -107,7 +112,18 @@ export interface VueltaCompleta extends ResultadoVuelta {
 
 // Resultado al cerrar una vuelta.
 export function ResultadoDeVuelta({ v }: { v: VueltaCompleta }) {
+  // El premio ganado aparece primero en grande, acercándose a la pantalla.
+  const [verPremio, setVerPremio] = useState(!!v.premio);
   return (
+    <>
+    {verPremio && v.premio && (
+      <PremioAparece
+        titulo={`${v.premio.superEspecial ? "Objeto superespecial" : "Objeto del mes"}: ${v.premio.label}`}
+        onCerrar={() => setVerPremio(false)}
+      >
+        <Dibujo id={v.premio.id} emoji={MEDALLA[v.premio.metal]} size={120} />
+      </PremioAparece>
+    )}
     <div className="rounded-2xl bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-100 border-2 border-amber-400 p-3 flex flex-col gap-2 text-left text-xs text-amber-950 shadow-sm">
       <div className="flex items-center gap-3">
         <InsigniaTorneo texto={v.insignia} className="min-w-12 h-12 px-1 text-base" />
@@ -123,7 +139,7 @@ export function ResultadoDeVuelta({ v }: { v: VueltaCompleta }) {
         <b>{Math.round(v.ms / 1000)} s</b> {v.dentroDeTiempo ? "(dentro del tiempo de plata ✅)" : `(el de plata era ${Math.round(v.msPlata / 1000)} s)`}
       </p>
       {v.premio && (
-        <div className="flex items-center gap-3 rounded-xl bg-white/80 border border-amber-300 p-2">
+        <div className="mm-premio-zoom flex items-center gap-3 rounded-xl bg-white/80 border border-amber-300 p-2">
           <Dibujo id={v.premio.id} emoji={MEDALLA[v.premio.metal]} size={48} />
           <p>
             <b>
@@ -143,5 +159,6 @@ export function ResultadoDeVuelta({ v }: { v: VueltaCompleta }) {
         </p>
       )}
     </div>
+    </>
   );
 }
