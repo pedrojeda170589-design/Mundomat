@@ -165,6 +165,12 @@ export interface StudentProgress {
   // completas (las 9 tablas), la vuelta en curso, los premios prestados y si
   // el alumno ocultó la insignia (×2, ×3… A1…) de su perfil.
   torneoVueltas?: number;
+  // Todas las partidas del repaso de las tablas, por tabla (totales y las
+  // últimas): para saber qué tablas le cuestan más (lib/torneo/prioridades.ts).
+  tablasStats?: Record<
+    number,
+    { partidas: number; errores: number; ultimas: { ms: number; errores: number; dia: string }[] }
+  >;
   vueltaTablas?: { tablas: Record<number, { ms: number; errores: number }>; desde: string };
   torneoPrestados?: { id: string; hastaVueltas: number; vence: string }[];
   insigniaTorneoOculta?: boolean;

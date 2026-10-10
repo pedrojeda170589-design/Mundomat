@@ -1,6 +1,8 @@
 "use client";
 
 import { MedallaTorneo } from "@/lib/torneo/tiempos";
+import { prioridadesTablas } from "@/lib/torneo/prioridades";
+import type { StudentProgress } from "@/types";
 
 interface TablaRecord {
   mejorMs: number;
@@ -11,9 +13,14 @@ interface TablaRecord {
 
 interface Props {
   tablasTorneo?: Record<string, Record<number, TablaRecord>>;
+  // Con el avance completo, muestra también las tablas que más le cuestan.
+  progress?: StudentProgress;
 }
 
-export default function TorneoReport({ tablasTorneo }: Props) {
+export default function TorneoReport({ tablasTorneo, progress }: Props) {
+  const cuestan = progress
+    ? prioridadesTablas(progress, "", 9).filter((p) => p.motivo === "errores" || p.motivo === "tiempo")
+    : [];
   if (!tablasTorneo || Object.keys(tablasTorneo).length === 0) {
     return (
       <div className="rounded-xl bg-amber-50/60 border border-amber-200 p-3 text-xs text-amber-900/70 italic">
@@ -27,6 +34,19 @@ export default function TorneoReport({ tablasTorneo }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
+      {cuestan.length > 0 && (
+        <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-950">
+          <p className="font-black mb-1">🎯 Tablas que más le cuestan (se le proponen primero cada día)</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            {cuestan.slice(0, 4).map((p) => (
+              <li key={p.tabla}>
+                <b>Tabla del {p.tabla}</b>: {p.erroresPorPartida !== undefined && `${Math.round(p.erroresPorPartida * 10) / 10} errores por partida`}
+                {p.segundos !== undefined && ` · ${Math.round(p.segundos)} s (meta de oro: ${p.metaOro} s)`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {weekendKeys.map((satKey) => {
         const tablas = tablasTorneo[satKey] ?? {};
         const nums = Object.keys(tablas)

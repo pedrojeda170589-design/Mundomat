@@ -928,7 +928,7 @@ export default function AdminDashboardPage() {
 
                 <div>
                   <p className="text-amber-950 font-black mb-2">⚡ Torneo de las tablas (Fin de semana)</p>
-                  <TorneoReport tablasTorneo={selectedProgress.tablasTorneo} />
+                  <TorneoReport tablasTorneo={selectedProgress.tablasTorneo} progress={selectedProgress} />
                 </div>
 
 

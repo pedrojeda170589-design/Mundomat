@@ -14,6 +14,8 @@ import { PENALIDAD_ERROR_MS, torneoHabilitado } from "@/lib/torneo/tiempos";
 import { esNivelSuper, insigniaDeVueltas, metalQueTiene, objetoDelMes, tablasHechas, vueltasParaQuedarse } from "@/lib/torneo/vueltas";
 import { elegirPrestamo, estadoPrestamo } from "@/lib/torneo/prestamoServer";
 import { gradeOf } from "@/lib/grades";
+import { prioridadesTablas } from "@/lib/torneo/prioridades";
+import { getArgentinaDate } from "@/lib/seasons";
 
 // Cada partida se abre en el servidor cuando arranca el reloj ({action:"start"})
 // y se cierra una sola vez al terminar: así nadie puede mandar un tiempo
@@ -85,7 +87,14 @@ export async function GET(request: NextRequest) {
       prestados: progreso.torneoPrestados ?? [],
     },
     prestamo,
+    // Las tablas que más le cuestan: se proponen primero para repasar hoy.
+    prioridades: prioridadesTablas(progreso, diaAR(now)),
   });
+}
+
+function diaAR(now: Date): string {
+  const d = getArgentinaDate(now);
+  return `${d.year}-${String(d.month).padStart(2, "0")}-${String(d.day).padStart(2, "0")}`;
 }
 
 export async function POST(request: NextRequest) {

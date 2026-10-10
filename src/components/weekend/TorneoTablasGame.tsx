@@ -9,6 +9,8 @@ import {
   PENALIDAD_ERROR_MS,
 } from "@/lib/torneo/tiempos";
 import type { EstadoPrestamo } from "@/lib/torneo/prestamoServer";
+import type { PrioridadTabla } from "@/lib/torneo/prioridades";
+import PremioAparece from "./PremioAparece";
 import PrestamoSixSeven from "./PrestamoSixSeven";
 import { InfoVuelta, ResultadoDeVuelta, type EstadoVuelta, type VueltaCompleta } from "./VueltaTorneo";
 
@@ -76,6 +78,12 @@ export default function TorneoTablasGame({
   const [vuelta, setVuelta] = useState<EstadoVuelta | null>(null);
   const [prestamo, setPrestamo] = useState<EstadoPrestamo | null>(null);
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
+  // Tablas que más le cuestan: se proponen primero para repasar hoy.
+  const [prioridades, setPrioridades] = useState<PrioridadTabla[]>([]);
+  // La primera vez se elige sola la tabla más importante para repasar.
+  const eligioRef = useRef(false);
+  // Medalla de oro o plata: aparece en grande, acercándose a la pantalla.
+  const [verMedalla, setVerMedalla] = useState(false);
 
   // Cronómetro
   const tiempoInicioRef = useRef<number>(0);
@@ -96,6 +104,13 @@ export default function TorneoTablasGame({
           setRankingDe({ tabla: tablaSeleccionada, lista: d.ranking ?? [] });
           setVuelta(d.vuelta ?? null);
           setPrestamo(d.prestamo ?? null);
+          const pr: PrioridadTabla[] = d.prioridades ?? [];
+          setPrioridades(pr);
+          if (!eligioRef.current) {
+            eligioRef.current = true;
+            const primera = pr.find((x) => !x.hechaHoy) ?? pr[0];
+            if (primera && primera.tabla !== tablaSeleccionada) setTablaSeleccionada(primera.tabla);
+          }
         }
       })
       .catch(() => {
@@ -173,6 +188,7 @@ export default function TorneoTablasGame({
     setOpcionCorrectaPresionada(null);
     setOpcionErroneaPresionada(null);
     setResultadoFinal(null);
+    setVerMedalla(false);
     setErrorEnvio(null);
     setCuentaRegresiva(3);
     setFase("cuenta_regresiva");
@@ -208,7 +224,7 @@ export default function TorneoTablasGame({
         }, 180);
       }
     } else {
-      // Error: +3 segundos de penalidad y sacudida
+      // Error: +2 segundos de penalidad (PENALIDAD_ERROR_MS) y sacudida
       setErrores((e) => e + 1);
       setPenalidadMs((p) => p + PENALIDAD_ERROR_MS);
       setOpcionErroneaPresionada(opcion);
@@ -246,6 +262,7 @@ export default function TorneoTablasGame({
           esMejorTiempo: false,
         });
       } else {
+        if (data.medalla === "oro" || data.medalla === "plata") setVerMedalla(true);
         setResultadoFinal({
           ms: data.ms,
           errores: data.errores,
@@ -311,9 +328,43 @@ export default function TorneoTablasGame({
               <span>⚡</span> Repaso de las Tablas
             </h1>
             <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
-              Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido y sin errores: al completar las 9 tablas ganás el objeto especial del mes (dorado, plateado o de bronce).
+              Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido y sin errores: cada error suma{" "}
+              <b>{PENALIDAD_ERROR_MS / 1000} segundos</b>. Al completar las 9 tablas ganás el objeto especial del mes (dorado, plateado o de bronce).
             </p>
           </div>
+
+          {prioridades.length > 0 && (
+            <div className="rounded-2xl border-2 border-rose-300 bg-rose-50/80 p-3 text-left">
+              <p className="text-xs font-black text-rose-900 mb-0.5">🎯 Para repasar hoy</p>
+              <p className="text-[11px] text-rose-900/80 mb-2">
+                {prioridades.some((p) => p.motivo === "errores" || p.motivo === "tiempo")
+                  ? "Son las tablas que más te cuestan. ¡Practicalas primero para ganar la medalla!"
+                  : "Empezá por estas para completar tu vuelta de las 9 tablas."}
+              </p>
+              <div className="flex flex-col gap-1.5">
+                {prioridades.map((p) => (
+                  <button
+                    key={p.tabla}
+                    onClick={() => setTablaSeleccionada(p.tabla)}
+                    className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2 text-left min-h-11 transition ${
+                      tablaSeleccionada === p.tabla ? "bg-white border-rose-500 shadow" : "bg-white/70 border-rose-200 hover:bg-white"
+                    }`}
+                  >
+                    <span className="text-base font-black text-rose-800 shrink-0 whitespace-nowrap">Tabla del {p.tabla}</span>
+                    <span className="flex-1 text-[11px] text-rose-900/90 leading-tight">
+                      {p.motivo === "errores" ? "❌ " : p.motivo === "tiempo" ? "🐢 " : "🔁 "}
+                      {p.texto}
+                    </span>
+                    {p.hechaHoy && (
+                      <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-300 rounded-full px-2 py-0.5 shrink-0">
+                        ✅ Hoy
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Grilla de selección de tablas 2 a 10 */}
           <div>
@@ -324,16 +375,22 @@ export default function TorneoTablasGame({
               {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((t) => {
                 const isSelected = tablaSeleccionada === t;
                 const meta = getMetaTabla(t);
+                const prioritaria = prioridades.some((p) => p.tabla === t);
                 return (
                   <button
                     key={t}
                     onClick={() => setTablaSeleccionada(t)}
-                    className={`rounded-2xl p-3 border-2 transition flex flex-col items-center justify-center gap-0.5 shadow-xs ${
+                    className={`relative rounded-2xl p-3 border-2 transition flex flex-col items-center justify-center gap-0.5 shadow-xs ${
                       isSelected
                         ? "bg-amber-500 text-white border-amber-600 scale-102 shadow-md ring-2 ring-amber-400"
                         : "bg-white/90 text-amber-950 border-amber-200 hover:bg-amber-50"
                     }`}
                   >
+                    {prioritaria && (
+                      <span className="absolute -top-2 -right-1.5 text-sm" title="Para repasar hoy" aria-label="Para repasar hoy">
+                        🎯
+                      </span>
+                    )}
                     <span className="text-lg font-black leading-tight">Tabla del {t}</span>
                     <span className="text-[10px] opacity-85 font-medium">
                       🥇 ≤ {meta.oroSegundos}s · 🥈 ≤ {meta.plataSegundos}s
@@ -442,7 +499,7 @@ export default function TorneoTablasGame({
           <div className="flex items-center gap-2">
             {alertaPenalidad && (
               <span className="text-xs font-black text-rose-600 bg-rose-100 border border-rose-300 px-2 py-0.5 rounded-lg animate-bounce">
-                +3s ⚠️
+                +{PENALIDAD_ERROR_MS / 1000}s ⚠️
               </span>
             )}
             <div className="rounded-xl bg-slate-900 text-amber-300 font-mono font-black text-2xl px-3.5 py-1 shadow-inner border border-slate-700 tracking-wider">
@@ -526,8 +583,16 @@ export default function TorneoTablasGame({
           </div>
         )}
 
+        {verMedalla && !errorEnvio && (medalla === "oro" || medalla === "plata") && !resultadoFinal.vueltaCompleta?.premio && (
+          <PremioAparece
+            titulo={medalla === "oro" ? `¡Medalla de Oro en la tabla del ${tablaSeleccionada}!` : `¡Medalla de Plata en la tabla del ${tablaSeleccionada}!`}
+            onCerrar={() => setVerMedalla(false)}
+          >
+            <span className="text-8xl leading-none">{medalla === "oro" ? "🥇" : "🥈"}</span>
+          </PremioAparece>
+        )}
         <div>
-          <span className="text-6xl block mb-2">
+          <span className={`text-6xl block mb-2 ${errorEnvio ? "" : "mm-premio-zoom-emoji"}`}>
             {medalla === "oro" ? "🥇" : medalla === "plata" ? "🥈" : "🥉"}
           </span>
           <h1 className="text-2xl font-black text-slate-950">
@@ -563,7 +628,9 @@ export default function TorneoTablasGame({
               {resultadoFinal.errores}
             </span>
             <span className="block text-[10px] text-amber-900/70 mt-1">
-              {resultadoFinal.errores > 0 ? `+${resultadoFinal.errores * 3}s penalidad` : "¡Sin errores!"}
+              {resultadoFinal.errores > 0
+                ? `+${(resultadoFinal.errores * PENALIDAD_ERROR_MS) / 1000}s de penalidad (${PENALIDAD_ERROR_MS / 1000}s por error)`
+                : "¡Sin errores!"}
             </span>
           </div>
         </div>

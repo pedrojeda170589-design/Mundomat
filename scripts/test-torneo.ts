@@ -131,8 +131,8 @@ async function main() {
 
   // 4. Penalidad de error
   console.log("4. Verificando penalidad de error...");
-  assert.strictEqual(PENALIDAD_ERROR_MS, 3000);
-  console.log("  ✅ Penalidad de 3000 ms (+3s) confirmada.");
+  assert.strictEqual(PENALIDAD_ERROR_MS, 2000);
+  console.log("  ✅ Penalidad de 2000 ms (+2s por error) confirmada.");
 
   // 5. Monedas por medalla
   console.log("5. Verificando monedas por medalla...");

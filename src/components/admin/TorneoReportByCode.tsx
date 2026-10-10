@@ -26,5 +26,5 @@ export default function TorneoReportByCode({ code }: { code: string }) {
 
   if (failed) return <p className="text-sm opacity-70">No se pudo cargar el reporte del torneo.</p>;
   if (!progress) return <p className="text-sm opacity-70">Cargando torneo…</p>;
-  return <TorneoReport tablasTorneo={progress.tablasTorneo} />;
+  return <TorneoReport tablasTorneo={progress.tablasTorneo} progress={progress} />;
 }

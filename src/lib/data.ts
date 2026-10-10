@@ -69,6 +69,7 @@ import {
   type PremioTorneo,
   type ResultadoVuelta,
 } from "@/lib/torneo/vueltas";
+import { sumarPartida } from "@/lib/torneo/prioridades";
 
 const STUDENTS_KEY = "students";
 const WORLDS_CONFIG_KEY = "worldsConfig";
@@ -1033,6 +1034,7 @@ export async function completeTorneoTable(
     coins: progress.coins + monedasGanadas,
     seasonalCollection: [...ownedAccessories],
     torneoVueltas: vueltas,
+    tablasStats: sumarPartida(progress.tablasStats, tabla, { ms, errores, dia: todayKey }),
     vueltaTablas: completa ? undefined : { tablas: tablasVuelta, desde: vuelta.desde },
     torneoPrestados: prestados,
     tablasTorneo: {

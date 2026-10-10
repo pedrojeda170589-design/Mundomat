@@ -5,7 +5,7 @@ import { DESAFIOS, desafioActivo } from "@/lib/eventos/config";
 export const META_ORO_BASE = 35; // segundos para la tabla del 2
 export const META_ORO_INCREMENTO = 3; // +3s por cada tabla adicional (35s, 38s, 41s... hasta 59s en la del 10)
 export const META_PLATA_DELTA = 15; // +15s sobre la meta de oro para clasificar a medalla de plata
-export const PENALIDAD_ERROR_MS = 3000; // 3 segundos de penalidad por intento fallido
+export const PENALIDAD_ERROR_MS = 2000; // 2 segundos más por cada error en la tabla (pedido de Pedro, 10/10/2026)
 
 export const MONEDAS_MEDALLA = {
   oro: 15,
