@@ -491,6 +491,25 @@ check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y
     "hielo seco",
     "hierro fundido",
     "altos hornos",
+    "seres mitológicos con poderes mágicos",
+    "varitas",
+    "idea luminosa",
+    "de abajo hacia arriba al revés",
+    "de abajo hacia arriba (al revés)",
+    "dibujos coloridos en las esquinas",
+    "obligando a leerlas de derecha a izquierda",
+    "obliga a leer de derecha a izquierda",
+    "memorizar la lista de autores",
+    "cambiar la cantidad de párrafos",
+    "transformar la historia en un chiste",
+    "abecedario español",
+    "renglones queden simétricos",
+    "no superen una sola página",
+    "no utilicen signos de puntuación",
+    "lleven signos de puntuación",
+    "ninguna letra vocal",
+    "orden alfabético de los párrafos",
+    "eliminar los signos de puntuación",
   ];
 
   const banks = [
@@ -509,6 +528,26 @@ check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y
               !optText.includes(joke),
               `Distractor de chiste "${joke}" hallado en ${b.name} mundo ${w} preg ${i + 1}: "${optText}"`
             );
+          }
+        }
+      }
+    }
+  }
+
+  // Verificar Matemática (todas sus opciones en los 28 mundos)
+  for (let w = 1; w <= 28; w++) {
+    for (let iter = 0; iter < 5; iter++) {
+      const acts = buildActivitiesForWorld({ id: 42000 + w, worldNumber: w, subject: "matematica", grade: 4, activityCount: 15 } as any);
+      for (const act of acts) {
+        if (act.type === "pick" && act.cards) {
+          for (const card of act.cards) {
+            const cardText = (card.label ?? "").toLowerCase();
+            for (const joke of JOKE_PHRASES) {
+              assert(
+                !cardText.includes(joke),
+                `Distractor de chiste "${joke}" hallado en Matemática mundo ${w}: "${cardText}"`
+              );
+            }
           }
         }
       }
