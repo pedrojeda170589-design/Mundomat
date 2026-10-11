@@ -396,6 +396,39 @@ check("Calidad lingüística: sin frases de relleno prohibidas ni palabras dupli
   }
 });
 
+// ---------------------------------------------------------------------------
+// 4b. Control de relleno en opciones correctas (AG-29)
+// Ninguna opción correcta puede repetir una misma palabra de 5+ letras
+// ni terminar en una sigla entre paréntesis.
+// ---------------------------------------------------------------------------
+check("Calidad lingüística: control de relleno en opciones correctas (sin palabras de 5+ letras repetidas ni siglas entre paréntesis) (AG-29)", () => {
+  for (let w = 1; w <= 28; w++) {
+    const questions = LENGUA_BANK[w] ?? [];
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      if (!q.options || typeof q.answer !== "number") continue;
+      const cText = q.options[q.answer][1];
+
+      // 1. No puede terminar en sigla entre paréntesis (ej: "(SES)")
+      assert(
+        !/\([A-Za-z0-9]+\)\s*$/.test(cText),
+        `Lengua mundo ${w} preg ${i + 1}: opción correcta termina en sigla entre paréntesis: "${cText}"`
+      );
+
+      // 2. No puede repetir una misma palabra de 5 letras o más
+      const words = (cText.toLowerCase().match(/\p{L}+/gu) || []).filter((word) => word.length >= 5);
+      const seen = new Set<string>();
+      for (const word of words) {
+        assert(
+          !seen.has(word),
+          `Lengua mundo ${w} preg ${i + 1}: opción correcta repite la palabra de 5+ letras "${word}": "${cText}"`
+        );
+        seen.add(word);
+      }
+    }
+  }
+});
+
 check("Calidad pedagógica: cero distractores absurdos o de chiste en opciones y afirmaciones V/F (AG-24 y AG-25)", () => {
   const JOKE_PHRASES = [
     "freno de bicicleta",
