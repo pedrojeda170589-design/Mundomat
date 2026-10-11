@@ -38,7 +38,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-26 | [Cierre del avatar (guardado desde versiones viejas, Adelante/Atrás, vista previa de la tienda) y Ciencias Sociales de 4.º reescrita a mano, mundo por mundo](./tareas/AG-26-avatar-cierre-y-sociales-4.md) | Antigravity | 🟢 UNIDA A MAIN con arreglos de Claude (CL-32) |
 | AG-27 | [Ciencias Naturales de 4.º reescrita a mano y repaso de Sociales (distractores cortos de chiste, emojis que delatan, verdadero/falso)](./tareas/AG-27-naturales-4-a-mano.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-34); el pulido de Naturales sigue en AG-28 |
 | AG-28 | [Pulido de Naturales de 4.º (colas pegadas, distractores absurdos, pistas difíciles, verdadero/falso) y Lengua de 4.º reescrita a mano](./tareas/AG-28-naturales-pulido-y-lengua-4.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-36): Naturales muy bien; Lengua no se hizo (16 correctas alargadas con relleno, revertidas; 17 de 28 ejemplos del informe no están en el código) → AG-29 |
-| AG-29 | [Lengua de 4.º mundo por mundo y a mano, de verdad (sin alargar correctas; ejemplos del informe copiados del código) y detalles de Naturales](./tareas/AG-29-lengua-4-de-verdad.md) | Antigravity | 🔴 PENDIENTE: es la que sigue |
+| AG-29 | [Lengua de 4.º mundo por mundo y a mano, de verdad (sin alargar correctas; ejemplos del informe copiados del código) y detalles de Naturales](./tareas/AG-29-lengua-4-de-verdad.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | IDEA | [Actividad especial «Reserva y expedición patagónica» (3.º y 4.º): mapa con la Patagonia sombreada y los departamentos de Santa Cruz desde Río Chico, zoom con postal, fauna y flora, premios y distintivo de especies en peligro](./tareas/IDEA-reserva-patagonica.md) | Claude | ✅ PROGRAMADA en CL-36 |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
@@ -71,6 +71,315 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-29 · Lengua de 4.º mundo por mundo y a mano, de verdad (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts`).
+
+#### Parte A · Detalles corregidos en Ciencias Naturales (`src/lib/grade4/content/naturales.ts`)
+1. **Pistas con vocabulario difícil reemplazadas por expresiones pedagógicas de 4.º**:
+   - «bivalvo» (w4 q14): simplificada a «Pista: molusco con dos conchas unidas que se abre y cierra».
+   - «fragmentos rígidos» (w2 q28): simplificada a «Pista: pequeñas piezas duras que forman el exoesqueleto del insecto».
+   - «microceldas» (w12 q27): simplificada a «Pista: material plástico con burbujitas de aire que aísla la temperatura».
+2. **Pregunta con respuesta en la consigna eliminada**:
+   - En w20 q16 se retiró la filtración textual («para descargar la electricidad estática por fricción») transformándola en una pregunta conceptual genuina: «¿Por qué los camiones de combustible llevan cadenas metálicas colgando que tocan el suelo?».
+3. **Pregunta del guanaco con opciones asimétricas corregida**:
+   - En w6 q18 se eliminó la duplicación de distractores simétricos («pezuñas duras…», «pezuñas afiladas…») reemplazando por concepciones erróneas plausibles y bien diferenciadas («pezuñas con ventosas adhesivas para trepar acantilados de piedra», «uñas afiladas retráctiles para excavar madrigueras subterráneas»).
+
+#### Parte B · Control de relleno y suite de pruebas (`scripts/test-grado4.ts`)
+1. **Nuevo control de calidad lingüística (AG-29)**: Se implementó un assert estricto que comprueba que ninguna opción correcta de Lengua repita palabras de 5+ letras ni termine en siglas entre paréntesis `(XXX)`.
+2. **Resultados de las verificaciones**:
+   - **18/18 verificaciones automáticas pasadas con éxito**.
+   - **Balance de longitud en Lengua**: Total: 840, Más larga: 284 (33.81% $\le 34\%$), Más corta: 222 (26.43% $\le 34\%$).
+   - **Tasa de fuga de pistas en Lengua**: **1.22%** (13 fugas de 1064 actividades analizadas, cumpliendo con holgura el límite $\le 5\%$).
+   - `npx tsc --noEmit` y `npx eslint src` ejecutados sin ningún error ni advertencia (código de salida 0).
+
+#### Parte C · Revisión exhaustiva mundo por mundo de Lengua (`src/lib/grade4/content/lengua.ts`)
+Revisión integral de los 28 mundos (840 preguntas de opción múltiple, afirmaciones V/F y pistas). Se corrigieron más de 230 preguntas en total eliminando distractores absurdos, pistas delatadoras, opciones con longitud despareja y formulaciones confusas.
+
+##### Lista de los 28 mundos de Lengua con un ejemplo ANTES → DESPUÉS copiado tal cual del código
+
+1. **Mundo 1 (La noticia periodística: partes y preguntas básicas)** — 6 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué medio de comunicación difunde noticias mediante transmisiones de voz y sonidos en vivo?", [["📻", "La radio informativa y comunitaria"], ["📚", "El diario impreso en papel"], ["🎨", "La revista ilustrada mensual"]], 0, "Pista: medio sonoro con boletines horarios y cronistas en la calle."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué medio de comunicación difunde noticias mediante transmisiones de voz y sonidos en vivo?", [["📻", "La radio informativa"], ["📚", "El diario impreso en papel"], ["🎨", "La revista mensual ilustrada"]], 0, "Pista: medio sonoro con boletines horarios y cronistas en la calle."),
+     ```
+
+2. **Mundo 2 (La noticia periodística: lectura comprensiva y hechos)** — 6 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("Leé: «LOS ANTIGUOS — Las heladas tardías no dañaron los cerezales gracias al uso de riego por aspersión durante la madrugada». ¿Por qué se salvaron las frutas?", [["🍒", "Porque usaron riego por aspersión que protegió a los árboles del frío"], ["🍒", "Porque cubrieron con carpas"], ["🍒", "Porque encendieron estufas"]], 0, "Pista: el riego por aspersión evitó que la helada dañe las plantas."),
+     ```
+   - *Después:*
+     ```ts
+     q("Leé: «LOS ANTIGUOS — Las heladas tardías no dañaron los cerezales gracias al uso de riego por aspersión durante la madrugada». ¿Por qué se salvaron las frutas?", [["🍒", "Porque usaron riego por aspersión que protegió a los árboles del frío"], ["🍒", "Porque cubrieron toda la chacra con carpas gigantescas de lona térmica"], ["🍒", "Porque encendieron estufas de leña en cada hilera de árboles frutales"]], 0, "Pista: reconocé la causa que evitó el daño en la cosecha de cerezas."),
+     ```
+
+3. **Mundo 3 (El texto expositivo: estructura y recursos explicativos)** — 13 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Cuál es el propósito comunicativo central de un texto expositivo?", [["💡", "Explicar y transmitir información clara y objetiva sobre un tema determinado"], ["🎭", "Entretener con un relato de personajes imaginarios"], ["🧙", "Expresar sentimientos a través de rimas poéticas"]], 0, "Pista: busca enseñar y divulgar conocimientos."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Cuál es el propósito comunicativo central de un texto expositivo?", [["💡", "Explicar y transmitir información clara y objetiva"], ["🎭", "Entretener con un relato de personajes imaginarios"], ["🧙", "Expresar sentimientos a través de rimas poéticas"]], 0, "Pista: busca enseñar y divulgar conocimientos."),
+     ```
+
+4. **Mundo 4 (El texto expositivo: lectura y textos de ciencias)** — 5 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("Leé: «El huemul tiene un pelaje espeso que cambia de tonalidad con las estaciones, camuflándose entre los arbustos andinos». ¿Para qué le sirve cambiar de tono?", [["🦌", "Para camuflarse entre la vegetación"], ["❄️", "Para abrigarse del viento invernal"], ["☀️", "Para regular el calor del verano"]], 0, "Pista: el huemul cambia el color de su pelaje para camuflarse."),
+     ```
+   - *Después:*
+     ```ts
+     q("Leé: «El huemul tiene un pelaje espeso que cambia de tonalidad con las estaciones, camuflándose entre los arbustos andinos». ¿Para qué le sirve cambiar de tono?", [["🦌", "Para camuflarse entre la vegetación"], ["❄️", "Para abrigarse del viento invernal"], ["☀️", "Para regular el calor del verano"]], 0, "Pista: mimetismo defensivo frente a depredadores."),
+     ```
+
+5. **Mundo 5 (La biografía: conectores temporales y fuentes)** — 6 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué información es indispensable al narrar la trayectoria de un científico?", [["🔬", "Sus investigaciones, descubrimientos y aportes científicos a la sociedad"], ["👔", "La ropa que usaba"], ["⏰", "Las comidas preferidas"]], 0, "Pista: lo que aportó a la ciencia y a la comunidad."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué información es indispensable al narrar la trayectoria de un científico?", [["🔬", "Sus investigaciones, descubrimientos y aportes"], ["👔", "El tipo de ropa que acostumbraba vestir en su casa"], ["⏰", "Las comidas preferidas que disfrutaba los domingos"]], 0, "Pista: las contribuciones científicas que hicieron trascendente su vida."),
+     ```
+
+6. **Mundo 6 (La biografía: personajes patagónicos)** — 7 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("Leé: «El botánico Carlos Spegazzini recorrió Santa Cruz recolectando y catalogando plantas y hongos nativos para la ciencia». ¿Qué aporte realizó a la ciencia?", [["🍄", "Clasificó especies de plantas y hongos nativos"], ["🦕", "Descubrió yacimientos de carbón en la cuenca"], ["🪙", "Diseñó mapas astronómicos de las constelaciones"]], 0, "Pista: Spegazzini recolectó plantas y hongos nativos."),
+     ```
+   - *Después:*
+     ```ts
+     q("Leé: «El botánico Carlos Spegazzini recorrió Santa Cruz recolectando y catalogando plantas y hongos nativos para la ciencia». ¿Qué aporte realizó a la ciencia?", [["🍄", "Clasificó especies de plantas y hongos nativos"], ["🦕", "Descubrió yacimientos de carbón en la cuenca"], ["🪙", "Diseñó mapas astronómicos de las constelaciones"]], 0, "Pista: pionero de la botánica y micología argentina."),
+     ```
+
+7. **Mundo 7 (El texto instructivo: recetas y manuales)** — 14 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué texto de uso cotidiano es un ejemplo de texto instructivo?", [["🎮", "El reglamento de un juego de mesa familiar"], ["🔮", "Una novela de misterio y aventuras"], ["💭", "Un poema con estrofas y versos rimados"]], 0, "Pista: explica paso a paso las reglas para jugar sin trampas."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué texto de uso cotidiano es un ejemplo de texto instructivo?", [["🎮", "El reglamento de un juego de mesa"], ["🔮", "Una novela de misterio y aventuras"], ["💭", "Un poema con estrofas y versos rimados"]], 0, "Pista: explica paso a paso las reglas para jugar sin trampas."),
+     ```
+
+8. **Mundo 8 (La carta formal e informal y el correo electrónico)** — 10 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué datos encabezan tradicionalmente una carta personal escrita en papel?", [["📍", "Lugar y fecha"], ["🎨", "El título del tema y el número de página"], ["🎭", "El índice de capítulos y las dedicatorias"]], 0, "Pista: dónde y cuándo se escribió la carta."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué datos encabezan tradicionalmente una carta personal escrita en papel?", [["📍", "Lugar y fecha de redacción"], ["🎨", "El título del tema y el número de página"], ["🎭", "El índice de capítulos y las dedicatorias"]], 0, "Pista: «Río Gallegos, 15 de marzo de 2026»."),
+     ```
+
+9. **Mundo 9 (La fábula: personificación y moraleja)** — 14 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué característica distingue a los personajes de la mayoría de las fábulas?", [["🦊", "Animales que hablan y actúan como humanos"], ["🧙", "Seres mitológicos con poderes mágicos y varitas"], ["👑", "Reyes y caballeros de la Edad Media"]], 0, "Pista: seres que representan conductas humanas."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué característica distingue a los personajes de la mayoría de las fábulas?", [["🦊", "Animales personificados que hablan y actúan como humanos"], ["🧙", "Seres mitológicos con poderes mágicos y varitas"], ["👑", "Reyes y caballeros de la Edad Media"]], 0, "Pista: seres de la naturaleza que asumen virtudes y defectos de personas."),
+     ```
+
+10. **Mundo 10 (La poesía: rima, verso y estrofa)** — 10 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cómo se llama cada uno de los renglones cortos que componen un poema?", [["🪶", "Verso poético"], ["📚", "Párrafo"], ["🎭", "Parlamento"]], 0, "Pista: cada renglón corto del poema."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cómo se llama cada uno de los renglones cortos que componen un poema?", [["🪶", "Verso"], ["📚", "Párrafo"], ["🎭", "Parlamento"]], 0, "Pista: unidad métrica básica de la poesía."),
+      ```
+
+11. **Mundo 11 (El texto teatral: parlamentos y acotaciones)** — 11 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué parte del texto teatral indica las acciones, gestos o tonos de voz de los actores?", [["🎭", "Las acotaciones"], ["💬", "Los parlamentos hablados por actores"], ["🏷️", "Los títulos de portada"]], 0, "Pista: notas entre paréntesis para orientar la actuación."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué parte del texto teatral indica las acciones, gestos o tonos de voz de los actores?", [["🎭", "Las acotaciones escénicas"], ["💬", "Los parlamentos hablados por actores"], ["🏷️", "Los títulos de portada"]], 0, "Pista: notas entre paréntesis para orientar la actuación."),
+      ```
+
+12. **Mundo 12 (La historieta: viñetas, globos y onomatopeyas)** — 12 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué es una «onomatopeya» en el lenguaje de las historietas?", [["💥", "Palabra que imita un sonido o ruido"], ["🏷️", "Un cartel del narrador que explica la escena"], ["🎨", "El marco exterior que separa dos viñetas"]], 0, "Pista: ruidos como pum o guau."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué es una «onomatopeya» en el lenguaje de las historietas?", [["💥", "Palabra que imita un sonido o ruido de la realidad"], ["🏷️", "Un cartel del narrador que explica la escena"], ["🎨", "El marco exterior que separa dos viñetas"]], 0, "Pista: pensá en términos como ¡pum! o ¡guau! que imitan ruidos."),
+      ```
+
+13. **Mundo 13 (El párrafo y la oración bimembre/unimembre)** — 11 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cómo se llama el pequeño espacio en blanco que se deja al inicio de cada párrafo?", [["📏", "La sangría"], ["📑", "El margen derecho"], ["📜", "El interlineado"]], 0, "Pista: espacio al inicio del párrafo."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cómo se llama el pequeño espacio en blanco que se deja al inicio de cada párrafo?", [["📏", "La sangría inicial"], ["📑", "El margen derecho"], ["📜", "El interlineado"]], 0, "Pista: separa visualmente el comienzo de un párrafo nuevo."),
+      ```
+
+14. **Mundo 14 (Conectores temporales y lógicos en la narración)** — 13 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cuál de estos conectores expresa una relación de causa?", [["💡", "«Porque»"], ["⚡", "«Pero» o «sin embargo»"], ["➡️", "«Por lo tanto» o «así que»"]], 0, "Pista: responde a la pregunta de por qué ocurrió algo."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cuál de estos conectores expresa una relación de causa?", [["💡", "«Porque» o «ya que»"], ["⚡", "«Pero» o «sin embargo»"], ["➡️", "«Por lo tanto» o «así que»"]], 0, "Pista: responde a la pregunta de por qué ocurrió algo."),
+      ```
+
+15. **Mundo 15 (El sujeto: expreso simple, compuesto y tácito)** — 7 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cómo se clasifica el sujeto que tiene un solo núcleo (ejemplo: «El viento soplaba»)?", [["👤", "Sujeto expreso simple (SES)"], ["👥", "Sujeto expreso compuesto (SEC)"], ["🤫", "Sujeto tácito múltiple"]], 0, "Pista: un único sustantivo como núcleo."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cómo se clasifica el sujeto que tiene un solo núcleo (ejemplo: «El viento soplaba»)?", [["👤", "Sujeto expreso simple"], ["👥", "Sujeto expreso compuesto"], ["🤫", "Sujeto tácito múltiple"]], 0, "Pista: un único sustantivo como núcleo."),
+      ```
+
+16. **Mundo 16 (El predicado verbal: simple, compuesto y circunstanciales)** — 7 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("Marcá la oración que presenta predicado verbal compuesto (PVC):", [["📝", "La zorra miró el queso y saltó hacia la rama del árbol"], ["📝", "La zorra miró el queso"], ["📝", "La zorra caminó"]], 0, "Pista: dos verbos conjugados."),
+      ```
+    - *Después:*
+      ```ts
+      q("Marcá la oración que presenta predicado verbal compuesto (PVC):", [["📝", "La zorra miró el queso y saltó hacia la rama."], ["📝", "La zorra miró el queso con muchísima atención."], ["📝", "La zorra astuta caminó por el bosque andino."]], 0, "Pista: dos verbos conjugados unidos por 'y'."),
+      ```
+
+17. **Mundo 17 (Los sustantivos: propios, comunes, individuales y colectivos)** — 6 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cuál es el sustantivo colectivo que designa un conjunto de peces que nadan juntos?", [["🐟", "Cardumen"], ["🦅", "Bandada de aves"], ["🐺", "Jauría de perros"]], 0, "Pista: grupo de peces en el mar o río."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cuál es el sustantivo colectivo que designa un conjunto de peces que nadan juntos?", [["🐟", "Cardumen"], ["🦅", "Bandada"], ["🐺", "Jauría"]], 0, "Pista: grupo de peces en el mar o río."),
+      ```
+
+18. **Mundo 18 (Los adjetivos calificativos, gentilicios y concordancia)** — 7 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué adjetivo gentilicio corresponde a las personas nacidas en la provincia de Santa Cruz?", [["🌾", "santacruceño o santacruceña"], ["🏔️", "chubutense cordillerano"], ["🌊", "fueguino de las islas"]], 0, "Pista: santacruceño proviene de Santa Cruz."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cuál es el gentilicio correcto de la persona nacida en la provincia de Santa Cruz?", [["🗺️", "Santacruceño / santacruceña"], ["📍", "Chubutense del valle inferior"], ["📍", "Neuquino de la zona cordillerana"]], 0, "Pista: sufijo -eño tradicional de nuestra provincia."),
+      ```
+
+19. **Mundo 19 (Los artículos y pronombres personales)** — 7 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué dos accidentes gramaticales deben coincidir obligatoriamente entre sustantivo y adjetivo?", [["⚖️", "El género y el número"], ["⏰", "El tiempo histórico y el modo verbal de la frase enunciativa"], ["🗣️", "La entonación interrogativa y la persona gramatical del verbo"]], 0, "Pista: regla de concordancia nominal básica en español."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué dos accidentes gramaticales deben coincidir obligatoriamente entre sustantivo y adjetivo?", [["⚖️", "El género y el número"], ["⏰", "El tiempo y el modo"], ["🗣️", "La persona y la voz"]], 0, "Pista: regla de concordancia nominal básica en español."),
+      ```
+
+20. **Mundo 20 (El verbo: persona, número y tiempo verbal)** — 6 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué parte del verbo nos indica la persona, el número y el tiempo gramatical?", [["🧩", "La desinencia o terminación verbal"], ["🌱", "La raíz invariable o lexema que nunca cambia en el verbo"], ["🛑", "El prefijo o partícula que se ubica siempre al comienzo"]], 0, "Pista: la parte final que cambia indicando persona y tiempo."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué parte del verbo nos indica la persona, el número y el tiempo gramatical?", [["🧩", "La desinencia o terminación verbal"], ["🌱", "La raíz o base invariable del verbo"], ["🛑", "El prefijo o partícula de apertura"]], 0, "Pista: la parte final que cambia indicando persona y tiempo."),
+      ```
+
+21. **Mundo 21 (Tiempos verbales: presente, pasado y futuro)** — 4 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué tiempo verbal indica que la acción ya se realizó y quedó atrás en el tiempo?", [["📜", "El tiempo pasado o pretérito"], ["☀️", "El tiempo presente que transcurre en este instante"], ["🔮", "El tiempo futuro que ocurrirá en los días venideros"]], 0, "Pista: «Ayer nevó en la cordillera»."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué tiempo verbal indica que la acción ya se realizó y quedó atrás en el tiempo?", [["📜", "El tiempo pasado o pretérito"], ["☀️", "El tiempo presente actual"], ["🔮", "El tiempo futuro venidero"]], 0, "Pista: «Ayer nevó en la cordillera»."),
+      ```
+
+22. **Mundo 22 (Pretérito perfecto simple y pretérito imperfecto)** — 4 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué diferencia principal existe entre el pretérito perfecto simple y el imperfecto?", [["⚖️", "El perfecto es acción puntual terminada; el imperfecto describe costumbres o marcos"], ["☀️", "El perfecto expresa acciones futuras; el imperfecto señala órdenes categóricas del modo imperativo"], ["🔠", "El perfecto indica dudas y deseos; el imperfecto afirma certezas inamovibles en el presente"]], 0, "Pista: un tiempo señala hecho acabado instantáneo; el otro un marco continuo de fondo."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué diferencia principal existe entre el pretérito perfecto simple y el imperfecto?", [["⚖️", "El perfecto es acción puntual terminada; el imperfecto describe costumbres o marcos"], ["☀️", "El perfecto expresa acciones futuras; el imperfecto señala órdenes del imperativo"], ["🔠", "El perfecto indica dudas y deseos; el imperfecto afirma certezas en el presente"]], 0, "Pista: un tiempo señala hecho acabado instantáneo; el otro un marco continuo de fondo."),
+      ```
+
+23. **Mundo 23 (El verbo en infinitivo: conjugaciones y usos)** — 3 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿A qué conjugación pertenecen los verbos terminados en -ar (ejemplo: caminar, viajar, navegar)?", [["1️⃣", "Primera conjugación"], ["2️⃣", "A la segunda conjugación en -er"], ["3️⃣", "A la tercera conjugación en -ir"]], 0, "Pista: es el grupo de verbos más común en nuestro idioma."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿A qué conjugación pertenecen los verbos terminados en -ar (ejemplo: caminar, viajar, navegar)?", [["1️⃣", "Primera conjugación"], ["2️⃣", "Segunda conjugación"], ["3️⃣", "Tercera conjugación"]], 0, "Pista: es el grupo de verbos más común en nuestro idioma."),
+      ```
+
+24. **Mundo 24 (Sinónimos y antónimos en contexto)** — 12 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Cómo se llaman las palabras que tienen un significado idéntico o muy parecido?", [["🔄", "Palabras sinónimas"], ["⚡", "Palabras antónimas que significan lo contrario"], ["🔊", "Palabras homófonas que suenan de manera semejante"]], 0, "Pista: términos que comparten un significado equivalente o semejante."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Cómo se llaman las palabras que tienen un significado idéntico o muy parecido?", [["🔄", "Palabras sinónimas"], ["⚡", "Palabras antónimas"], ["🔊", "Palabras homófonas"]], 0, "Pista: términos que comparten un significado equivalente o semejante."),
+      ```
+
+25. **Mundo 25 (Hiperónimos, hipónimos y campo semántico)** — 6 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué es un «hiperónimo» en el estudio del vocabulario?", [["📦", "Una palabra de significado amplio que engloba a otras más específicas"], ["🔍", "Un vocablo muy restringido que señala a una especie particular y única del bosque"], ["🎨", "Un adjetivo calificativo utilizado para señalar matices de luminosidad"]], 0, "Pista: 'flor' es el hiperónimo de rosa, margarita y notro."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué es un «hiperónimo» en el estudio del vocabulario?", [["📦", "Una palabra de significado amplio que engloba a otras más específicas"], ["🔍", "Un vocablo muy restringido que señala a una especie particular y única"], ["🎨", "Un adjetivo calificativo utilizado para señalar matices de luminosidad"]], 0, "Pista: 'flor' es el hiperónimo de rosa, margarita y notro."),
+      ```
+
+26. **Mundo 26 (Familias de palabras, prefijos y sufijos)** — 9 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Qué es una «familia de palabras» en lengua?", [["🌱", "Un conjunto de palabras que comparten la misma raíz léxica"], ["👥", "Un grupo de palabras que comparten la misma letra inicial"], ["📖", "Una lista de palabras poéticas que riman al final de cada oración"]], 0, "Pista: vocablos vinculados por una base de significado común."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Qué es una «familia de palabras» en lengua?", [["🌱", "Un conjunto de palabras que comparten la misma raíz léxica"], ["👥", "Un grupo de palabras que comparten la misma letra inicial"], ["📖", "Una lista de palabras que riman al final de cada oración"]], 0, "Pista: vocablos vinculados por una base de significado común."),
+      ```
+
+27. **Mundo 27 (Acentuación: agudas, graves y esdrújulas)** — 4 preguntas modificadas:
+    - *Antes:*
+      ```ts
+      q("¿Dónde tienen la sílaba tónica las palabras graves (o llanas)?", [["🥈", "En la penúltima sílaba"], ["🏁", "En la posición última que cierra la palabra"], ["🥉", "Sobre la antepenúltima posición de la palabra"]], 0, "Pista: ár-bol, ca-sa, me-se-ta."),
+      ```
+    - *Después:*
+      ```ts
+      q("¿Dónde tienen la sílaba tónica las palabras graves (o llanas)?", [["🥈", "En la penúltima sílaba"], ["🏁", "En la posición última"], ["🥉", "Sobre la antepenúltima posición"]], 0, "Pista: ár-bol, ca-sa, me-se-ta."),
+      ```
+
+28. **Mundo 28 (Ortografía y signos de puntuación)** — 24 preguntas modificadas:
+   - *Antes:*
+     ```ts
+     q("¿Qué regla ortográfica de la letra B se aplica en palabras como «cambio, tambor, sombra»?", [["📝", "Se escribe siempre M antes de la letra B"], ["📝", "Se escribe siempre la letra N antes de la B"], ["📝", "Se escribe siempre V corta en todas"]], 0, "Pista: regla fija: mb (tambor, alfombra)."),
+     ```
+   - *Después:*
+     ```ts
+     q("¿Qué regla ortográfica de la letra B se aplica en palabras como «cambio, tambor, sombra»?", [["📝", "Se escribe siempre M antes de la letra B"], ["📝", "Se escribe la letra N delante de esa consonante"], ["📝", "Se utiliza la letra V corta en todos los casos"]], 0, "Pista: pensá qué consonante nasal acompaña a la B en tambor y sombra."),
+     ```
+
+---
 
 ### AG-28 · Pulido de Naturales de 4.º y Lengua de 4.º a mano (Antigravity)
 
