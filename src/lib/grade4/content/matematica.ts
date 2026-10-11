@@ -134,7 +134,7 @@ function buildMundo42001(): ActivitySpec[] {
             `Completá la escala numérica que avanza de ${step.toLocaleString("es-AR")} en ${step.toLocaleString("es-AR")}:\n${promptSeq}`,
             choices.map((c) => ["🔢", c.toLocaleString("es-AR")]),
             choices.indexOf(target),
-            `Pista: sumale ${step.toLocaleString("es-AR")} al número anterior.`
+            `Pista: fijate cuánto aumenta de un casillero al que le sigue.`
           ),
           `m42001-${i}`,
           "",
@@ -191,7 +191,7 @@ function buildMundo42001(): ActivitySpec[] {
             `¿Qué número se forma con ${dmStr}, ${umStr} y ${cStr}?`,
             choices.map((num) => ["🧮", num.toLocaleString("es-AR")]),
             choices.indexOf(target),
-            `Pista: ${dmStr} equivalen a ${(dm * 10000).toLocaleString("es-AR")}.`
+            "Pista: ubicá cada cifra en el cuadro de valor posicional: decenas de mil, unidades de mil y centenas."
           ),
           `m42001-${i}`,
           "",
@@ -270,7 +270,7 @@ function buildMundo42002(): ActivitySpec[] {
             `Completá la serie numérica hasta el millón:\n${promptSeq}`,
             choices.map((c) => ["🔢", c.toLocaleString("es-AR")]),
             choices.indexOf(target),
-            `Pista: la serie avanza sumando ${step.toLocaleString("es-AR")}.`
+            "Pista: compará dos números seguidos de la serie para calcular cuánto se suma en cada paso."
           ),
           `m42002-${i}`,
           "",
@@ -573,7 +573,7 @@ function buildMundo42006(): ActivitySpec[] {
           `m42006-in-${i}`,
           `Un camión transporta ${a.toLocaleString("es-AR")} kg de carne ovina y ${b.toLocaleString("es-AR")} kg de pescado. ¿Cuántos kg transporta en total?`,
           total,
-          `Pista: sumá primero los miles (${(Math.floor(a / 1000) + Math.floor(b / 1000)).toLocaleString("es-AR")}.000) y luego las centenas.`,
+          "Pista: sumá primero las unidades de mil de ambos números y luego agregale las centenas.",
           skills
         )
       );
@@ -621,7 +621,7 @@ function buildMundo42007(): ActivitySpec[] {
           `Una escuela de Santa Cruz compró materiales por $${a.toLocaleString("es-AR")} y libros por $${b.toLocaleString("es-AR")}.\nRedondeando cada monto al millar más cercano, ¿cuál es la mejor estimación del gasto total?`,
           choices.map((c) => ["🏷️", `$${c}`]),
           choices.indexOf(estimated.toLocaleString("es-AR")),
-          `Pista: ${a.toLocaleString("es-AR")} se redondea a ${roundA.toLocaleString("es-AR")} y ${b.toLocaleString("es-AR")} a ${roundB.toLocaleString("es-AR")}.`
+          "Pista: si la cifra de las centenas es 5 o mayor, redondeá al millar superior; si es menor, al millar inferior."
         ),
         `m42007-${i}`,
         "",
@@ -665,18 +665,22 @@ function buildMundo42008(): ActivitySpec[] {
     (total: number, factor: number) => ({
       txt: `Se reparten $${total.toLocaleString("es-AR")} en partes iguales entre ${factor} estudiantes para una excursión. ¿Cuánto recibe cada uno?`,
       ico: "🪙",
+      unit: (v: number) => `$${v.toLocaleString("es-AR")}`,
     }),
     (total: number, factor: number) => ({
       txt: `Un depósito distribuye ${total.toLocaleString("es-AR")} litros de agua potable en ${factor} tanques idénticos. ¿Cuántos litros van en cada tanque?`,
       ico: "🚰",
+      unit: (v: number) => `${v.toLocaleString("es-AR")} litros`,
     }),
     (total: number, factor: number) => ({
       txt: `Un club deportivo reparte $${total.toLocaleString("es-AR")} en ${factor} premios iguales para un torneo juvenil. ¿De cuánto es cada premio?`,
       ico: "🏆",
+      unit: (v: number) => `$${v.toLocaleString("es-AR")}`,
     }),
     (total: number, factor: number) => ({
       txt: `Una fábrica envasa ${total.toLocaleString("es-AR")} gramos de té en ${factor} frascos iguales. ¿Cuántos gramos contiene cada frasco?`,
       ico: "🍵",
+      unit: (v: number) => `${v.toLocaleString("es-AR")} gramos`,
     }),
   ];
 
@@ -708,7 +712,7 @@ function buildMundo42008(): ActivitySpec[] {
         qToPick(
           q(
             sc.txt,
-            choices.map((c) => [sc.ico, `$${c.toLocaleString("es-AR")}`]),
+            choices.map((c) => [sc.ico, sc.unit(c)]),
             choices.indexOf(n),
             `Pista: dividir por ${factor} quita ${factor === 10 ? "1 cero" : factor === 100 ? "2 ceros" : "3 ceros"}.`
           ),
@@ -746,7 +750,7 @@ function buildMundo42009(): ActivitySpec[] {
           `m42009-in-${i}`,
           `Un ${tr} recorre ${a} km por día en las rutas de Santa Cruz. ¿Cuántos km recorrerá en ${b} días?`,
           prod,
-          `Pista: calculá ${a} × ${decenas * 10} (${a * decenas * 10}) y sumale ${a} × ${unidades} (${a * unidades}).`,
+          `Pista: descomponé ${b} en decenas y unidades (${decenas * 10} + ${unidades}), multiplicá ${a} por cada parte y sumá ambos resultados.`,
           skills
         )
       );
@@ -860,7 +864,7 @@ function buildMundo42010(): ActivitySpec[] {
             pr,
             choices.map((c) => ["🔄", c]),
             choices.indexOf(correctStr),
-            `Pista: conmutar significa cambiar el orden: ${a} × ${b} es igual a ${b} × ${a}.`
+            "Pista: la propiedad conmutativa dice que podés invertir el orden de los factores y el producto no cambia."
           ),
           `m42010-${i}`,
           "",
@@ -893,7 +897,7 @@ function buildMundo42011(): ActivitySpec[] {
           `m42011-in-${i}`,
           promptText,
           total,
-          `Pista: multiplicá filas por columnas (${filas} × ${cols}).`,
+          "Pista: multiplicá la cantidad de filas por la cantidad de columnas.",
           skills
         )
       );
@@ -931,7 +935,7 @@ function buildMundo42011(): ActivitySpec[] {
             esc.pregunta,
             choices.map((c) => [esc.icono, `${c} ${esc.item}`]),
             choices.indexOf(comb),
-            `Pista: multiplicá las opciones (${panes} × ${rellenos}).`
+            "Pista: multiplicá la cantidad de opciones de cada tipo para hallar todas las combinaciones posibles."
           ),
           `m42011-${i}`,
           "",
@@ -967,7 +971,7 @@ function buildMundo42012(): ActivitySpec[] {
         `m42012-in-${i}`,
         prText,
         cociente,
-        `Pista: dividí ${dividendo.toLocaleString("es-AR")} por ${divisor}.`,
+        "Pista: calculá el cociente dividiendo la cantidad total por lo que entra en cada unidad.",
         skills
       )
     );
@@ -1021,7 +1025,7 @@ function buildMundo42013(): ActivitySpec[] {
             prText,
             choices.map((c) => ["🚐", `${c} vehículos`]),
             choices.indexOf(combisNecesarias),
-            `Pista: ${totalPersonas} ÷ ${capacidad} da ${viajes} y sobran ${sobrantes} personas. ¿Hace falta otro transporte para los que sobran?`
+            "Pista: dividí el total de personas por la capacidad de cada vehículo y fijate si el resto obliga a sumar uno más."
           ),
           `m42013-${i}`,
           "",
@@ -1037,7 +1041,7 @@ function buildMundo42013(): ActivitySpec[] {
             prText,
             choices.map((c) => ["📦", `${c} sobrantes`]),
             choices.indexOf(sobrantes),
-            `Pista: calculá el resto de dividir ${totalPersonas} por ${capacidad}.`
+            "Pista: calculá el resto de la división para saber cuántos elementos sobran sin completar una unidad."
           ),
           `m42013-${i}`,
           "",
@@ -1070,17 +1074,17 @@ function buildMundo42014(): ActivitySpec[] {
         {
           pregunta: `Si 1 kg de manzanas en la verdulería cuesta $${precioKg.toLocaleString("es-AR")}, ¿cuánto costarán ${cantKg} kg?`,
           icono: "🍎",
-          pista: `Pista: multiplicá el precio de un kilo ($${precioKg.toLocaleString("es-AR")}) por ${cantKg}.`,
+          pista: "Pista: al aumentar la cantidad de manera proporcional, el costo total se multiplica por el mismo valor.",
         },
         {
           pregunta: `Si 1 kg de cerezas de Los Antiguos cuesta $${precioKg.toLocaleString("es-AR")}, ¿cuánto costarán ${cantKg} kg?`,
           icono: "🍒",
-          pista: `Pista: multiplicá el precio de un kilo ($${precioKg.toLocaleString("es-AR")}) por ${cantKg}.`,
+          pista: "Pista: al aumentar la cantidad de manera proporcional, el costo total se multiplica por el mismo valor.",
         },
         {
           pregunta: `Si 1 paquete de yerba mate cuesta $${precioKg.toLocaleString("es-AR")}, ¿cuánto costarán ${cantKg} paquetes?`,
           icono: "🧉",
-          pista: `Pista: multiplicá el precio unitario ($${precioKg.toLocaleString("es-AR")}) por ${cantKg}.`,
+          pista: "Pista: al aumentar la cantidad de manera proporcional, el costo total se multiplica por el mismo valor.",
         },
       ];
       const pEsc = propEscenarios[Math.floor(i / 4) % propEscenarios.length];
@@ -1110,21 +1114,21 @@ function buildMundo42014(): ActivitySpec[] {
           columnas: ["Cajas", "Alfajores"],
           icono: "📦",
           item: "alfajores por caja",
-          pista: `Pista: calculá el valor de una caja dividiendo ${total2} ÷ 2 o ${totalCajas} ÷ ${cantCajas}.`,
+          pista: "Pista: calculá el valor de una caja dividiendo la cantidad total por la cantidad de cajas.",
         },
         {
           pregunta: "Mirá la tabla de proporcionalidad directa. ¿Cuántas botellas contiene 1 cajón?",
           columnas: ["Cajones", "Botellas de jugo"],
           icono: "🧃",
           item: "botellas por cajón",
-          pista: `Pista: dividí las botellas entre los cajones para encontrar cuántas van en 1 solo (${total2} ÷ 2).`,
+          pista: "Pista: calculá el valor de un cajón dividiendo la cantidad total de botellas por el número de cajones.",
         },
         {
           pregunta: "Mirá la tabla de proporcionalidad directa. ¿Cuántas medialunas hay en 1 bandeja?",
           columnas: ["Bandejas", "Medialunas"],
           icono: "🥐",
           item: "medialunas por bandeja",
-          pista: `Pista: dividí la cantidad total por el número de bandejas para hallar la unidad (${total2} ÷ 2).`,
+          pista: "Pista: dividí la cantidad total por el número de bandejas para hallar la cantidad que hay en una sola.",
         },
       ];
       const tEsc = tablaEscenarios[tablaShuffled[tablaIdx++]];
@@ -1225,7 +1229,7 @@ function buildMundo42015(): ActivitySpec[] {
     { p: "Un bidón contiene 3 litros de agua mineral. ¿Cuántas botellitas de 1/2 litro se pueden llenar?", opts: ["6 botellitas", "3 botellitas", "8 botellitas"], ans: "6 botellitas", hint: "Pista: cada litro rinde dos botellitas de esa medida." },
     { p: "¿Cuántos paquetes de 1/8 kg de levadura se precisan para reunir 1/2 kg?", opts: ["4 paquetes", "2 paquetes", "8 paquetes"], ans: "4 paquetes", hint: "Pista: calculá la mitad de las ocho partes que integran el entero." },
     { p: "Si una bolsa de manzanas pesa 2 1/4 kg, ¿cuántos cuartos de kilo (1/4 kg) contiene?", opts: ["9 cuartos", "8 cuartos", "7 cuartos"], ans: "9 cuartos", hint: "Pista: calculá cuántos cuartos hay en dos enteros y agregá el cuarto suelto." },
-    { p: "Una horma de queso se dividió en 8 trozos iguales y se vendieron 6. ¿Qué fracción quedó sin vender?", opts: ["2/8 de la horma", "6/8 de la horma", "1/4 de la horma"], ans: "2/8 de la horma", hint: "Pista: restá los trozos vendidos del total inicial de porciones." },
+    { p: "Una horma de queso se dividió en 8 trozos iguales y se vendieron 6. ¿Qué fracción quedó sin vender?", opts: ["2/8 de la horma", "6/8 de la horma", "3/8 de la horma"], ans: "2/8 de la horma", hint: "Pista: restá los trozos vendidos del total inicial de porciones." },
     { p: "Para hornear galletitas se usan 1/4 kg de manteca y 3/4 kg de azúcar. ¿Cuánto pesan ambos ingredientes juntos?", opts: ["1 kg", "1 1/2 kg", "2/4 kg"], ans: "1 kg", hint: "Pista: sumá los cuartos indicados para verificar si completan la unidad entera." },
     { p: "¿Cuántos medios litros (1/2 L) hay en 5 litros de agua?", opts: ["10 medios litros", "5 medios litros", "15 medios litros"], ans: "10 medios litros", hint: "Pista: duplicá la cantidad de litros para obtener los medios litros equivalentes." },
     { p: "Si cortamos una cinta de 1 metro en 8 pedacitos iguales, ¿cuánto mide cada pedacito?", opts: ["1/8 de metro", "1/4 de metro", "1/2 de metro"], ans: "1/8 de metro", hint: "Pista: cuando se fracciona en ocho partes iguales, cada sección recibe ese nombre." },
@@ -1250,12 +1254,12 @@ function buildMundo42015(): ActivitySpec[] {
     () => {
       const k = randInt(1, 6);
       const ans = `${k * 4} paquetes`;
-      return { p: `¿Cuántos paquetes de 1/4 kg de yerba mate se necesitan para completar ${k} kg?`, ans, opts: [ans, `${k * 2} paquetes`, `${k * 8} paquetes`], hint: `Pista: cada kilo requiere 4 cuartos; calculá ${k} × 4.` };
+      return { p: `¿Cuántos paquetes de 1/4 kg de yerba mate se necesitan para completar ${k} kg?`, ans, opts: [ans, `${k * 2} paquetes`, `${k * 8} paquetes`], hint: "Pista: recordá que cada kilo requiere 4 paquetes de un cuarto." };
     },
     () => {
       const L = randInt(2, 7);
       const ans = `${L * 2} vasos`;
-      return { p: `¿Cuántos vasos de 1/2 litro de agua se necesitan para llenar una botella de ${L} litros?`, ans, opts: [ans, `${L} vasos`, `${L * 4} vasos`], hint: `Pista: en cada litro entran 2 medios litros; calculá ${L} × 2.` };
+      return { p: `¿Cuántos vasos de 1/2 litro de agua se necesitan para llenar una botella de ${L} litros?`, ans, opts: [ans, `${L} vasos`, `${L * 4} vasos`], hint: "Pista: en cada litro entran exactamente 2 medios litros." };
     },
     () => {
       const tot = pickOne([6, 8, 10, 12]);
@@ -1267,12 +1271,12 @@ function buildMundo42015(): ActivitySpec[] {
       const potes = randInt(2, 8) * 2;
       const kg = potes / 2;
       const ans = `${kg} kg`;
-      return { p: `Si se juntan ${potes} potes de 1/2 kg de dulce de leche, ¿cuántos kilos se obtienen en total?`, ans, opts: [ans, `${potes} kg`, `${kg + 2} kg`], hint: `Pista: cada 2 potes de medio kilo forman 1 kilo entero (${potes} ÷ 2).` };
+      return { p: `Si se juntan ${potes} potes de 1/2 kg de dulce de leche, ¿cuántos kilos se obtienen en total?`, ans, opts: [ans, `${potes} kg`, `${kg + 2} kg`], hint: "Pista: cada 2 potes de medio kilo forman 1 kilo entero." };
     },
     () => {
       const L = randInt(2, 6);
       const ans = `${L * 4} vasos`;
-      return { p: `¿Cuántos vasos de 1/4 litro se pueden llenar con un bidón de ${L} litros de jugo?`, ans, opts: [ans, `${L * 2} vasos`, `${L * 8} vasos`], hint: `Pista: cada litro equivale a 4 vasos de un cuarto; calculá ${L} × 4.` };
+      return { p: `¿Cuántos vasos de 1/4 litro se pueden llenar con un bidón de ${L} litros de jugo?`, ans, opts: [ans, `${L * 2} vasos`, `${L * 8} vasos`], hint: "Pista: cada litro equivale a 4 vasos de un cuarto." };
     }
   ];
 
@@ -1361,7 +1365,7 @@ function buildMundo42016(): ActivitySpec[] {
           `Se reparten ${cant} ${item} entre ${chicos} chicos en partes iguales sin que sobre nada. ¿Cuánto recibe cada uno?`,
           choices.map((c) => [ico, c]),
           choices.indexOf(`${frac} de ${item.split(" ")[0]}`),
-          `Pista: la cantidad a repartir (${cant}) es el numerador y la cantidad de chicos (${chicos}) es el denominador.`
+          "Pista: lo que se reparte corresponde al numerador y la cantidad entre quienes se reparte es el denominador."
         ),
         `m42016-${i}`,
         "",
@@ -1381,7 +1385,7 @@ function buildMundo42017(): ActivitySpec[] {
   const compararGens = [
     () => {
       const [, , ans, fakes] = pickOne([
-        [3, 4, "3/4", ["1/4", "2/8", "1/6"]],
+        [3, 4, "3/4", ["1/4", "1/8", "1/6"]],
         [2, 3, "2/3", ["1/3", "1/6", "2/8"]],
         [4, 5, "4/5", ["2/5", "1/5", "3/10"]],
         [5, 8, "5/8", ["3/8", "2/8", "1/8"]],
@@ -1470,7 +1474,7 @@ function buildMundo42017(): ActivitySpec[] {
         p: `Para que la fracción sea EQUIVALENTE a ${n}/${d}, ¿qué número completa el numerador: ___/${targetD}?`,
         ans: `${targetN}`,
         fakes: [`${targetN + 1}`, `${Math.max(1, targetN - 1)}`],
-        hint: `Pista: el denominador se multiplicó por ${mult}, así que hacé ${n} × ${mult}.`,
+        hint: `Pista: observá por cuánto se multiplicó el denominador y multiplicá el numerador por ese mismo número.`,
         ico: "✏️"
       };
     },
@@ -1482,7 +1486,7 @@ function buildMundo42017(): ActivitySpec[] {
         p: `¿Qué fracción con denominador ${targetD} es EQUIVALENTE a 1/2?`,
         ans: `${mult}/${targetD}`,
         fakes: [`${mult - 1}/${targetD}`, `${mult + 1}/${targetD}`],
-        hint: `Pista: multiplicá numerador y denominador por ${mult}.`,
+        hint: `Pista: pensá por qué número se multiplicó el denominador 2 para dar ${targetD} y aplicalo al numerador.`,
         ico: "🔢"
       };
     },
@@ -1492,7 +1496,7 @@ function buildMundo42017(): ActivitySpec[] {
         p: `Si multiplicamos numerador y denominador de ${n}/${d} por ${mult}, ¿qué fracción equivalente obtenemos?`,
         ans: `${n * mult}/${d * mult}`,
         fakes: [`${n * mult + 1}/${d * mult}`, `${n}/${d * mult}`],
-        hint: `Pista: calculá ${n} × ${mult} y ${d} × ${mult}.`,
+        hint: `Pista: para obtener una fracción equivalente debés multiplicar numerador y denominador por ese mismo factor.`,
         ico: "✨"
       };
     }
@@ -1509,11 +1513,15 @@ function buildMundo42017(): ActivitySpec[] {
         [8, 2, "1/4"],
         [8, 6, "3/4"],
       ]);
+      const fakePool = equiv === "1/2" ? ["1/4", "3/4"]
+        : equiv === "1/3" ? ["1/2", "2/3"]
+        : equiv === "1/4" ? ["1/2", "3/4"]
+        : ["1/2", "1/4"];
       return {
         p: `Un chocolate rectangular tiene ${tot} barritas iguales y comimos ${pintadas}. ¿A qué fracción irreducible equivale lo consumido?`,
         ans: equiv,
-        fakes: [`1/${tot}`, `${tot - pintadas}/${tot}`],
-        hint: `Pista: ${pintadas} de ${tot} barritas se puede simplificar dividiendo ambos números.`,
+        fakes: fakePool,
+        hint: `Pista: ${pintadas} de ${tot} barritas se puede simplificar dividiendo ambos números por un divisor común.`,
         ico: "🍫"
       };
     },
@@ -1666,7 +1674,7 @@ function buildMundo42019(): ActivitySpec[] {
     { p: "¿Cuál de estas fracciones se encuentra más CERCA del 1 en la recta numérica?", opts: ["7/8", "1/2", "1/4"], ans: "7/8", hint: "Pista: calculá cuál está a menor diferencia de completar la unidad entera." },
     
     { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la primera división?", opts: ["1/4", "1/2", "3/4"], ans: "1/4", hint: "Pista: la primera marca de un reparto en cuatro indica un cuarto." },
-    { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la segunda división?", opts: ["2/4 (1/2)", "1/4", "3/4"], ans: "2/4 (1/2)", hint: "Pista: dos divisiones de cuatro equivalen al punto medio del recorrido." },
+    { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la segunda división?", opts: ["2/4", "1/4", "3/4"], ans: "2/4", hint: "Pista: dos divisiones de cuatro equivalen al punto medio del recorrido." },
     { p: "Si dividimos el tramo de 0 a 1 en 4 partes iguales, ¿en qué marca queda la tercera división?", opts: ["3/4", "2/4", "4/4"], ans: "3/4", hint: "Pista: contá tres divisiones unitarias desde el punto de inicio." },
     { p: "¿Qué punto de la recta numérica representa la fracción 4/4?", opts: ["El número 1", "El número 0", "El número 2"], ans: "El número 1", hint: "Pista: cuando numerador y denominador coinciden, señalan la unidad entera." },
     { p: "¿Entre qué enteros se ubica la fracción 5/2 en la recta numérica?", opts: ["Entre 2 y 3", "Entre 1 y 2", "Entre 3 y 4"], ans: "Entre 2 y 3", hint: "Pista: calculá cuántas veces entra el dos en el cinco." },
@@ -1694,13 +1702,13 @@ function buildMundo42019(): ActivitySpec[] {
       const r = randInt(1, 3);
       const num = entero * 4 + r;
       const ans = `Entre ${entero} y ${entero + 1}`;
-      return { p: `¿Entre qué dos números enteros se ubica la fracción ${num}/4 en la recta numérica?`, ans, opts: [ans, `Entre ${entero - 1} y ${entero}`, `Entre ${entero + 1} y ${entero + 2}`], hint: `Pista: ${num}/4 equivale a ${entero} enteros y ${r}/4.` };
+      return { p: `¿Entre qué dos números enteros se ubica la fracción ${num}/4 en la recta numérica?`, ans, opts: [ans, `Entre ${entero - 1} y ${entero}`, `Entre ${entero + 1} y ${entero + 2}`], hint: "Pista: dividí el numerador por 4 para ver cuántos enteros completos contiene." };
     },
     () => {
       const d = pickOne([2, 3, 4, 5]);
       const k = randInt(2, 7);
       const ans = `${k}`;
-      return { p: `¿Qué número entero equivale exactamente a la fracción ${k * d}/${d} en la recta numérica?`, ans, opts: [ans, `${k - 1}`, `${k + 1}`], hint: `Pista: dividí el numerador ${k * d} por el denominador ${d}.` };
+      return { p: `¿Qué número entero equivale exactamente a la fracción ${k * d}/${d} en la recta numérica?`, ans, opts: [ans, `${k - 1}`, `${k + 1}`], hint: "Pista: dividí el numerador por el denominador para obtener el valor del entero." };
     },
     () => {
       const d = pickOne([5, 6, 8, 10]);
@@ -1754,7 +1762,7 @@ function buildMundo42020(): ActivitySpec[] {
       const a = randInt(1, Math.max(1, Math.floor(den / 2) - 1));
       const b = randInt(1, den - a - 1);
       const sumNum = a + b;
-      const choices = distinctChoices(`${sumNum}/${den}`, [`${sumNum}/${den * 2}`, `${sumNum + 1}/${den}`, `${Math.max(1, sumNum - 1)}/${den}`], 3);
+      const choices = distinctChoices(`${sumNum}/${den}`, [`${sumNum}/${den * 2}`, `${sumNum + 1}/${den}`, `${sumNum + 1}/${den * 2}`], 3);
       const sumaEscenarios = [
         {
           pregunta: `Martín pintó ${a}/${den} de un mural escolar por la mañana y ${b}/${den} por la tarde. ¿Qué fracción del mural pintó en total?`,
@@ -1796,7 +1804,8 @@ function buildMundo42020(): ActivitySpec[] {
       const a = randInt(3, den - 1);
       const b = randInt(1, a - 1);
       const resNum = a - b;
-      const choices = distinctChoices(`${resNum}/${den}`, [`${resNum + 1}/${den}`, `${Math.max(1, resNum - 1)}/${den}`, `${a + b}/${den}`], 3);
+      const fakeDown = resNum > 1 ? `${resNum - 1}/${den}` : `${resNum + 2}/${den}`;
+      const choices = distinctChoices(`${resNum}/${den}`, [`${resNum + 1}/${den}`, fakeDown, `${a + b < den ? a + b : resNum + 3}/${den}`], 3);
       const restaEscenarios = [
         {
           pregunta: `En una jarra había ${a}/${den} de litro de jugo y Sofía sirvió ${b}/${den} de litro. ¿Qué fracción de jugo quedó en la jarra?`,
@@ -2140,7 +2149,7 @@ function buildMundo42023(): ActivitySpec[] {
             sc.txt,
             choices.map((c) => [sc.ico, c]),
             choices.indexOf(vueltoStr),
-            `Pista: restá el gasto al billete ($${pesosAR(billete)},00 - $${pesosAR(gasto)}).`
+            "Pista: restá el valor de la compra al valor del billete entregado, alineando la coma decimal."
           ),
           `m42023-${i}`,
           "",
@@ -2514,12 +2523,12 @@ function buildMundo42026(): ActivitySpec[] {
       const b = randInt(25, 140 - a);
       const c = 180 - a - b;
       const ans = `${c}°`;
-      return { p: `Si dos ángulos de un triángulo miden ${a}° y ${b}°, ¿cuánto mide el tercer ángulo sabiendo que suman 180°?`, ans, fakes: [`${c + 10}°`, `${Math.max(10, c - 10)}°`], hint: `Pista: restá ${a} y ${b} de 180° (180 - ${a + b} = ${c}).` };
+      return { p: `Si dos ángulos de un triángulo miden ${a}° y ${b}°, ¿cuánto mide el tercer ángulo sabiendo que suman 180°?`, ans, fakes: [`${c + 10}°`, `${Math.max(10, c - 10)}°`], hint: "Pista: sumá los dos ángulos que conocés y restáselo a 180°." };
     },
     () => {
       const lado = randInt(4, 25);
       const ans = `${lado * 3} cm`;
-      return { p: `¿Cuál es el perímetro de un triángulo equilátero cuyos lados miden ${lado} cm cada uno?`, ans, fakes: [`${lado * 2} cm`, `${lado * 4} cm`], hint: `Pista: sumá los tres lados iguales (${lado} × 3 = ${lado * 3}).` };
+      return { p: `¿Cuál es el perímetro de un triángulo equilátero cuyos lados miden ${lado} cm cada uno?`, ans, fakes: [`${lado * 2} cm`, `${lado * 4} cm`], hint: "Pista: al ser equilátero, multiplicá la medida del lado por 3 para obtener el perímetro." };
     },
     () => {
       const igual = randInt(10, 35);
@@ -2749,7 +2758,7 @@ function buildMundo42028(): ActivitySpec[] {
       "m42028-perim",
       `${pLugar.lugar} mide ${pLugar.largo} metros de largo por ${pLugar.ancho} metros de ancho. ¿Cuántos metros de cerca se necesitan para rodear todo su perímetro?`,
       perimVal,
-      `Pista: calculá la suma de los cuatro lados (${pLugar.largo} + ${pLugar.largo} + ${pLugar.ancho} + ${pLugar.ancho}).`,
+      "Pista: el perímetro es la suma de los cuatro lados del rectángulo (dos largos y dos anchos).",
       skills
     )
   );
@@ -2768,7 +2777,7 @@ function buildMundo42028(): ActivitySpec[] {
       "m42028-area",
       `${aLugar.lugar} tiene ${aLugar.base} metros de largo por ${aLugar.alt} metros de ancho. ¿Cuál es su superficie en metros cuadrados (m²)?`,
       areaVal,
-      `Pista: multiplicá la longitud del largo por la del ancho (${aLugar.base} × ${aLugar.alt}).`,
+      "Pista: para calcular el área de un rectángulo debés multiplicar el largo por el ancho.",
       skills
     )
   );
@@ -2819,7 +2828,7 @@ function buildMundo42028(): ActivitySpec[] {
         `El viaje en colectivo de larga distancia por las rutas santacruceñas demora aproximadamente ${horasViaje} horas. ¿A cuántos minutos equivale ese viaje?`,
         choicesTiempo.map((c) => ["⏱️", c]),
         choicesTiempo.indexOf(`${minutosViaje} minutos`),
-        `Pista: cada hora tiene 60 minutos. Multiplicá ${horasViaje} × 60.`
+        "Pista: recordá que 1 hora equivale a 60 minutos."
       ),
       "m42028-tiempo",
       "",
@@ -2837,7 +2846,7 @@ function buildMundo42028(): ActivitySpec[] {
         `Durante una actividad escolar cronometrada pasaron ${min} minutos. ¿Cuántos segundos duró ese intervalo?`,
         choicesSeg.map((c) => ["⏳", c]),
         choicesSeg.indexOf(`${seg} segundos`),
-        `Pista: cada minuto tiene 60 segundos. Multiplicá ${min} × 60.`
+        "Pista: recordá que 1 minuto equivale a 60 segundos."
       ),
       "m42028-seg",
       "",
@@ -2879,7 +2888,7 @@ function buildMundo42028(): ActivitySpec[] {
     },
     () => {
       const target = "Miércoles (9 °C)";
-      const choices = distinctChoices(target, ["Lunes: 12 °C", "Viernes: 14 °C"], 3);
+      const choices = distinctChoices(target, ["Lunes (12 °C)", "Viernes (14 °C)"], 3);
       return {
         prompt: "En un registro semanal del clima en El Calafate se anotaron estas temperaturas mínimas:\nLunes: 12 °C — Martes: 15 °C — Miércoles: 9 °C — Jueves: 18 °C — Viernes: 14 °C.\n¿Qué día se registró la temperatura MÁS BAJA?",
         target,
