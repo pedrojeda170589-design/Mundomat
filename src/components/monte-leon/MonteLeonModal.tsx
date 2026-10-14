@@ -75,7 +75,7 @@ export default function MonteLeonModal({
         {/* Cabecera del modal */}
         <div className="relative p-4 sm:p-5 border-b-2 border-amber-800/20 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl overflow-hidden bg-sky-900/10 border-2 border-amber-700/30 p-1 shadow-sm">
+            <div className="relative hidden sm:block w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl overflow-hidden bg-sky-900/10 border-2 border-amber-700/30 p-1 shadow-sm">
               <Image
                 src={ISLA_MONTE_LEON}
                 alt="Isla Monte León"

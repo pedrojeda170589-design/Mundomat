@@ -1,9 +1,9 @@
-// Fichas de lectura de las leyendas (pedido de Pedro, 14/10/2026: «quisiera
-// que los documentos para descargar y practicar las leyendas tengan este
-// formato», tomando como modelo una ficha de «La leyenda del Kakuy»).
+// Fichas de lectura de los cuentos, leyendas y fábulas (pedido de Pedro,
+// 14/10/2026: primero las leyendas, con el formato de una ficha de «La
+// leyenda del Kakuy»; después, «aplicá ese formato para los demás textos»).
 //
-// Una hoja A4 por leyenda y por grado:
-// - a la izquierda, la leyenda ilustrada (cartel con el título, el texto del
+// Una hoja A4 por texto y por grado:
+// - a la izquierda, el texto ilustrado (cartel con el título, el texto del
 //   grado y dos escenas);
 // - a la derecha, «Comprensión lectora»: preguntas numeradas con casilleros,
 //   preguntas para responder con renglones y «Numerá las imágenes según el
@@ -12,9 +12,9 @@
 // El texto y las preguntas son los mismos de los mundos de la app
 // (src/lib/cuentos), así que la ficha practica lo que el chico lee en la app.
 //
-// Uso: npx tsx scripts/fichas/fichas_leyendas.ts
+// Uso: npx tsx scripts/fichas/fichas_lectura.ts
 // Salida: private/fichas/mundo-<id>-2.pdf (la «Ficha 2» del mundo de la
-// leyenda en la página de familias) y docs/equipo/capturas/fichas-leyendas/.
+// texto en la página de familias) y docs/equipo/capturas/fichas-lectura/.
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
@@ -24,7 +24,7 @@ import type { CuentoQuestion } from "@/lib/cuentos/tipos";
 
 const RAIZ = process.cwd();
 const SALIDA = path.join(RAIZ, "private", "fichas");
-const MUESTRAS = path.join(RAIZ, "docs", "equipo", "capturas", "fichas-leyendas");
+const MUESTRAS = path.join(RAIZ, "docs", "equipo", "capturas", "fichas-lectura");
 const b64 = (p: string) => fs.readFileSync(path.join(RAIZ, p)).toString("base64");
 const imagen = (p: string) => `data:image/${p.endsWith(".png") ? "png" : "jpeg"};base64,${b64(p)}`;
 const fuente = (p: string) => `data:font/ttf;base64,${b64(p)}`;
@@ -60,9 +60,18 @@ interface Plan {
   dibujo: boolean;
 }
 
-// En la app el texto va por escenas; en papel se dice «en la leyenda».
-function enPapel(q: string): string {
-  return q.replace(/^En la escena \d+,?\s*/i, "En la leyenda ").replace(/en la escena \d+/gi, "en la leyenda");
+const NOMBRE: Record<string, string> = { cuento: "el cuento", leyenda: "la leyenda", fabula: "la fábula" };
+const SOBRE: Record<string, string> = {
+  cuento: "Los cuentos narran una historia con personajes, un problema y un final. Se pueden contar de nuevo con las propias palabras.",
+  leyenda: "Las leyendas cuentan, con imaginación, el origen de algo que existe en la naturaleza o en la cultura de un pueblo.",
+  fabula: "Las fábulas son relatos breves, casi siempre con animales que hablan, que terminan con una enseñanza o moraleja.",
+};
+
+// En la app el texto va por escenas; en papel se dice «en el cuento», «en la leyenda»…
+function enPapel(q: string, genero: string): string {
+  const n = NOMBRE[genero] ?? "el texto";
+  const N = n.charAt(0).toUpperCase() + n.slice(1);
+  return q.replace(/^En la escena \d+,?\s*/i, `${N} `).replace(/en la escena \d+/gi, n);
 }
 
 function plan(grade: number, qs: CuentoQuestion[]): Plan {
@@ -138,7 +147,7 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
   const pl = plan(grade, qs);
   const semilla = id.length * 31 + grade * 7;
   const tam = grade === 1 ? 13.5 : grade === 2 ? 11.8 : 10.8; // se achica sola si no entra
-  const tituloArriba = /^la leyenda/i.test(c.title) ? c.title.replace(/^(La leyenda de(?:l| la| las)?)\s+(.*)$/i, "$1") : "";
+  const tituloArriba = /^la leyenda de/i.test(c.title) ? c.title.replace(/^(La leyenda de(?:l| la| las)?)\s+(.*)$/i, "$1") : "";
   const tituloGrande = tituloArriba ? c.title.slice(tituloArriba.length).trim() : c.title;
 
   // Texto con dos escenas intercaladas (las del ordenamiento son otras).
@@ -157,7 +166,7 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
     n++;
     const { todas, correcta } = opciones(q, semilla + k * 13, grade === 1 ? 3 : 3);
     preguntas.push(
-      `<div class="p"><div class="num">${n}</div><div><div class="q">${esc(enPapel(q.q))}</div>${todas
+      `<div class="p"><div class="num">${n}</div><div><div class="q">${esc(enPapel(q.q, c.genre))}</div>${todas
         .map((o) => `<div class="op"><span class="caja"></span><span>${esc(o)}</span></div>`)
         .join("")}</div></div>`
     );
@@ -166,7 +175,7 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
   pl.abiertas.forEach((a) => {
     n++;
     preguntas.push(
-      `<div class="p"><div class="num">${n}</div><div><div class="q">${esc(enPapel(a.q))}</div>${'<div class="renglon"></div>'.repeat(a.renglones)}</div></div>`
+      `<div class="p"><div class="num">${n}</div><div><div class="q">${esc(enPapel(a.q, c.genre))}</div>${'<div class="renglon"></div>'.repeat(a.renglones)}</div></div>`
     );
     claves.push(`<li><b>${n}.</b> Respuesta abierta. Idea esperada: ${esc(a.esperada)}</li>`);
   });
@@ -181,7 +190,7 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
   );
   const posiciones = orden.map((e) => pl.ordenar.indexOf(e) + 1);
   claves.push(`<li><b>${n}.</b> De izquierda a derecha y de arriba abajo: ${posiciones.join(", ")}.</li>`);
-  const dibujo = pl.dibujo ? `<div class="dibujo">Dibujá la parte de la leyenda que más te gustó.</div>` : "";
+  const dibujo = pl.dibujo ? `<div class="dibujo">Dibujá la parte de ${NOMBRE[c.genre] ?? "la historia"} que más te gustó.</div>` : "";
 
   const isla = [`public/theme/grados/1/islas/cuento-${id}.png`, `public/theme/grados/2/islas/cuento-${id}.png`, `public/theme/islands/cuento-${id}.png`].find((p) =>
     fs.existsSync(path.join(RAIZ, p))
@@ -192,7 +201,7 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
     <div class="cols">
       <div class="izq">
         <div class="cabeza">
-          <div class="cartel">${tituloArriba ? `<div class="chico">${esc(tituloArriba.toUpperCase())}</div>` : ""}<div class="grande">${esc(tituloGrande)}</div></div>
+          <div class="cartel">${tituloArriba ? `<div class="chico">${esc(tituloArriba.toUpperCase())}</div>` : ""}<div class="grande" style="font-size:${tituloGrande.length > 30 ? 16 : tituloGrande.length > 20 ? 19.5 : 25}pt">${esc(tituloGrande)}</div></div>
           ${isla ? `<img class="isla" src="${imagen(isla)}">` : ""}
         </div>
         <div class="origen">${esc(c.origin)}</div>
@@ -208,9 +217,9 @@ function hoja(grade: number, id: string): { html: string; titulo: string } | nul
   </section>
   <section class="hoja resp">
     <h1>Respuestas · ${esc(c.title)}</h1>
-    <p>Para la familia o el docente. Leé la leyenda junto al chico y conversen sobre las respuestas antes de corregir.</p>
+    <p>Para la familia o el docente. Leé ${NOMBRE[c.genre] ?? "el texto"} junto al chico y conversen sobre las respuestas antes de corregir.</p>
     <ol style="list-style:none;padding:0">${claves.join("")}</ol>
-    <div class="nota"><b>Sobre esta leyenda:</b> ${esc(c.origin)}. Las leyendas cuentan, con imaginación, el origen de algo que existe en la naturaleza o en la cultura de un pueblo. Es la misma leyenda que el chico lee en su mundo de MundoTest26, en ${grade}.º grado.</div>
+    <div class="nota"><b>Sobre ${NOMBRE[c.genre] ?? "el texto"}:</b> ${esc(c.origin)}. ${SOBRE[c.genre] ?? ""} Es el mismo texto que el chico lee en su mundo de MundoTest26, en ${grade}.º grado.</div>
   </section>`;
   return { html, titulo: c.title };
 }
@@ -223,7 +232,7 @@ async function main() {
   const page = await browser.newPage();
   const hechas: string[] = [];
   for (const grade of [1, 2, 3]) {
-    for (const c of CUENTOS.filter((x) => x.genre === "leyenda")) {
+    for (const c of CUENTOS) {
       const wid = storyWorldId(grade, c.id);
       if (!wid) continue;
       const h = hoja(grade, c.id);
@@ -247,7 +256,7 @@ async function main() {
       }
       const pdf = path.join(SALIDA, `mundo-${wid}-2.pdf`);
       await page.pdf({ path: pdf, format: "A4", printBackground: true, preferCSSPageSize: true });
-      if ([11102, 21108, 31102].includes(wid)) {
+      if ([11102, 21108, 31102, 21103, 31104].includes(wid)) {
         await page.setViewportSize({ width: 794, height: 1123 });
         await page.screenshot({ path: path.join(MUESTRAS, `mundo-${wid}.png`), clip: { x: 0, y: 0, width: 794, height: 1123 } });
       }

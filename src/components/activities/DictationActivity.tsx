@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cardBase } from "./shared";
 import { esperarVoces, estadoVoz, speak, stopSpeaking, type EstadoVoz } from "@/lib/tts";
 import { evaluarDictado, EvaluacionDictado } from "@/lib/dictado/evaluacion";
+import { diferencias, type Diferencias } from "@/lib/dictado/diferencias";
 
 interface Props {
   prompt: string;
@@ -28,6 +29,7 @@ export default function DictationActivity({
 }: Props) {
   const [value, setValue] = useState("");
   const [result, setResult] = useState<EvaluacionDictado | null>(null);
+  const [dif, setDif] = useState<Diferencias | null>(null);
   const textToSay = say || answer;
 
   const [voz, setVoz] = useState<EstadoVoz>("cargando");
@@ -65,6 +67,8 @@ export default function DictationActivity({
 
     const ev = evaluarDictado(kind, value, answer, grade, strictAccents);
     setResult(ev);
+    // Si se equivocó: qué tenía que escribir y qué puso mal o le faltó.
+    if (!ev.ok) setDif(diferencias(kind, value, answer));
 
     if (ev.ok) {
       setTimeout(() => {
@@ -183,8 +187,37 @@ export default function DictationActivity({
               </>
             ) : (
               <>
-                <p className="text-red-300 font-bold text-base">
-                  {result.feedback}
+                <p className="text-red-300 font-bold text-base">¡Casi! Mirá cómo se escribe:</p>
+                <div className="w-full rounded-2xl bg-slate-800/90 border-2 border-emerald-400/60 px-3 py-2.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-emerald-300 mb-1">Tenías que escribir</p>
+                  <p className="text-2xl font-black tracking-wide text-white break-words">
+                    {(dif?.partes ?? [{ t: answer, tipo: "ok" as const }]).map((p, i) =>
+                      p.tipo === "ok" ? (
+                        <span key={i}>{p.t}</span>
+                      ) : (
+                        <span
+                          key={i}
+                          className={`rounded px-0.5 ${p.tipo === "falta" ? "bg-amber-400 text-slate-950" : "bg-rose-500 text-white"}`}
+                        >
+                          {p.t === " " ? "\u00a0\u00a0" : p.t}
+                        </span>
+                      )
+                    )}
+                  </p>
+                  <p className="mt-1.5 text-sm text-slate-300 break-words">
+                    Vos escribiste: <span className="font-bold text-slate-100">«{value.trim() || "…"}»</span>
+                  </p>
+                </div>
+                {dif && dif.explicaciones.length > 0 && (
+                  <ul className="w-full text-left text-sm text-amber-100 bg-amber-950/60 border border-amber-500/40 rounded-xl px-3 py-2 flex flex-col gap-1">
+                    {dif.explicaciones.map((x) => (
+                      <li key={x}>👉 {x}</li>
+                    ))}
+                  </ul>
+                )}
+                <p className="text-[11px] text-slate-400">
+                  <span className="rounded bg-rose-500 px-1 text-white">rojo</span> = lo que pusiste distinto ·{" "}
+                  <span className="rounded bg-amber-400 px-1 text-slate-950">amarillo</span> = lo que te faltó
                 </p>
                 <button
                   type="button"
