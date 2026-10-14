@@ -102,7 +102,7 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
   - postales y especies de la Reserva y mapa propio;
   - escenas y objetos de Monte León.
 
-  Llevan música original sintetizada por código (los instrumentos de `scripts/musica/componer.py`) y efectos también sintetizados: no usan muestras ni música de terceros. La letra es **Fredoka** (Google Fonts, licencia SIL Open Font License 1.1, en `scripts/videos/Fredoka-OFL.txt`), que permite usarla en videos comerciales.
+  Llevan música original sintetizada por código (los instrumentos de `scripts/musica/componer.py`) y efectos también sintetizados (destellos, «pop» y un arpegio de caja de música en lugar del sonido de viento, que se sacó el 14/10/2026): no usan muestras ni música de terceros. La letra es **Fredoka** (Google Fonts, licencia SIL Open Font License 1.1, en `scripts/videos/Fredoka-OFL.txt`), que permite usarla en videos comerciales.
 - **Cuento «La tortuga gigante», escena 2**: se le quitó el tercer ojo a la tortuga (retoque local, 5/10/2026).
 
 ## 7. Revisión del 5/10/2026 (imágenes nuevas)

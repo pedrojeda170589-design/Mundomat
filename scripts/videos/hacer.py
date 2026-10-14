@@ -244,13 +244,19 @@ def efecto_pop(dur=0.25):
     return np.sin(2 * np.pi * np.cumsum(f) / M.SR) * np.exp(-t * 18)
 
 
-def efecto_zumbido(dur=0.6):
-    """«Whoosh»: ruido filtrado que sube y baja."""
-    n = int(dur * M.SR)
-    r = np.random.default_rng(5).normal(0, 1, n)
-    y = np.convolve(r, np.ones(40) / 40, mode="same")
-    env = np.sin(np.linspace(0, np.pi, n)) ** 2
-    return y * env * 3
+def efecto_arpa(dur=0.6):
+    """Arpegio rápido hacia arriba (caja de música): reemplaza al «whoosh» de
+    viento, que a Pedro no le gustó (14/10/2026)."""
+    notas = [72, 76, 79, 84, 88]  # do mayor, sube
+    paso = min(0.07, dur / (len(notas) + 2))
+    n = int((dur + 0.6) * M.SR)
+    y = np.zeros(n)
+    for k, m in enumerate(notas):
+        s_ = M.music_box(M.midi_hz(m), 0.6)
+        i = int(k * paso * M.SR)
+        j = min(n, i + len(s_))
+        y[i:j] += s_[: j - i] * (0.6 + 0.1 * k)
+    return y / max(1e-9, np.abs(y).max())
 
 
 def mezclar(musica, efectos, dur):
@@ -403,7 +409,7 @@ def video_bienvenida():
         fundido(b, t, dur)
         return b
 
-    ef = [(efecto_zumbido(), 0.3, 0.5), (efecto_pop(), 0.9, 0.5)] + [(efecto_pop(), x, 0.6) for x in t_mat]
+    ef = [(efecto_arpa(), 0.3, 0.5), (efecto_pop(), 0.9, 0.5)] + [(efecto_pop(), x, 0.6) for x in t_mat]
     ef += [(efecto_destello(), 7.2, 0.4), (efecto_destello(1.2), 10.6, 0.6)]
     audio = mezclar(musica_alegre(dur), ef, dur)
     grabar("bienvenida", dur, cuadro, audio, 11.6)
@@ -436,7 +442,7 @@ def video_festejo():
     st = M.pieza_festejo()
     musica = np.zeros((int(dur * M.SR), 2))
     musica[: len(st)] = st[: len(musica)]
-    ef = [(efecto_zumbido(0.5), 0.15, 0.5), (efecto_destello(), 0.9, 0.6), (efecto_pop(), 0.95, 0.5), (efecto_destello(1.2), 3.2, 0.5), (efecto_pop(), 2.0, 0.4)]
+    ef = [(efecto_arpa(0.5), 0.15, 0.5), (efecto_destello(), 0.9, 0.6), (efecto_pop(), 0.95, 0.5), (efecto_destello(1.2), 3.2, 0.5), (efecto_pop(), 2.0, 0.4)]
     audio = mezclar(musica, ef, dur)
     grabar("festejo", dur, cuadro, audio, 2.6)
 
@@ -514,7 +520,7 @@ def video_reserva():
         fundido(b, t, dur)
         return b
 
-    ef = [(efecto_zumbido(1.2), 1.1, 0.6), (efecto_pop(), 3.4, 0.5)] + [(efecto_zumbido(0.5), 5.3 + i * 1.3, 0.5) for i in range(3)]
+    ef = [(efecto_arpa(1.2), 1.1, 0.6), (efecto_pop(), 3.4, 0.5)] + [(efecto_arpa(0.5), 5.3 + i * 1.3, 0.5) for i in range(3)]
     ef += [(efecto_pop(), 10.7 + i * 0.6, 0.55) for i in range(4)] + [(efecto_destello(1.2), 13.6, 0.6)]
     audio = mezclar(musica_aventura(dur), ef, dur)
     grabar("reserva", dur, cuadro, audio, 14.6)
@@ -572,7 +578,7 @@ def video_monte_leon():
         fundido(b, t, dur)
         return b
 
-    ef = [(efecto_zumbido(0.6), e[2], 0.45) for e in escenas[1:]] + [(efecto_pop(), 10.2, 0.6)]
+    ef = [(efecto_arpa(0.6), e[2], 0.45) for e in escenas[1:]] + [(efecto_pop(), 10.2, 0.6)]
     ef += [(efecto_pop(), 10.9 + j * 0.45, 0.5) for j in range(4)] + [(efecto_destello(1.2), 12.6, 0.55)]
     audio = mezclar(musica_alegre(dur, bpm=108, prog_=("C", "G", "Am", "F"), seed=31, raiz=60), ef, dur)
     grabar("monte-leon", dur, cuadro, audio, 13.4)
