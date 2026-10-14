@@ -3,7 +3,7 @@
 import { DESAFIOS, gradoPermitido, usarEventosConfig } from "@/lib/eventos/config";
 import HeroFondo from "@/components/HeroFondo";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
 import { DEFAULT_GRADE, getGrade, missingPrerequisite, themeForGrade } from "@/lib/grades";
@@ -51,6 +51,8 @@ import TrialRatingCard from "@/components/prueba/TrialRatingCard";
 import MonteLeonCard from "@/components/monte-leon/MonteLeonCard";
 import MonteLeonModal from "@/components/monte-leon/MonteLeonModal";
 import ReservaCard from "@/components/reserva/ReservaCard";
+import VideoAnimacion from "@/components/VideoAnimacion";
+import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
 import ReservaModal from "@/components/reserva/ReservaModal";
 import { debeMostrarReserva } from "@/lib/reserva/progreso";
 import BuenViajeDialog from "@/components/monte-leon/BuenViajeDialog";
@@ -87,6 +89,8 @@ export default function StudentPlayPage() {
   const [metasOpen, setMetasOpen] = useState(false);
   const [monteLeonOpen, setMonteLeonOpen] = useState(false);
   const [reservaOpen, setReservaOpen] = useState(false);
+  const [videoBienvenida, setVideoBienvenida] = useState(false);
+  const bienvenidaRevisada = useRef(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
   const [oferta, setOferta] = useState(() => ofertaVigente());
   const [weekend, setWeekend] = useState<WeekendSummary | null>(null);
@@ -130,6 +134,12 @@ export default function StudentPlayPage() {
     }
     setEnabledWorldIds(worldsData.config?.enabledWorldIds ?? []);
     setGrade(typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE);
+    // Video de bienvenida: al entrar, como mucho una vez por semana.
+    if (!bienvenidaRevisada.current) {
+      bienvenidaRevisada.current = true;
+      const g = typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE;
+      if (videosActivos(g) && tocaVideo("bienvenida", studentCode, 7)) setVideoBienvenida(true);
+    }
     // Repaso de las tablas: actividad especial de todos los días (desde 3.º, de julio en adelante).
     setRepasoTablas(torneoHabilitado(typeof worldsData.grade === "number" ? worldsData.grade : DEFAULT_GRADE));
     if (challengeRes.ok) {
@@ -605,6 +615,16 @@ export default function StudentPlayPage() {
       )}
 
       {debeMostrarReserva({ grade }) && <ReservaCard progress={progress} onClick={() => setReservaOpen(true)} />}
+
+      {videoBienvenida && code && (
+        <VideoAnimacion
+          nombre="bienvenida"
+          onCerrar={() => {
+            marcarVideoVisto("bienvenida", code);
+            setVideoBienvenida(false);
+          }}
+        />
+      )}
 
       {reservaOpen && code && progress && (
         <ReservaModal

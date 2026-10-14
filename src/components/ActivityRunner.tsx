@@ -30,6 +30,8 @@ import BuildActivity from "@/components/activities/BuildActivity";
 import TraceActivity from "@/components/activities/TraceActivity";
 import ListenActivity from "@/components/activities/ListenActivity";
 import { festejo } from "@/lib/musica";
+import VideoAnimacion from "@/components/VideoAnimacion";
+import { videosActivos } from "@/lib/videos";
 import type { PremiosNuevos } from "@/lib/coleccion/premios";
 import { LEGENDARIO_MUNDOS, TEMPORADAS } from "@/lib/coleccion/temporadas";
 import DictationActivity from "@/components/activities/DictationActivity";
@@ -109,6 +111,8 @@ export default function ActivityRunner({
   const [correctCount, setCorrectCount] = useState(0);
   const [dictationMistakes, setDictationMistakes] = useState<string[]>([]);
   const [premios, setPremios] = useState<PremiosNuevos | null>(null);
+  // Video de festejo: la primera vez que se supera el mundo.
+  const [videoFestejo, setVideoFestejo] = useState(false);
   const [attemptOutcome, setAttemptOutcome] =
     useState<WorldMasteryOutcome | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -243,18 +247,22 @@ export default function ActivityRunner({
       const data = await res.json();
       if (res.ok) {
         setAttemptOutcome(data.outcome);
+        const primeraVez = data.outcome?.kind === "completed" && !data.outcome?.alreadyCompleted;
+        if (primeraVez && videosActivos(world.grade)) setVideoFestejo(true);
+        else festejo();
         if (data.premios) setPremios(data.premios);
         if (data.coinsEarned) {
           onCoinsChange(data.progress.coins);
         }
       } else {
         setAttemptOutcome(null);
+        festejo();
       }
     } catch {
       // si falla la red, igual dejamos ver la pantalla final (sin detalle)
       setAttemptOutcome(null);
+      festejo();
     }
-    festejo();
     setPhase("world-done");
   }
 
@@ -291,12 +299,15 @@ export default function ActivityRunner({
 
   if (phase === "world-done") {
     return (
-      <WorldDoneScreen
-        world={world}
-        outcome={attemptOutcome}
-        premios={premios}
-        onBack={onWorldCompleted}
-      />
+      <>
+        <WorldDoneScreen
+          world={world}
+          outcome={attemptOutcome}
+          premios={premios}
+          onBack={onWorldCompleted}
+        />
+        {videoFestejo && <VideoAnimacion nombre="festejo" onCerrar={() => setVideoFestejo(false)} />}
+      </>
     );
   }
 

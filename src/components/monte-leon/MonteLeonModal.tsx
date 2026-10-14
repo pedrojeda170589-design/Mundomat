@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import VideoAnimacion from "@/components/VideoAnimacion";
+import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
 import Image from "next/image";
 import MochilaView from "./MochilaView";
 import StageRunner from "./StageRunner";
@@ -33,6 +35,8 @@ export default function MonteLeonModal({
   onOpenProfile,
 }: Props) {
   const [tab, setTab] = useState<"etapas" | "mochila">("etapas");
+  // Video de presentación: la primera vez que se abre (después, con 🎬).
+  const [video, setVideo] = useState(() => videosActivos(3) && tocaVideo("monte-leon", studentCode, Infinity));
   const [playingEtapa, setPlayingEtapa] = useState<number | null>(null);
   const [activities, setActivities] = useState<ActivitySpec[]>([]);
   const [localProgress, setLocalProgress] = useState<StudentProgress | null>(null);
@@ -93,6 +97,15 @@ export default function MonteLeonModal({
             </div>
           </div>
 
+          <button
+            type="button"
+            onClick={() => setVideo(true)}
+            className="w-9 h-9 shrink-0 rounded-full bg-amber-950/10 hover:bg-amber-950/20 text-amber-950 flex items-center justify-center text-lg transition ml-auto"
+            aria-label="Ver el video de presentación"
+            title="Ver el video"
+          >
+            🎬
+          </button>
           <button
             type="button"
             onClick={onClose}
@@ -276,6 +289,15 @@ export default function MonteLeonModal({
           )}
         </div>
       </div>
+      {video && (
+        <VideoAnimacion
+          nombre="monte-leon"
+          onCerrar={() => {
+            marcarVideoVisto("monte-leon", studentCode);
+            setVideo(false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -97,6 +97,12 @@ Todas son ilustraciones nuevas, sin texto, sin marcas y sin personajes conocidos
     - Escudo de Puerto San Julián: CC BY-SA 4.0.
 
     La ficha de cada uno muestra la fuente. Faltan los escudos de Perito Moreno, Puerto Deseado y Puerto Santa Cruz, que no tienen un archivo con licencia clara; mientras tanto se ve un escudo genérico. Lo ideal es pedirlos a cada municipio.
+- **Videos de animación** (`public/videos/`), 14/10/2026: se arman por código (`scripts/videos/hacer.py`) con ilustraciones que ya tiene la app:
+  - fondo de inicio, poses del profe (con autorización de Pedro), islas de 4.º, cofre;
+  - postales y especies de la Reserva y mapa propio;
+  - escenas y objetos de Monte León.
+
+  Llevan música original sintetizada por código (los instrumentos de `scripts/musica/componer.py`) y efectos también sintetizados: no usan muestras ni música de terceros. La letra es **Fredoka** (Google Fonts, licencia SIL Open Font License 1.1, en `scripts/videos/Fredoka-OFL.txt`), que permite usarla en videos comerciales.
 - **Cuento «La tortuga gigante», escena 2**: se le quitó el tercer ojo a la tortuga (retoque local, 5/10/2026).
 
 ## 7. Revisión del 5/10/2026 (imágenes nuevas)
