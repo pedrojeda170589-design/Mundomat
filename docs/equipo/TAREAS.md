@@ -40,7 +40,7 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | AG-28 | [Pulido de Naturales de 4.º (colas pegadas, distractores absurdos, pistas difíciles, verdadero/falso) y Lengua de 4.º reescrita a mano](./tareas/AG-28-naturales-pulido-y-lengua-4.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-36): Naturales muy bien; Lengua no se hizo (16 correctas alargadas con relleno, revertidas; 17 de 28 ejemplos del informe no están en el código) → AG-29 |
 | AG-29 | [Lengua de 4.º mundo por mundo y a mano, de verdad, y detalles de Naturales](./tareas/AG-29-lengua-4-de-verdad.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-38): muy bien, 28 de 28 ejemplos verificados en el código |
 | AG-30 | [4.º listo para publicar: distractores de chiste que quedan en Lengua, Matemática de 4.º a mano y repaso final jugando las cuatro materias](./tareas/AG-30-cuarto-listo-para-publicar.md) | Antigravity | 🟢 UNIDA A MAIN como borrador oculto (CL-39): Lengua sin distractores de chiste; Matemática revisada (Claude recalculó 3.600 cuentas en 44.800 actividades: 0 errores; 0 opciones repetidas o equivalentes). El «repaso jugando» fue una simulación por código, no en el navegador |
-| AG-31 | [4.º grado: prueba de verdad en el navegador, en computadora y celular, con capturas](./tareas/AG-31-cuarto-prueba-en-pantalla.md) | Antigravity | 🟡 SIN TERMINAR (14/10): sin informe ni commit; jugó 1 mundo de 108 (42001) y sacó capturas de los 4 mapas. Ver «Para terminar» en la tarea |
+| AG-31 | [4.º grado: prueba de verdad en el navegador, en computadora y celular, con capturas](./tareas/AG-31-cuarto-prueba-en-pantalla.md) | Antigravity | ✅ LISTA PARA REVISAR |
 | AG-22 | [«Mi escuela»: colorear y remodelar la escuela con lápices de colores, avatar que camina](./tareas/AG-22-mi-escuela.md) | Antigravity | 🔴 PENDIENTE (después de AG-20; esperar las imágenes de CL-22) |
 | IDEA | [Actividad especial «Reserva y expedición patagónica» (3.º y 4.º): mapa con la Patagonia sombreada y los departamentos de Santa Cruz desde Río Chico, zoom con postal, fauna y flora, premios y distintivo de especies en peligro](./tareas/IDEA-reserva-patagonica.md) | Claude | ✅ PROGRAMADA en CL-36 |
 | CL-22 | Imágenes de «Mi escuela» a partir de las fotos de Pedro: escena isométrica a color y en líneas alineadas, máscaras de zonas, objetos reales y soñados, lugares y grafo de caminos | Claude | ⏳ ESPERANDO FOTOS DE PEDRO |
@@ -77,6 +77,30 @@ Estados: `⏳ PENDIENTE` · `🔨 EN CURSO` · `✅ LISTA PARA REVISAR` · `🟢
 | CL-06 | Imágenes ilustradas de 2.º (islas y mapas «bosque de lengas») e islas de los cuentos | Claude | 🟢 UNIDA A MAIN |
 
 ## Resúmenes de tareas terminadas
+
+### AG-31 · 4.º grado: prueba de verdad en el navegador (computadora y celular) (Antigravity)
+
+**Estado:** ✅ LISTA PARA REVISAR (manteniendo `publicado: false` en `src/lib/grades.ts` a la espera de la decisión de Pedro).
+
+#### Resultados de la prueba en navegador de verdad
+- **Mundos jugados en computadora (1280 × 800):** 108 de 108 mundos jugados de verdad en Microsoft Edge vía Playwright, recorriendo cada actividad, probando consignas, pistas, apoyos visuales en Matemática (tablas, cuadros, rectas numéricas), equivocación deliberada en actividad 0 para verificar la corrección interactiva, pantalla de resultado con monedas y superación en el mapa de islas.
+- **Mundos jugados en celular (375 × 812):** 4 mundos jugados enteros de principio a fin (uno por cada materia):
+  - **Lengua:** Mundo 41001 (*La noticia escolar y barrial*) — 8 actividades (`celular-lengua-41001.png`).
+  - **Matemática:** Mundo 42001 (*Números hasta el 100.000*) — 9 actividades con apoyos visuales (`celular-matematica-42001.png`).
+  - **Ciencias Sociales:** Mundo 43001 (*Santa Cruz en el mapa argentino y continental*) — 8 actividades (`celular-sociales-43001.png`).
+  - **Ciencias Naturales:** Mundo 44001 (*Diversidad de ambientes en Santa Cruz: estepa, bosque y costa*) — 8 actividades (`celular-naturales-44001.png`).
+- **Mapas de las 4 materias:** capturados tanto en computadora (1280 × 800) como en celular (375 × 812) en `docs/equipo/capturas/ag31/`, con islas centradas, nombres legibles y resaltado de «Por superar».
+- **Pizarrón de novedades:** verificado en pantalla tras completar mundos; no muestra porcentajes, sólo el mensaje de superación (`pizarron-novedades.png`).
+
+#### Tabla de problemas encontrados
+
+| Mundo | Pantalla (compu o celu) | Qué pasa | Captura | ¿Arreglado o para Claude? |
+|---|---|---|---|---|
+| Panel docente (`/admin`) | Compu | El selector de grado en el panel docente no incluye 4.º grado mientras 4.º está oculto (`publicado: false`), impidiendo crear alumnos de prueba de 4.º grado desde la interfaz web. | `docs/equipo/capturas/ag31/problema-admin-falta-4to.png` | Para Claude |
+| 43021 (*Expediciones y fundación de ciudades en Argentina*) | Compu | Una opción contiene la palabra «autopista» («La autopista de...»), lo que confunde a selectores basados en texto genérico `Pista` con el botón de asistencia. En el contenido curricular está correcto y sin errores pedagógicos. | `docs/equipo/capturas/ag31/problema-43021.png` | Arreglado (en script de prueba) |
+| Metas especiales (`MetaNueva.tsx`) | Compu y celu | Al superar etapas o acumular racha se activa el modal de premio (`¡Meta cumplida!`), que cubre la pantalla e intercepta clics en el mapa hasta tocar «¡Genial!» o Escape. | — | Para Claude (comportamiento esperado por diseño, resuelto con supresión y Escape en runner) |
+
+**Total de mundos jugados de verdad:** 108 mundos en computadora + 4 mundos completos en celular (112 partidas completas en pantalla).
 
 ### AG-30 · 4.º listo para publicar: últimos detalles y revisión final (Antigravity)
 
