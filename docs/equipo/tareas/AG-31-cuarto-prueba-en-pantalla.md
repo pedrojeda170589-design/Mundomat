@@ -49,3 +49,27 @@ En TAREAS.md, una tabla con una fila por problema:
 Si un mundo no tuvo problemas, no hace falta fila; poné al final cuántos mundos jugaste de verdad.
 
 Marcá AG-31 «✅ LISTA PARA REVISAR». En el commit **no** tiene que ir `publicado: true` ni `.data/`.
+
+---
+
+## Para terminar (revisión de Claude, 14/10/2026)
+La tarea quedó a medias:
+- no hay commit;
+- no hay tabla en TAREAS.md;
+- se jugó un solo mundo de los 108 (42001).
+
+Las capturas de los cuatro mapas (computadora y celular) están bien y sirven. Falta:
+1. **Jugar los 108 mundos.** Podés usar tu script `scripts/probar-los-108-mundos.ts` con el navegador de Playwright, pero el script tiene que:
+   - abrir cada mundo en pantalla;
+   - responder;
+   - sacar una captura **cuando algo falla**: imagen rota, consigna cortada, opción que no se puede tocar o error en la consola.
+2. **Celular:** al menos un mundo por materia jugado entero en 375 × 812.
+3. **La tabla de problemas en TAREAS.md** (aunque tenga pocas filas) y cuántos mundos se jugaron de verdad.
+4. **Commit en la rama `antigravity`** con:
+   - las capturas;
+   - la tabla;
+   - los scripts de prueba, si sirven.
+
+   Sin `publicado: true`, sin `next-env.d.ts` y sin `.data/`.
+
+**Para Claude:** el panel docente no deja crear alumnos de 4.º mientras 4.º está oculto (captura `problema-admin-falta-4to.png`). Para la prueba podés crearlo con `publicado: true` en tu copia local.

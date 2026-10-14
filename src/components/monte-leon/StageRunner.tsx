@@ -373,6 +373,7 @@ export default function StageRunner({
             key={currentActivity.id}
             prompt={currentActivity.prompt}
             say={currentActivity.say}
+            contexto={currentActivity.contexto}
             answer={currentActivity.answer}
             kind={currentActivity.kind}
             strictAccents={currentActivity.strictAccents}

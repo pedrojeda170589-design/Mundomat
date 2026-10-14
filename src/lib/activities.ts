@@ -242,6 +242,9 @@ export type ActivitySpec = (
       title: string;
       prompt: string;
       say?: string;
+      // Oración que se ve en pantalla con un hueco («____») donde va la
+      // palabra dictada, para que quede claro QUÉ hay que escribir.
+      contexto?: string;
       answer: string;
       kind: "numero" | "palabra" | "oracion";
       strictAccents?: boolean;

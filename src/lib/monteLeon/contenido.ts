@@ -304,154 +304,53 @@ const BANCO_ETAPA_4: readonly ActivitySpec[] = [
 // ============================================================================
 // BANCO ETAPA 5: DICTADO DEL VIAJE (26 palabras del Doc de Pedro)
 // ============================================================================
+// Pedido de Pedro (14/10/2026): «en la última actividad de dictado no se
+// entiende qué es lo que hay que escribir». Antes se escuchaba la palabra
+// pegada a una oración larga y no se veía nada en la pantalla. Ahora:
+// - en la pantalla está la oración con un hueco donde va la palabra;
+// - la voz dice «Escribí la palabra: …», lee la oración y repite la palabra.
+// Cada oración tiene la palabra exacta (sin plurales ni cambios).
 interface PalabraDictadoViaje {
   palabra: string;
-  say: string;
+  oracion: string;
   hint: string;
 }
 
 const PALABRAS_DICTADO_VIAJE: readonly PalabraDictadoViaje[] = [
-  {
-    palabra: "pingüino",
-    say: "Pingüino. En la costa de Monte León anidan miles de pingüinos de Magallanes.",
-    hint: "Pista: pingüino lleva diéresis con dos puntitos sobre la u para que suene güi.",
-  },
-  {
-    palabra: "guardaparque",
-    say: "Guardaparque. El guardaparque cuida los senderos y protege a los animales.",
-    hint: "Pista: guardaparque empieza con gua y termina con que.",
-  },
-  {
-    palabra: "acantilado",
-    say: "Acantilado. Las olas del mar chocan con fuerza contra el acantilado.",
-    hint: "Pista: acantilado se escribe con c.",
-  },
-  {
-    palabra: "meseta",
-    say: "Meseta. Durante el viaje vamos a cruzar la meseta patagónica.",
-    hint: "Pista: meseta se escribe con s.",
-  },
-  {
-    palabra: "ruta",
-    say: "Ruta. Viajamos por la ruta provincial veintisiete hacia el mar.",
-    hint: "Pista: ruta empieza con una sola r fuerte al inicio.",
-  },
-  {
-    palabra: "viaje",
-    say: "Viaje. Todos los chicos de tercer grado nos preparamos para este gran viaje.",
-    hint: "Pista: viaje se escribe con v corta y con j.",
-  },
-  {
-    palabra: "mochila",
-    say: "Mochila. Guardamos la botella de agua y los residuos dentro de la mochila.",
-    hint: "Pista: mochila se escribe con ch.",
-  },
-  {
-    palabra: "colectivo",
-    say: "Colectivo. El colectivo escolar va a viajar varias horas por la ruta.",
-    hint: "Pista: colectivo lleva c antes de la t y v corta.",
-  },
-  {
-    palabra: "playa",
-    say: "Playa. Caminamos despacio por la playa de canto rodado.",
-    hint: "Pista: playa se escribe con y griega.",
-  },
-  {
-    palabra: "lobo marino",
-    say: "Lobo marino. Sobre las rocas descansa un lobo marino con su cría.",
-    hint: "Pista: lobo se escribe con b larga; son dos palabras separadas.",
-  },
-  {
-    palabra: "cormorán",
-    say: "Cormorán. El cormorán es un ave marina que anida en los acantilados.",
-    hint: "Pista: cormorán es palabra aguda y lleva tilde en la a.",
-  },
-  {
-    palabra: "guanaco",
-    say: "Guanaco. En la estepa vamos a ver una manada de guanacos.",
-    hint: "Pista: guanaco empieza con gua y termina con co.",
-  },
-  {
-    palabra: "choique",
-    say: "Choique. El choique corre a gran velocidad entre los arbustos.",
-    hint: "Pista: choique empieza con ch y termina con que.",
-  },
-  {
-    palabra: "parque",
-    say: "Parque. Monte León es un parque nacional junto al mar.",
-    hint: "Pista: parque se escribe con qu.",
-  },
-  {
-    palabra: "costa",
-    say: "Costa. Al llegar a la costa sentimos la brisa fresca del mar.",
-    hint: "Pista: costa se escribe con c.",
-  },
-  {
-    palabra: "huevo",
-    say: "Huevo. La hembra de pingüino suele poner dos huevos en el nido.",
-    hint: "Pista: huevo empieza con h muda y se escribe con v corta.",
-  },
-  {
-    palabra: "nido",
-    say: "Nido. Los pingüinos cuidan su nido debajo de la tierra.",
-    hint: "Pista: nido se escribe con n y d.",
-  },
-  {
-    palabra: "cueva",
-    say: "Cueva. Cada pareja de pingüinos cava una cueva en la tierra.",
-    hint: "Pista: cueva se escribe con c y con v corta.",
-  },
-  {
-    palabra: "sendero",
-    say: "Sendero. Para cuidar el suelo caminamos únicamente por el sendero.",
-    hint: "Pista: sendero empieza con s.",
-  },
-  {
-    palabra: "pasarela",
-    say: "Pasarela. Miramos la pingüinera desde la pasarela de madera.",
-    hint: "Pista: pasarela se escribe con s.",
-  },
-  {
-    palabra: "basura",
-    say: "Basura. En el parque nacional se respeta la regla de cero basura.",
-    hint: "Pista: basura se escribe con b larga y con s.",
-  },
-  {
-    palabra: "protector",
-    say: "Protector. Antes de caminar nos ponemos protector solar en la cara.",
-    hint: "Pista: protector lleva c antes de la t final.",
-  },
-  {
-    palabra: "gorra",
-    say: "Gorra. Llevamos una gorra para protegernos del sol.",
-    hint: "Pista: gorra lleva doble r entre vocales.",
-  },
-  {
-    palabra: "botella",
-    say: "Botella. Llevamos una botella de agua para la excursión.",
-    hint: "Pista: botella se escribe con b larga y con doble l.",
-  },
-  {
-    palabra: "también",
-    say: "También. En el parque también vamos a ver lobos marinos.",
-    hint: "Pista: antes de b se escribe m: también. Lleva tilde en la e.",
-  },
-  {
-    palabra: "envase",
-    say: "Envase. Guardamos el envase vacío en la mochila.",
-    hint: "Pista: antes de v se escribe n: envase.",
-  },
-  {
-    palabra: "Piedrabuena",
-    say: "Piedrabuena. Al pasar por Piedrabuena cruzamos un gran puente.",
-    hint: "Pista: Piedrabuena es nombre propio, empieza con mayúscula y lleva b larga.",
-  },
-  {
-    palabra: "Monte León",
-    say: "Monte León. ¡Qué hermosa excursión nos espera en Monte León!",
-    hint: "Pista: Monte León son dos palabras con mayúscula y León lleva tilde en la o.",
-  },
+  { palabra: "pingüino", oracion: "En la costa de Monte León anida el pingüino de Magallanes.", hint: "Pista: pingüino lleva diéresis con dos puntitos sobre la u para que suene güi." },
+  { palabra: "guardaparque", oracion: "El guardaparque cuida los senderos y protege a los animales.", hint: "Pista: guardaparque empieza con gua y termina con que." },
+  { palabra: "acantilado", oracion: "Las olas del mar chocan con fuerza contra el acantilado.", hint: "Pista: acantilado se escribe con c." },
+  { palabra: "meseta", oracion: "Durante el viaje vamos a cruzar la meseta patagónica.", hint: "Pista: meseta se escribe con s." },
+  { palabra: "ruta", oracion: "Viajamos por la ruta provincial veintisiete hacia el mar.", hint: "Pista: ruta empieza con una sola r fuerte al inicio." },
+  { palabra: "viaje", oracion: "Todos los chicos de tercer grado nos preparamos para el viaje.", hint: "Pista: viaje se escribe con v corta y con j." },
+  { palabra: "mochila", oracion: "Guardamos la botella de agua y los residuos en la mochila.", hint: "Pista: mochila se escribe con ch." },
+  { palabra: "colectivo", oracion: "El colectivo escolar va a viajar varias horas por la ruta.", hint: "Pista: colectivo lleva c antes de la t y v corta." },
+  { palabra: "playa", oracion: "Caminamos despacio por la playa de canto rodado.", hint: "Pista: playa se escribe con y griega." },
+  { palabra: "lobo marino", oracion: "Sobre las rocas descansa un lobo marino con su cría.", hint: "Pista: lobo se escribe con b larga; son dos palabras separadas." },
+  { palabra: "cormorán", oracion: "El cormorán es un ave marina que anida en los acantilados.", hint: "Pista: cormorán es palabra aguda y lleva tilde en la a." },
+  { palabra: "guanaco", oracion: "En la estepa vemos un guanaco junto a su manada.", hint: "Pista: guanaco empieza con gua y termina con co." },
+  { palabra: "choique", oracion: "El choique corre a gran velocidad entre los arbustos.", hint: "Pista: choique empieza con ch y termina con que." },
+  { palabra: "parque", oracion: "Monte León es un parque nacional junto al mar.", hint: "Pista: parque se escribe con qu." },
+  { palabra: "costa", oracion: "Al llegar a la costa sentimos la brisa fresca del mar.", hint: "Pista: costa se escribe con c." },
+  { palabra: "huevo", oracion: "La hembra de pingüino cuida cada huevo dentro del nido.", hint: "Pista: huevo empieza con h muda y se escribe con v corta." },
+  { palabra: "nido", oracion: "Los pingüinos cuidan su nido debajo de la tierra.", hint: "Pista: nido se escribe con n y d." },
+  { palabra: "cueva", oracion: "Cada pareja de pingüinos cava una cueva en la tierra.", hint: "Pista: cueva se escribe con c y con v corta." },
+  { palabra: "sendero", oracion: "Para cuidar el suelo caminamos únicamente por el sendero.", hint: "Pista: sendero empieza con s." },
+  { palabra: "pasarela", oracion: "Miramos la pingüinera desde la pasarela de madera.", hint: "Pista: pasarela se escribe con s." },
+  { palabra: "basura", oracion: "En el parque nacional no dejamos nada de basura.", hint: "Pista: basura se escribe con b larga y con s." },
+  { palabra: "protector", oracion: "Antes de caminar nos ponemos protector solar en la cara.", hint: "Pista: protector lleva c antes de la t final." },
+  { palabra: "gorra", oracion: "Llevamos una gorra para protegernos del sol.", hint: "Pista: gorra lleva doble r entre vocales." },
+  { palabra: "botella", oracion: "Llevamos una botella de agua para la excursión.", hint: "Pista: botella se escribe con b larga y con doble l." },
+  { palabra: "también", oracion: "En el parque también vamos a ver lobos marinos.", hint: "Pista: antes de b se escribe m: también. Lleva tilde en la e." },
+  { palabra: "envase", oracion: "Guardamos el envase vacío en la mochila.", hint: "Pista: antes de v se escribe n: envase." },
+  { palabra: "Piedrabuena", oracion: "Al pasar por Piedrabuena cruzamos un gran puente.", hint: "Pista: Piedrabuena es nombre propio, empieza con mayúscula y lleva b larga." },
+  { palabra: "Monte León", oracion: "¡Qué hermosa excursión nos espera en Monte León!", hint: "Pista: Monte León son dos palabras con mayúscula y León lleva tilde en la o." },
 ];
+
+// La oración con «____» en el lugar de la palabra.
+export function oracionConHueco(item: PalabraDictadoViaje): string {
+  return item.oracion.replace(item.palabra, "____");
+}
 
 // Transforma una palabra del banco de dictado en una ActivitySpec de dictation
 function crearActividadDictado(item: PalabraDictadoViaje, index: number): ActivitySpec {
@@ -459,8 +358,9 @@ function crearActividadDictado(item: PalabraDictadoViaje, index: number): Activi
     type: "dictation",
     id: `ml-dict-${index}-${item.palabra.toLowerCase().replace(/\s+/g, "-")}`,
     title: "Dictado del viaje",
-    prompt: "Escuchá con atención y escribí la palabra dictada:",
-    say: item.say,
+    prompt: "Escuchá y escribí la palabra que falta en la oración:",
+    say: `Escribí la palabra: ${item.palabra}. ${item.oracion} Otra vez: ${item.palabra}.`,
+    contexto: oracionConHueco(item),
     answer: item.palabra,
     kind: "palabra",
     strictAccents: true,

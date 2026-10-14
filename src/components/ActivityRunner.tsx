@@ -489,6 +489,7 @@ export default function ActivityRunner({
                 key={`dict-${index}`}
                 prompt={activity.prompt}
                 say={activity.say}
+                contexto={activity.contexto}
                 answer={activity.answer}
                 kind={activity.kind}
                 strictAccents={activity.strictAccents}

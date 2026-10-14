@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { cardBase } from "./shared";
-import { speak, stopSpeaking } from "@/lib/tts";
+import { esperarVoces, estadoVoz, speak, stopSpeaking, type EstadoVoz } from "@/lib/tts";
 import { evaluarDictado, EvaluacionDictado } from "@/lib/dictado/evaluacion";
 
 interface Props {
   prompt: string;
   say?: string;
+  contexto?: string; // oración con «____» donde va la palabra
   answer: string;
   kind: "numero" | "palabra" | "oracion";
   strictAccents?: boolean;
@@ -18,6 +19,7 @@ interface Props {
 export default function DictationActivity({
   prompt,
   say,
+  contexto,
   answer,
   kind,
   strictAccents = false,
@@ -28,13 +30,30 @@ export default function DictationActivity({
   const [result, setResult] = useState<EvaluacionDictado | null>(null);
   const textToSay = say || answer;
 
-  // Reproducción automática de audio al montar la consigna
+  const [voz, setVoz] = useState<EstadoVoz>("cargando");
+  const [mirar, setMirar] = useState(false); // ver la palabra unos segundos (sin voz)
+
+  // Reproducción automática de audio al montar la consigna. Antes se fija si
+  // el navegador tiene voz en español (si no, la voz en inglés no se entiende).
   useEffect(() => {
-    speak(textToSay, undefined, 0.85);
+    let vivo = true;
+    void esperarVoces().then(() => {
+      if (!vivo) return;
+      // Si después de esperar todavía no hay voces, el navegador no tiene ninguna.
+      const e = estadoVoz();
+      setVoz(e === "cargando" ? "sin-voz" : e);
+      speak(textToSay, undefined, 0.85);
+    });
     return () => {
+      vivo = false;
       stopSpeaking();
     };
   }, [textToSay]);
+
+  function verUnosSegundos() {
+    setMirar(true);
+    setTimeout(() => setMirar(false), 3000);
+  }
 
   function handlePlayAudio() {
     speak(textToSay, undefined, 0.85);
@@ -63,6 +82,38 @@ export default function DictationActivity({
       <p className="text-xl font-bold text-white mb-4 text-center">
         {prompt}
       </p>
+
+      {contexto && (
+        <p className="mb-4 rounded-2xl bg-slate-800/80 border border-slate-600 px-4 py-3 text-center text-lg text-slate-100 leading-snug">
+          {contexto.split(/_{2,}/).map((parte, i, arr) => (
+            <span key={i}>
+              {parte}
+              {i < arr.length - 1 && (
+                <span className="inline-block min-w-24 mx-1 border-b-4 border-amber-400 text-amber-300 font-black align-baseline">
+                  {mirar ? answer : "\u00a0"}
+                </span>
+              )}
+            </span>
+          ))}
+        </p>
+      )}
+
+      {(voz === "sin-voz" || voz === "sin-espanol") && (
+        <div className="mb-4 rounded-2xl bg-amber-950/70 border border-amber-500/50 px-4 py-3 text-center text-sm text-amber-100">
+          <p className="font-bold">
+            {voz === "sin-voz"
+              ? "Este dispositivo no puede leer en voz alta."
+              : "Este dispositivo no tiene voz en español: la lectura puede no entenderse."}
+          </p>
+          <p className="mt-1">Pedile a tu docente que te dicte la palabra, o mirala unos segundos y después escribila de memoria.</p>
+          {!mirar && result === null && (
+            <button type="button" onClick={verUnosSegundos} className="mt-2 rounded-full bg-amber-500 text-slate-950 font-black px-4 py-1.5">
+              👀 Ver la palabra 3 segundos
+            </button>
+          )}
+          {mirar && !contexto && <p className="mt-2 text-2xl font-black text-amber-300">{answer}</p>}
+        </div>
+      )}
 
       {/* Botón grande para escuchar y repetir */}
       <div className="flex justify-center mb-6">
