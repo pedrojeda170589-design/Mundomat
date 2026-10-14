@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import VideoAnimacion from "@/components/VideoAnimacion";
+import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
 import Image from "next/image";
 import MochilaView from "./MochilaView";
 import StageRunner from "./StageRunner";
@@ -33,6 +35,8 @@ export default function MonteLeonModal({
   onOpenProfile,
 }: Props) {
   const [tab, setTab] = useState<"etapas" | "mochila">("etapas");
+  // Video de presentación: la primera vez que se abre (después, con 🎬).
+  const [video, setVideo] = useState(() => videosActivos(3) && tocaVideo("monte-leon", studentCode, Infinity));
   const [playingEtapa, setPlayingEtapa] = useState<number | null>(null);
   const [activities, setActivities] = useState<ActivitySpec[]>([]);
   const [localProgress, setLocalProgress] = useState<StudentProgress | null>(null);
@@ -71,7 +75,7 @@ export default function MonteLeonModal({
         {/* Cabecera del modal */}
         <div className="relative p-4 sm:p-5 border-b-2 border-amber-800/20 bg-gradient-to-r from-amber-100 via-amber-50 to-amber-100 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl overflow-hidden bg-sky-900/10 border-2 border-amber-700/30 p-1 shadow-sm">
+            <div className="relative hidden sm:block w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl overflow-hidden bg-sky-900/10 border-2 border-amber-700/30 p-1 shadow-sm">
               <Image
                 src={ISLA_MONTE_LEON}
                 alt="Isla Monte León"
@@ -93,6 +97,15 @@ export default function MonteLeonModal({
             </div>
           </div>
 
+          <button
+            type="button"
+            onClick={() => setVideo(true)}
+            className="w-9 h-9 shrink-0 rounded-full bg-amber-950/10 hover:bg-amber-950/20 text-amber-950 flex items-center justify-center text-lg transition ml-auto"
+            aria-label="Ver el video de presentación"
+            title="Ver el video"
+          >
+            🎬
+          </button>
           <button
             type="button"
             onClick={onClose}
@@ -276,6 +289,15 @@ export default function MonteLeonModal({
           )}
         </div>
       </div>
+      {video && (
+        <VideoAnimacion
+          nombre="monte-leon"
+          onCerrar={() => {
+            marcarVideoVisto("monte-leon", studentCode);
+            setVideo(false);
+          }}
+        />
+      )}
     </div>
   );
 }

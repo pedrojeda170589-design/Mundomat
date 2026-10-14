@@ -30,6 +30,8 @@ import { MAPA } from "@/lib/reserva/mapaDatos";
 import { emojiPremio, nombrePremio, rutaPostal, rutaPremio } from "@/lib/reserva/arte";
 import MapaReserva, { CAJA_PAIS, CAJA_PATAGONIA, CAJA_SANTA_CRUZ, cajaDeTerritorio, type Caja, type EstadoTerritorio } from "./MapaReserva";
 import ImgReserva from "./ImgReserva";
+import VideoAnimacion from "@/components/VideoAnimacion";
+import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
 import FichaReserva, { ContenidoFicha, SelloConservacion } from "./FichaReserva";
 
 type Vista = "mapa" | "etapa" | "juego" | "resultado" | "coleccion";
@@ -141,6 +143,8 @@ export default function ReservaModal({
   const [premios, setPremios] = useState<string[]>([]);
   const [verPremios, setVerPremios] = useState(false);
   const [ficha, setFicha] = useState<string | null>(null);
+  // Video de presentación: la primera vez que se abre (después, con 🎬).
+  const [video, setVideo] = useState(() => videosActivos(undefined) && tocaVideo("reserva", studentCode, Infinity));
 
   const et: Etapa = ETAPAS.find((e) => e.n === etapaN) ?? ETAPAS[0];
   const superadas = etapasSuperadas(progress);
@@ -232,6 +236,14 @@ export default function ReservaModal({
               className="min-h-11 rounded-full bg-emerald-500 border-2 border-white px-3 text-xs font-black text-white shadow"
             >
               {vista === "coleccion" ? "🗺️ Mapa" : `🌿 Mi reserva (${coleccion.size})`}
+            </button>
+            <button
+              onClick={() => setVideo(true)}
+              className="w-11 h-11 rounded-full bg-white/90 border-2 border-white text-lg shadow"
+              aria-label="Ver el video de presentación"
+              title="Ver el video"
+            >
+              🎬
             </button>
             <button onClick={onClose} className="w-11 h-11 rounded-full bg-gradient-to-b from-rose-400 to-rose-600 border-2 border-white text-white font-black shadow" aria-label="Cerrar">
               ✕
@@ -451,6 +463,15 @@ export default function ReservaModal({
       </div>
       {verPremios && premios.length > 0 && <PremiosGanados ids={premios} onCerrar={() => setVerPremios(false)} />}
       {ficha && <FichaReserva id={ficha} onCerrar={() => setFicha(null)} />}
+      {video && (
+        <VideoAnimacion
+          nombre="reserva"
+          onCerrar={() => {
+            marcarVideoVisto("reserva", studentCode);
+            setVideo(false);
+          }}
+        />
+      )}
     </div>,
     document.body
   );

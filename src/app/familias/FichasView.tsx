@@ -6,7 +6,7 @@ import { WORLDS } from "@/lib/worlds";
 import { GRADE1_WORLDS } from "@/lib/grade1/worlds";
 import { GRADE2_WORLDS } from "@/lib/grade2/worlds";
 import { SUBJECT_INFO, WorldSubject } from "@/types";
-import { fichaHref, fichaVersions } from "@/lib/fichas";
+import { fichaHref, fichaLabel, fichaVersions } from "@/lib/fichas";
 import FichasGate from "@/components/FichasGate";
 
 export default function FichasView() {
@@ -136,7 +136,7 @@ export default function FichasView() {
                             rel="noopener"
                             className="rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-2.5 py-1 transition active:scale-95"
                           >
-                            {fichaVersions(w) === 1 ? "Descargar ficha ⬇" : `Ficha ${v} ⬇`}
+                            {fichaLabel(w, v)}
                           </a>
                         ))}
                       </span>
