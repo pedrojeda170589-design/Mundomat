@@ -1,0 +1,1148 @@
+{
+  "timestamp": "2026-10-14T19:01:49.473Z",
+  "totalWorldsCatalog": 108,
+  "mobilePlayedCount": 4,
+  "desktopPlayedCount": 108,
+  "mobilePlayed": [
+    {
+      "worldId": 41001,
+      "subject": "lengua",
+      "name": "La noticia escolar y barrial",
+      "mode": "celular",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 42001,
+      "subject": "matematica",
+      "name": "Números hasta el 100.000",
+      "mode": "celular",
+      "status": "OK",
+      "activitiesCount": 9,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 43001,
+      "subject": "sociales",
+      "name": "Santa Cruz en el mapa argentino y continental",
+      "mode": "celular",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44001,
+      "subject": "naturales",
+      "name": "Diversidad de ambientes en Santa Cruz: estepa, bosque y costa",
+      "mode": "celular",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    }
+  ],
+  "desktopPlayed": [
+    {
+      "worldId": 41001,
+      "subject": "lengua",
+      "name": "La noticia escolar y barrial",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41002,
+      "subject": "lengua",
+      "name": "Comprensión lectora: Noticias patagónicas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41003,
+      "subject": "lengua",
+      "name": "El texto expositivo y sus partes",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41004,
+      "subject": "lengua",
+      "name": "Comprensión lectora: Naturaleza santacruceña",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41005,
+      "subject": "lengua",
+      "name": "Biografías de personajes patagónicos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41006,
+      "subject": "lengua",
+      "name": "Comprensión lectora: Biografías de pioneros",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41007,
+      "subject": "lengua",
+      "name": "Textos instructivos y reglamentos escolares",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41008,
+      "subject": "lengua",
+      "name": "Cartas y correos de comunicación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41009,
+      "subject": "lengua",
+      "name": "Fábulas tradicionales y moralejas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41010,
+      "subject": "lengua",
+      "name": "Poesía: versos, estrofas y rimas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41011,
+      "subject": "lengua",
+      "name": "El texto teatral, personajes y acotaciones",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41012,
+      "subject": "lengua",
+      "name": "La historieta, viñetas y onomatopeyas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41013,
+      "subject": "lengua",
+      "name": "El párrafo y la oración: sangría y puntos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41014,
+      "subject": "lengua",
+      "name": "Cohesión y conectores temporales y causales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41015,
+      "subject": "lengua",
+      "name": "Sujeto expreso y desinencial (tácito)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41016,
+      "subject": "lengua",
+      "name": "Predicado verbal simple y compuesto",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41017,
+      "subject": "lengua",
+      "name": "Sustantivos comunes, propios, individuales y colectivos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41018,
+      "subject": "lengua",
+      "name": "Adjetivos calificativos, gentilicios y numerales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41019,
+      "subject": "lengua",
+      "name": "Concordancia de género y número sustantivo-adjetivo",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41020,
+      "subject": "lengua",
+      "name": "El verbo: persona y número",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41021,
+      "subject": "lengua",
+      "name": "Tiempos verbales: presente, pasado y futuro",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41022,
+      "subject": "lengua",
+      "name": "Pretérito perfecto simple y pretérito imperfecto",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41023,
+      "subject": "lengua",
+      "name": "Verbos en infinitivo: terminaciones -ar, -er, -ir",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41024,
+      "subject": "lengua",
+      "name": "Sinónimos y antónimos contextuales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41025,
+      "subject": "lengua",
+      "name": "Hiperónimos, hipónimos y campos semánticos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41026,
+      "subject": "lengua",
+      "name": "Familias de palabras, prefijos y sufijos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41027,
+      "subject": "lengua",
+      "name": "Acentuación: agudas, graves y esdrújulas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 41028,
+      "subject": "lengua",
+      "name": "Signos de puntuación y reglas ortográficas (b/v, c/s/z, g/j, h, ll/y)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 42001,
+      "subject": "matematica",
+      "name": "Números hasta el 100.000",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42002,
+      "subject": "matematica",
+      "name": "Números hasta el 1.000.000",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42003,
+      "subject": "matematica",
+      "name": "Valor posicional y descomposición aditiva y multiplicativa",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42004,
+      "subject": "matematica",
+      "name": "Comparación y recta numérica hasta el millón",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42005,
+      "subject": "matematica",
+      "name": "Sistema de numeración romano y comparación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42006,
+      "subject": "matematica",
+      "name": "Sumas y restas con números grandes",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42007,
+      "subject": "matematica",
+      "name": "Estrategias de cálculo mental y estimación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42008,
+      "subject": "matematica",
+      "name": "Multiplicación y división por la unidad seguida de ceros",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42009,
+      "subject": "matematica",
+      "name": "Multiplicación por dos cifras y repertorio pitagórico",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42010,
+      "subject": "matematica",
+      "name": "Propiedades de la multiplicación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42011,
+      "subject": "matematica",
+      "name": "Organizaciones rectangulares y combinatoria",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42012,
+      "subject": "matematica",
+      "name": "División por una y dos cifras",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42013,
+      "subject": "matematica",
+      "name": "Análisis del resto en la división",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42014,
+      "subject": "matematica",
+      "name": "Proporcionalidad directa y tablas de valores",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42015,
+      "subject": "matematica",
+      "name": "Fracciones de uso social: 1/2, 1/4, 3/4, 1/8",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42016,
+      "subject": "matematica",
+      "name": "Fracciones de tercios, quintos y sextos en repartos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42017,
+      "subject": "matematica",
+      "name": "Fracciones equivalentes y representaciones",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42018,
+      "subject": "matematica",
+      "name": "Números mixtos y fracciones mayores que 1",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42019,
+      "subject": "matematica",
+      "name": "Fracciones en la recta numérica",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42020,
+      "subject": "matematica",
+      "name": "Suma y resta de fracciones de igual denominador",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42021,
+      "subject": "matematica",
+      "name": "Números decimales: décimos, centésimos y milésimos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42022,
+      "subject": "matematica",
+      "name": "Decimales multiplicados y divididos por 10, 100 y 1.000",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42023,
+      "subject": "matematica",
+      "name": "Suma y resta de números decimales cotidianos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42024,
+      "subject": "matematica",
+      "name": "Rectas paralelas, secantes y perpendiculares",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42025,
+      "subject": "matematica",
+      "name": "Ángulos y uso del transportador",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42026,
+      "subject": "matematica",
+      "name": "Triángulos: clasificación por lados y ángulos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42027,
+      "subject": "matematica",
+      "name": "Cuadriláteros y cuerpos geométricos (cubos y prismas)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 42028,
+      "subject": "matematica",
+      "name": "Medición: peso, capacidad, tiempo, superficies y perímetro",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": true,
+      "issues": []
+    },
+    {
+      "worldId": 43001,
+      "subject": "sociales",
+      "name": "Santa Cruz en el mapa argentino y continental",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43002,
+      "subject": "sociales",
+      "name": "División política y departamentos santacruceños",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43003,
+      "subject": "sociales",
+      "name": "Ciudades y pueblos santacruceños: urbanos y rurales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43004,
+      "subject": "sociales",
+      "name": "Relieves de Santa Cruz: mesetas, cordillera y costa",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43005,
+      "subject": "sociales",
+      "name": "Cuencas hídricas: ríos y grandes lagos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43006,
+      "subject": "sociales",
+      "name": "Clima frío y árido de la meseta austral",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43007,
+      "subject": "sociales",
+      "name": "Riesgos naturales patagónicos (heladas, nevadas y cenizas)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43008,
+      "subject": "sociales",
+      "name": "Áreas protegidas y Parques Nacionales de Santa Cruz",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43009,
+      "subject": "sociales",
+      "name": "Actividades económicas: ganadería ovina y zafra lanera",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43010,
+      "subject": "sociales",
+      "name": "Recursos hidrocarburíferos y mineros de la provincia",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43011,
+      "subject": "sociales",
+      "name": "Actividades productivas: turismo y pesca marítima",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43012,
+      "subject": "sociales",
+      "name": "Problemas ambientales locales: desertificación de la estepa",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43013,
+      "subject": "sociales",
+      "name": "Pueblos originarios de la meseta: los Aonikenk (tehuelches)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43014,
+      "subject": "sociales",
+      "name": "Cazadores y canoeros australes: Selk'nam y Yámanas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43015,
+      "subject": "sociales",
+      "name": "Pueblos mapuche y mapuche-tehuelche en la Patagonia",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43016,
+      "subject": "sociales",
+      "name": "Pueblos agricultores del noroeste: los Diaguitas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43017,
+      "subject": "sociales",
+      "name": "Una gran civilización americana: el Imperio Inca",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43018,
+      "subject": "sociales",
+      "name": "Sociedades indígenas en el presente: derechos y comunidades",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43019,
+      "subject": "sociales",
+      "name": "Motivos de los viajes europeos y adelantos técnicos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43020,
+      "subject": "sociales",
+      "name": "La expedición de Magallanes en San Julián (1520)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43021,
+      "subject": "sociales",
+      "name": "Expediciones y fundación de ciudades en Argentina",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43022,
+      "subject": "sociales",
+      "name": "La sociedad colonial y sus estamentos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43023,
+      "subject": "sociales",
+      "name": "El circuito comercial del Potosí y las economías regionales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43024,
+      "subject": "sociales",
+      "name": "Conquista espiritual y mestizaje cultural",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43025,
+      "subject": "sociales",
+      "name": "La Constitución Nacional y la organización federal",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 43026,
+      "subject": "sociales",
+      "name": "Constitución de Santa Cruz, municipios y Derechos del Niño",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44001,
+      "subject": "naturales",
+      "name": "Diversidad de ambientes en Santa Cruz: estepa, bosque y costa",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44002,
+      "subject": "naturales",
+      "name": "Flora autóctona santacruceña (coirón, calafate, lenga)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44003,
+      "subject": "naturales",
+      "name": "Fauna nativa y adaptaciones (guanaco, choique, huemul)",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44004,
+      "subject": "naturales",
+      "name": "Adaptaciones de seres vivos al frío y la aridez",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44005,
+      "subject": "naturales",
+      "name": "Los cuatro reinos de los seres vivos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44006,
+      "subject": "naturales",
+      "name": "Redes tróficas: productores, consumidores y descomponedores",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44007,
+      "subject": "naturales",
+      "name": "Impacto humano en los ecosistemas y conservación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44008,
+      "subject": "naturales",
+      "name": "El esqueleto humano y las funciones de los huesos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44009,
+      "subject": "naturales",
+      "name": "Articulaciones y músculos en el movimiento integrado",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44010,
+      "subject": "naturales",
+      "name": "Cuidado del sistema osteo-artro-muscular y posturas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44011,
+      "subject": "naturales",
+      "name": "Materiales naturales y manufacturados",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44012,
+      "subject": "naturales",
+      "name": "Conducción térmica y eléctrica de los materiales",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44013,
+      "subject": "naturales",
+      "name": "Estados de la materia: sólidos, líquidos y gases",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44014,
+      "subject": "naturales",
+      "name": "Cambios de estado de agregación por efecto del calor",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44015,
+      "subject": "naturales",
+      "name": "Mezclas homogéneas y heterogéneas en la vida cotidiana",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44016,
+      "subject": "naturales",
+      "name": "Métodos de separación de mezclas",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44017,
+      "subject": "naturales",
+      "name": "La luz: fuentes luminosas, sombras y propagación",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44018,
+      "subject": "naturales",
+      "name": "El sonido: vibraciones, tono, intensidad y timbre",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44019,
+      "subject": "naturales",
+      "name": "Magnetismo e imanes: atracción y repulsión",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44020,
+      "subject": "naturales",
+      "name": "Electrostática: fuerzas a distancia por frotamiento",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44021,
+      "subject": "naturales",
+      "name": "El ciclo del agua y los glaciares patagónicos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44022,
+      "subject": "naturales",
+      "name": "La Tierra como cuerpo cósmico y sus dimensiones",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44023,
+      "subject": "naturales",
+      "name": "Movimiento de rotación: día y noche",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44024,
+      "subject": "naturales",
+      "name": "Movimiento de traslación y ciclo de las cuatro estaciones",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44025,
+      "subject": "naturales",
+      "name": "Subsistemas terrestres: geósfera, hidrósfera, atmósfera y biósfera",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    },
+    {
+      "worldId": 44026,
+      "subject": "naturales",
+      "name": "Geósfera: terremotos, volcanes y procesos geológicos",
+      "mode": "desktop",
+      "status": "OK",
+      "activitiesCount": 8,
+      "hasVisualAid": false,
+      "issues": []
+    }
+  ],
+  "problems": [
+    {
+      "worldId": 0,
+      "worldName": "Panel docente (/admin)",
+      "screen": "compu",
+      "issue": "Selector de grado en el panel docente no incluye 4.º grado mientras 4.º está en borrador oculto (publicado: false), impidiendo crear alumnos de prueba de 4.º desde la interfaz gráfica.",
+      "screenshot": "problema-admin-falta-4to.png",
+      "fixedOrClaude": "Para Claude"
+    },
+    {
+      "worldId": 43021,
+      "worldName": "Expediciones y fundación de ciudades en Argentina",
+      "screen": "compu",
+      "issue": "Opción de respuesta contiene «La autopista de...», haciendo que un selector genérico de texto «Pista» confunda la opción con el botón de asistencia. En contenido está correcto.",
+      "screenshot": "problema-43021.png",
+      "fixedOrClaude": "Arreglado"
+    }
+  ]
+}
