@@ -1,6 +1,6 @@
 # AG-31 · 4.º grado: prueba de verdad en el navegador (computadora y celular)
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** ✅ LISTA PARA REVISAR.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🟢 UNIDA A MAIN (revisión en AG-32).
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
 
