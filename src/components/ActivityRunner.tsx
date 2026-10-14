@@ -314,15 +314,15 @@ export default function ActivityRunner({
   return (
     <div className={`relative flex-1 flex flex-col px-4 py-6 overflow-hidden ${themeForWorld(world).nightBg}`}>
       <Scenery world={world} isDay={false} />
-      <div className="wood-panel-light relative z-10 flex items-center justify-between mb-4 max-w-md w-full mx-auto rounded-2xl px-4 py-2">
-        <button onClick={onExit} className="text-amber-50 text-sm font-semibold">
+      <div className="wood-panel-light relative z-10 flex items-center gap-2 mb-4 max-w-md w-full mx-auto rounded-2xl px-3 sm:px-4 py-2">
+        <button onClick={onExit} className="shrink-0 whitespace-nowrap text-amber-50 text-sm font-semibold">
           ← Salir
         </button>
-        <span className="text-sm text-amber-50 font-semibold">
-          {world.emoji} {world.name}
-          {activity.type !== "listen" && ` · ${shownIndex}/${shownTotal}`}
+        <span className="flex-1 min-w-0 text-center text-sm text-amber-50 font-semibold leading-tight">
+          <span className="block truncate">{world.emoji} {world.name}</span>
+          {activity.type !== "listen" && <span className="block text-xs text-amber-100/90">{shownIndex}/{shownTotal}</span>}
         </span>
-        <CoinBadge coins={coins} />
+        <span className="shrink-0"><CoinBadge coins={coins} /></span>
       </div>
       <div className="relative z-10 max-w-md w-full mx-auto mb-3 flex items-center gap-3">
         <span className="relative w-16 h-16 shrink-0 wk-float">

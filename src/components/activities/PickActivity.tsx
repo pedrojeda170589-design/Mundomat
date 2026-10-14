@@ -85,6 +85,18 @@ export default function PickActivity({ prompt, say, audio, promptBig, promptEmoj
     );
   }
 
+  // Columnas: con textos largos (en celular) las tarjetas de 3 columnas
+  // cortaban palabras como «Precipitaciones». Si hay etiquetas largas se usan
+  // 2 columnas, y si son frases, una sola.
+  const etiquetas = cards.map((c) => c.label ?? "");
+  const masLarga = Math.max(0, ...etiquetas.map((t) => t.length));
+  const palabraMasLarga = Math.max(0, ...etiquetas.flatMap((t) => t.split(/\s+/)).map((w) => w.length));
+  const columnas =
+    masLarga > 40
+      ? "grid-cols-1"
+      : cards.length === 2 || cards.length === 4 || masLarga > 18 || palabraMasLarga > 9
+        ? "grid-cols-2"
+        : "grid-cols-3";
   return (
     <div className={cardBase}>
       <div className="flex items-start gap-2 mb-3">
@@ -113,7 +125,7 @@ export default function PickActivity({ prompt, say, audio, promptBig, promptEmoj
           )}
         </div>
       )}
-      <div className={`grid gap-3 ${cards.length === 2 || cards.length === 4 ? "grid-cols-2" : "grid-cols-3"}`}>
+      <div className={`grid gap-3 ${columnas}`}>
         {cards.map((c) => {
           const isSel = selected.includes(c.id);
           const isAns = answerIds.includes(c.id);
@@ -139,7 +151,14 @@ export default function PickActivity({ prompt, say, audio, promptBig, promptEmoj
                     {c.big}
                   </span>
                 )}
-                {c.label && <span className="text-sm font-bold leading-tight">{c.label}</span>}
+                {c.label && (
+                  <span
+                    lang="es"
+                    className={`font-bold leading-tight text-center break-words hyphens-auto w-full ${c.label.length > 40 ? "text-[13px]" : "text-sm"}`}
+                  >
+                    {c.label}
+                  </span>
+                )}
               </button>
               {(c.say || c.audio) && (
                 <button

@@ -54,14 +54,14 @@ export default function TrueFalseActivity({
           <button
             type="button"
             onClick={() => handleAnswer(true)}
-            className="rounded-2xl border-2 border-emerald-500/50 bg-emerald-500/10 text-emerald-200 font-black text-lg py-4 hover:bg-emerald-500/20 transition"
+            className="rounded-2xl border-2 border-emerald-500/50 bg-emerald-500/10 text-emerald-200 font-black text-base sm:text-lg px-1 py-4 whitespace-nowrap hover:bg-emerald-500/20 transition"
           >
             ✅ Verdadero
           </button>
           <button
             type="button"
             onClick={() => handleAnswer(false)}
-            className="rounded-2xl border-2 border-red-500/50 bg-red-500/10 text-red-200 font-black text-lg py-4 hover:bg-red-500/20 transition"
+            className="rounded-2xl border-2 border-red-500/50 bg-red-500/10 text-red-200 font-black text-base sm:text-lg px-1 py-4 whitespace-nowrap hover:bg-red-500/20 transition"
           >
             ❌ Falso
           </button>
