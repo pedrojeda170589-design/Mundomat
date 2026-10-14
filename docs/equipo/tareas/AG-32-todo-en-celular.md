@@ -1,6 +1,6 @@
 # AG-32 · Toda la plataforma en celular: detector de cosas cortadas y revisión con los ojos
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🔴 PENDIENTE.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🔴 PENDIENTE (después de AG-33).
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
 
