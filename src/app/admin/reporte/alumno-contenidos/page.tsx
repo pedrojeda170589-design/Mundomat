@@ -130,7 +130,7 @@ function Contenido() {
           🖨️ Imprimir / Guardar como PDF
         </button>
       </div>
-      <main className="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-0">
+      <main className="max-w-3xl mx-auto bg-white p-4 sm:p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-0">
         <header className="border-b-2 border-amber-600 pb-3 mb-4">
           <p className="text-xs font-bold uppercase tracking-wider text-amber-700">Informe para el docente</p>
           <h1 className="text-lg font-black">
@@ -148,7 +148,7 @@ function Contenido() {
             <SkillReport progress={progress} grade={grade} />
           </section>
         )}
-        <p className="mt-5 text-[11px] text-slate-500">
+        <p className="mt-5 text-xs text-slate-500">
           Los estados describen la práctica en la app (respuestas y vueltas completas), no son una calificación.
         </p>
       </main>

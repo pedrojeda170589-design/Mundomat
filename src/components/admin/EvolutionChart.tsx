@@ -24,10 +24,11 @@ export default function EvolutionChart({ title, subtitle, points, data }: Evolut
         {subtitle && <p className="text-xs text-amber-900/70">{subtitle}</p>}
       </div>
 
-      <div
-        className="grid gap-2"
-        style={{ gridTemplateColumns: `repeat(${chartPoints.length}, minmax(0, 1fr))` }}
-      >
+      <div className="overflow-x-auto pb-1">
+        <div
+          className="grid gap-2 min-w-[300px]"
+          style={{ gridTemplateColumns: `repeat(${chartPoints.length}, minmax(0, 1fr))` }}
+        >
         {chartPoints.map((pt, idx) => {
           const heightPct = Math.max(8, Math.min(100, pt.accuracyPct));
           const timeHeightPct = Math.max(6, Math.min(100, (pt.totalMinutes / maxMinutes) * 100));
@@ -72,6 +73,7 @@ export default function EvolutionChart({ title, subtitle, points, data }: Evolut
             </div>
           );
         })}
+        </div>
       </div>
 
       <div className="flex items-center justify-center gap-4 mt-3 pt-2 border-t border-amber-800/10 text-[11px]">

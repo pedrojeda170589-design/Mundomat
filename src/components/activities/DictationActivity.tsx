@@ -189,7 +189,7 @@ export default function DictationActivity({
               <>
                 <p className="text-red-300 font-bold text-base">¡Casi! Mirá cómo se escribe:</p>
                 <div className="w-full rounded-2xl bg-slate-800/90 border-2 border-emerald-400/60 px-3 py-2.5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-emerald-300 mb-1">Tenías que escribir</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 mb-1">Tenías que escribir</p>
                   <p className="text-2xl font-black tracking-wide text-white break-words">
                     {(dif?.partes ?? [{ t: answer, tipo: "ok" as const }]).map((p, i) =>
                       p.tipo === "ok" ? (
@@ -215,7 +215,7 @@ export default function DictationActivity({
                     ))}
                   </ul>
                 )}
-                <p className="text-[11px] text-slate-400">
+                <p className="text-xs text-slate-400">
                   <span className="rounded bg-rose-500 px-1 text-white">rojo</span> = lo que pusiste distinto ·{" "}
                   <span className="rounded bg-amber-400 px-1 text-slate-950">amarillo</span> = lo que te faltó
                 </p>

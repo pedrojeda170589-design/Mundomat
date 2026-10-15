@@ -83,15 +83,15 @@ export default function CompetitionBanner({ code }: { code: string }) {
         onClick={() => router.push("/student/competencia")}
         className="relative z-10 w-full max-w-3xl mx-auto mb-5 px-4 text-left"
       >
-        <div className="rounded-2xl border-4 border-rose-300 bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 px-4 py-2.5 flex items-center gap-3 shadow-lg hover:brightness-110 transition">
-          <span className="text-3xl">⚔️</span>
+        <div className="rounded-2xl border-4 border-rose-300 bg-gradient-to-r from-rose-600 via-red-500 to-amber-500 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2.5 sm:gap-3 shadow-lg hover:brightness-110 transition">
+          <span className="text-2xl sm:text-3xl shrink-0">⚔️</span>
           <span className="flex-1 min-w-0">
-            <span className="block text-white font-black text-base drop-shadow">Competencia de memoria</span>
+            <span className="block text-white font-black text-sm sm:text-base drop-shadow">Competencia de memoria</span>
             <span className="block text-white/90 text-xs">
               Duelos con tus compañeros y torneo de la semana · ¡todos ganan monedas!
             </span>
           </span>
-          <span className="shrink-0 rounded-xl bg-white/90 px-3 py-1.5 font-black text-rose-700">Entrar →</span>
+          <span className="shrink-0 rounded-xl bg-white/90 px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-black text-rose-700">Entrar →</span>
         </div>
       </button>
 

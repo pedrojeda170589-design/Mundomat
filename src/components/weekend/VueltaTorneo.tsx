@@ -73,7 +73,7 @@ export function InfoVuelta({ estado }: { estado: EstadoVuelta | null }) {
           <p className="font-black">
             {estado.superEspecial ? "✨ Objeto superespecial" : "🎁 Objeto especial"} de {MESES[o.mes]}: {o.label}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {METALES.map((m) => (
               <span key={m} className="flex items-center gap-1">
                 <Dibujo id={`${o.base}-${m}`} emoji={MEDALLA[m]} size={34} />

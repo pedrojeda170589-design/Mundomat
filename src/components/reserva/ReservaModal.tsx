@@ -226,26 +226,26 @@ export default function ReservaModal({
       <div className="relative w-full max-w-3xl h-full sm:h-auto sm:max-h-[96vh] overflow-y-auto sm:rounded-[2rem] border-4 border-amber-300 bg-gradient-to-b from-sky-100 via-amber-50 to-amber-100 shadow-2xl">
         {/* Encabezado */}
         <div className="sticky top-0 z-20 wood-panel px-3 py-2 flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <h2 className="font-black text-sm sm:text-lg drop-shadow leading-tight">🦙 Reserva patagónica</h2>
+          <div className="min-w-0 flex-1">
+            <h2 className="font-black text-xs sm:text-base drop-shadow leading-tight">🦙 Reserva patagónica</h2>
             <p className="text-[11px] font-bold opacity-90">⭐ {superadas} de {ETAPAS.length} etapas</p>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => setVista(vista === "coleccion" ? "mapa" : "coleccion")}
-              className="min-h-11 rounded-full bg-emerald-500 border-2 border-white px-3 text-xs font-black text-white shadow"
+              className="min-h-10 sm:min-h-11 rounded-full bg-emerald-500 border-2 border-white px-2.5 sm:px-3 text-xs font-black text-white shadow"
             >
-              {vista === "coleccion" ? "🗺️ Mapa" : `🌿 Mi reserva (${coleccion.size})`}
+              {vista === "coleccion" ? "🗺️ Mapa" : <><span className="hidden sm:inline">🌿 Mi reserva</span><span className="sm:hidden">🌿</span> ({coleccion.size})</>}
             </button>
             <button
               onClick={() => setVideo(true)}
-              className="w-11 h-11 rounded-full bg-white/90 border-2 border-white text-lg shadow"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 border-2 border-white text-base sm:text-lg shadow flex items-center justify-center"
               aria-label="Ver el video de presentación"
               title="Ver el video"
             >
               🎬
             </button>
-            <button onClick={onClose} className="w-11 h-11 rounded-full bg-gradient-to-b from-rose-400 to-rose-600 border-2 border-white text-white font-black shadow" aria-label="Cerrar">
+            <button onClick={onClose} className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-b from-rose-400 to-rose-600 border-2 border-white text-white font-black shadow flex items-center justify-center text-sm sm:text-base" aria-label="Cerrar">
               ✕
             </button>
           </div>

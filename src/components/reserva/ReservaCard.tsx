@@ -13,12 +13,12 @@ export default function ReservaCard({ progress, onClick }: { progress?: StudentP
       <button
         type="button"
         onClick={onClick}
-        className="w-full parchment-panel rounded-2xl p-3.5 flex items-center justify-between gap-3 border-2 border-emerald-400 bg-gradient-to-r from-emerald-100/90 via-amber-50 to-sky-100/90 shadow-md hover:brightness-105 active:scale-[0.99] transition text-left"
+        className="w-full parchment-panel rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-2.5 sm:gap-3 border-2 border-emerald-400 bg-gradient-to-r from-emerald-100/90 via-amber-50 to-sky-100/90 shadow-md hover:brightness-105 active:scale-[0.99] transition text-left"
       >
-        <span className="flex items-center gap-3 min-w-0">
-          <span className="text-3xl">🦙</span>
-          <span className="min-w-0">
-            <span className="block font-black text-amber-950 text-sm">Reserva y expedición patagónica · actividad especial</span>
+        <span className="flex-1 items-center gap-2.5 sm:gap-3 min-w-0 flex">
+          <span className="text-2xl sm:text-3xl shrink-0">🦙</span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-black text-amber-950 text-xs sm:text-sm">Reserva y expedición patagónica · actividad especial</span>
             <span className="block text-xs text-amber-900/80 leading-snug">
               {proxima
                 ? `Próxima parada: ${proxima.nivel === "departamento" ? "departamento" : "provincia de"} ${proxima.nombre}. Animales, plantas y lugares de la Patagonia.`
@@ -27,7 +27,9 @@ export default function ReservaCard({ progress, onClick }: { progress?: StudentP
             <span className="block text-[11px] font-bold text-amber-950/80 mt-0.5">⭐ Etapas: {hechas}/{ETAPAS.length}</span>
           </span>
         </span>
-        <span className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black text-xs px-3.5 py-2 shrink-0">🗺️ ¡Explorar!</span>
+        <span className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black text-xs px-2.5 sm:px-3.5 py-1.5 sm:py-2 shrink-0">
+          🗺️ <span className="hidden sm:inline">¡Explorar!</span>
+        </span>
       </button>
     </div>
   );

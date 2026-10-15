@@ -1,13 +1,53 @@
-import { chromium, Page, Locator } from "playwright";
+import { chromium, Page, Locator, ConsoleMessage } from "playwright";
 import path from "node:path";
 import fs from "node:fs";
 import { getProgress, saveProgress } from "../src/lib/data";
 import { GRADE4_WORLDS } from "../src/lib/grade4/worlds";
 import { METAS } from "../src/lib/coleccion/metasDatos";
+import { RoundInProgress } from "../src/types";
 
 const BASE_URL = "http://localhost:3000";
 const CAPTURAS_DIR = path.join(process.cwd(), "docs", "equipo", "capturas", "ag31");
 const ALL_META_IDS = METAS.map((m) => m.id);
+
+interface TestCard {
+  id: string;
+  label?: string;
+  big?: string;
+}
+
+interface TestItem {
+  id?: string;
+  label?: string;
+  text?: string;
+  order?: number;
+  categoryIndex?: number;
+}
+
+interface TestActivity {
+  type: string;
+  prompt?: string;
+  cards?: TestCard[];
+  answerIds?: string[];
+  isTrue?: boolean;
+  justification?: {
+    answerIndex: number;
+    choices: string[];
+  };
+  answer?: string | number;
+  items?: (string | TestItem)[];
+  correctOrder?: number[];
+  sequence?: Array<{ label: string }>;
+  pairs?: Array<{ left: string; right: string }>;
+  target?: number;
+  current?: number;
+  options?: number[];
+  fila?: number;
+  columna?: number;
+  modo?: string;
+  answerIndex?: number;
+  [key: string]: unknown;
+}
 
 export interface WorldResult {
   worldId: number;
@@ -46,8 +86,9 @@ async function dismissModalsIfNeeded(page: Page) {
 async function safeClick(page: Page, locator: Locator, timeout = 5000) {
   try {
     await locator.click({ timeout });
-  } catch (err: any) {
-    if (err.message.includes("intercepts pointer events") || err.message.includes("Timeout")) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    if (errorMsg.includes("intercepts pointer events") || errorMsg.includes("Timeout")) {
       await page.keyboard.press("Escape");
       await page.waitForTimeout(200);
       await dismissModalsIfNeeded(page);
@@ -71,7 +112,7 @@ export async function playOneWorld(
   const issues: string[] = [];
   const consoleErrors: string[] = [];
 
-  const onConsole = (msg: any) => {
+  const onConsole = (msg: ConsoleMessage) => {
     if (msg.type() === "error") {
       const text = msg.text();
       if (!text.includes("favicon") && !text.includes("audio") && !text.includes("404")) {
@@ -155,11 +196,14 @@ export async function playOneWorld(
     await page.locator(".parchment-panel, p.text-lg, p.text-xl, div.grid").first().waitFor({ state: "visible", timeout: 8000 });
 
     // 5. Leer ronda del servidor (con reintentos breves mientras la API guarda)
-    let round: any = null;
+    let round: (RoundInProgress & { activities: TestActivity[] }) | null = null;
     for (let attempt = 0; attempt < 12; attempt++) {
       const progAfter = await getProgress(studentCode);
-      round = progAfter.roundsInProgress?.[worldId];
-      if (round && round.activities?.length > 0) break;
+      const r = progAfter.roundsInProgress?.[worldId];
+      if (r && Array.isArray(r.activities) && r.activities.length > 0) {
+        round = r as RoundInProgress & { activities: TestActivity[] };
+        break;
+      }
       await page.waitForTimeout(300);
     }
     if (!round) {
@@ -237,10 +281,10 @@ export async function playOneWorld(
       if (act.type === "pick") {
         const cardBtns = page.locator("div.grid div.relative > button:first-child");
         if (deliberateError) {
-          const wrongIdx = act.cards.findIndex((c: any) => !act.answerIds.includes(c.id));
+          const wrongIdx = (act.cards ?? []).findIndex((c) => !(act.answerIds ?? []).includes(c.id));
           await cardBtns.nth(wrongIdx >= 0 ? wrongIdx : 1).click();
         } else {
-          const correctIdx = act.cards.findIndex((c: any) => act.answerIds.includes(c.id));
+          const correctIdx = (act.cards ?? []).findIndex((c) => (act.answerIds ?? []).includes(c.id));
           await cardBtns.nth(correctIdx >= 0 ? correctIdx : 0).click();
         }
       } else if (act.type === "true-false") {
@@ -262,16 +306,17 @@ export async function playOneWorld(
         await page.click('button:has-text("Responder")');
       } else if (act.type === "order") {
         if (deliberateError) {
-          const count = act.items.length;
+          const count = act.items?.length ?? 0;
           for (let s = 0; s < count; s++) {
             const btns = page.locator("div.grid.grid-cols-3 button:not([disabled])");
             await btns.last().click();
             await page.waitForTimeout(100);
           }
         } else {
-          for (const orderIdx of act.correctOrder) {
-            const targetItem = act.items[orderIdx];
-            const btn = page.locator("div.grid.grid-cols-3 button:not([disabled])", { hasText: targetItem }).first();
+          for (const orderIdx of act.correctOrder ?? []) {
+            const targetItem = act.items?.[orderIdx];
+            const itemText = typeof targetItem === "string" ? targetItem : (targetItem?.text ?? targetItem?.label ?? "");
+            const btn = page.locator("div.grid.grid-cols-3 button:not([disabled])", { hasText: itemText }).first();
             await btn.click();
             await page.waitForTimeout(100);
           }
@@ -279,37 +324,41 @@ export async function playOneWorld(
       } else if (act.type === "classify") {
         const itemBtns = page.locator("div.flex.flex-wrap.gap-2.justify-center button");
         const catBtns = page.locator("div.grid.grid-cols-2 button");
+        const itemsList = act.items ?? [];
         if (deliberateError) {
-          for (let i = 0; i < act.items.length; i++) {
+          for (let i = 0; i < itemsList.length; i++) {
             await itemBtns.nth(i).click();
             await page.waitForTimeout(80);
             await catBtns.first().click();
             await page.waitForTimeout(80);
           }
         } else {
-          for (let i = 0; i < act.items.length; i++) {
-            const it = act.items[i];
+          for (let i = 0; i < itemsList.length; i++) {
+            const it = itemsList[i];
+            const catIdx = typeof it === "object" && it !== null && "categoryIndex" in it && typeof it.categoryIndex === "number" ? it.categoryIndex : 0;
             await itemBtns.nth(i).click();
             await page.waitForTimeout(80);
-            await catBtns.nth(it.categoryIndex).click();
+            await catBtns.nth(catIdx).click();
             await page.waitForTimeout(80);
           }
         }
         await page.click('button:has-text("Listo")');
       } else if (act.type === "pitagorica") {
         const gridBtns = page.locator('div[role="grid"] button');
+        const fila = act.fila ?? 0;
+        const columna = act.columna ?? 0;
         if (deliberateError) {
-          const wrongBtnIdx = (act.fila + 1) * 12 + (((act.columna + 2) % 10) + 1);
+          const wrongBtnIdx = (fila + 1) * 12 + (((columna + 2) % 10) + 1);
           await gridBtns.nth(wrongBtnIdx).click();
         } else {
           if (act.modo === "cruce") {
-            const btnIdx = (act.fila + 1) * 12 + (act.columna + 1);
+            const btnIdx = (fila + 1) * 12 + (columna + 1);
             await gridBtns.nth(btnIdx).click();
           } else {
-            const btnIdx = (act.columna + 1) * 12 + (act.fila + 1);
+            const btnIdx = (columna + 1) * 12 + (fila + 1);
             await gridBtns.nth(btnIdx).click();
             await page.waitForTimeout(300);
-            const rowHeaderIdx = (act.columna + 1) * 12 + 0;
+            const rowHeaderIdx = (columna + 1) * 12 + 0;
             await gridBtns.nth(rowHeaderIdx).click();
           }
         }
@@ -402,7 +451,7 @@ async function main() {
 
   const resStudents = await page.request.get(`${BASE_URL}/api/students?adminPassword=docente2026`);
   const { students } = await resStudents.json();
-  const testStudent = students.find((s: any) => s.grade === 4 && s.name.includes("Prueba"));
+  const testStudent = students.find((s: { grade: number; name: string; code: string }) => s.grade === 4 && s.name.includes("Prueba"));
   if (!testStudent) throw new Error("No se encontró alumno de prueba de 4.º");
 
   const runMobile = !subjectArg || subjectArg === "all";
@@ -427,7 +476,7 @@ async function main() {
     if (mobileAlreadyDone && fs.existsSync(reportPath)) {
       try {
         const prev = JSON.parse(fs.readFileSync(reportPath, "utf-8"));
-        if (prev.mobilePlayed?.length === 4 && prev.mobilePlayed.every((r: any) => r.status === "OK")) {
+        if (prev.mobilePlayed?.length === 4 && prev.mobilePlayed.every((r: { status: string }) => r.status === "OK")) {
           mobileResults.push(...prev.mobilePlayed);
           console.log(`📱 Los 4 mundos en celular ya fueron jugados y capturados con éxito.`);
         }
@@ -444,9 +493,10 @@ async function main() {
           const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
           console.log(`  -> Celular Mundo ${mw.worldId}: ✅ ${res.status} (${elapsed}s)`);
           mobileResults.push(res);
-        } catch (err: any) {
+        } catch (err: unknown) {
+          const errMsg = err instanceof Error ? err.message : String(err);
           const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-          console.error(`  -> Celular Mundo ${mw.worldId}: ❌ ERROR (${elapsed}s): ${err.message}`);
+          console.error(`  -> Celular Mundo ${mw.worldId}: ❌ ERROR (${elapsed}s): ${errMsg}`);
           const shot = `problema-celular-${mw.worldId}.png`;
           try {
             await page.screenshot({ path: path.join(CAPTURAS_DIR, shot) });
@@ -458,15 +508,15 @@ async function main() {
             mode: "celular",
             status: "ERROR",
             activitiesCount: 0,
-            issues: [err.message],
-            error: err.message,
+            issues: [errMsg],
+            error: errMsg,
             screenshot: shot,
           });
           problems.push({
             worldId: mw.worldId,
             worldName: worldDef.name,
             screen: "celu",
-            issue: err.message,
+            issue: errMsg,
             screenshot: shot,
             fixedOrClaude: "Para Claude",
           });
@@ -515,9 +565,10 @@ async function main() {
       console.log(`[${count}/${worldsToRun.length}] Mundo ${world.id} (${world.subject}) "${world.name}": ✅ ${res.status} (${elapsed}s, ${res.activitiesCount} acts)`);
       desktopResults.push(res);
       alreadyOkMap.set(world.id, res);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
       const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-      console.error(`[${count}/${worldsToRun.length}] Mundo ${world.id} (${world.subject}) "${world.name}": ❌ ERROR (${elapsed}s): ${err.message}`);
+      console.error(`[${count}/${worldsToRun.length}] Mundo ${world.id} (${world.subject}) "${world.name}": ❌ ERROR (${elapsed}s): ${errMsg}`);
       const shot = `problema-${world.id}.png`;
       try {
         await page.screenshot({ path: path.join(CAPTURAS_DIR, shot) });
@@ -529,15 +580,15 @@ async function main() {
         mode: "desktop",
         status: "ERROR",
         activitiesCount: 0,
-        issues: [err.message],
-        error: err.message,
+        issues: [errMsg],
+        error: errMsg,
         screenshot: shot,
       });
       problems.push({
         worldId: world.id,
         worldName: world.name,
         screen: "compu",
-        issue: err.message,
+        issue: errMsg,
         screenshot: shot,
         fixedOrClaude: "Para Claude",
       });

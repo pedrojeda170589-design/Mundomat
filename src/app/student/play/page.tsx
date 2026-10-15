@@ -524,7 +524,7 @@ export default function StudentPlayPage() {
           </button>
           <button
             onClick={() => setShopOpen(true)}
-            className="relative rounded-full hover:brightness-110 active:scale-95 transition"
+            className={`relative rounded-full hover:brightness-110 active:scale-95 transition ${oferta ? "mb-2 sm:mb-0" : ""}`}
             title="Tienda: gastá tus monedas en avatares y objetos"
           >
             <CoinBadge coins={progress.coins} />
@@ -544,14 +544,15 @@ export default function StudentPlayPage() {
           </button>
 
           <div
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 border bg-black/15 text-sm font-bold"
+            className="flex items-center gap-1.5 rounded-full px-2.5 sm:px-3 py-1 sm:py-1.5 border bg-black/15 text-xs sm:text-sm font-bold shrink-0"
             style={{
               borderColor: medalInfo.color,
               color: medalInfo.color,
             }}
+            title={medalInfo.label}
           >
             <span>{medalInfo.emoji}</span>
-            {medalInfo.label}
+            <span className="hidden sm:inline">{medalInfo.label}</span>
           </div>
         </div>
       </div>
