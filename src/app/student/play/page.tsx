@@ -1,6 +1,6 @@
 "use client";
 
-import { DESAFIOS, gradoPermitido, usarEventosConfig } from "@/lib/eventos/config";
+import { DESAFIOS, gradoPermitido, informeAlumnoActivo, usarEventosConfig } from "@/lib/eventos/config";
 import HeroFondo from "@/components/HeroFondo";
 
 import { useCallback, useEffect, useState, useRef } from "react";
@@ -100,6 +100,52 @@ export default function StudentPlayPage() {
   const [trialReport, setTrialReport] = useState<TrialReport | null>(null);
   const [trialExpired, setTrialExpired] = useState(false);
   const [showEarlyRating, setShowEarlyRating] = useState(false);
+
+  // Modal para descargar el informe en PDF
+  const [modalInformeOpen, setModalInformeOpen] = useState(false);
+  const [periodoInforme, setPeriodoInforme] = useState<"mes" | "trimestre" | "ano">("mes");
+  const [descargandoInforme, setDescargandoInforme] = useState(false);
+  const [errorInforme, setErrorInforme] = useState<string | null>(null);
+
+  async function handleDescargarInformeAlumno() {
+    if (!code) return;
+    setDescargandoInforme(true);
+    setErrorInforme(null);
+    try {
+      const res = await fetch(
+        `/api/informe-alumno?code=${encodeURIComponent(code)}&periodo=${periodoInforme}`
+      );
+      if (!res.ok) {
+        if (res.status === 403) {
+          const data = await res.json().catch(() => ({}));
+          setErrorInforme(data.error || "Tu docente todavía no habilitó el informe.");
+        } else {
+          setErrorInforme("No se pudo descargar el informe. Probá de nuevo.");
+        }
+        return;
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("content-disposition");
+      let filename = `informe-${periodoInforme}.pdf`;
+      if (disposition) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match && match[1]) filename = match[1];
+      }
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      setModalInformeOpen(false);
+    } catch {
+      setErrorInforme("No se pudo conectar con el servidor. Revisá tu conexión a internet.");
+    } finally {
+      setDescargandoInforme(false);
+    }
+  }
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
@@ -417,6 +463,19 @@ export default function StudentPlayPage() {
             </span>
           </span>
         </button>
+        {informeAlumnoActivo(grade) && (
+          <button
+            onClick={() => {
+              setErrorInforme(null);
+              setModalInformeOpen(true);
+            }}
+            className="shrink-0 flex items-center gap-1.5 rounded-full border-2 border-emerald-300/80 bg-emerald-700/80 hover:bg-emerald-600 text-emerald-100 px-3 py-1 text-xs font-bold shadow transition active:scale-95 cursor-pointer"
+            title="Descargar mi informe en PDF"
+          >
+            <span>📄</span>
+            <span>Descargar mi informe</span>
+          </button>
+        )}
         <div className="flex items-center gap-3">
           {!!weekend?.streak && (
             <div
@@ -499,6 +558,97 @@ export default function StudentPlayPage() {
 
       {caminoOpen && <CaminoRacha progress={progress} grade={grade} onClose={() => setCaminoOpen(false)} />}
       {metasOpen && <MetasEspeciales progress={progress} onClose={() => setMetasOpen(false)} />}
+
+      {modalInformeOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl border border-slate-200 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">📄</span>
+                <h3 className="text-base font-black text-slate-900">
+                  Descargar mi informe
+                </h3>
+              </div>
+              <button
+                onClick={() => setModalInformeOpen(false)}
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold p-1 leading-none cursor-pointer"
+                disabled={descargandoInforme}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
+              Elegí qué período querés que figure en tu informe en PDF:
+            </p>
+
+            <div className="space-y-2 mb-4">
+              {[
+                { id: "mes" as const, label: "Último mes", desc: "Tus actividades de los últimos 30 días" },
+                { id: "trimestre" as const, label: "Último trimestre", desc: "Tus avances de los últimos 90 días" },
+                { id: "ano" as const, label: "Todo el año", desc: "Todo tu recorrido del ciclo lectivo" },
+              ].map((opt) => (
+                <label
+                  key={opt.id}
+                  onClick={() => setPeriodoInforme(opt.id)}
+                  className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
+                    periodoInforme === opt.id
+                      ? "border-indigo-600 bg-indigo-50/70"
+                      : "border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="periodoInforme"
+                    checked={periodoInforme === opt.id}
+                    onChange={() => setPeriodoInforme(opt.id)}
+                    className="mt-0.5 accent-indigo-600 cursor-pointer"
+                  />
+                  <div>
+                    <span className="block text-xs font-bold text-slate-900">
+                      {opt.label}
+                    </span>
+                    <span className="block text-[11px] text-slate-500">
+                      {opt.desc}
+                    </span>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            {errorInforme && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-start gap-2">
+                <span>⚠️</span>
+                <span>{errorInforme}</span>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => setModalInformeOpen(false)}
+                disabled={descargandoInforme}
+                className="flex-1 py-2 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => handleDescargarInformeAlumno()}
+                disabled={descargandoInforme}
+                className="flex-1 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow transition cursor-pointer disabled:opacity-75 flex items-center justify-center gap-1.5"
+              >
+                {descargandoInforme ? (
+                  <>
+                    <span className="inline-block animate-spin text-sm">⏳</span>
+                    <span>Preparando tu informe…</span>
+                  </>
+                ) : (
+                  <span>Descargar PDF</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {code && <MetaNueva code={code} progress={progress} />}
       {vestidorOpen && (
         <Vestidor

@@ -1,6 +1,6 @@
 # AG-33 · «Descargar mi informe»: cada alumno baja su propio informe en PDF, con sus tablas
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🔴 PENDIENTE · **Prioridad:** la pidió Pedro. Hacela **antes que AG-32**. Si ya empezaste AG-32, hacé un commit de lo que tengas y seguí con esta.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** ✅ LISTA PARA REVISAR · **Prioridad:** la pidió Pedro. Hacela **antes que AG-32**. Si ya empezaste AG-32, hacé un commit de lo que tengas y seguí con esta.
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
 
@@ -124,4 +124,89 @@ Una función pura, `tablasDelAlumno(progress)`, que clasifica las tablas del 2 a
 - **Celular:** baja el PDF desde 375 px y revisa que se descargue un archivo con el nombre correcto.
 
 ## Informe
-_(lo completa Antigravity)_
+
+### Qué se hizo
+
+1. **Parte A · Las tablas y consejos (`src/lib/informeAlumno/tablas.ts`, `consejosTablas.ts`):**
+   - Se exportaron `medir` y `Medida` en `src/lib/torneo/prioridades.ts` para no duplicar lógica.
+   - Se implementó `tablasDelAlumno(progress)` clasificando las tablas del 2 al 10 en los 4 grupos requeridos («con facilidad», «en camino», «le cuesta», «sin practicar»), respetando el criterio de menos de 2 partidas para tablas con buen tiempo (pasan a «en camino (pocas partidas)»).
+   - En `consejosTablas.ts` se escribieron a mano consejos pedagógicos específicos para cada tabla (2 a 10) para el apoyo familiar en casa.
+
+2. **Parte B · Informe en PDF (`src/lib/informeAlumno/pdf.ts`):**
+   - Se separaron los datos (`armarInformeAlumno`) del dibujo (`pdfDelInforme`).
+   - Se instalaron `pdf-lib` y `@pdf-lib/fontkit` en `dependencies` con `package-lock.json` actualizado.
+   - Se copió la fuente Fredoka a `private/fuentes/Fredoka.ttf` para los títulos y se utilizó Helvetica para el cuerpo.
+   - Se estructuró en hoja A4:
+     - 1 página si no hay tablas (como en 1.º grado) o si no hay datos de tablas.
+     - 2 páginas si incluye la sección de tablas con su grilla visual del 2 al 10 en colores, detalles y consejos.
+   - Se garantizó que **no figure el código del alumno en ningún texto del objeto ni del PDF**, ni nombres de otros compañeros, ni comparaciones, ni cantidad de mundos que faltan, ni emojis rotos (se usan viñetas y formas vectoriales).
+
+3. **Parte C · Descarga segura en el servidor (`src/app/api/informe-alumno/route.ts`):**
+   - `GET /api/informe-alumno?code=...&periodo=mes|trimestre|ano`:
+     - Rate limiting estricto con `checkCodeRateLimit`, `recordFailedCodeAttempt` y `recordSuccessfulCodeAttempt`.
+     - Si el código no existe: 404 (cuenta como intento fallido).
+     - Si la prueba está vencida: 403.
+     - Si el interruptor está apagado para el grado del alumno: 403 («Tu docente todavía no habilitó el informe»).
+     - Cabecera `x-admin-password` para que el docente pueda descargar el informe de cualquier alumno aún con el interruptor apagado.
+     - Encabezados: `Content-Type: application/pdf`, `Content-Disposition: attachment; filename="informe-<nombre-sin-tildes>-<AAAA-MM-DD>.pdf"`, `Cache-Control: no-store`.
+
+4. **Parte D · Interruptor y botones:**
+   - Interruptor: `informeAlumno: { id: "informe-alumno", grados: [1, 2, 3, 4, 5, 6, 7] }` agregado a `DESAFIOS` en `src/lib/eventos/config.ts` con regla automática `() => false`. Fila agregada a `DESAFIOS_CATALOGO` en `src/lib/eventos/catalogo.ts`.
+   - Botón del alumno: en el panel superior del mapa (`src/app/student/play/page.tsx`), visible solo si `informeAlumnoActivo(grade)` está encendido. Abre cartelito para elegir «Último mes», «Último trimestre» o «Todo el año», muestra «Preparando tu informe…» durante la descarga y usa `fetch` + `Blob` + `download`.
+   - Botón del docente: en `src/app/admin/reporte/alumno/page.tsx`, botón «📄 Descargar PDF» con `x-admin-password` que descarga el mismo archivo con el período seleccionado.
+
+5. **Parte E · Pruebas y capturas:**
+   - `scripts/test-informe-alumno.ts` cubriendo todas las reglas de clasificación, validación de ausencia de código/otros alumnos/mundos restantes, estructura de 1 o 2 páginas del PDF, e integración con la ruta (403 apagado, 200 prendido, 404 inventado, 429 rate limit).
+   - Capturas en `docs/equipo/capturas/ag33/` de la UI en celular y computadora, el interruptor en el panel y las páginas de los PDFs convertidas a PNG.
+
+### Salida de las pruebas
+
+```text
+=== AG-33: PRUEBAS DEL INFORME DEL ALUMNO EN PDF ===
+
+1. Clasificación de tablas:
+  ✓ Sin datos → todavía no la jugó
+  ✓ Sin errores y rápido (2 partidas) → con facilidad
+  ✓ 1 sola partida perfecta → en camino (pocas partidas)
+  ✓ Sin errores y lento → en camino
+  ✓ Con 2 errores por partida → le cuesta y tiene consejo
+  ✓ Solo datos viejos de tablasTorneo → se usan correctamente
+
+2. armarInformeAlumno:
+  ✓ El objeto NO contiene el código del alumno en ningún texto
+  ✓ No contiene nombres de otros alumnos
+  ✓ No dice cuántos mundos faltan
+  ✓ Alumno de 1.º sin datos de tablas no tiene sección «Mis tablas»
+  ✓ Alumno de 3.º tiene la sección de tablas
+
+3. pdfDelInforme:
+  ✓ Los bytes empiezan con %PDF
+  ✓ Carga correctamente con PDFDocument.load (2 páginas)
+  ✓ Alumno de 1.º genera exactamente 1 página
+
+4. Ruta API /api/informe-alumno:
+  ✓ Interruptor apagado → 403 «Tu docente todavía no habilitó el informe»
+  ✓ Interruptor prendido → 200 y Content-Type application/pdf
+  ✓ Código inventado → 404
+  ... Enviando 19 intentos fallidos adicionales ...
+  ✓ Más de 20 códigos inventados seguidos → 429 (Rate Limit)
+
+✅ Todas las pruebas de AG-33 pasaron con éxito.
+```
+
+### Rutas de las capturas (`docs/equipo/capturas/ag33/`)
+
+- `docs/equipo/capturas/ag33/boton-celular-375px.png` (botón en mapa móvil)
+- `docs/equipo/capturas/ag33/cartelito-celular-375px.png` (cartelito de selección de período en celular)
+- `docs/equipo/capturas/ag33/boton-computadora.png` (botón en mapa escritorio)
+- `docs/equipo/capturas/ag33/cartelito-computadora.png` (cartelito de selección de período en computadora)
+- `docs/equipo/capturas/ag33/interruptor-panel.png` (fila del interruptor en el panel de Desafíos y eventos)
+- `docs/equipo/capturas/ag33/alumno-3ro-variado-pag1.png` (PDF pág. 1 alumno de 3.º con tablas variadas)
+- `docs/equipo/capturas/ag33/alumno-3ro-variado-pag2.png` (PDF pág. 2 alumno de 3.º con evolución y recomendaciones)
+- `docs/equipo/capturas/ag33/alumno-1ro-pag1.png` (PDF pág. 1 alumno de 1.º sin tablas)
+- `docs/equipo/capturas/ag33/alumno-sin-actividad-pag1.png` (PDF pág. 1 alumno nuevo sin actividad)
+- `docs/equipo/capturas/ag33/alumno-sin-actividad-pag2.png` (PDF pág. 2 alumno nuevo sin actividad)
+
+### Todo lo que no se pudo hacer
+
+Se completaron todas las partes solicitadas (A a E) sin excepciones ni bloqueos. Las páginas PNG fueron inspeccionadas visualmente con la herramienta de visualización comprobando alineación, tipografía Fredoka, acentos y diagramación.

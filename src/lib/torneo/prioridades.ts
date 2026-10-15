@@ -54,7 +54,7 @@ export interface PrioridadTabla {
   puntaje: number;
 }
 
-interface Medida {
+export interface Medida {
   partidas: number;
   errores: number; // por partida
   segundos?: number; // sin penalidad
@@ -63,7 +63,7 @@ interface Medida {
 
 // Lo que se sabe de cada tabla: las últimas partidas; si es un alumno que
 // jugó antes de guardar las partidas, los mejores de cada semana.
-function medir(p: StudentProgress, tabla: number): Medida | null {
+export function medir(p: StudentProgress, tabla: number): Medida | null {
   const oro = getMetaTabla(tabla).oroSegundos;
   const ult = p.tablasStats?.[tabla]?.ultimas ?? [];
   let lista: { ms: number; errores: number }[] = ult;
