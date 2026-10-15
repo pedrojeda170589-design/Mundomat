@@ -1,8 +1,31 @@
 # AG-32 · Toda la plataforma en celular: detector de cosas cortadas y revisión con los ojos
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🔴 PENDIENTE (después de AG-33).
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🔴 PENDIENTE · **es la próxima** (AG-33 ya está unida a main).
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
+
+## Revisión de AG-33 (unida a main, con arreglos de Claude en CL-47)
+**Muy bien:**
+- la clasificación de tablas es correcta (Claude la comparó tabla por tabla con 9 casos armados a mano: 0 diferencias);
+- el código del alumno no aparece en el PDF;
+- el servidor respeta el interruptor;
+- el docente baja el mismo archivo;
+- los consejos de tablas están escritos a mano.
+
+**Lo que se escapó (lo arregló Claude):**
+1. **Rompía la publicación.** `scripts/probar-un-mundo.ts` (de AG-31) tenía 28 errores de TypeScript, y `next build` revisa también `scripts/`, así que **Vercel no podía publicar main**. Claude lo arregló. Desde ahora, **antes de cada commit**:
+   - `npx tsc --noEmit -p .` → 0 errores;
+   - `npx eslint` sobre los archivos que tocaste → 0 errores;
+   - `npm run build` → termina bien.
+
+   Pegá la salida de las tres cosas en el informe.
+2. **El PDF se caía con algunos nombres.** Helvetica no tiene «Ł», «ř» ni otras letras: con «Łukasz» o «Dvořák» la ruta daba error 500. Ahora esas letras pasan a su forma sin tilde (Ł → L, ř → r).
+3. **Barra del mapa en celular.** El botón largo «Descargar mi informe» empujaba las monedas fuera de la barra (se ve en tu propia captura `boton-celular-375px.png`). Ahora es un botón 📄 como 🎯 y 👕, con texto solo en pantallas grandes, y los íconos bajan de renglón si no entran.
+4. **Detalles del PDF:**
+   - «..» doble cuando el contenido del currículo terminaba en punto. Estaba en `familyReport.ts`, así que también se veía en el informe del panel;
+   - «3.° grado» con el signo de grados, en vez de «3.º»;
+   - el nombre de la plataforma: es **MundoTest26** (en la tarea Claude había escrito «MundoMat» por error).
+5. **La prueba podía tocar la base de verdad.** `test-informe-alumno.ts` cambia el interruptor y usa un alumno real. Ahora se niega a correr si hay `KV_REST_API_URL` y borra lo que deja en la base local.
 
 ## Revisión de AG-31 (unida a main)
 **Bien:** esta vez jugaste los 108 mundos en el navegador, con informe y capturas. Los scripts `probar-*.ts` y `playwright` en devDependencies quedan.
@@ -22,8 +45,9 @@ Una función que se corre dentro de la página con Playwright (`page.evaluate`) 
 4. **Elementos pisados:** dos botones o textos visibles de la misma barra cuyos rectángulos se superponen. Ejemplo: «Salir» y el nombre del mundo.
 5. **Botón chico para un dedo:** un botón visible de menos de 40 × 40 px.
 6. **Letra muy chica:** texto visible de menos de 12 px.
+7. **Fuera de su panel:** un botón o texto que se sale del rectángulo de su barra o tarjeta, aunque la página no tenga desborde. Ejemplo: las monedas que quedaban fuera de la barra de madera del mapa.
 
-**Prueba de que el detector sirve (obligatoria):** corrélo sobre el commit `856c04e`, que es main antes de CL-46. **Tiene que marcar** los dos problemas de arriba en 43001 y 44001. Después corrélo sobre main actual: esos dos tienen que desaparecer. Poné en el informe la salida de las dos corridas.
+**Prueba de que el detector sirve (obligatoria):** corrélo sobre el commit `856c04e`, que es main antes de CL-46. **Tiene que marcar** los dos problemas de arriba en 43001 y 44001. Después corrélo sobre main actual: esos dos tienen que desaparecer. Poné en el informe la salida de las dos corridas. Además, corrélo sobre `81f1678` (tu AG-33 antes de los arreglos), en el mapa a 375 px: **tiene que marcar** las monedas fuera de la barra.
 
 ## Parte B · Recorrido en celular (375 × 812) y en celular chico (320 × 640)
 Pasá el detector y sacá captura en cada pantalla:
@@ -58,7 +82,8 @@ Para que el recorrido no dependa de la suerte, buscá a propósito los textos m�
    - la tabla de problemas encontrados (pantalla, tamaño, tipo, captura, arreglado sí/no);
    - la salida del detector sobre `856c04e` y sobre tu rama final, que en la final tiene que dar **0 problemas** o cada uno explicado;
    - la lista «Para Claude / Pedro».
-4. Commit en `antigravity` y fila de AG-32 en `TAREAS.md` con «✅ LISTA PARA REVISAR».
+4. **Antes del commit:** `npx tsc --noEmit -p .`, `npx eslint` sobre lo que tocaste y `npm run build`, los tres sin errores, con la salida en el informe. Los scripts tuyos que ya están en main también tienen que quedar sin errores de eslint: `scripts/probar-*.ts`, `scripts/capturar-*.ts` y `scripts/generar-capturas.ts`, que hoy suman 10.
+5. Commit en `antigravity` y fila de AG-32 en `TAREAS.md` con «✅ LISTA PARA REVISAR».
 
 ## Cómo lo va a revisar Claude
 - Corre tu detector sobre `856c04e`: si no marca los dos problemas de CL-46, la tarea vuelve.

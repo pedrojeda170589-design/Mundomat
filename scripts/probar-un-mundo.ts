@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- script de prueba con Playwright: lee campos de cualquier tipo de actividad */
 import { chromium } from "playwright";
 import path from "node:path";
 import fs from "node:fs";
@@ -51,7 +52,7 @@ async function main() {
   console.log(`✅ Ronda obtenida con ${activities.length} actividades.`);
 
   for (let idx = 0; idx < activities.length; idx++) {
-    const currentAct = activities[idx];
+    const currentAct = activities[idx] as any;
     console.log(`\n--- Actividad ${idx + 1} de ${activities.length} (${currentAct.type}) ---`);
     await page.waitForTimeout(600);
 

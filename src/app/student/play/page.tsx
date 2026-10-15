@@ -463,20 +463,7 @@ export default function StudentPlayPage() {
             </span>
           </span>
         </button>
-        {informeAlumnoActivo(grade) && (
-          <button
-            onClick={() => {
-              setErrorInforme(null);
-              setModalInformeOpen(true);
-            }}
-            className="shrink-0 flex items-center gap-1.5 rounded-full border-2 border-emerald-300/80 bg-emerald-700/80 hover:bg-emerald-600 text-emerald-100 px-3 py-1 text-xs font-bold shadow transition active:scale-95 cursor-pointer"
-            title="Descargar mi informe en PDF"
-          >
-            <span>📄</span>
-            <span>Descargar mi informe</span>
-          </button>
-        )}
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-2 sm:gap-3">
           {!!weekend?.streak && (
             <div
               className="flex items-center gap-1 rounded-full px-3 py-1.5 border border-amber-300/60 bg-black/15 text-amber-200 text-sm font-bold"
@@ -506,6 +493,19 @@ export default function StudentPlayPage() {
           >
             🔥 {racha.racha}
           </button>
+          {informeAlumnoActivo(grade) && (
+            <button
+              onClick={() => {
+                setErrorInforme(null);
+                setModalInformeOpen(true);
+              }}
+              className="shrink-0 whitespace-nowrap rounded-full border-2 border-emerald-300/80 bg-emerald-700/80 px-2 py-0.5 text-xs font-black text-emerald-50 shadow active:scale-95"
+              title="Descargar mi informe en PDF"
+              aria-label="Descargar mi informe"
+            >
+              📄<span className="hidden sm:inline"> Mi informe</span>
+            </button>
+          )}
           <button
             onClick={() => setMetasOpen(true)}
             className="shrink-0 rounded-full border-2 border-amber-300/70 bg-black/20 px-2 py-0.5 text-xs font-black text-amber-100 shadow active:scale-95"

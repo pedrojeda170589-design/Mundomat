@@ -115,14 +115,14 @@ export function armarInformeAlumno(
 
   const schoolName = escuela || undefined;
   const pie = schoolName
-    ? `Informe generado por MundoMat · Escuela ${schoolName}`
-    : "Informe generado por MundoMat";
+    ? `Informe generado por MundoTest26 · Escuela ${schoolName}`
+    : "Informe generado por MundoTest26";
 
   return {
-    titulo: "Mi informe de MundoMat",
+    titulo: "Mi informe de MundoTest26",
     alumnoNombre: student.name,
     grado: grade,
-    gradoTexto: `${grade}.° grado`,
+    gradoTexto: `${grade}.º grado`,
     periodo,
     periodoTexto: familyData.periodLabel,
     fechaEmision: familyData.generatedDate,
@@ -152,7 +152,7 @@ export function armarInformeAlumno(
   };
 }
 
-// Colores del informe (paleta MundoMat)
+// Colores del informe
 const PRIMARY = rgb(0.25, 0.28, 0.68); // #3f47ad
 const TEXT_DARK = rgb(0.12, 0.16, 0.22); // #1f2937
 const TEXT_MUTED = rgb(0.42, 0.46, 0.53); // #6b7280
@@ -194,10 +194,23 @@ const GRUPO_COLORES: Record<
 /**
  * Limpia emojis y caracteres no imprimibles para evitar errores de renderizado.
  */
+// Helvetica (WinAnsi) solo tiene Latin-1 y unos pocos signos más: con un
+// nombre como «Łukasz» o «Dvořák» pdf-lib tiraba error y no salía el informe.
+// Lo que no entra se pasa a la letra sin tilde (ř → r, Ł → L) o se quita.
+const WINANSI_EXTRA = new Set("€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ");
+const SIN_DESCOMPONER: Record<string, string> = { Ł: "L", ł: "l", Đ: "D", đ: "d", Ħ: "H", ħ: "h", ı: "i" };
 function sanitizeText(str: string): string {
-  return str
-    .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "")
-    .replace(/[^\x00-\xFF\u0100-\u017F\u2010-\u2027\u2030-\u205E]/g, "");
+  let out = "";
+  for (const ch of str) {
+    const c = ch.codePointAt(0) ?? 0;
+    if ((c >= 0x20 && c <= 0x7e) || (c >= 0xa0 && c <= 0xff) || WINANSI_EXTRA.has(ch) || ch === "\n") {
+      out += ch;
+      continue;
+    }
+    const base = SIN_DESCOMPONER[ch] ?? ch.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if ([...base].every((b) => (b.codePointAt(0) ?? 0) >= 0x20 && (b.codePointAt(0) ?? 0) <= 0x7e)) out += base;
+  }
+  return out;
 }
 
 /**
@@ -315,7 +328,7 @@ export async function pdfDelInforme(informe: InformeAlumno): Promise<Uint8Array>
 
   // --- 1. ENCABEZADO ---
   // Franja superior con marca
-  page.drawText("Mundomat", {
+  page.drawText("MundoTest26", {
     x: MARGIN_LEFT,
     y,
     size: 14,
@@ -324,7 +337,7 @@ export async function pdfDelInforme(informe: InformeAlumno): Promise<Uint8Array>
   });
   const subMarca = "Informe Pedagógico Escolar";
   page.drawText(subMarca, {
-    x: MARGIN_LEFT + 75,
+    x: MARGIN_LEFT + fontTitle.widthOfTextAtSize("MundoTest26", 14) + 10,
     y: y + 1,
     size: 8.5,
     font: fontBold,
@@ -655,7 +668,7 @@ export async function pdfDelInforme(informe: InformeAlumno): Promise<Uint8Array>
     y = PAGE_HEIGHT - 38;
 
     // Encabezado compacto página 2
-    page.drawText("Mundomat", {
+    page.drawText("MundoTest26", {
       x: MARGIN_LEFT,
       y,
       size: 12,
@@ -664,7 +677,7 @@ export async function pdfDelInforme(informe: InformeAlumno): Promise<Uint8Array>
     });
     const subTit = `Mi informe · ${informe.alumnoNombre} (${informe.gradoTexto})`;
     page.drawText(sanitizeText(subTit), {
-      x: MARGIN_LEFT + 70,
+      x: MARGIN_LEFT + fontTitle.widthOfTextAtSize("MundoTest26", 12) + 10,
       y: y + 1,
       size: 8.5,
       font: fontBold,

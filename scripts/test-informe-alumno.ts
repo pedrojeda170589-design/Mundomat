@@ -10,7 +10,7 @@ import { armarInformeAlumno, pdfDelInforme } from "@/lib/informeAlumno/pdf";
 import { GET } from "@/app/api/informe-alumno/route";
 import { guardarEventosConfig, leerEventosConfig } from "@/lib/eventos/server";
 import { sumarPartida } from "@/lib/torneo/prioridades";
-import { getMetaTabla, PENALIDAD_ERROR_MS } from "@/lib/torneo/tiempos";
+import { PENALIDAD_ERROR_MS } from "@/lib/torneo/tiempos";
 import { getStudents } from "@/lib/data";
 import { MAX_FAILED_ATTEMPTS } from "@/lib/rateLimit";
 import { delKey } from "@/lib/store";
@@ -51,6 +51,13 @@ function containsString(obj: unknown, target: string): boolean {
 }
 
 async function run() {
+  // La parte 4 cambia el interruptor y usa un alumno de la base: solo se corre
+  // contra la base local (.data/db.json), nunca contra la base de verdad.
+  if (process.env.KV_REST_API_URL || process.env.KV_REST_API_TOKEN) {
+    console.error("❌ Hay KV_REST_API_URL/KV_REST_API_TOKEN: esta prueba solo se corre con la base local.");
+    process.exit(1);
+  }
+
   console.log("=== AG-33: PRUEBAS DEL INFORME DEL ALUMNO EN PDF ===");
 
   // --------------------------------------------------------------------------
@@ -295,6 +302,8 @@ async function run() {
     // Limpieza de rate limit de prueba
     await delKey(`rate_limit:code:${ipPrueba}`);
   } finally {
+    await delKey("rate_limit:code:192.168.1.101");
+    await delKey("rate_limit:code:192.168.1.222");
     // Restaurar configuración original de eventos
     await guardarEventosConfig(configOriginal);
   }

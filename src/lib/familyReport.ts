@@ -46,6 +46,10 @@ export interface FamilyReportData {
   hasActivityInPeriod: boolean;
 }
 
+// Los contenidos del currículo terminan con punto: al meterlos dentro de una
+// oración quedaba «…1.500.. Resuelve…».
+const sinPuntoFinal = (t: string) => t.trim().replace(/[.\s]+$/, "");
+
 export function computeFamilyReportData(
   student: Student,
   progress: StudentProgress,
@@ -187,7 +191,7 @@ export function computeFamilyReportData(
     const curr = curriculumEntries[String(worldId)];
     const area = curr?.area ?? (w?.subject ? String(w.subject) : "General");
     const eje = curr?.eje ?? "Desarrollo de habilidades";
-    const contenido = curr?.contenido ?? w?.objective ?? "Contenido del programa";
+    const contenido = sinPuntoFinal(curr?.contenido ?? w?.objective ?? "Contenido del programa");
 
     strengths.push({
       worldId,
@@ -227,7 +231,7 @@ export function computeFamilyReportData(
     const curr = curriculumEntries[String(worldId)];
     const area = curr?.area ?? (w?.subject ? String(w.subject) : "General");
     const eje = curr?.eje ?? "Contenido escolar";
-    const contenido = curr?.contenido ?? w?.objective ?? "Práctica guiada";
+    const contenido = sinPuntoFinal(curr?.contenido ?? w?.objective ?? "Práctica guiada");
 
     let tip = "";
     if (area.toLowerCase().includes("matem")) {
@@ -281,7 +285,7 @@ export function computeFamilyReportData(
     strengths,
     recommendations,
     generalMessage:
-      "Este informe fue elaborado por el equipo docente a partir de los desafíos interactivos resueltos en Mundomat, alineados con el Diseño Curricular de Educación Primaria. ¡El acompañamiento y el estímulo afectivo de la familia son fundamentales para su confianza!",
+      "Este informe fue elaborado por el equipo docente a partir de los desafíos interactivos resueltos en MundoTest26, alineados con el Diseño Curricular de Educación Primaria. ¡El acompañamiento y el estímulo afectivo de la familia son fundamentales para su confianza!",
     hasActivityInPeriod,
   };
 }

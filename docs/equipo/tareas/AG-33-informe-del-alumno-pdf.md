@@ -1,6 +1,6 @@
 # AG-33 · «Descargar mi informe»: cada alumno baja su propio informe en PDF, con sus tablas
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** ✅ LISTA PARA REVISAR · **Prioridad:** la pidió Pedro. Hacela **antes que AG-32**. Si ya empezaste AG-32, hacé un commit de lo que tengas y seguí con esta.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🟢 UNIDA A MAIN (revisión y arreglos de Claude en CL-47; ver el principio de AG-32) · **Prioridad:** la pidió Pedro. Hacela **antes que AG-32**. Si ya empezaste AG-32, hacé un commit de lo que tengas y seguí con esta.
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
 
