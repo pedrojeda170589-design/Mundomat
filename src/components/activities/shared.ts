@@ -1,5 +1,5 @@
 export const cardBase =
-  "w-full max-w-md rounded-3xl bg-slate-900/80 border border-slate-700 p-6 shadow-xl";
+  "w-full max-w-md rounded-3xl bg-slate-900/80 border border-slate-700 p-4 sm:p-6 shadow-xl";
 
 export const choiceButtonClass = (state: "idle" | "correct" | "wrong" | "muted") => {
   const base =

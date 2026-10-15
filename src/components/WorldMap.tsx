@@ -119,11 +119,11 @@ export default function WorldMap({
         >
           <Profe pose={t.modulo.profe} className="w-14 h-20 -mb-1" />
           <div className="wood-panel rounded-xl px-3 py-1.5 shadow-lg text-left max-w-[70%]">
-            <p className="text-[10px] font-black uppercase tracking-wide text-amber-200">
+            <p className="text-xs font-black uppercase tracking-wide text-amber-200">
               Módulo {t.numero} · {t.modulo.titulo}
             </p>
             <p className="text-sm font-black text-white leading-tight drop-shadow">📍 {t.lugar.nombre}</p>
-            <p className="text-[10px] font-bold text-amber-100/90">{t.lugar.localidad}, Santa Cruz</p>
+            <p className="text-xs font-bold text-amber-100/90">{t.lugar.localidad}, Santa Cruz</p>
           </div>
         </div>
       ))}
@@ -189,7 +189,7 @@ export default function WorldMap({
                 {esProximo && (
                   <span
                     aria-hidden
-                    className="mm-flecha absolute -top-7 left-1/2 z-20 whitespace-nowrap rounded-full bg-rose-500 border-2 border-white px-2 py-0.5 text-[11px] font-black text-white shadow-lg"
+                    className="mm-flecha absolute -top-7 left-1/2 z-20 whitespace-nowrap rounded-full bg-rose-500 border-2 border-white px-2 py-0.5 text-xs font-black text-white shadow-lg"
                   >
                     👇 ¡Te toca!
                   </span>
@@ -235,7 +235,7 @@ export default function WorldMap({
                 )}
                 {enabled && inProgress[world.id] && (
                   <span
-                    className="absolute bottom-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-full bg-emerald-500 border-2 border-white px-2 py-0.5 text-[11px] font-black text-white shadow"
+                    className="absolute bottom-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-full bg-emerald-500 border-2 border-white px-2 py-0.5 text-xs font-black text-white shadow"
                     title="Tenés una vuelta a medias: seguís donde dejaste"
                   >
                     👣 Seguí {inProgress[world.id].hechas}/{inProgress[world.id].total}
@@ -243,7 +243,7 @@ export default function WorldMap({
                 )}
                 {classmatesHere > 0 && (
                   <span
-                    className="absolute top-0 left-0 z-10 flex items-center gap-0.5 rounded-full bg-white border-2 border-amber-500 px-1.5 py-0.5 text-[10px] font-black text-amber-700 shadow"
+                    className="absolute top-0 left-0 z-10 flex items-center gap-0.5 rounded-full bg-white border-2 border-amber-500 px-1.5 py-0.5 text-xs font-black text-amber-700 shadow"
                     title={
                       classmatesHere === 1
                         ? "1 compañero/a está en este mundo"
@@ -255,7 +255,7 @@ export default function WorldMap({
                 )}
               </span>
               <span
-                className={`rounded-lg px-2 py-1 text-[11px] font-black text-center leading-tight w-full ${
+                className={`rounded-lg px-2 py-1 text-xs font-black text-center leading-tight w-full ${
                   pendiente
                     ? "bg-yellow-200 text-amber-950 border-2 border-amber-500 shadow-md"
                     : "wood-panel-light"
@@ -263,18 +263,18 @@ export default function WorldMap({
               >
                 {world.emoji} {world.name}
                 {pendiente && (
-                  <span className="block text-[10px] font-black uppercase tracking-wide text-rose-700">
+                  <span className="block text-xs font-black uppercase tracking-wide text-rose-700">
                     🎯 Por superar
                   </span>
                 )}
               </span>
               {world.tables && world.tables.length > 0 && (
-                <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
+                <span className="text-xs font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
                   Tablas del {world.tables.join(", ")}
                 </span>
               )}
               {!enabled && (
-                <span className="text-[10px] font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
+                <span className="text-xs font-bold text-slate-800 bg-white/80 rounded-md px-1.5">
                   {lockedReasons[world.id]?.startsWith("Vuelve")
                     ? lockedReasons[world.id]
                     : lockedReasons[world.id]

@@ -85,7 +85,7 @@ export default function MonteLeonModal({
               />
             </div>
             <div className="min-w-0">
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-900/70">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-900/70">
                 Mundo especial de 3.º grado
               </span>
               {/* Sin «truncate»: en un celular de 320 px se cortaba en «Viaje a Monte L» (AG-32). */}
@@ -141,7 +141,7 @@ export default function MonteLeonModal({
               }`}
             >
               <span>🎒</span> Mi mochila
-              <span className="ml-1 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[11px] text-amber-950">
+              <span className="ml-1 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-950">
                 {ganadosMochila}/6
               </span>
             </button>
@@ -224,7 +224,7 @@ export default function MonteLeonModal({
                         sizes="(max-width: 640px) 100vw, 112px"
                         className="object-cover"
                       />
-                      <span className="absolute top-1 left-1 bg-black/70 text-white text-[11px] font-black px-1.5 py-0.5 rounded-md">
+                      <span className="absolute top-1 left-1 bg-black/70 text-white text-xs font-black px-1.5 py-0.5 rounded-md">
                         Etapa {et.id}
                       </span>
                     </div>
@@ -236,12 +236,12 @@ export default function MonteLeonModal({
                           {et.titulo}
                         </h4>
                         {superada && (
-                          <span className="rounded-full bg-emerald-600 text-white text-[11px] font-black px-2 py-0.5 shadow-xs">
+                          <span className="rounded-full bg-emerald-600 text-white text-xs font-black px-2 py-0.5 shadow-xs">
                             ⭐ Superada ({bestScore}%)
                           </span>
                         )}
                         {!superada && bestScore > 0 && (
-                          <span className="rounded-full bg-amber-500/20 text-amber-950 text-[11px] font-bold px-2 py-0.5 border border-amber-600/30">
+                          <span className="rounded-full bg-amber-500/20 text-amber-950 text-xs font-bold px-2 py-0.5 border border-amber-600/30">
                             Mejor intento: {bestScore}%
                           </span>
                         )}
@@ -251,7 +251,7 @@ export default function MonteLeonModal({
                         {et.subtitulo} · {et.descripcion}
                       </p>
 
-                      <div className="mt-2 flex items-center justify-center sm:justify-start gap-2 text-[11px] text-amber-900/70">
+                      <div className="mt-2 flex items-center justify-center sm:justify-start gap-2 text-xs text-amber-900/70">
                         <span>🎒 Premio:</span>
                         <span className="font-bold text-amber-950">
                           {premioInfo?.label}

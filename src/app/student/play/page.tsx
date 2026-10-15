@@ -191,6 +191,15 @@ export default function StudentPlayPage() {
     if (challengeRes.ok) {
       setWeekend(await challengeRes.json());
     }
+    const searchMundo = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("mundo") : null;
+    if (searchMundo) {
+      const targetWorld = [1, 2, 3, 4]
+        .flatMap((g) => getGrade(g, { borradores: true }).worlds)
+        .find((w) => w.id === Number(searchMundo));
+      if (targetWorld) {
+        setSelectedWorld(targetWorld);
+      }
+    }
     setLoading(false);
   }, []);
 

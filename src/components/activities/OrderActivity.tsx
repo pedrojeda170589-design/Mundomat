@@ -39,36 +39,47 @@ export default function OrderActivity({
     setPicked(picked.slice(0, -1));
   }
 
+  const isLongText = items.some((it) => it.length > 6 || it.includes(" "));
+
   return (
     <div className={cardBase}>
       <p className="text-xl font-bold text-white mb-4 text-center">
         {prompt}
       </p>
 
-      <div className="flex flex-wrap gap-2 justify-center min-h-[3rem] mb-4 rounded-xl bg-slate-800/60 border border-slate-700 p-3">
+      <div
+        className={`${
+          isLongText ? "flex flex-col gap-2" : "flex flex-wrap gap-2 justify-center"
+        } min-h-[3rem] mb-4 rounded-xl bg-slate-800/60 border border-slate-700 p-3`}
+      >
         {picked.length === 0 && (
-          <span className="text-slate-500 text-sm">
-            Tocá los números en el orden correcto
+          <span className="text-slate-500 text-sm text-center">
+            {isLongText ? "Tocá las opciones en el orden correcto" : "Tocá los números en el orden correcto"}
           </span>
         )}
         {picked.map((i, order) => (
           <span
             key={`${i}-${order}`}
-            className="rounded-lg bg-amber-500/20 border border-amber-400 text-amber-200 font-bold px-3 py-1.5"
+            className={`rounded-lg bg-amber-500/20 border border-amber-400 text-amber-200 font-bold px-3 py-1.5 ${
+              isLongText ? "text-sm text-left" : ""
+            }`}
           >
+            {isLongText && <span className="font-mono text-amber-400 mr-1.5">{order + 1}.</span>}
             {items[i]}
           </span>
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className={isLongText ? "flex flex-col gap-2 mb-3" : "grid grid-cols-3 gap-2 mb-3"}>
         {remaining.map((i) => (
           <button
             key={i}
             type="button"
             onClick={() => handlePick(i)}
             disabled={result !== null}
-            className="rounded-xl border-2 border-slate-600 bg-slate-800 text-white font-bold px-3 py-3 hover:border-amber-400 active:scale-[0.98] transition disabled:opacity-50"
+            className={`rounded-xl border-2 border-slate-600 bg-slate-800 text-white font-bold hover:border-amber-400 active:scale-[0.98] transition disabled:opacity-50 ${
+              isLongText ? "text-left text-sm px-3.5 py-2.5" : "text-center px-3 py-3"
+            }`}
           >
             {items[i]}
           </button>
