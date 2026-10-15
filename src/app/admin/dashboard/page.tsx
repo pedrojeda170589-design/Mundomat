@@ -331,22 +331,24 @@ export default function AdminDashboardPage() {
     <main className="relative flex-1 bg-explorer-day py-8 px-4 overflow-hidden">
       <Mountains isDay />
       <div className="relative z-10 max-w-3xl mx-auto">
-        <div className="wood-panel-light flex items-center justify-between mb-6 rounded-2xl px-5 py-3">
+        <div className="wood-panel-light flex items-center justify-between mb-6 rounded-2xl px-4 sm:px-5 py-3">
           <div>
-            <h1 className="text-2xl font-black text-amber-50">
+            <h1 className="text-xl sm:text-2xl font-black text-amber-50">
               🧭 Panel Docente
             </h1>
-            <p className="text-amber-100 text-sm">MundoTest26</p>
+            <p className="text-amber-100 text-xs sm:text-sm">MundoTest26</p>
           </div>
-          <Link href="/docente" className="ml-auto mr-4 text-amber-100 text-sm underline">
-            🏫 Escuelas y aulas
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="text-amber-100 text-sm underline"
-          >
-            Salir
-          </button>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-xs sm:text-sm">
+            <Link href="/docente" className="text-amber-100 underline whitespace-nowrap">
+              🏫 <span className="hidden sm:inline">Escuelas y aulas</span><span className="sm:hidden">Aulas</span>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="text-amber-100 underline whitespace-nowrap"
+            >
+              Salir
+            </button>
+          </div>
         </div>
 
         <div className="flex gap-2 mb-6 flex-wrap">

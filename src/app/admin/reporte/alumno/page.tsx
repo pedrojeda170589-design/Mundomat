@@ -169,15 +169,15 @@ function StudentReportContent() {
   return (
     <div className="min-h-screen bg-slate-100 py-6 px-4 print:p-0 print:bg-white text-slate-900 font-sans">
       {/* Barra de herramientas en pantalla (se oculta al imprimir) */}
-      <div className="max-w-3xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 print:hidden">
-        <div className="flex items-center gap-2">
+      <div className="max-w-3xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 print:hidden">
+        <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/admin/dashboard"
             className="text-xs font-bold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition"
           >
             ← Volver al Panel
           </Link>
-          <div className="flex items-center gap-1 ml-2">
+          <div className="flex flex-wrap items-center gap-1 sm:ml-2">
             <span className="text-xs font-semibold text-slate-500">Período:</span>
             {(["mes", "trimestre", "ano"] as ReportPeriod[]).map((p) => (
               <button
@@ -195,7 +195,7 @@ function StudentReportContent() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => handleDescargarPdfDocente()}
             disabled={descargandoPdf}
@@ -213,33 +213,33 @@ function StudentReportContent() {
       </div>
 
       {/* Hoja imprimible tamaño A4 */}
-      <main className="max-w-3xl mx-auto bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-0 print:max-w-none">
+      <main className="max-w-3xl mx-auto bg-white p-4 sm:p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200 print:border-none print:shadow-none print:p-0 print:max-w-none">
         {/* Cabecera institucional */}
-        <header className="border-b-2 border-indigo-600 pb-4 mb-6 flex items-start justify-between gap-4">
+        <header className="border-b-2 border-indigo-600 pb-4 mb-6 flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-2xl">🧭</span>
-              <span className="text-xl font-black tracking-tight text-indigo-950">Mundomat</span>
+              <span className="text-lg sm:text-xl font-black tracking-tight text-indigo-950">Mundomat</span>
               <span className="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full ml-1">
                 Informe Pedagógico Escolar
               </span>
             </div>
-            <h1 className="text-lg font-black text-slate-800 mt-2">
+            <h1 className="text-base sm:text-lg font-black text-slate-800 mt-2">
               Reporte de Progreso y Aprendizaje para la Familia
             </h1>
             <p className="text-xs text-slate-500">
               Escuela Primaria · Período analizado: <strong className="text-slate-700">{reportData.periodLabel}</strong>
             </p>
           </div>
-          <div className="text-right text-xs text-slate-500">
+          <div className="text-left sm:text-right text-xs text-slate-500 shrink-0">
             <p className="font-semibold text-slate-700">Fecha de emisión:</p>
             <p>{reportData.generatedDate}</p>
           </div>
         </header>
 
         {/* Ficha del alumno */}
-        <section className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
+        <section className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="col-span-2 sm:col-span-1">
             <p className="text-xs uppercase tracking-wider font-bold text-slate-500">Estudiante</p>
             <p className="text-base font-black text-slate-900">{reportData.studentName}</p>
           </div>
@@ -248,7 +248,7 @@ function StudentReportContent() {
             <p className="text-sm font-bold text-indigo-700">{reportData.grade}.º grado</p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wider font-bold text-slate-500">Identificador</p>
+            <p className="text-xs uppercase font-bold text-slate-500">Código</p>
             <p className="text-xs font-mono text-slate-600">{student.code}</p>
           </div>
         </section>
@@ -258,21 +258,21 @@ function StudentReportContent() {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
             1. Resumen de Desempeño y Dedicación
           </h2>
-          <div className="grid grid-cols-3 gap-3 text-center mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center mb-3">
             <div className="p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl">
               <p className="text-2xl font-black text-indigo-900">{reportData.worldsCompleted}</p>
               <p className="text-xs font-bold text-indigo-800 mt-0.5">Mundos logrados</p>
-              <p className="text-[11px] text-slate-500 leading-tight mt-1">Superó los desafíos fijados</p>
+              <p className="text-xs text-slate-500 leading-tight mt-1">Superó los desafíos fijados</p>
             </div>
             <div className="p-3 bg-emerald-50/70 border border-emerald-100 rounded-xl">
               <p className="text-2xl font-black text-emerald-900">{reportData.accuracyPct}%</p>
               <p className="text-xs font-bold text-emerald-800 mt-0.5">Precisión de aciertos</p>
-              <p className="text-[11px] text-slate-500 leading-tight mt-1">En las actividades realizadas</p>
+              <p className="text-xs text-slate-500 leading-tight mt-1">En las actividades realizadas</p>
             </div>
             <div className="p-3 bg-amber-50/70 border border-amber-100 rounded-xl">
               <p className="text-2xl font-black text-amber-900">{reportData.totalTimeMinutes} min</p>
               <p className="text-xs font-bold text-amber-800 mt-0.5">Tiempo de práctica</p>
-              <p className="text-[11px] text-slate-500 leading-tight mt-1">Resolución interactiva activa</p>
+              <p className="text-xs text-slate-500 leading-tight mt-1">Resolución interactiva activa</p>
             </div>
           </div>
           <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-3 text-xs text-emerald-950 font-medium">
@@ -332,23 +332,25 @@ function StudentReportContent() {
             4. Evolución de la Actividad Semanal
           </h2>
           <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div className="grid grid-cols-6 gap-2 text-center">
-              {reportData.weeklyEvolution.map((pt, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="h-16 w-full flex items-end justify-center bg-white rounded-lg border border-slate-200 p-1 mb-1.5">
-                    <div
-                      className="w-full bg-indigo-500 rounded-t transition-all"
-                      style={{
-                        height: `${Math.max(8, Math.min(100, pt.accuracyPct))}%`,
-                        opacity: pt.activitiesCount > 0 ? 1 : 0.25,
-                      }}
-                      title={`${pt.weekLabel}: ${pt.accuracyPct}% aciertos (${pt.activitiesCount} actividades)`}
-                    />
+            <div className="overflow-x-auto pb-1">
+              <div className="grid grid-cols-6 gap-2 text-center min-w-[280px]">
+                {reportData.weeklyEvolution.map((pt, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <div className="h-16 w-full flex items-end justify-center bg-white rounded-lg border border-slate-200 p-1 mb-1.5">
+                      <div
+                        className="w-full bg-indigo-500 rounded-t transition-all"
+                        style={{
+                          height: `${Math.max(8, Math.min(100, pt.accuracyPct))}%`,
+                          opacity: pt.activitiesCount > 0 ? 1 : 0.25,
+                        }}
+                        title={`${pt.weekLabel}: ${pt.accuracyPct}% aciertos (${pt.activitiesCount} actividades)`}
+                      />
+                    </div>
+                    <p className="text-[10px] font-bold text-slate-800">{pt.accuracyPct}%</p>
+                    <p className="text-[10px] text-slate-400 leading-tight">{pt.weekLabel.replace("Sem. ", "")}</p>
                   </div>
-                  <p className="text-[10px] font-bold text-slate-800">{pt.accuracyPct}%</p>
-                  <p className="text-[9px] text-slate-400 leading-tight">{pt.weekLabel.replace("Sem. ", "")}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
             <p className="text-[10px] text-slate-400 text-center mt-2">
               Barras indican el porcentaje de respuestas acertadas por semana.

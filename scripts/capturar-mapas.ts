@@ -1,7 +1,5 @@
 import { chromium } from "playwright";
 import path from "node:path";
-import fs from "node:fs";
-
 const BASE_URL = "http://localhost:3000";
 const CAPTURAS_DIR = path.join(process.cwd(), "docs", "equipo", "capturas", "ag31");
 
@@ -12,7 +10,7 @@ async function main() {
 
   const resStudents = await page.request.get(`${BASE_URL}/api/students?adminPassword=docente2026`);
   const { students } = await resStudents.json();
-  const testStudent = students.find((s: any) => s.grade === 4 && s.name.includes("Prueba"));
+  const testStudent = students.find((s: { grade: number; name: string; code: string }) => s.grade === 4 && s.name.includes("Prueba"));
 
   await page.goto(`${BASE_URL}/student`);
   await page.fill('input', testStudent.code);

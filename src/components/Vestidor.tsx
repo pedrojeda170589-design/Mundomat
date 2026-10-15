@@ -162,7 +162,7 @@ export default function Vestidor({
               role="tab"
               aria-selected={zona === z}
               onClick={() => setZona(z)}
-              className={`shrink-0 min-h-11 rounded-full border-2 px-3 text-xs font-black ${
+              className={`shrink-0 min-h-11 rounded-full border-2 px-2.5 sm:px-3 text-xs font-black ${
                 zona === z ? "bg-amber-500 text-white border-amber-600" : "bg-white text-amber-900 border-amber-200"
               }`}
             >
@@ -182,7 +182,7 @@ export default function Vestidor({
           </p>
         )}
 
-        <div className="p-3 grid grid-cols-3 gap-2">
+        <div className="p-3 pb-24 grid grid-cols-3 gap-2">
           {deZona.map((p) => {
             const mia = tiene.has(p.id);
             const puesta = v.puesto[p.zona] === p.id;

@@ -267,11 +267,11 @@ export default function ShopModal({
                 return (
                   <section key={v.eventId} className="mb-3">
                     <LimitedHeader v={v} />
-                    <ul className="grid grid-cols-3 gap-2">{items.map(avatarCard)}</ul>
+                    <ul className="grid grid-cols-2 min-[360px]:grid-cols-3 gap-2">{items.map(avatarCard)}</ul>
                   </section>
                 );
               })}
-              <ul className="grid grid-cols-3 gap-2">
+              <ul className="grid grid-cols-2 min-[360px]:grid-cols-3 gap-2">
                 {SHOP_AVATARS.filter((a) => !a.season || (!ventanas[a.season] && owned.has(a.id))).map(avatarCard)}
               </ul>
             </>
@@ -295,7 +295,7 @@ export default function ShopModal({
                           : `🔒 Para comprar, superá ${d.mundosRequeridos} mundos con 90 % o más (${hechos}/${d.mundosRequeridos}).`}
                       </p>
                     </div>
-                    <ul className="grid grid-cols-3 gap-2">{items.map(accessoryCard)}</ul>
+                    <ul className="grid grid-cols-2 min-[360px]:grid-cols-3 gap-2">{items.map(accessoryCard)}</ul>
                   </section>
                 );
               })}
