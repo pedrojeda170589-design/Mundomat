@@ -77,6 +77,44 @@ function StudentReportContent() {
     return computeFamilyReportData(student, progress, curriculumEntries, period);
   }, [student, progress, curriculumEntries, period]);
 
+  const [descargandoPdf, setDescargandoPdf] = useState<boolean>(false);
+
+  async function handleDescargarPdfDocente() {
+    if (!code) return;
+    setDescargandoPdf(true);
+    try {
+      const res = await fetch(
+        `/api/informe-alumno?code=${encodeURIComponent(code)}&periodo=${period}`,
+        {
+          headers: { "x-admin-password": adminPassword },
+        }
+      );
+      if (!res.ok) {
+        alert("Error al descargar el informe en PDF.");
+        return;
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("content-disposition");
+      let filename = `informe-${code}-${period}.pdf`;
+      if (disposition) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match && match[1]) filename = match[1];
+      }
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      alert("Error de conexión al generar el PDF.");
+    } finally {
+      setDescargandoPdf(false);
+    }
+  }
+
   if (!adminPassword && !loading) {
     return (
       <main className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
@@ -157,12 +195,21 @@ function StudentReportContent() {
           </div>
         </div>
 
-        <button
-          onClick={() => window.print()}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5 transition cursor-pointer"
-        >
-          🖨️ Imprimir / Guardar como PDF
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleDescargarPdfDocente()}
+            disabled={descargandoPdf}
+            className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5 transition cursor-pointer"
+          >
+            {descargandoPdf ? "Preparando PDF…" : "📄 Descargar PDF"}
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5 transition cursor-pointer"
+          >
+            🖨️ Imprimir / Guardar como PDF
+          </button>
+        </div>
       </div>
 
       {/* Hoja imprimible tamaño A4 */}

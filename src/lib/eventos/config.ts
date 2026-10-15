@@ -146,6 +146,7 @@ export const DESAFIOS = {
   monteLeon: { id: "monte-leon", grados: [3] },
   reserva: { id: "reserva-patagonica", grados: [3, 4] },
   videos: { id: "videos-animacion", grados: [1, 2, 3, 4, 5, 6, 7] },
+  informeAlumno: { id: "informe-alumno", grados: [1, 2, 3, 4, 5, 6, 7] },
   competencia: { id: "competencia", grados: [3] },
   zonasPractica: { id: "zonas-practica", grados: [1, 2] },
 } as const;
@@ -157,6 +158,10 @@ export function desafioActivo(
   reglaAuto: () => boolean
 ): boolean {
   return eventoActivo(d.id, grade ?? 3, now, reglaAuto, [...d.grados]);
+}
+
+export function informeAlumnoActivo(grade: number | undefined, now: Date = new Date()): boolean {
+  return desafioActivo(DESAFIOS.informeAlumno, grade, now, () => false);
 }
 
 // Ids de las festividades / temporadas / lanzamientos en la configuración.
