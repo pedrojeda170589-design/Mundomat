@@ -88,8 +88,9 @@ export default function MonteLeonModal({
               <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-amber-900/70">
                 Mundo especial de 3.º grado
               </span>
-              <h2 className="text-lg sm:text-xl font-black text-amber-950 truncate flex items-center gap-1.5">
-                <span>🐧</span> Viaje a Monte León
+              {/* Sin «truncate»: en un celular de 320 px se cortaba en «Viaje a Monte L» (AG-32). */}
+              <h2 className="text-base sm:text-xl font-black leading-tight text-amber-950">
+                <span aria-hidden>🐧</span> Viaje a Monte León
               </h2>
               <p className="text-xs font-bold text-sky-800 truncate">
                 {textoCuentaRegresiva()}

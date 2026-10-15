@@ -226,7 +226,7 @@ function CourseReportContent() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">🧭</span>
-              <span className="text-xl font-black tracking-tight text-indigo-950">Mundomat</span>
+              <span className="text-xl font-black tracking-tight text-indigo-950">MundoTest26</span>
               <span className="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full ml-1">
                 Panel Docente
               </span>
@@ -409,7 +409,7 @@ function CourseReportContent() {
 
         {/* Pie de informe */}
         <footer className="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs text-slate-400">
-          <p>Mundomat Educación Primaria · Sistema de Gestión de Aprendizajes</p>
+          <p>MundoTest26 · Educación Primaria · Sistema de Gestión de Aprendizajes</p>
           <p>Página de control docente</p>
         </footer>
       </main>

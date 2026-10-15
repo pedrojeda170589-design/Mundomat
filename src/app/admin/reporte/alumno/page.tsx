@@ -219,7 +219,7 @@ function StudentReportContent() {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-2xl">🧭</span>
-              <span className="text-lg sm:text-xl font-black tracking-tight text-indigo-950">Mundomat</span>
+              <span className="text-lg sm:text-xl font-black tracking-tight text-indigo-950">MundoTest26</span>
               <span className="text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full ml-1">
                 Informe Pedagógico Escolar
               </span>
