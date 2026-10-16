@@ -61,7 +61,7 @@ export default function AssistControls({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 pl-12 sm:pl-0">
       <div className="flex items-center gap-2 flex-wrap">
         <button
           type="button"

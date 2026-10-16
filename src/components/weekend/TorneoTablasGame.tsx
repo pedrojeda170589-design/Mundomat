@@ -336,7 +336,7 @@ export default function TorneoTablasGame({
           {prioridades.length > 0 && (
             <div className="rounded-2xl border-2 border-rose-300 bg-rose-50/80 p-3 text-left">
               <p className="text-xs font-black text-rose-900 mb-0.5">🎯 Para repasar hoy</p>
-              <p className="text-[11px] text-rose-900/80 mb-2">
+              <p className="text-xs text-rose-900/80 mb-2">
                 {prioridades.some((p) => p.motivo === "errores" || p.motivo === "tiempo")
                   ? "Son las tablas que más te cuestan. ¡Practicalas primero para ganar la medalla!"
                   : "Empezá por estas para completar tu vuelta de las 9 tablas."}
@@ -351,12 +351,12 @@ export default function TorneoTablasGame({
                     }`}
                   >
                     <span className="text-base font-black text-rose-800 shrink-0 whitespace-nowrap">Tabla del {p.tabla}</span>
-                    <span className="flex-1 text-[11px] text-rose-900/90 leading-tight">
+                    <span className="flex-1 text-xs text-rose-900/90 leading-tight">
                       {p.motivo === "errores" ? "❌ " : p.motivo === "tiempo" ? "🐢 " : "🔁 "}
                       {p.texto}
                     </span>
                     {p.hechaHoy && (
-                      <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-300 rounded-full px-2 py-0.5 shrink-0">
+                      <span className="text-xs font-black text-emerald-700 bg-emerald-100 border border-emerald-300 rounded-full px-2 py-0.5 shrink-0">
                         ✅ Hoy
                       </span>
                     )}

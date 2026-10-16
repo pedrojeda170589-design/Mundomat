@@ -228,7 +228,7 @@ export default function ReservaModal({
         <div className="sticky top-0 z-20 wood-panel px-3 py-2 flex items-center justify-between gap-2">
           <div className="min-w-0 flex-1">
             <h2 className="font-black text-xs sm:text-base drop-shadow leading-tight">🦙 Reserva patagónica</h2>
-            <p className="text-[11px] font-bold opacity-90">⭐ {superadas} de {ETAPAS.length} etapas</p>
+            <p className="text-xs font-bold opacity-90">⭐ {superadas} de {ETAPAS.length} etapas</p>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <button

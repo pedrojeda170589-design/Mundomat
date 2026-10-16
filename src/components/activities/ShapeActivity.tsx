@@ -57,7 +57,7 @@ export default function ShapeActivity({
               key={i}
               type="button"
               onClick={() => handleSelect(i)}
-              className={choiceButtonClass(state)}
+              className={`${choiceButtonClass(state)} text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-3`}
             >
               <span className="block text-3xl mb-1">{SHAPE_EMOJI[c]}</span>
               {SHAPE_LABEL[c]}

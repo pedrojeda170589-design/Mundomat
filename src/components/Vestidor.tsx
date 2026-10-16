@@ -148,7 +148,7 @@ export default function Vestidor({
                 </button>
               ))}
             </div>
-            <p className="mt-2 text-[11px] text-amber-900/80 leading-snug">
+            <p className="mt-2 text-xs text-amber-900/80 leading-snug">
               Tocá una prenda para ponértela o sacártela. La ropa se gana con las metas especiales o se compra con monedas.
             </p>
             <p className="mt-1 text-xs font-black text-amber-950">🪙 {progress.coins} monedas</p>
@@ -204,17 +204,17 @@ export default function Vestidor({
                   {puesta && <span className="absolute top-0 right-0 text-sm">✅</span>}
                   {!mia && <span className="absolute top-0 right-0 text-sm">🔒</span>}
                 </button>
-                <span className="text-[10px] font-black text-amber-950 leading-tight mt-0.5">{p.label}</span>
+                <span className="text-xs font-black text-amber-950 leading-tight mt-0.5">{p.label}</span>
                 {!mia && p.precio ? (
                   <button
                     onClick={() => comprar(p.id)}
                     disabled={ocupado || progress.coins < p.precio}
-                    className="mt-1 min-h-9 w-full rounded-lg bg-amber-500 text-white text-[11px] font-black disabled:opacity-50"
+                    className="mt-1 min-h-9 w-full rounded-lg bg-amber-500 text-white text-xs font-black disabled:opacity-50"
                   >
                     🪙 {p.precio}
                   </button>
                 ) : !mia && meta ? (
-                  <span className="mt-1 text-[10px] font-bold text-orange-700 leading-tight">{meta}</span>
+                  <span className="mt-1 text-xs font-bold text-orange-700 leading-tight">{meta}</span>
                 ) : null}
               </div>
             );

@@ -56,7 +56,7 @@ export default function MetasEspeciales({ progress, onClose }: { progress: Stude
                 <p className="font-black text-amber-950">
                   {g.titulo} · <span className="text-orange-700">llevás {valor}</span>
                 </p>
-                <p className="text-[11px] text-amber-900/75 mb-2">{g.ayuda}</p>
+                <p className="text-xs text-amber-900/75 mb-2">{g.ayuda}</p>
                 <div className="flex flex-col gap-1.5">
                   {lista.map((m) => {
                     const meta = m[g.clave]!;
@@ -69,12 +69,12 @@ export default function MetasEspeciales({ progress, onClose }: { progress: Stude
                         <Dibujo m={m} />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-black text-amber-950 leading-tight">{m.premio.label}</p>
-                          <p className="text-[10px] text-amber-800">{TIPO[m.premio.tipo]} · meta: {meta}</p>
+                          <p className="text-xs text-amber-800">{TIPO[m.premio.tipo]} · meta: {meta}</p>
                           <span className="mt-1 block h-1.5 rounded-full bg-amber-900/10 overflow-hidden">
                             <span className="block h-full bg-orange-500" style={{ width: `${Math.min(100, Math.round((valor / meta) * 100))}%` }} />
                           </span>
                         </div>
-                        <span className={`text-[11px] font-black shrink-0 ${listo ? "text-emerald-700" : "text-orange-700"}`}>
+                        <span className={`text-xs font-black shrink-0 ${listo ? "text-emerald-700" : "text-orange-700"}`}>
                           {listo ? "✅ ¡Ganado!" : `Faltan ${meta - valor}`}
                         </span>
                       </div>

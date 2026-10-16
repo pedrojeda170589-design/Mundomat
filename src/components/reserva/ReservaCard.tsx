@@ -24,7 +24,7 @@ export default function ReservaCard({ progress, onClick }: { progress?: StudentP
                 ? `Próxima parada: ${proxima.nivel === "departamento" ? "departamento" : "provincia de"} ${proxima.nombre}. Animales, plantas y lugares de la Patagonia.`
                 : "¡Recorriste toda la expedición! Mirá tu reserva."}
             </span>
-            <span className="block text-[11px] font-bold text-amber-950/80 mt-0.5">⭐ Etapas: {hechas}/{ETAPAS.length}</span>
+            <span className="block text-xs font-bold text-amber-950/80 mt-0.5">⭐ Etapas: {hechas}/{ETAPAS.length}</span>
           </span>
         </span>
         <span className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black text-xs px-2.5 sm:px-3.5 py-1.5 sm:py-2 shrink-0">
