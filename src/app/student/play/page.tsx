@@ -191,7 +191,13 @@ export default function StudentPlayPage() {
     if (challengeRes.ok) {
       setWeekend(await challengeRes.json());
     }
-    const searchMundo = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("mundo") : null;
+    // ?mundo=ID abre un mundo directo: SOLO para los scripts de prueba en la
+    // compu (npm run dev). En la versión publicada no existe: si no, un alumno
+    // podía saltar a mundos bloqueados o a 4.º oculto (revisión de AG-34).
+    const searchMundo =
+      process.env.NODE_ENV === "development" && typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("mundo")
+        : null;
     if (searchMundo) {
       const targetWorld = [1, 2, 3, 4]
         .flatMap((g) => getGrade(g, { borradores: true }).worlds)

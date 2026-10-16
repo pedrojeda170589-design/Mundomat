@@ -1,6 +1,6 @@
 # AG-34 · Celular, segunda vuelta: el detector contra la app de verdad, todas las actividades y la letra chica
 
-**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** ✅ LISTA PARA REVISAR.
+**Asignada a:** Antigravity · **Rama:** `antigravity` · **Estado:** 🟢 UNIDA A MAIN (revisión de Claude en CL-49).
 
 **Antes de empezar:** `git checkout antigravity && git merge -X theirs main`. Si algo choca, gana main.
 
