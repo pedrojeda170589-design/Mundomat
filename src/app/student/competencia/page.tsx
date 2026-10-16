@@ -1,5 +1,6 @@
 "use client";
 
+import BotonReglas from "@/components/eventos/BotonReglas";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CloudsBackground from "@/components/CloudsBackground";
@@ -142,7 +143,16 @@ export default function CompetitionPage() {
         ← Volver
       </button>
       <span className="text-white font-black text-lg">⚔️ Competencia</span>
-      <span className="w-12" />
+      <BotonReglas
+        titulo="Competencia de memoria"
+        claro
+        reglas={[
+          "Para competir tenés que estar al día con tus mundos.",
+          "Duelos: desafiá a un compañero, por turnos o en vivo. Se juegan sábado y domingo.",
+          "Torneo de la semana: todos juegan la misma partida, una sola vez. Gana quien tenga menos errores; si empatan, el más rápido.",
+          "Todos ganan monedas: ganar 🪙3 · empatar 🪙2 · participar 🪙1.",
+        ]}
+      />
     </div>
   );
 
@@ -160,7 +170,6 @@ export default function CompetitionPage() {
   }
 
   const { eligibility } = data;
-  const missing = Math.max(0, eligibility.pending.length - data.maxPending);
   const canPlay = data.canPlayToday && eligibility.eligible;
 
   return (
@@ -172,17 +181,8 @@ export default function CompetitionPage() {
           <div className="parchment-panel rounded-3xl p-5 text-center">
             <p className="text-4xl">🧭</p>
             <p className="font-black text-lg">¡Ponete al día para competir!</p>
-            <p className="text-sm mt-1">
-              Para jugar duelos y el torneo podés tener como mucho {data.maxPending} mundos sin completar. Te{" "}
-              {missing === 1 ? "falta completar 1 mundo" : `faltan completar ${missing} mundos`}:
-            </p>
-            <ul className="mt-2 flex flex-wrap justify-center gap-1.5">
-              {eligibility.pending.map((w) => (
-                <li key={w.id} className="rounded-full bg-white/80 border border-amber-300 px-2.5 py-1 text-xs font-bold">
-                  {w.emoji} {w.name}
-                </li>
-              ))}
-            </ul>
+            {/* Sin contar ni listar los mundos que faltan (regla de la plataforma). */}
+            <p className="text-sm mt-1">Seguí superando tus mundos y volvé a competir.</p>
             <button
               onClick={() => router.push("/student/play")}
               className="mt-3 rounded-2xl bg-violet-600 text-white font-black px-5 py-2"
@@ -196,7 +196,7 @@ export default function CompetitionPage() {
           </div>
         ) : (
           <div className="rounded-2xl bg-emerald-100 border-2 border-emerald-300 px-4 py-3 text-sm text-emerald-900 text-center">
-            ✅ ¡Estás al día! Podés jugar duelos y el torneo. Todos ganan monedas: ganar 🪙3 · empatar 🪙2 · participar 🪙1.
+            ✅ ¡Estás al día! Podés jugar duelos y el torneo.
           </div>
         )}
 
@@ -216,10 +216,7 @@ export default function CompetitionPage() {
 
         {tab === "torneo" && (
           <div className="parchment-panel rounded-3xl p-5 flex flex-col gap-3">
-            <p className="text-sm">
-              Todos juegan la <b>misma partida</b> ({data.tournament.rounds} juegos de memoria). Gana quien tenga menos
-              errores; si empatan, el más rápido. Se juega una sola vez por semana.
-            </p>
+            <p className="text-sm text-center font-bold">🏆 {data.tournament.rounds} juegos · una vez por semana</p>
             {data.tournament.played ? (
               <p className="text-center font-black text-emerald-700">✅ Ya jugaste el torneo de esta semana.</p>
             ) : (

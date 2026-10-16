@@ -117,13 +117,14 @@ export default function WorldMap({
           className="absolute inset-x-3 z-10 flex items-end justify-center gap-1 pointer-events-none"
           style={{ top: arribaIsla(t.desde) - CARTEL + 6, height: CARTEL - 16 }}
         >
-          <Profe pose={t.modulo.profe} className="w-14 h-20 -mb-1" />
-          <div className="wood-panel rounded-xl px-3 py-1.5 shadow-lg text-left max-w-[70%]">
-            <p className="text-xs font-black uppercase tracking-wide text-amber-200">
-              Módulo {t.numero} · {t.modulo.titulo}
+          <Profe pose={t.modulo.profe} className="w-11 h-16 sm:w-14 sm:h-20 -mb-1 shrink-0" />
+          {/* En celular, compacto: si no, en un mapa angosto crecía hacia arriba y se cortaba. */}
+          <div className="wood-panel rounded-xl px-2.5 sm:px-3 py-1.5 shadow-lg text-left max-w-[80%] sm:max-w-[70%] min-w-0">
+            <p className="text-xs font-black uppercase tracking-wide leading-tight text-amber-200">
+              Módulo {t.numero}<span className="hidden sm:inline"> · {t.modulo.titulo}</span>
             </p>
             <p className="text-sm font-black text-white leading-tight drop-shadow">📍 {t.lugar.nombre}</p>
-            <p className="text-xs font-bold text-amber-100/90">{t.lugar.localidad}, Santa Cruz</p>
+            <p className="hidden sm:block text-xs font-bold text-amber-100/90">{t.lugar.localidad}, Santa Cruz</p>
           </div>
         </div>
       ))}

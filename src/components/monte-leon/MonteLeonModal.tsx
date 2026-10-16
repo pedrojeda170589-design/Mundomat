@@ -1,5 +1,6 @@
 "use client";
 
+import BotonReglas from "@/components/eventos/BotonReglas";
 import { useState } from "react";
 import VideoAnimacion from "@/components/VideoAnimacion";
 import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
@@ -98,10 +99,20 @@ export default function MonteLeonModal({
             </div>
           </div>
 
+          <BotonReglas
+            titulo="Viaje a Monte León"
+            className="ml-auto !w-9 !h-9"
+            reglas={[
+              "Son 5 etapas de 8 actividades sobre el viaje.",
+              <>Con <b>7 u 8 bien</b> superás la etapa y ganás un objeto para la mochila.</>,
+              <>Con <b>8 de 8</b> en cualquier etapa ganás los bocadillos.</>,
+              "Podés repetir las etapas todas las veces que quieras.",
+            ]}
+          />
           <button
             type="button"
             onClick={() => setVideo(true)}
-            className="w-9 h-9 shrink-0 rounded-full bg-amber-950/10 hover:bg-amber-950/20 text-amber-950 flex items-center justify-center text-lg transition ml-auto"
+            className="w-9 h-9 shrink-0 rounded-full bg-amber-950/10 hover:bg-amber-950/20 text-amber-950 flex items-center justify-center text-lg transition"
             aria-label="Ver el video de presentación"
             title="Ver el video"
           >
@@ -194,15 +205,6 @@ export default function MonteLeonModal({
             />
           ) : tab === "etapas" ? (
             <div className="flex flex-col gap-3.5">
-              <div className="text-center sm:text-left mb-1">
-                <p className="text-xs text-amber-950/80 leading-relaxed">
-                  Repasá todo sobre el viaje de estudio en estas 5 etapas de 8 actividades.
-                  Una etapa se supera con <b>7 u 8 bien</b> y te da su objeto para la mochila.
-                  Con una <b>vuelta perfecta (8 de 8)</b> en cualquier etapa ganás los bocadillos.
-                  ¡Podés repetirlas todas las veces que quieras!
-                </p>
-              </div>
-
               {ETAPAS_MONTE_LEON.map((et) => {
                 const rec = currentProgress.monteLeon?.etapas?.[et.id];
                 const bestScore = rec?.bestScore ?? 0;

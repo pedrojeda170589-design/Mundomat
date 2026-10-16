@@ -7,6 +7,7 @@ import { BIRTHDAY_EVENT, getActiveEvents, getEventRewardIds } from "@/lib/season
 interface Props {
   seasonalCollection?: string[];
   birthday?: boolean;
+  soloEvento?: string; // desde la barra lateral: solo esa fiesta
   onOpenProfile: () => void;
 }
 
@@ -16,9 +17,11 @@ interface Props {
 export default function SeasonalBanner({
   seasonalCollection = [],
   birthday = false,
+  soloEvento,
   onOpenProfile,
 }: Props) {
-  const events = birthday ? [BIRTHDAY_EVENT, ...getActiveEvents()] : getActiveEvents();
+  const todos = birthday ? [BIRTHDAY_EVENT, ...getActiveEvents()] : getActiveEvents();
+  const events = soloEvento ? todos.filter((e) => e.id === soloEvento) : todos;
   if (events.length === 0) return null;
   const owned = new Set(seasonalCollection);
 

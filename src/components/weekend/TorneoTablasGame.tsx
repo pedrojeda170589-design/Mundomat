@@ -1,5 +1,6 @@
 "use client";
 
+import BotonReglas from "@/components/eventos/BotonReglas";
 import { useEffect, useRef, useState } from "react";
 import { generarPasosTabla, PasoTorneo } from "@/lib/torneo/opciones";
 import {
@@ -323,14 +324,19 @@ export default function TorneoTablasGame({
             </span>
           </div>
 
-          <div>
+          <div className="flex items-center justify-center gap-2">
             <h1 className="text-2xl font-black text-amber-950 flex items-center justify-center gap-2">
               <span>⚡</span> Repaso de las Tablas
             </h1>
-            <p className="text-xs text-amber-900/80 mt-1 leading-relaxed">
-              Completá del <b>N×0 al N×10</b> en orden contra reloj. ¡Respondé rápido y sin errores: cada error suma{" "}
-              <b>{PENALIDAD_ERROR_MS / 1000} segundos</b>. Al completar las 9 tablas ganás el objeto especial del mes (dorado, plateado o de bronce).
-            </p>
+            <BotonReglas
+              titulo="Repaso de las tablas"
+              reglas={[
+                <>Elegí una tabla y completá del <b>N×0 al N×10</b> en orden, contra reloj.</>,
+                <>Cada error suma <b>{PENALIDAD_ERROR_MS / 1000} segundos</b>: rápido, pero sin equivocarte.</>,
+                "Según tu tiempo ganás medalla de oro, plata o bronce.",
+                "Completá las 9 tablas y ganás el objeto especial del mes y tu insignia (×2, ×3… A1).",
+              ]}
+            />
           </div>
 
           {prioridades.length > 0 && (

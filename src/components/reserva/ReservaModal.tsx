@@ -1,5 +1,6 @@
 "use client";
 
+import BotonReglas from "@/components/eventos/BotonReglas";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import type { StudentProgress } from "@/types";
@@ -237,6 +238,16 @@ export default function ReservaModal({
             >
               {vista === "coleccion" ? "🗺️ Mapa" : <><span className="hidden sm:inline">🌿 Mi reserva</span><span className="sm:hidden">🌿</span> ({coleccion.size})</>}
             </button>
+            <BotonReglas
+              titulo="Reserva y expedición patagónica"
+              claro
+              reglas={[
+                <>Empezás en <b>Río Chico</b> (Gobernador Gregores) y seguís por toda Santa Cruz.</>,
+                "En cada lugar conocés un animal, una planta, un objeto tradicional y su escudo o bandera.",
+                "Cada etapa tiene 8 actividades: con 6 bien la superás y se abre la siguiente.",
+                "Lo que descubrís queda guardado en «Mi reserva».",
+              ]}
+            />
             <button
               onClick={() => setVideo(true)}
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 border-2 border-white text-base sm:text-lg shadow flex items-center justify-center"
@@ -276,9 +287,6 @@ export default function ReservaModal({
         {vista === "mapa" && (
           <div className="px-3 pb-4">
             <p className="-mt-2 mb-2 text-right text-[9px] text-slate-500">Límites: Instituto Geográfico Nacional (CC BY 4.0) y Natural Earth.</p>
-            <p className="text-sm font-bold text-amber-950 mb-2">
-              Recorré la Patagonia: empezamos en <b>Río Chico</b>, el departamento de Gobernador Gregores, y seguimos por toda Santa Cruz. En cada lugar conocés un animal, una planta, un objeto tradicional y su escudo o bandera.
-            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {ETAPAS.map((e) => {
                 const est = estados[e.territorio];

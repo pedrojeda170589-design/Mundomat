@@ -22,7 +22,7 @@ const POLL_MS = 20_000;
 
 // Entrada a la competencia (en el mapa) + aviso cuando un compañero te
 // invita a un duelo EN VIVO (se consulta cada 20 s).
-export default function CompetitionBanner({ code }: { code: string }) {
+export default function CompetitionBanner({ code, soloInvitaciones = false }: { code: string; soloInvitaciones?: boolean }) {
   const router = useRouter();
   const [invite, setInvite] = useState<Invite | null>(null);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
@@ -79,6 +79,7 @@ export default function CompetitionBanner({ code }: { code: string }) {
 
   return (
     <>
+      {!soloInvitaciones && (
       <button
         onClick={() => router.push("/student/competencia")}
         className="relative z-10 w-full max-w-3xl mx-auto mb-5 px-4 text-left"
@@ -94,6 +95,7 @@ export default function CompetitionBanner({ code }: { code: string }) {
           <span className="shrink-0 rounded-xl bg-white/90 px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-black text-rose-700">Entrar →</span>
         </div>
       </button>
+      )}
 
       {invite &&
         createPortal(

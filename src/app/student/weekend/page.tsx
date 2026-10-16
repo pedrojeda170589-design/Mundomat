@@ -1,5 +1,6 @@
 "use client";
 
+import BotonReglas from "@/components/eventos/BotonReglas";
 import Profe from "@/components/Profe";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -115,7 +116,19 @@ export default function WeekendPage() {
       <span className="text-white font-black text-sm sm:text-lg text-center leading-tight">
         {data.plan?.title ?? "Aventura de fin de semana"}
       </span>
-      <CoinBadge coins={coins} />
+      <span className="flex items-center gap-2 shrink-0">
+        <BotonReglas
+          titulo="Juegos de memoria del finde"
+          claro
+          reglas={[
+            `Sábado y domingo hay ${data.plan?.activities.length ?? 10} juegos de memoria: Memoria Numérica y memoramas.`,
+            "Se juegan en orden por el camino del mapa.",
+            "Cada juego da puntos; si no te equivocás, ganás puntos extra.",
+            "Al terminar todos, abrís el cofre: monedas y un accesorio.",
+          ]}
+        />
+        <CoinBadge coins={coins} />
+      </span>
     </div>
   );
 
@@ -170,12 +183,15 @@ export default function WeekendPage() {
           <h1 className="text-3xl font-black text-violet-700">
             {a.kind === "memoria-secuencia" ? "🔢" : a.kind === "memorama-imagenes" ? "🖼️" : "📝"} {intro.gameName}
           </h1>
-          <div className="flex items-end gap-2 text-left">
-            <Profe pose="explica" className="w-20 h-20" />
-            <div>
-              <p className="font-black text-sm mb-1">¿Qué vamos a hacer?</p>
-              <p className="text-sm leading-relaxed">{intro.howTo}</p>
-            </div>
+          <div className="flex items-center justify-center gap-3">
+            <Profe pose="explica" className="w-16 h-16" />
+            <BotonReglas
+              titulo={intro.gameName}
+              reglas={[
+                intro.howTo,
+                `Ganás ${a.points} ${a.points === 1 ? "punto" : "puntos"}${data.perfectBonus ? ` y ${data.perfectBonus} más si no te equivocás` : ""}.`,
+              ]}
+            />
           </div>
           {intro.sequenceType && (
             <p className="rounded-xl bg-violet-100 border-2 border-violet-300 py-2 font-black text-violet-800">
@@ -331,10 +347,7 @@ export default function WeekendPage() {
             <span className="text-3xl animate-bounce">⚡</span>
             <div>
               <span className="block font-black text-amber-950 text-sm">Repaso de las tablas</span>
-              <span className="block text-xs text-amber-900/80">Desafío contra reloj con las tablas del 2 al 10</span>
-              <span className="block text-[11px] text-amber-900/80 mt-0.5">
-                🎁 Completá las 9 tablas: objeto del mes dorado, plateado o de bronce e insignia (×2, ×3… A1). Ahora también de lunes a viernes, desde el mapa.
-              </span>
+              <span className="block text-xs text-amber-900/80">Contra reloj, del 2 al 10</span>
             </div>
           </div>
           <button

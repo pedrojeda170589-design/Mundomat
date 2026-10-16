@@ -1,6 +1,9 @@
 import { checkCodeRateLimit, getClientIp, recordFailedCodeAttempt, recordFailedLookup } from "@/lib/rateLimit";
 import { NextRequest } from "next/server";
-import { findStudentByCode, getProgress, mundoHabilitadoPara, saveProgress } from "@/lib/data";
+import { findStudentByCode, getEnabledWorldIdsFor, getProgress, mundoHabilitadoPara, saveProgress } from "@/lib/data";
+import { getGrade, gradeOf } from "@/lib/grades";
+import { mundoQueFalta, PCT_PARA_ABRIR } from "@/lib/desbloqueo";
+import type { Student, StudentProgress } from "@/types";
 import { isTrialExpired } from "@/lib/openClassroomShared";
 import { empezarVuelta, saltarEnVuelta, validRoundId, vueltaEnCurso } from "@/lib/vuelta";
 
@@ -48,10 +51,35 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Este mundo no está habilitado.", disabled: true }, { status: 403 });
   }
   const progress = await getProgress(student.code);
+  // Desbloqueo en orden: no se puede empezar un mundo cuyo anterior no se
+  // superó con 80 % (la pantalla ya lo muestra con candado; esto evita
+  // saltearlo desde afuera). Si no se puede saber qué está habilitado
+  // (plataforma sin respuesta), no se le corta la vuelta al alumno.
+  if (typeof body.skipIndex !== "number") {
+    const falta = await mundoQueFaltaPara(student, worldId, progress);
+    if (falta) {
+      return Response.json(
+        { error: `Primero superá «${falta}» con ${PCT_PARA_ABRIR} % o más.`, locked: true },
+        { status: 403 }
+      );
+    }
+  }
   const next =
     typeof body.skipIndex === "number"
       ? saltarEnVuelta(progress, worldId, roundId, body.skipIndex)
       : empezarVuelta(progress, worldId, roundId, Array.isArray(body.activities) ? body.activities : []);
   if (next !== progress) await saveProgress(next);
   return Response.json({ ok: true });
+}
+
+async function mundoQueFaltaPara(student: Student, worldId: number, progress: StudentProgress): Promise<string | null> {
+  const mundos = getGrade(gradeOf(student)).worlds;
+  const world = mundos.find((w) => w.id === worldId);
+  if (!world) return null;
+  try {
+    const habilitados = await getEnabledWorldIdsFor(student);
+    return mundoQueFalta(world, mundos, habilitados, progress)?.name ?? null;
+  } catch {
+    return null;
+  }
 }

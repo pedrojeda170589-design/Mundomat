@@ -6,7 +6,8 @@ import HeroFondo from "@/components/HeroFondo";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { WORLDS, getMapStage } from "@/lib/worlds";
-import { DEFAULT_GRADE, getGrade, missingPrerequisite, themeForGrade } from "@/lib/grades";
+import { DEFAULT_GRADE, getGrade, themeForGrade } from "@/lib/grades";
+import { mundoQueFalta } from "@/lib/desbloqueo";
 import Seashore from "@/components/Seashore";
 import Forest from "@/components/Forest";
 import { grade1HasContent } from "@/lib/grade1/content";
@@ -34,12 +35,13 @@ import { torneoHabilitado } from "@/lib/torneo/tiempos";
 import CloudsBackground from "@/components/CloudsBackground";
 import Mountains from "@/components/Mountains";
 import SubjectBadge from "@/components/SubjectBadge";
-import WeekendBanner, { WeekendSummary } from "@/components/weekend/WeekendBanner";
+import type { WeekendSummary } from "@/components/weekend/WeekendBanner";
 import SeasonalBanner from "@/components/SeasonalBanner";
 import NewsBoard from "@/components/NewsBoard";
 import CompetitionBanner from "@/components/competition/CompetitionBanner";
 import ClassMailbox from "@/components/ClassMailbox";
-import { getSeasonalEventById, isBirthdayToday } from "@/lib/seasons";
+import { BIRTHDAY_EVENT, getActiveEvents, getEventRewardIds, getSeasonalEventById, isBirthdayToday } from "@/lib/seasons";
+import BarraEventos, { VentanaEvento, type ItemEvento } from "@/components/eventos/BarraEventos";
 import { warmUpVoices } from "@/lib/tts";
 import Link from "next/link";
 import MusicToggle from "@/components/MusicToggle";
@@ -48,9 +50,7 @@ import { getCuento } from "@/lib/cuentos/catalogo";
 import { TRIAL_WORLDS_PER_SUBJECT, TrialReport, getTrialDaysLeft, getTrialLengthDays } from "@/lib/openClassroomShared";
 import TrialReportCard from "@/components/prueba/TrialReportCard";
 import TrialRatingCard from "@/components/prueba/TrialRatingCard";
-import MonteLeonCard from "@/components/monte-leon/MonteLeonCard";
 import MonteLeonModal from "@/components/monte-leon/MonteLeonModal";
-import ReservaCard from "@/components/reserva/ReservaCard";
 import VideoAnimacion from "@/components/VideoAnimacion";
 import { marcarVideoVisto, tocaVideo, videosActivos } from "@/lib/videos";
 import ReservaModal from "@/components/reserva/ReservaModal";
@@ -58,6 +58,24 @@ import { debeMostrarReserva } from "@/lib/reserva/progreso";
 import BuenViajeDialog from "@/components/monte-leon/BuenViajeDialog";
 import { debeMostrarMonteLeon, debeMostrarBuenViaje } from "@/lib/monteLeon/fechas";
 import { esPorSuperar, porSuperarPorMateria } from "@/lib/mapa/porSuperar";
+
+// Letrero corto de cada fiesta en la barra lateral (los demás usan su nombre).
+const LETRERO_FIESTA: Record<string, string> = {
+  "semana-mayo": "Mayo",
+  patria: "Patria",
+  infancias: "Infancias",
+  aniversario: "Escuela",
+  tradicion: "Tradición",
+  cumple: "¡Cumple!",
+};
+
+function marcarAnunciosVistos(code: string | null) {
+  try {
+    localStorage.setItem(`mt26-anuncios-visto-${code}`, String(Date.now()));
+  } catch {
+    // sin almacenamiento: no pasa nada
+  }
+}
 
 export default function StudentPlayPage() {
   const router = useRouter();
@@ -89,6 +107,10 @@ export default function StudentPlayPage() {
   const [metasOpen, setMetasOpen] = useState(false);
   const [monteLeonOpen, setMonteLeonOpen] = useState(false);
   const [reservaOpen, setReservaOpen] = useState(false);
+  // Barra lateral de eventos: ventanas del pizarrón y de las fiestas.
+  const [anunciosOpen, setAnunciosOpen] = useState(false);
+  const [fiestaOpen, setFiestaOpen] = useState<string | null>(null);
+  const [anunciosNuevos, setAnunciosNuevos] = useState(false);
   const [videoBienvenida, setVideoBienvenida] = useState(false);
   const bienvenidaRevisada = useRef(false);
   // Aviso de lo que está por tiempo limitado en la tienda (se calcula una vez).
@@ -146,6 +168,31 @@ export default function StudentPlayPage() {
       setDescargandoInforme(false);
     }
   }
+
+  // Puntito en «Anuncios» si hay un mensaje del docente, un cumpleaños o una
+  // novedad más nueva que la última vez que abrió el pizarrón.
+  useEffect(() => {
+    if (!code) return;
+    let vivo = true;
+    void fetch(`/api/news?code=${encodeURIComponent(code)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!vivo || !d) return;
+        let visto = 0;
+        try {
+          visto = Number(localStorage.getItem(`mt26-anuncios-visto-${code}`) ?? 0);
+        } catch {
+          // sin almacenamiento: se muestra el puntito
+        }
+        const fechas = [...(d.notes ?? []), ...(d.items ?? [])].map((x: { at: string }) => new Date(x.at).getTime());
+        const ultimo = fechas.length ? Math.max(...fechas) : 0;
+        setAnunciosNuevos((d.birthdays?.length ?? 0) > 0 || ultimo > visto);
+      })
+      .catch(() => {});
+    return () => {
+      vivo = false;
+    };
+  }, [code]);
 
   const refresh = useCallback(async (studentCode: string) => {
     setLoading(true);
@@ -352,15 +399,16 @@ export default function StudentPlayPage() {
   const mapStage = getMapStage(progress.completedWorlds, gradeWorlds);
   const lockedReasons: Record<number, string> = {};
   let mapWorlds = gradeWorlds.filter((w) => w.subject === subject);
-  let playableIds = enabledWorldIds;
+  // Los mundos habilitados por el docente se abren de a uno: el siguiente,
+  // cuando el anterior de la materia se superó con 80 % (lib/desbloqueo.ts).
+  let playableIds = enabledWorldIds.filter((id) => {
+    const w = gradeWorlds.find((x) => x.id === id);
+    const falta = w ? mundoQueFalta(w, gradeWorlds, enabledWorldIds, progress) : null;
+    if (falta) lockedReasons[id] = falta.name;
+    return !falta;
+  });
   if (grade !== DEFAULT_GRADE) {
     const zones = practiceZonesFor(progress, subject, grade);
-    playableIds = enabledWorldIds.filter((id) => {
-      const w = gradeWorlds.find((x) => x.id === id);
-      const missing = w ? missingPrerequisite(w, progress, enabledWorldIds) : null;
-      if (missing) lockedReasons[id] = missing;
-      return !missing;
-    });
     playableIds = [...playableIds, ...zones.map((z) => z.id)];
     mapWorlds = [...zones, ...mapWorlds];
   }
@@ -398,8 +446,59 @@ export default function StudentPlayPage() {
 
   const sceneryType = themeForGrade(grade).scenery;
 
+  // Barra lateral de eventos (lo que antes eran carteles arriba del mapa).
+  const conDuelos = !isTrialStudent && gradoPermitido(DESAFIOS.competencia.id, grade, [...DESAFIOS.competencia.grados]);
+  const eventosFiesta = isBirthday ? [BIRTHDAY_EVENT, ...getActiveEvents()] : getActiveEvents();
+  const tengo = new Set(progress.seasonalCollection ?? []);
+  const itemsEventos: ItemEvento[] = [];
+  if (repasoTablas) {
+    itemsEventos.push({ id: "tablas", logo: "tablas", letrero: "Tablas", titulo: "Repaso de las tablas", onClick: () => router.push("/student/tablas") });
+  }
+  if (debeMostrarMonteLeon({ grade, classroomId: isTrialStudent ? "abierta-3" : undefined })) {
+    itemsEventos.push({ id: "viaje", logo: "viaje", letrero: "Viaje", titulo: "Viaje a Monte León", onClick: () => setMonteLeonOpen(true) });
+  }
+  if (debeMostrarReserva({ grade })) {
+    itemsEventos.push({ id: "reserva", logo: "reserva", letrero: "Reserva", titulo: "Reserva y expedición patagónica", onClick: () => setReservaOpen(true) });
+  }
+  if (weekend?.available) {
+    itemsEventos.push({
+      id: "memoria",
+      logo: "memoria",
+      letrero: "Memoria",
+      titulo: "Juegos de memoria del fin de semana",
+      nuevo: !weekend.record?.finished,
+      onClick: () => router.push("/student/weekend"),
+    });
+  }
+  if (conDuelos) {
+    itemsEventos.push({ id: "duelos", logo: "duelos", letrero: "Duelos", titulo: "Competencia de memoria con tus compañeros", onClick: () => router.push("/student/competencia") });
+  }
+  itemsEventos.push({
+    id: "anuncios",
+    logo: "anuncios",
+    letrero: "Anuncios",
+    titulo: "Pizarrón de novedades",
+    nuevo: anunciosNuevos,
+    onClick: () => {
+      setAnunciosOpen(true);
+      setAnunciosNuevos(false);
+      marcarAnunciosVistos(code);
+    },
+  });
+  for (const ev of eventosFiesta) {
+    itemsEventos.push({
+      id: `fiesta-${ev.id}`,
+      logo: "fiesta",
+      emoji: ev.emoji,
+      letrero: LETRERO_FIESTA[ev.id] ?? ev.label,
+      titulo: ev.label,
+      nuevo: !getEventRewardIds(ev.id).every((id) => tengo.has(id)),
+      onClick: () => setFiestaOpen(ev.id),
+    });
+  }
+
   return (
-    <main className={`relative flex-1 flex flex-col ${themeForGrade(grade).dayBg} py-8 overflow-hidden`}>
+    <main className={`relative flex-1 flex flex-col ${themeForGrade(grade).dayBg} py-8 overflow-clip`}>
       <MusicToggle />
       <CloudsBackground />
       {sceneryType === "seashore" ? <Seashore isDay /> : sceneryType === "forest" ? <Forest isDay /> : <Mountains isDay />}
@@ -743,44 +842,6 @@ export default function StudentPlayPage() {
         />
       )}
 
-      <SeasonalBanner
-        seasonalCollection={progress.seasonalCollection}
-        birthday={isBirthday}
-        onOpenProfile={() => setEditingProfile(true)}
-      />
-
-      {weekend?.available && (
-        <WeekendBanner summary={weekend} onPlay={() => router.push("/student/weekend")} />
-      )}
-
-      {repasoTablas && (
-        <div className="relative z-10 max-w-3xl w-full mx-auto px-4 mb-4">
-          <button
-            onClick={() => router.push("/student/tablas")}
-            className="w-full parchment-panel rounded-2xl p-3.5 flex items-center justify-between gap-3 border-2 border-amber-400 bg-gradient-to-r from-amber-100/90 via-yellow-50 to-amber-100/90 shadow-md text-left"
-          >
-            <span className="flex items-center gap-3">
-              <span className="text-3xl">⚡</span>
-              <span>
-                <span className="block font-black text-amber-950 text-sm">Repaso de las tablas · actividad especial de todos los días</span>
-                <span className="block text-xs text-amber-900/80">
-                  Completá las 9 tablas: objeto del mes dorado, plateado o de bronce e insignia (×2, ×3… A1).
-                </span>
-              </span>
-            </span>
-            <span className="rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs px-3.5 py-2 shrink-0">🚀 ¡Jugar!</span>
-          </button>
-        </div>
-      )}
-
-      {debeMostrarMonteLeon({ grade, classroomId: isTrialStudent ? "abierta-3" : undefined }) && (
-        <MonteLeonCard
-          progress={progress}
-          onClick={() => setMonteLeonOpen(true)}
-        />
-      )}
-
-      {debeMostrarReserva({ grade }) && <ReservaCard progress={progress} onClick={() => setReservaOpen(true)} />}
 
       {videoBienvenida && code && (
         <VideoAnimacion
@@ -819,11 +880,36 @@ export default function StudentPlayPage() {
         />
       )}
 
-      <NewsBoard code={code} />
+      {/* Los duelos en vivo pueden llegar en cualquier momento: el aviso sigue activo. */}
+      {conDuelos && <CompetitionBanner code={code} soloInvitaciones />}
 
-      {!isTrialStudent && gradoPermitido(DESAFIOS.competencia.id, grade, [...DESAFIOS.competencia.grados]) && <CompetitionBanner code={code} />}
+      {anunciosOpen && (
+        <VentanaEvento titulo="Anuncios" logo="anuncios" onClose={() => setAnunciosOpen(false)}>
+          <NewsBoard code={code} />
+        </VentanaEvento>
+      )}
+      {fiestaOpen && (
+        <VentanaEvento
+          titulo={eventosFiesta.find((e) => e.id === fiestaOpen)?.label ?? "Fiesta"}
+          logo="fiesta"
+          emoji={eventosFiesta.find((e) => e.id === fiestaOpen)?.emoji}
+          onClose={() => setFiestaOpen(null)}
+        >
+          <SeasonalBanner
+            seasonalCollection={progress.seasonalCollection}
+            birthday={isBirthday}
+            soloEvento={fiestaOpen}
+            onOpenProfile={() => {
+              setFiestaOpen(null);
+              setEditingProfile(true);
+            }}
+          />
+        </VentanaEvento>
+      )}
 
-      <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 mb-6 px-4 max-w-3xl w-full mx-auto">
+      <div className="relative z-10 w-full max-w-3xl mx-auto flex items-start gap-1.5 sm:gap-3 pl-1 pr-1.5 sm:px-4">
+      <div className="flex-1 min-w-0">
+      <div className="relative z-10 grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-1.5 sm:gap-2 mb-3 px-1 sm:px-4 w-full">
         {(Object.keys(SUBJECT_INFO) as WorldSubject[]).map((s) => {
           const info = SUBJECT_INFO[s];
           const active = s === subject;
@@ -833,20 +919,22 @@ export default function StudentPlayPage() {
               key={s}
               onClick={() => setSubject(s)}
               aria-label={`${info.label}${pendientes ? ": hay actividades nuevas" : ""}`}
-              className={`relative flex items-center gap-1.5 rounded-full pl-1.5 pr-3 py-1.5 text-xs sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm ${
+              title={info.label}
+              className={`relative flex items-center gap-1 sm:gap-1.5 rounded-full pl-1 sm:pl-1.5 pr-2 sm:pr-3 py-1.5 text-[11px] sm:text-sm font-bold border-2 transition whitespace-nowrap shadow-sm min-w-0 ${
                 active
                   ? "bg-white text-slate-900 border-amber-500"
                   : "bg-white/70 text-slate-700 border-white/60"
               }`}
             >
-              <SubjectBadge subject={s} size={24} />
-              {info.label}
+              <SubjectBadge subject={s} size={22} />
+              <span className="truncate sm:hidden">{info.label.replace("Ciencias ", "")}</span>
+              <span className="hidden sm:inline">{info.label}</span>
               {pendientes > 0 && (
                 <span
-                  className="absolute -top-2.5 -right-2 rounded-full bg-rose-500 border-2 border-white px-1.5 py-px text-[10px] font-black text-white shadow"
+                  className="absolute -top-2 -right-1.5 rounded-full bg-rose-500 border-2 border-white px-1 sm:px-1.5 py-px text-[10px] font-black text-white shadow"
                   title="Hay actividades nuevas"
                 >
-                  ✨ ¡Nuevo!
+                  ✨<span className="hidden sm:inline"> ¡Nuevo!</span>
                 </span>
               )}
             </button>
@@ -854,54 +942,32 @@ export default function StudentPlayPage() {
         })}
       </div>
 
-      <div className="relative z-10 max-w-md w-full mx-auto px-4 mb-3">
-        {tramoHoy ? (
-          <div className="parchment-panel rounded-xl px-3 py-2 flex items-center gap-2 text-xs" title="Al pasar de módulo, cambia el paisaje del mapa">
-            <span className="text-base">📍</span>
-            <span className="flex-1">
-              <span className="font-black">
-                Módulo {tramoHoy.numero} de {tramos.length}: {tramoHoy.modulo.titulo}
-              </span>{" "}
-              · {tramoHoy.lugar.nombre} ({tramoHoy.lugar.localidad})
-              <span className="mt-1 block h-1.5 rounded-full bg-amber-900/15 overflow-hidden">
-                <span className="block h-full rounded-full bg-emerald-500" style={{ width: `${pctTramo}%` }} />
-              </span>
-            </span>
-            <span className="font-black">{pctTramo}%</span>
-          </div>
-        ) : (
+      <div className="relative z-10 max-w-md w-full mx-auto px-1 sm:px-4 mb-3">
         <div
-          className="parchment-panel rounded-xl px-3 py-2 flex items-center gap-2 text-xs"
-          title="El paisaje cambia cuando avanzás en las 4 áreas"
+          className="parchment-panel rounded-xl px-3 py-1.5 flex items-center gap-2 text-xs"
+          title={
+            tramoHoy
+              ? `Módulo ${tramoHoy.numero} de ${tramos.length}: ${tramoHoy.modulo.titulo} · ${tramoHoy.lugar.nombre} (${tramoHoy.lugar.localidad}). Al pasar de módulo, cambia el paisaje.`
+              : "El paisaje cambia cuando avanzás en las 4 áreas"
+          }
         >
-          <span className="text-base">🗺️</span>
-          <span className="flex-1">
-            <span className="font-black">Paisaje etapa {mapStage.stage} de 4</span> · crece cuando
-            avanzás en las 4 áreas
-            <span className="mt-1 block h-1.5 rounded-full bg-amber-900/15 overflow-hidden">
-              <span
-                className="block h-full rounded-full bg-emerald-500"
-                style={{ width: `${mapStage.percent}%` }}
-              />
-            </span>
+          <span className="text-base">{tramoHoy ? "📍" : "🗺️"}</span>
+          <span className="font-black whitespace-nowrap">
+            {tramoHoy ? `Módulo ${tramoHoy.numero}/${tramos.length}` : `Paisaje ${mapStage.stage}/4`}
           </span>
-          <span className="font-black">{mapStage.percent}%</span>
+          <span className="flex-1 h-2 rounded-full bg-amber-900/15 overflow-hidden">
+            <span
+              className="block h-full rounded-full bg-emerald-500"
+              style={{ width: `${tramoHoy ? pctTramo : mapStage.percent}%` }}
+            />
+          </span>
         </div>
-        )}
       </div>
 
-      {habilitadosAca && (
-      <div className="relative z-10 max-w-md w-full mx-auto px-4 mb-3">
-        <p
-          className={`rounded-xl px-3 py-2 text-xs font-black text-center border-2 shadow-sm ${
-            pendientesAca
-              ? "bg-yellow-100 border-amber-400 text-amber-950"
-              : "bg-emerald-50 border-emerald-400 text-emerald-900"
-          }`}
-        >
-          {pendientesAca
-            ? `✨ ¡Hay actividades nuevas en ${SUBJECT_INFO[subject].label}! Buscá los mundos que brillan en el mapa.`
-            : `🏆 ¡Superaste todos los mundos habilitados de ${SUBJECT_INFO[subject].label}!`}
+      {habilitadosAca && !pendientesAca && (
+      <div className="relative z-10 max-w-md w-full mx-auto px-1 sm:px-4 mb-3">
+        <p className="rounded-xl px-3 py-1.5 text-xs font-black text-center border-2 shadow-sm bg-emerald-50 border-emerald-400 text-emerald-900">
+          🏆 ¡Superaste todo {SUBJECT_INFO[subject].label}!
         </p>
       </div>
       )}
@@ -922,6 +988,9 @@ export default function StudentPlayPage() {
           lockedLabel={isTrialStudent ? "Fuera de la prueba" : undefined}
           onSelectWorld={setSelectedWorld}
         />
+      </div>
+      </div>
+      <BarraEventos items={itemsEventos} />
       </div>
 
       {grade >= 2 && (
